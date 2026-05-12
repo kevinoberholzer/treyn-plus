@@ -412,7 +412,6 @@ function Intro({onNext}) {
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <button className="btn btn-neon" style={{fontSize:15,padding:"14px 32px"}} onClick={onNext}>Analyse starten →</button>
-              <div style={{marginTop:12,fontSize:12,color:C.g400}}>Kein Account nötig.</div>
             </div>
           </>
         )}
@@ -1127,11 +1126,11 @@ const SPORT_NUTRITION = {
   cycling:{
     primary:[
       {id:"sn_mau_320",name:"Maurten Drink Mix 320",dose:"80g / 500ml — 1 Flasche/h",when:"Ausfahrten über 2h",why:"Konstante Kohlenhydratzufuhr mit Hydrogel-Technologie — reduziert GI-Stress bei hoher Intensität.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
-      {id:"sn_mau_caf",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & intensive Einheiten",why:"Koffein + Kohlenhydrate für maximale Leistung — unverzichtbar bei Wettkämpfen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+      {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & intensive Einheiten",why:"Koffein + Kohlenhydrate für maximale Leistung — unverzichtbar bei Wettkämpfen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_mn_heat",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor Touren über 3h",why:"Optionale Kohlenhydrat-Aufladung für sehr lange Einheiten.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY"},
-      {id:"sn_elek",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Sommer & intensive Einheiten",why:"Natriumverlust ausgleichen — besonders sinnvoll ab 25°C.",link:AFF.sponser("elektrolyt"),shop:"Sponser"},
+      {id:"sn_mn_heat_2",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor Touren über 3h",why:"Optionale Kohlenhydrat-Aufladung für sehr lange Einheiten.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY"},
+      {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Sommer & intensive Einheiten",why:"Natriumverlust ausgleichen — besonders sinnvoll ab 25°C.",link:AFF.sponser("elektrolyt"),shop:"Sponser"},
     ],
   },
   running:{
@@ -1751,7 +1750,7 @@ function StepAllergien({onNext, onBack}) {
           <div style={{marginBottom:20,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>
-              <strong style={{color:C.g800}}>Hinweis:</strong> TREYN AI warnt auf Basis deiner Angaben — prüfe aber immer nochmals die Inhaltsstoffe direkt beim Hersteller. AI kann trotz höchster Sorgfalt Fehler machen.
+              <strong style={{color:C.g800}}>Wichtiger Hinweis:</strong> TREYN AI analysiert auf Basis deiner Angaben — prüfe Inhaltsstoffe und Allergene <strong style={{color:C.g800}}>immer direkt beim Hersteller</strong>. Bei Unsicherheiten oder Erkrankungen konsultiere einen Arzt oder Apotheker. TREYN+ ersetzt keine medizinische Beratung.
             </div>
           </div>
 
@@ -1972,7 +1971,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span style={{fontSize:12,fontWeight:500,color:C.black}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
-              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 9.90 · Einmalig</span>
+              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 15.90 · Einmalig</span>
             </div>
             <div style={{padding:"14px 16px",background:"#FAFFF0"}}>
               <div style={{marginBottom:8,fontSize:10,color:"#999",letterSpacing:".02em"}}>Zusätzlich zu Basic:</div>
@@ -1982,10 +1981,10 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 ))}
               </div>
               <button onClick={scrollToCards} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
-                PRO freischalten — CHF 9.90 ↓
+                PRO freischalten — CHF 15.90 ↓
               </button>
               <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
-                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC nutzen — CHF 4.90 ↓</span>
+                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC nutzen — CHF 9.90 ↓</span>
               </div>
               <div style={{marginTop:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:8,border:"1px solid #F0F0F0",display:"flex",gap:10,alignItems:"flex-start"}}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2086,7 +2085,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>BASIC</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#EFEFEF",color:"#888",fontWeight:500,marginTop:3}}>~75% genau</span>
             </div>
-            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 4.90 · Einmalige Zahlung</div>
+            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 9.90 · Einmalige Zahlung</div>
           </div>
           <div style={{padding:"14px 16px",flex:1}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Schätzung</div>
@@ -2104,7 +2103,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
               style={{width:"100%",background:"#EBEBEB",color:"#555",border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Basic — CHF 4.90 →
+              Basic — CHF 9.90 →
             </button>
           </div>
         </div>
@@ -2116,7 +2115,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>PRO</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontWeight:600,marginTop:3}}>~92% genau</span>
             </div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400}}>CHF 9.90 · Einmalige Zahlung</div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400}}>CHF 15.90 · Einmalige Zahlung</div>
           </div>
           <div style={{padding:"14px 16px",flex:1,background:C.white}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Exaktberechnung</div>
@@ -2136,7 +2135,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 14px",background:C.white}}>
             <button onClick={openPro} disabled={loadPro}
               style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:9,padding:"12px",fontSize:13,fontWeight:800,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",marginBottom:6}}>
-              {loadPro?"...":"Pro — CHF 9.90 →"}
+              {loadPro?"...":"Pro — CHF 15.90 →"}
             </button>
 
           </div>
@@ -2279,7 +2278,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{fontSize:12,color:C.g600,lineHeight:1.5}}>Natrium, Magnesium, exakter Protein- & Kohlenhydratbedarf — sport-spezifisch berechnet. ~92% Genauigkeit.</div>
             </div>
             <button onClick={onUpgrade} style={{background:C.black,color:C.white,border:"none",borderRadius:9,padding:"10px 16px",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,whiteSpace:"nowrap"}}>
-              PRO · CHF 9.90
+              PRO · CHF 15.90
             </button>
           </div>
         )}
@@ -2389,12 +2388,20 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{isPro?"TREYN+ PRO — Aktiv":"TREYN+ Basic — Kostenlos"}</div>
               <div style={{fontSize:11,color:C.g600}}>{isPro?"Einmalige Zahlung · Profil lebenslang anpassbar":"Pauschale Berechnungen · Upgrade jederzeit möglich"}</div>
             </div>
-            {!isPro&&<button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:9,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>Upgrade CHF 9.90</button>}
+            {!isPro&&<button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:9,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>Upgrade CHF 15.90</button>}
           </div>
         </div>
         <button onClick={onReset} style={{width:"100%",background:"transparent",color:C.g400,border:`1px solid ${C.g200}`,borderRadius:10,padding:"10px",fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
           Neu starten
         </button>
+
+        {/* Legal disclaimer */}
+        <div style={{marginTop:16,padding:"12px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`}}>
+          <div style={{fontSize:10,fontWeight:600,color:C.g600,marginBottom:4,letterSpacing:".03em",textTransform:"uppercase"}}>Haftungsausschluss</div>
+          <div style={{fontSize:10,color:C.g400,lineHeight:1.7}}>
+            TREYN+ liefert Ernährungsempfehlungen auf Basis deiner Angaben — kein Ersatz für medizinische Beratung. Supplement-Empfehlungen wurden nicht von einem Arzt geprüft. Prüfe Inhaltsstoffe, Allergene und Wechselwirkungen immer direkt beim Hersteller. Bei Erkrankungen, Schwangerschaft, Medikamenteneinnahme oder Unsicherheiten konsultiere einen Arzt oder Apotheker. TREYN+ übernimmt keine Haftung für Schäden durch Fehler oder Unvollständigkeiten der Empfehlungen.
+          </div>
+        </div>
       </div>
     );
   };
@@ -2461,7 +2468,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
                   <div>
-                    <div style={{fontSize:14,fontWeight:800,color:C.black,letterSpacing:"-.02em"}}>CHF 9.90 <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· einmalig</span></div>
+                    <div style={{fontSize:14,fontWeight:800,color:C.black,letterSpacing:"-.02em"}}>CHF 15.90 <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· einmalig</span></div>
                     <div style={{fontSize:10,color:C.g600}}>Direkt über TREYN+ bestellbar</div>
                   </div>
                   <div style={{display:"flex",gap:5}}>
@@ -2472,7 +2479,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
                 </div>
                 <button onClick={buyBluttest} disabled={loadBlut}
                   style={{width:"100%",background:loadBlut?C.g200:C.black,color:loadBlut?C.g400:C.neon,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:700,cursor:loadBlut?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .15s"}}>
-                  {loadBlut?"Weiterleitung...":"Bluttest bestellen — CHF 9.90 →"}
+                  {loadBlut?"Weiterleitung...":"Bluttest bestellen — CHF 15.90 →"}
                 </button>
               </div>
             )}
@@ -2524,9 +2531,11 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <p style={{fontSize:13,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
 
               {/* AI Disclaimer */}
-              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(255,59,48,.05)",borderRadius:10,border:"1px solid rgba(255,59,48,.15)",display:"flex",gap:10,alignItems:"flex-start"}}>
+              <div style={{marginBottom:12,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div style={{fontSize:11,color:"#C0392B",lineHeight:1.55}}>Alle Empfehlungen werden durch <strong>TREYN AI</strong> berechnet. Trotz höchster Genauigkeit kann AI Fehler machen — prüfe Inhaltsstoffe & Dosierungen immer direkt beim Hersteller und konsultiere bei Unsicherheiten einen Arzt.</div>
+                <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>
+                  Empfehlungen werden durch <strong style={{color:C.g800}}>TREYN AI</strong> berechnet und sind ausschliesslich Ernährungsempfehlungen — keine medizinische Beratung. Prüfe Inhaltsstoffe & Wechselwirkungen immer direkt beim Hersteller. Konsultiere bei Erkrankungen, Medikamenten oder Unsicherheiten einen Arzt oder Apotheker. TREYN+ übernimmt keine Haftung für Unvollständigkeiten.
+                </div>
               </div>
 
               {/* TREYN Score */}
@@ -2592,15 +2601,15 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               cycling:{
                 optimal:[
                   {id:"sn_mau_320",name:"Maurten Drink Mix 320",dose:"80g / 500ml · 1 Flasche/h",when:"Ausfahrten über 2h",why:"Hydrogel-Technologie — minimaler GI-Stress, maximale Kohlenhydrataufnahme. Offizielle Tour de France Nahrung.",link:AFF.maurten("drink-mix-320"),shop:"Maurten",price:"~CHF 4.50/Portion",isPartner:true},
-                  {id:"sn_mau_caf",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & Intervalle",why:"Koffein + Kohlenhydrate für maximale Leistung in Rennsituationen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten",price:"~CHF 4.00/Gel",isPartner:true},
+                  {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & Intervalle",why:"Koffein + Kohlenhydrate für maximale Leistung in Rennsituationen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten",price:"~CHF 4.00/Gel",isPartner:true},
                 ],
                 budget:[
                   {id:"sn_sp_gel",name:"Sponser Liquid Energy",dose:"1 Beutel alle 45 min",when:"Training & Rennen",why:"Günstigere Alternative mit ähnlichem Kohlenhydratprofil. Gute Verträglichkeit.",link:AFF.sponser("liquid energy"),shop:"Sponser",price:"~CHF 2.20/Portion",isPartner:true},
-                  {id:"sn_elek",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Training ab 60 min",why:"Kostengünstige Elektrolytversorgung — Natrium, Kalium, Magnesium.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser",price:"~CHF 0.50/Tab",isPartner:true},
+                  {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Training ab 60 min",why:"Kostengünstige Elektrolytversorgung — Natrium, Kalium, Magnesium.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser",price:"~CHF 0.50/Tab",isPartner:true},
                 ],
                 premium:[
                   {id:"sn_mau_320p",name:"Maurten Drink Mix 320 CAF",dose:"80g / 500ml",when:"Wettkampf & harte Intervalle",why:"Premium-Version mit Koffein — maximale Performance für Entscheidungsmomente.",link:AFF.maurten("drink-mix-320"),shop:"Maurten",price:"~CHF 5.50/Portion",isPartner:true},
-                  {id:"sn_mn_heat",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor langen Touren (3h+)",why:"Premium Kohlenhydrat-Loading mit natürlichen Zutaten. Genutzt von EF Education.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY",price:"~CHF 5.00/Portion",isPartner:true},
+                  {id:"sn_mn_heat_2",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor langen Touren (3h+)",why:"Premium Kohlenhydrat-Loading mit natürlichen Zutaten. Genutzt von EF Education.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY",price:"~CHF 5.00/Portion",isPartner:true},
                 ],
               },
               running:{
@@ -2631,9 +2640,11 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
                 <p style={{fontSize:13,color:C.g600,marginBottom:14}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
 
                 {/* AI Disclaimer */}
-              <div style={{marginBottom:12,padding:"10px 14px",background:"rgba(255,59,48,.05)",borderRadius:10,border:"1px solid rgba(255,59,48,.15)",display:"flex",gap:10,alignItems:"flex-start"}}>
+              <div style={{marginBottom:12,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div style={{fontSize:11,color:"#C0392B",lineHeight:1.55}}>Alle Empfehlungen werden durch <strong>TREYN AI</strong> berechnet. Trotz höchster Genauigkeit kann AI Fehler machen — prüfe Inhaltsstoffe & Dosierungen immer direkt beim Hersteller und konsultiere bei Unsicherheiten einen Arzt.</div>
+                <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>
+                  Empfehlungen werden durch <strong style={{color:C.g800}}>TREYN AI</strong> berechnet und sind ausschliesslich Ernährungsempfehlungen — keine medizinische Beratung. Prüfe Inhaltsstoffe & Wechselwirkungen immer direkt beim Hersteller. Konsultiere bei Erkrankungen, Medikamenten oder Unsicherheiten einen Arzt oder Apotheker. TREYN+ übernimmt keine Haftung für Unvollständigkeiten.
+                </div>
               </div>
 
               {/* TREYN Score */}
@@ -2796,7 +2807,7 @@ export default function App() {
   },[]);
 
   const openStripePayment=(sd,td,pd,ad)=>{
-    const STRIPE_LINK="https://buy.stripe.com/DEIN_PAYMENT_LINK_990";
+    const STRIPE_LINK="https://buy.stripe.com/DEIN_PAYMENT_LINK_1590";
     const isPlaceholder=STRIPE_LINK.includes("DEIN_PAYMENT_LINK");
     if(isPlaceholder){
       if(sd)setSportData(sd); if(td)setTrainingData(td); if(pd)setProfilData(pd); if(ad)setAllergenData(ad);
