@@ -10,11 +10,12 @@ const C = {
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Inter',sans-serif;background:${C.white};color:${C.black};-webkit-font-smoothing:antialiased;}
+  body{font-family:'Inter',sans-serif;background:${C.white};color:${C.black};-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:15px;font-weight:400;letter-spacing:-.01em;}
   ::-webkit-scrollbar{width:0;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   @keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
   .fu{animation:fadeUp .4s ease forwards;}
   .fu2{animation:fadeUp .4s .07s ease forwards;opacity:0;}
   .fu3{animation:fadeUp .4s .14s ease forwards;opacity:0;}
@@ -316,7 +317,7 @@ function Logo({size="md"}) {
       <div style={{width:s.b,height:s.b,background:C.black,borderRadius:s.b*.28,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
         <div style={{width:s.g,height:s.g,background:C.neon,borderRadius:2,transform:"rotate(45deg)"}}/>
       </div>
-      <span style={{fontSize:s.f,fontWeight:700,letterSpacing:"-.04em"}}>TREYN <span style={{color:C.neon}}>+</span></span>
+      <span style={{fontSize:s.f,fontWeight:600,letterSpacing:"-.03em",fontFamily:"'Inter',sans-serif"}}>TREYN <span style={{color:C.neon}}>+</span></span>
     </div>
   );
 }
@@ -390,13 +391,13 @@ function Intro({onNext}) {
   ];
 
   const lines=[
-    {text:"Die präziseste Analyse für Supplements & Sportnahrung auf dem Markt",size:26,weight:700,tracking:"-.04em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Gemessen aus deinen Gesundheits- & Leistungsdaten. Wissenschaftlich belegt.",size:14,weight:400,color:C.g800,leading:1.6,mb:28,delay:200},
-    {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:14,weight:700,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
-    {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:14,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
-    {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:14,weight:700,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
-    {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:14,weight:400,color:C.g600,leading:1.65,mb:24,delay:180},
-    {text:"Auf Basis deiner Daten berechnet TREYN+ die optimalen Supplemente & Sportnahrung. Kostenlos verfügbar in 22 Ländern.",size:14,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Die präziseste Analyse für Supplements & Sportnahrung auf dem Markt",size:26,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Gemessen aus deinen Gesundheits- & Leistungsdaten. Wissenschaftlich belegt.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
+    {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
+    {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
+    {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
+    {text:"Auf Basis deiner Daten berechnet TREYN+ die optimalen Supplemente & Sportnahrung. Ab sofort verfügbar in 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
 
   return (
@@ -411,7 +412,7 @@ function Intro({onNext}) {
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <button className="btn btn-neon" style={{fontSize:15,padding:"14px 32px"}} onClick={onNext}>Analyse starten →</button>
-              <div style={{marginTop:12,fontSize:12,color:C.g400}}>Kostenlos. Kein Account nötig.</div>
+              <div style={{marginTop:12,fontSize:12,color:C.g400}}>Kein Account nötig.</div>
             </div>
           </>
         )}
@@ -454,12 +455,12 @@ function Intro({onNext}) {
 
 function Demo({onNext}) {
   return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:40}}><Logo size="lg"/></div>
         <div className="fu2"><span className="mono">So funktioniert es</span></div>
-        <h2 className="fu2" style={{fontSize:24,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
-        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>3 Minuten Eingabe. Lebenslang dein Profil — automatisch aktualisiert.</p>
+        <h2 className="fu2" style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
+        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>3 Minuten Eingabe. Lebenslanges Profil — automatisch aktualisiert. Aus einer riesigen Datenbank & Partnershops empfehlen wir die für dich besten Produkte.</p>
         <div className="fu3" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginBottom:20}}>
           {/* Step 1 */}
           <div style={{background:C.white,borderRadius:12,border:`0.5px solid ${C.g200}`,padding:"12px 10px"}}>
@@ -517,12 +518,12 @@ function Demo({onNext}) {
         </div>
         <div className="fu4" style={{display:"flex",alignItems:"center",marginBottom:20}}>
           <div style={{height:1,flex:1,background:C.g200}}/>
-          <div style={{fontSize:11,color:C.g400,padding:"0 12px"}}>3 Minuten · Magic Link Login · 100% kostenlos</div>
+          <div style={{fontSize:11,color:C.g400,padding:"0 12px"}}>3 Minuten · Magic Link Login</div>
           <div style={{height:1,flex:1,background:C.g200}}/>
         </div>
         <div className="fu5">
           <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px"}} onClick={onNext}>Analyse starten →</button>
-          <div style={{textAlign:"center",marginTop:10,fontSize:11,color:C.g400}}>Kostenlos · Kein Passwort · Login per E-Mail-Link</div>
+          <div style={{textAlign:"center",marginTop:10,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
         </div>
       </div>
     </div>
@@ -593,7 +594,7 @@ function StepSport({onNext}) {
       <div style={{width:"100%",maxWidth:520}}>
         <Progress step={1} total={5}/>
         <div className="su">
-          <h2 style={{fontSize:24,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Wähle deine Sportarten.</h2>
+          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Wähle deine Sportarten.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Mehrfach-Auswahl möglich — selektiere alle Sportarten die du regelmässig betreibst. Bei einigen Sportarten öffnen sich die diversen Disziplinen.</p>
 
           {/* Health-only option */}
@@ -713,7 +714,7 @@ function StepTraining({sportData,onNext,onBack}) {
       <div style={{width:"100%",maxWidth:520}}>
         <Progress step={2} total={5}/>
         <div className="su">
-          <h2 style={{fontSize:24,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Dein Training.</h2>
+          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Dein Training.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:32,lineHeight:1.65}}>Fülle für jede Sportart aus — so berechnet TREYN+ die optimalen Mengen.</p>
           <div style={{display:"flex",flexDirection:"column",gap:20}}>
             {sports.map(id=>{
@@ -858,8 +859,34 @@ function calcBMR(gender,weight,height,age){
 
 function StepProfil({sportData,trainingData,onNext,onBack}) {
   const [platform,setPlatform]=useState(null);
+  const [appleConnecting,setAppleConnecting]=useState(false);
+  const [appleConnected,setAppleConnected]=useState(false);
   const [form,setForm]=useState({firstname:"",lastname:"",email:"",country:"Schweiz",gender:"",birthyear:"",weight:"",height:""});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+
+  const handlePlatform=(id)=>{
+    setPlatform(id);
+    if(id==="apple"){
+      setAppleConnecting(true);
+      setTimeout(()=>{
+        // Simulate Apple Health data pull
+        setForm(f=>({...f,
+          firstname:"Kevin",
+          lastname:"Muster",
+          email:"kevin@beispiel.ch",
+          gender:"m",
+          birthyear:"1988",
+          height:"180",
+          weight:"76",
+          country:"Schweiz",
+        }));
+        setAppleConnecting(false);
+        setAppleConnected(true);
+      },1800);
+    } else {
+      setAppleConnected(false);
+    }
+  };
 
   const isManual=platform==="manual";
   const isAuto=platform&&platform!=="manual";
@@ -877,7 +904,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
       <div style={{width:"100%",maxWidth:520}}>
         <Progress step={3} total={5}/>
         <div className="su">
-          <h2 style={{fontSize:24,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Deine Daten.</h2>
+          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Deine Daten.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Gib deine Personalien & Daten ein. Mit deiner E-Mail speichern wir dein Profil, du kannst es jederzeit per Link aufrufen, ohne Passwort.</p>
 
           {/* Plattformen 3-spaltig kompakt */}
@@ -886,10 +913,19 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
             <div style={{fontSize:12,color:C.g400,marginBottom:10,lineHeight:1.5}}>Wenn du eine Plattform verbindest, beziehen wir Gewicht, Grösse, HRV und weitere Körperdaten automatisch — du musst nichts manuell eingeben.</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:7}}>
               {PLATFORMS.map(p=>(
-                <div key={p.id} onClick={()=>setPlatform(p.id)}
-                  style={{padding:"11px 10px",borderRadius:11,cursor:"pointer",transition:"all .14s",border:`1.5px solid ${platform===p.id?C.neon:C.g200}`,background:platform===p.id?C.neonDim:C.white,textAlign:"center"}}>
+                <div key={p.id} onClick={()=>handlePlatform(p.id)}
+                  style={{padding:"11px 10px",borderRadius:11,cursor:"pointer",transition:"all .14s",border:`1.5px solid ${platform===p.id?C.neon:C.g200}`,background:platform===p.id?C.neonDim:C.white,textAlign:"center",position:"relative"}}>
                   <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:3}}>{p.label}</div>
                   <div style={{fontSize:10,color:C.g400,lineHeight:1.3}}>{p.desc}</div>
+                  {p.id==="apple"&&appleConnecting&&(
+                    <div style={{position:"absolute",inset:0,background:"rgba(255,255,255,.9)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:4}}>
+                      <div style={{width:16,height:16,border:`2px solid ${C.neon}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
+                      <div style={{fontSize:9,color:C.g600}}>Verbinden...</div>
+                    </div>
+                  )}
+                  {p.id==="apple"&&appleConnected&&!appleConnecting&&(
+                    <div style={{marginTop:5,fontSize:9,color:"#27AE60",fontWeight:600}}>✓ Daten importiert</div>
+                  )}
                 </div>
               ))}
             </div>
@@ -1638,25 +1674,51 @@ Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
 // ─── STEP 4: ALLERGIEN & UNVERTRÄGLICHKEITEN ─────────────────────────────────
 
 const ALLERGEN_GROUPS = [
-  {id:"gluten",     label:"Gluten",           icon:"🌾", ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"]},
-  {id:"laktose",    label:"Laktose / Milch",  icon:"🥛", ingredients:["Molke","Whey","Casein","Laktose","Milchprotein","Milch"]},
-  {id:"soja",       label:"Soja",             icon:"🫘", ingredients:["Soja","Sojaprotein","Sojalecithin"]},
-  {id:"nüsse",      label:"Nüsse",            icon:"🥜", ingredients:["Erdnuss","Mandel","Cashew","Walnuss","Haselnuss"]},
-  {id:"eier",       label:"Eier",             icon:"🥚", ingredients:["Eier","Eiprotein","Albumin"]},
-  {id:"fisch",      label:"Fisch / Meeresfrüchte",icon:"🐟",ingredients:["Fisch","Krustentiere","Omega-3 (Fisch)","Krabben"]},
-  {id:"koffein",    label:"Koffein",          icon:"☕", ingredients:["Koffein","Guarana","Teein","Matcha"]},
-  {id:"beta_ala",   label:"Beta-Alanin (Kribbeln)",icon:"⚡",ingredients:["Beta-Alanin"]},
-  {id:"blutverd",   label:"Blutverdünner (ASS/Marcumar)",icon:"💊",ingredients:["Omega-3","Vitamin E","Ginkgo"]},
-  {id:"schilddr",   label:"Schilddrüsenerkrankung",icon:"🦋",ingredients:["Ashwagandha","Jod","Selen"]},
-  {id:"vegan",      label:"Vegan",            icon:"🌱", ingredients:["Whey","Casein","Kollagen","Fischöl","Omega-3 (Fisch)","Gelatine"]},
-  {id:"vegetarisch",label:"Vegetarisch",      icon:"🥦", ingredients:["Gelatine","Fischöl","Kollagen (Tier)"]},
+  // Echte Allergien & Unverträglichkeiten
+  {id:"gluten",     label:"Gluten / Zöliakie",       icon:"🌾", ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"]},
+  {id:"laktose",    label:"Laktose / Milch",          icon:"🥛", ingredients:["Molke","Whey","Casein","Laktose","Milchprotein","Milch"]},
+  {id:"soja",       label:"Soja",                     icon:"🫘", ingredients:["Soja","Sojaprotein","Sojalecithin"]},
+  {id:"nüsse",      label:"Nüsse / Erdnüsse",         icon:"🥜", ingredients:["Erdnuss","Mandel","Cashew","Walnuss","Haselnuss","Pekannuss","Pistazie"]},
+  {id:"eier",       label:"Eier",                     icon:"🥚", ingredients:["Eier","Eiprotein","Albumin"]},
+  {id:"fisch",      label:"Fisch / Meeresfrüchte",    icon:"🐟", ingredients:["Fisch","Krustentiere","Omega-3 (Fisch)","Krabben","Garnelen"]},
+  {id:"sesam",      label:"Sesam",                    icon:"🌿", ingredients:["Sesam","Tahini","Sesamöl"]},
+  {id:"senf",       label:"Senf",                     icon:"💛", ingredients:["Senf","Senfmehl"]},
+  {id:"koffein",    label:"Koffein-Sensitivität",     icon:"☕", ingredients:["Koffein","Guarana","Teein","Matcha"]},
+  {id:"beta_ala",   label:"Beta-Alanin (Kribbeln)",   icon:"⚡", ingredients:["Beta-Alanin"]},
+  {id:"fruktose",   label:"Fruktose-Intoleranz",      icon:"🍎", ingredients:["Fruktose","Fruchtzucker","Agavensirup"]},
+  {id:"histamin",   label:"Histamin-Intoleranz",      icon:"🌸", ingredients:["Histamin","Rotwein","fermentiert"]},
+  {id:"blutverd",   label:"Blutverdünner (ASS/Marcumar)", icon:"💊", ingredients:["Omega-3","Vitamin E","Ginkgo"]},
+  {id:"schilddr",   label:"Schilddrüsenerkrankung",   icon:"🦋", ingredients:["Ashwagandha","Jod","Selen"]},
+  {id:"nierenprob", label:"Nierenerkrankung",         icon:"🫘", ingredients:["Kreatin","Protein","Kalium","Phosphor"]},
+  // Ernährungsweise
+  {id:"vegan",         label:"Vegan",                  icon:"🌱", ingredients:["Whey","Casein","Kollagen","Fischöl","Omega-3 (Fisch)","Gelatine","Honig"], category:"diet"},
+  {id:"vegetarisch",   label:"Vegetarisch",             icon:"🥦", ingredients:["Gelatine","Fischöl","Kollagen (Tier)","Fisch"], category:"diet"},
+  {id:"pescetarisch",  label:"Pescetarisch",            icon:"🐟", ingredients:["Fleisch","Rinderkollagen","Whey vom Rind"], category:"diet"},
+  {id:"keto",          label:"Keto / Low Carb",         icon:"🥑", ingredients:["Maltodextrin","Dextrose","Traubenzucker","Fruktose"], category:"diet"},
+  {id:"halal",         label:"Halal",                   icon:"☪️", ingredients:["Schweinegelatine","Alkohol","Schweinefett"], category:"diet"},
+  {id:"koscher",       label:"Koscher",                 icon:"✡️", ingredients:["Schweinegelatine","Milch+Fleisch kombiniert"], category:"diet"},
+  {id:"glutenfrei",    label:"Glutenfrei (Präferenz)",  icon:"🚫", ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"], category:"diet"},
 ];
 
 function StepAllergien({onNext, onBack}) {
   const [selected, setSelected] = useState([]);
   const [custom, setCustom] = useState("");
+  const [customTags, setCustomTags] = useState([]);
+  const [noAllergens, setNoAllergens] = useState(false);
 
-  const toggle = (id) => setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s, id]);
+  const toggle = (id) => {
+    setNoAllergens(false);
+    setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s, id]);
+  };
+  const handleNoAllergens = () => {
+    setNoAllergens(true);
+    setSelected([]);
+    setCustomTags([]);
+    setCustom("");
+  };
+
+  const hasDiet = selected.some(s => ALLERGEN_GROUPS.find(g=>g.id===s)?.category==="diet");
+  const canContinue = (noAllergens || selected.length > 0 || customTags.length > 0) && (hasDiet || noAllergens);
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
@@ -1664,42 +1726,94 @@ function StepAllergien({onNext, onBack}) {
         <Progress step={4} total={5}/>
         <div className="su">
           <div className="mono" style={{marginBottom:8}}>Schritt 4 von 5</div>
-          <h2 style={{fontSize:24,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Allergien & Unverträglichkeiten</h2>
+          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Allergien & Unverträglichkeiten</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:6,lineHeight:1.65}}>TREYN+ gleicht alle Supplement-Empfehlungen mit deinen Angaben ab und warnt dich bei problematischen Inhaltsstoffen.</p>
 
           {/* Safety disclaimer */}
-          <div style={{marginBottom:20,padding:"10px 14px",background:"rgba(255,59,48,.06)",borderRadius:10,border:"1px solid rgba(255,59,48,.15)",display:"flex",gap:10,alignItems:"flex-start"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <div style={{fontSize:11,color:"#C0392B",lineHeight:1.55}}>
-              <strong>Wichtig:</strong> TREYN AI warnt auf Basis deiner Angaben — prüfe aber immer die Inhaltsstoffe direkt beim Hersteller. AI kann trotz höchster Sorgfalt Fehler machen.
+          <div style={{marginBottom:20,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>
+              <strong style={{color:C.g800}}>Hinweis:</strong> TREYN AI warnt auf Basis deiner Angaben — prüfe aber immer nochmals die Inhaltsstoffe direkt beim Hersteller. AI kann trotz höchster Sorgfalt Fehler machen.
             </div>
           </div>
 
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
-            {ALLERGEN_GROUPS.map(a=>{
+          {/* Keine Allergien option */}
+          <div onClick={handleNoAllergens}
+            style={{marginBottom:12,padding:"13px 16px",borderRadius:12,cursor:"pointer",transition:"all .14s",
+              border:`1.5px solid ${noAllergens?C.neon:C.g200}`,
+              background:noAllergens?C.neonDim:C.white,
+              display:"flex",alignItems:"center",gap:10}}>
+            <div style={{width:20,height:20,borderRadius:"50%",border:`2px solid ${noAllergens?C.black:C.g300||C.g400}`,background:noAllergens?C.black:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              {noAllergens&&<div style={{width:8,height:8,borderRadius:"50%",background:C.neon}}/>}
+            </div>
+            <div>
+              <div style={{fontSize:13,fontWeight:noAllergens?700:500,color:noAllergens?C.black:C.black,lineHeight:1.3}}>Keine Allergien oder Unverträglichkeiten</div>
+              <div style={{fontSize:11,color:C.g400,marginTop:1}}>Ich vertrage alle Inhaltsstoffe</div>
+            </div>
+          </div>
+
+          <div style={{fontSize:11,color:C.g400,marginBottom:10,fontWeight:500}}>Oder auswählen welche Allergien / Unverträglichkeiten du hast:</div>
+
+          {!noAllergens&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+            {ALLERGEN_GROUPS.filter(a=>!a.category).map(a=>{
               const on=selected.includes(a.id);
               return (
                 <div key={a.id} onClick={()=>toggle(a.id)}
-                  style={{padding:"12px 14px",borderRadius:12,cursor:"pointer",transition:"all .14s",
+                  style={{padding:"10px 12px",borderRadius:12,cursor:"pointer",transition:"all .14s",
                     border:`1.5px solid ${on?"rgba(255,59,48,.4)":C.g200}`,
-                    background:on?"rgba(255,59,48,.06)":C.white,
-                    display:"flex",alignItems:"center",gap:10}}>
-                  <span style={{fontSize:18,flexShrink:0}}>{a.icon}</span>
+                    background:on?"rgba(255,59,48,.05)":C.white,
+                    display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:16,flexShrink:0}}>{a.icon}</span>
                   <div>
-                    <div style={{fontSize:12,fontWeight:on?700:500,color:on?"#C0392B":C.black,lineHeight:1.3}}>{a.label}</div>
-                    {on&&<div style={{fontSize:9,color:"rgba(192,57,43,.7)",marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>WIRD AUSGESCHLOSSEN</div>}
+                    <div style={{fontSize:11,fontWeight:on?700:500,color:on?"#C0392B":C.black,lineHeight:1.3}}>{a.label}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>}
+
+          <div style={{fontSize:11,color:C.g400,marginBottom:10,fontWeight:500}}>Ernährungsweise: <span style={{color:C.red,fontSize:10}}>Pflichtfeld</span></div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+            {ALLERGEN_GROUPS.filter(a=>a.category==="diet").map(a=>{
+              const on=selected.includes(a.id);
+              return (
+                <div key={a.id} onClick={()=>toggle(a.id)}
+                  style={{padding:"10px 12px",borderRadius:12,cursor:"pointer",transition:"all .14s",
+                    border:`1.5px solid ${on?C.neon:C.g200}`,
+                    background:on?C.neonDim:C.white,
+                    display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:16,flexShrink:0}}>{a.icon}</span>
+                  <div>
+                    <div style={{fontSize:11,fontWeight:on?700:500,color:C.black,lineHeight:1.3}}>{a.label}</div>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Custom input */}
+          {/* Custom input with add button */}
           <div style={{marginBottom:24}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Weitere Allergien / Medikamente (optional)</div>
-            <input type="text" value={custom} onChange={e=>setCustom(e.target.value)}
-              placeholder="z.B. Penicillin, Latexallergie..."
-              style={{width:"100%",padding:"12px 14px",border:`1.5px solid ${custom?C.neon:C.g200}`,borderRadius:11,fontSize:13,background:custom?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"}}/>
+            <div style={{display:"flex",gap:6,marginBottom:6}}>
+              <input type="text" value={custom} onChange={e=>setCustom(e.target.value)}
+                onKeyDown={e=>{if(e.key==="Enter"&&custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
+                placeholder="z.B. Penicillin, Latexallergie..."
+                style={{flex:1,padding:"10px 14px",border:`1.5px solid ${custom?C.neon:C.g200}`,borderRadius:11,fontSize:13,background:custom?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"}}/>
+              <button onClick={()=>{if(custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
+                style={{padding:"10px 16px",background:custom.trim()?C.black:C.g200,color:custom.trim()?C.white:C.g400,border:"none",borderRadius:11,fontSize:13,fontWeight:500,cursor:custom.trim()?"pointer":"default",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap",transition:"all .14s"}}>
+                + Hinzufügen
+              </button>
+            </div>
+            {customTags.length>0&&(
+              <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                {customTags.map((t,i)=>(
+                  <div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:20,background:C.g100,border:`1px solid ${C.g200}`}}>
+                    <span style={{fontSize:12,color:C.black}}>{t}</span>
+                    <button onClick={()=>setCustomTags(tags=>tags.filter((_,j)=>j!==i))} style={{background:"none",border:"none",cursor:"pointer",color:C.g400,fontSize:14,lineHeight:1,padding:0}}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {selected.length>0&&(
@@ -1710,8 +1824,10 @@ function StepAllergien({onNext, onBack}) {
 
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8}}>
             <button className="btn-ghost" onClick={onBack}>← Zurück</button>
-            <button className="btn btn-black" onClick={()=>onNext({allergens:selected,customAllergens:custom})}>
-              {selected.length===0?"Weiter ohne Angaben →":`Weiter mit ${selected.length} Angabe${selected.length>1?"n":""} →`}
+            <button className="btn btn-black" disabled={!canContinue}
+              style={{opacity:canContinue?1:.4,cursor:canContinue?"pointer":"default"}}
+              onClick={()=>canContinue&&onNext({allergens:selected,customAllergens:customTags.join(", "),noAllergens})}>
+              {noAllergens?"Weiter →":selected.length+customTags.length===0?"Auswahl erforderlich →":`Weiter mit ${selected.length+customTags.length} Angabe${selected.length+customTags.length>1?"n":""} →`}
             </button>
           </div>
         </div>
@@ -1765,102 +1881,85 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
   ];
 
   return (
-    <div style={{maxWidth:600,margin:"0 auto",padding:"36px 24px 72px"}}>
-      <div className="fu" style={{marginBottom:24}}><Logo/></div>
+    <div style={{maxWidth:580,margin:"0 auto",padding:"48px 28px 80px"}}>
+      <div className="fu" style={{marginBottom:32}}><Logo/></div>
 
-      <div className="fu2" style={{marginBottom:20}}>
-        <div className="mono" style={{marginBottom:6}}>Deine Analyse{fname?` · ${fname}`:""}</div>
-        <h2 style={{fontSize:21,fontWeight:700,letterSpacing:"-.03em",lineHeight:1.25,marginBottom:10}}>
-          Deine Analyse — wechsle zu PRO für die genausten Daten & Werte!
+      <div className="fu2" style={{marginBottom:32}}>
+        <div style={{fontSize:11,color:C.g400,letterSpacing:".04em",textTransform:"uppercase",marginBottom:10}}>Deine Analyse{fname?` · ${fname}`:""}</div>
+        <h2 style={{fontSize:26,fontWeight:600,color:C.black,lineHeight:1.2,marginBottom:12,letterSpacing:"-.02em"}}>
+          Deine Analyse — Nutze PRO für die genausten Werte. Einmalige Zahlung.
         </h2>
-        <p style={{fontSize:13,color:C.g600,lineHeight:1.7}}>
-          Basic ist kostenlos und sofort nutzbar — mit PRO rechnet TREYN+ <strong style={{color:C.black}}>bis zu 3× genauer</strong> und empfiehlt die passgenauen Supplements und Sportnahrung exakt für deinen Körper.
+        <p style={{fontSize:13,color:C.g600,lineHeight:1.7,maxWidth:480}}>
+          Basic ist kostenlos und sofort nutzbar — mit PRO rechnen wir <strong style={{color:C.black,fontWeight:500}}>bis zu 92% genau</strong> und empfehlen die passgenauen Supplements & Sportnahrung exakt für deinen Körper, Einsatzbereich und Energieverbrauch.
         </p>
       </div>
 
-      {/* Basic results — kcal + protein + carbs visible */}
-      <div className="fu3" style={{borderRadius:14,overflow:"hidden",border:`1px solid ${C.g200}`,marginBottom:18}}>
-        <div style={{background:C.g100,padding:"11px 16px",borderBottom:`1px solid ${C.g200}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.black}}>Deine Basis-Analyse · {sportLabel}{!healthOnly?` · ${intensityLabel}`:""}</span>
-          <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,149,0,.12)",color:C.orange,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>~75% GENAU</span>
-            <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:C.g200,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>BASIC</span>
-          </div>
+      {/* Basic results — Google style */}
+      <div className="fu3" style={{borderRadius:16,overflow:"hidden",border:"1px solid #E8E8E8",marginBottom:20,background:C.white}}>
+        <div style={{padding:"14px 20px",borderBottom:"1px solid #F0F0F0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <span style={{fontSize:12,fontWeight:500,color:"#444"}}>Basic-Analyse deiner Sportarten & Intensitäten</span>
+          <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#F0F0F0",color:"#555",fontFamily:"JetBrains Mono,monospace",fontWeight:600,letterSpacing:".02em"}}>~75% GENAU</span>
         </div>
-        <div style={{padding:"14px 16px",background:C.white}}>
-          {/* kcal */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>GRUNDUMSATZ</div>
-              <div style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{basic.bmr.toLocaleString("de-CH")}</div>
-              <div style={{fontSize:10,color:C.g400}}>kcal / Tag</div>
+        <div style={{padding:"20px"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2,letterSpacing:".02em"}}>Grundumsatz</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{basic.bmr.toLocaleString("de-CH")}</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>kcal / Tag</div>
             </div>
-            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>MIT TRAINING</div>
-              <div style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{basic.withTraining.toLocaleString("de-CH")}</div>
-              <div style={{fontSize:10,color:C.g400}}>kcal / Tag</div>
-            </div>
-          </div>
-          {/* Protein + Carbs — basic estimate */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
-            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>PROTEIN / TAG</div>
-              <div style={{fontSize:18,fontWeight:800,color:C.black,letterSpacing:"-.03em"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
-              <div style={{fontSize:10,color:C.g400}}>Schätzwert</div>
-            </div>
-            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>KOHLENHYDRATE / TAG</div>
-              <div style={{fontSize:18,fontWeight:800,color:C.black,letterSpacing:"-.03em"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
-              <div style={{fontSize:10,color:C.g400}}>Schätzwert</div>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2,letterSpacing:".02em"}}>Mit Training</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{basic.withTraining.toLocaleString("de-CH")}</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>kcal / Tag</div>
             </div>
           </div>
-          <div style={{fontSize:10,color:C.g400,fontStyle:"italic",marginBottom:12}}>±25% Fehler — pauschale Berechnung ohne sport-spezifische MET-Werte.</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Protein / Tag</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Schätzwert</div>
+            </div>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kohlenhydrate / Tag</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Schätzwert</div>
+            </div>
+          </div>
+          <div style={{fontSize:11,color:"#AAA",fontStyle:"italic",marginBottom:16}}>±25% Fehler — pauschale Berechnung ohne sport-spezifische MET-Werte.</div>
 
           {/* PRO locked */}
-          <div style={{borderRadius:11,overflow:"hidden",border:`1.5px solid ${C.neon}`}}>
-            <div style={{background:C.black,padding:"8px 12px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-              <div style={{display:"flex",alignItems:"center",gap:7}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.neon} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                <span style={{fontSize:10,fontWeight:700,color:C.white}}>Nur mit PRO · ~92% Genauigkeit</span>
+          <div style={{borderRadius:12,overflow:"hidden",border:`1.5px solid ${C.neon}`}}>
+            <div style={{background:C.neon,padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span style={{fontSize:12,fontWeight:500,color:C.black}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
-              <span style={{fontSize:9,color:C.neon,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>CHF 6.90 · Einmalig</span>
+              <span style={{fontSize:10,color:"rgba(0,0,0,.45)",fontFamily:"JetBrains Mono,monospace",fontWeight:600,whiteSpace:"nowrap",marginLeft:12}}>CHF 9.90 · Einmalig</span>
             </div>
-            <div style={{padding:"10px 12px",background:C.neonDim}}>
-              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
-                {["Exakte kcal via MET-Werte","Protein exakt","Kohlenhydrate exakt","Natrium-Verlust","Magnesium-Bedarf","Schweissverlust","Eisenbedarf-Prüfung","Einnahme-Protokolle","Unlimited AI Chat"].map(f=>(
-                  <span key={f} style={{fontSize:10,padding:"3px 8px",borderRadius:5,background:"rgba(0,0,0,.07)",color:C.black,fontFamily:"JetBrains Mono,monospace"}}>{f}</span>
+            <div style={{padding:"14px 16px",background:"#FAFFF0"}}>
+              <div style={{marginBottom:8,fontSize:10,color:"#999",letterSpacing:".02em"}}>Zusätzlich zu Basic:</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+                {["Exakte kcal via MET","Protein exakt","Kohlenhydrate exakt","Natrium-Verlust","Magnesium","Schweissverlust","Eisenbedarf-Prüfung","Protokolle","Unlimited AI Chat"].map(f=>(
+                  <span key={f} style={{fontSize:11,padding:"3px 9px 3px 6px",borderRadius:20,background:"rgba(0,0,0,.06)",color:"#333",display:"inline-flex",alignItems:"center",gap:4}}><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="6" fill="#222"/><path d="M3.5 6l2 2 3-3" stroke="#C8FF00" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>{f}</span>
                 ))}
               </div>
-              <button onClick={openPro} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:8,padding:"10px",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                {loadPro?"...":"PRO freischalten — CHF 6.90 →"}
+              <button onClick={openPro} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
+                {loadPro?"...":"PRO freischalten — CHF 9.90"}
               </button>
+              <div style={{marginTop:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:8,border:"1px solid #F0F0F0",display:"flex",gap:10,alignItems:"flex-start"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <div>
+                  <div style={{fontSize:11,fontWeight:500,color:"#333",marginBottom:2}}>PRO — Einmalige Zahlung. Für immer.</div>
+                  <div style={{fontSize:11,color:"#888",lineHeight:1.55}}>Einmalig CHF 9.90 — Profil jederzeit anpassbar. Kein Abo, keine Folgekosten. Kein Passwort — du gelangst per E-Mail-Link zu deinem Profil.</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Compact accuracy bars */}
-      <div className="fu3" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:18}}>
-        <div style={{borderRadius:10,padding:"10px 12px",background:C.g100,border:`1px solid ${C.g200}`}}>
-          <div style={{fontSize:9,fontWeight:700,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:1}}>BASIC</div>
-          <div style={{display:"flex",alignItems:"baseline",gap:4}}>
-            <span style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em",lineHeight:1}}>~75%</span>
-            <span style={{fontSize:10,fontWeight:600,color:C.black}}>genau</span>
-          </div>
-          <div style={{fontSize:9,color:C.g400,marginTop:1}}>Fehler: ±25%</div>
-        </div>
-        <div style={{borderRadius:10,padding:"10px 12px",background:C.neon,border:`1px solid rgba(0,0,0,.08)`}}>
-          <div style={{fontSize:9,fontWeight:700,color:"rgba(0,0,0,.4)",fontFamily:"JetBrains Mono,monospace",marginBottom:1}}>PRO</div>
-          <div style={{display:"flex",alignItems:"baseline",gap:4}}>
-            <span style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em",lineHeight:1}}>~92%</span>
-            <span style={{fontSize:10,fontWeight:600,color:C.black}}>genau</span>
-          </div>
-          <div style={{fontSize:9,color:"rgba(0,0,0,.45)",marginTop:1}}>Fehler: ±8%</div>
         </div>
       </div>
 
       {/* Info card with info button */}
-      <div className="fu3" style={{padding:"14px 16px",borderRadius:11,border:`1px solid ${C.g200}`,background:"#F7F9F0",marginBottom:18}}>
+      <div className="fu3" style={{padding:"14px 16px",borderRadius:11,border:`1px solid ${C.g200}`,background:C.white,marginBottom:18}}>
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10}}>
           <p style={{fontSize:12,color:C.g800,lineHeight:1.65,margin:0,flex:1}}>
             Basic schätzt deinen Bedarf pauschal — mit einem Basiswert für deine Sportarten, Intensität und Körperwerte. PRO berechnet exakt mit{" "}
@@ -1943,57 +2042,49 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
       <div className="fu3" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18,alignItems:"start"}}>
 
         {/* BASIC */}
-        <div style={{border:`1.5px solid ${C.g200}`,borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-          <div style={{background:C.g100,padding:"13px 15px"}}>
-            <div style={{fontSize:26,fontWeight:800,color:C.black,letterSpacing:"-.04em",lineHeight:1,marginBottom:8}}>BASIC</div>
-            <div style={{display:"inline-flex",alignItems:"center",gap:4,background:C.black,borderRadius:5,padding:"2px 7px"}}>
-              <span style={{fontSize:8,fontWeight:700,color:C.white,fontFamily:"JetBrains Mono,monospace"}}>~75% GENAU</span>
-            </div>
+        <div style={{border:"1px solid #E8E8E8",borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+          <div style={{background:"#FAFAFA",padding:"14px 16px",borderBottom:"1px solid #F0F0F0"}}>
+            <div style={{fontSize:11,fontWeight:400,color:"#999",marginBottom:4}}>CHF 4.90 · Einmalige Zahlung</div>
+            <div style={{fontSize:22,fontWeight:600,color:C.black,marginBottom:8,letterSpacing:"-.02em"}}>BASIC</div>
+            <span style={{fontSize:10,color:"#999",letterSpacing:".02em"}}>~75% genau</span>
           </div>
-          <div style={{padding:"12px 14px",flex:1}}>
-            <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>KCAL SCHÄTZUNG</div>
-            <div style={{fontSize:22,fontWeight:800,color:C.g400,letterSpacing:"-.04em",lineHeight:1,marginBottom:1}}>{basic.withTraining.toLocaleString("de-CH")}</div>
-            <div style={{fontSize:8,color:C.g400,marginBottom:12}}>BMR × 1.5 pauschal</div>
+          <div style={{padding:"14px 16px",flex:1}}>
+            <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Schätzung</div>
+            <div style={{fontSize:22,fontWeight:400,color:C.black,letterSpacing:"-.02em",lineHeight:1,marginBottom:1}}>{basic.withTraining.toLocaleString("de-CH")}</div>
+            <div style={{fontSize:10,color:"#999",marginBottom:14}}>BMR × 1.5 pauschal</div>
             <div style={{display:"flex",flexDirection:"column",gap:5}}>
               {ROWS.map((r,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:6}}>
                   {r.basic ? <OK acid={false}/> : <NO/>}
-                  <span style={{fontSize:10,color:r.basic?C.black:C.g300||"#C8C8C6",lineHeight:1.3}}>{r.basicLabel||r.label}</span>
+                  <span style={{fontSize:11,color:r.basic?C.black:"#CCCCCC",lineHeight:1.4}}>{r.basicLabel||r.label}</span>
                 </div>
               ))}
             </div>
           </div>
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
-              style={{width:"100%",background:C.black,color:C.white,border:"none",borderRadius:9,padding:"10px",fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Kostenlos berechnen →
+              style={{width:"100%",background:C.black,color:C.white,border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+              Basic — CHF 4.90 →
             </button>
           </div>
         </div>
 
         {/* PRO */}
-        <div style={{borderRadius:16,overflow:"hidden",border:`2.5px solid ${C.neon}`,display:"flex",flexDirection:"column",boxShadow:`0 0 0 4px rgba(200,255,0,.15), 0 8px 24px rgba(200,255,0,.2)`}}>
-          <div style={{background:C.neon,padding:"13px 15px"}}>
-            <div style={{fontSize:26,fontWeight:800,color:C.black,letterSpacing:"-.04em",lineHeight:1,marginBottom:8}}>PRO</div>
-            <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-              <div style={{display:"inline-flex",alignItems:"center",gap:5,background:C.black,borderRadius:6,padding:"3px 9px"}}>
-                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke={C.neon} strokeWidth="2.5" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <span style={{fontSize:9,fontWeight:800,color:C.white,fontFamily:"JetBrains Mono,monospace"}}>EINMALIGE ZAHLUNG</span>
-              </div>
-              <div style={{display:"inline-flex",alignItems:"center",gap:4,background:C.black,borderRadius:6,padding:"3px 9px"}}>
-                <span style={{fontSize:8,fontWeight:700,color:C.white,fontFamily:"JetBrains Mono,monospace"}}>~92% GENAU</span>
-              </div>
-            </div>
+        <div style={{borderRadius:16,overflow:"hidden",border:`1.5px solid ${C.neon}`,display:"flex",flexDirection:"column",boxShadow:"0 4px 20px rgba(200,255,0,.15)"}}>
+          <div style={{background:C.neon,padding:"14px 16px",borderBottom:"1px solid rgba(0,0,0,.08)"}}>
+            <div style={{fontSize:11,fontWeight:400,color:"rgba(0,0,0,.45)",marginBottom:4}}>CHF 9.90 · Einmalige Zahlung</div>
+            <div style={{fontSize:22,fontWeight:600,color:C.black,marginBottom:8,letterSpacing:"-.02em"}}>PRO</div>
+            <span style={{fontSize:10,padding:"3px 9px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontFamily:"JetBrains Mono,monospace"}}>~92% GENAU</span>
           </div>
-          <div style={{padding:"12px 14px",flex:1,background:C.white}}>
-            <div style={{fontSize:8,color:C.black,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>KCAL EXAKTBERECHNUNG</div>
-            <div style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em",lineHeight:1,marginBottom:1}}>{pro.withTraining.toLocaleString("de-CH")}</div>
-            <div style={{fontSize:8,color:C.g600,marginBottom:12}}>MET-WERTE (COM. 2024)</div>
+          <div style={{padding:"14px 16px",flex:1,background:C.white}}>
+            <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Exaktberechnung</div>
+            <div style={{fontSize:22,fontWeight:400,color:C.black,letterSpacing:"-.02em",lineHeight:1,marginBottom:1}}>{pro.withTraining.toLocaleString("de-CH")}</div>
+            <div style={{fontSize:10,color:"#999",marginBottom:14}}>MET-Werte (Compendium 2024)</div>
             <div style={{display:"flex",flexDirection:"column",gap:5}}>
               {ROWS.filter(r=>!r.basicOnly).map((r,i)=>(
                 <div key={i} style={{display:"flex",alignItems:"center",gap:6}}>
                   <OK acid={false}/>
-                  <span style={{fontSize:10,color:C.black,fontWeight:400,lineHeight:1.3}}>
+                  <span style={{fontSize:11,color:C.black,fontWeight:400,lineHeight:1.4}}>
                     {r.proLabel||r.label}
                   </span>
                 </div>
@@ -2003,29 +2094,14 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 14px",background:C.white}}>
             <button onClick={openPro} disabled={loadPro}
               style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:9,padding:"12px",fontSize:13,fontWeight:800,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",marginBottom:6}}>
-              {loadPro?"...":"Pro — CHF 6.90 →"}
+              {loadPro?"...":"Pro — CHF 9.90 →"}
             </button>
-            <div style={{textAlign:"center",fontSize:9,color:C.g400,letterSpacing:".01em"}}>
-              Kreditkarte · Apple Pay · Google Pay · TWINT
-            </div>
+
           </div>
         </div>
       </div>
 
       {/* Blood test premium tier */}
-
-      {/* Reassurance card */}
-      <div className="fu4" style={{padding:"14px 16px",borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,marginBottom:20}}>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          <div style={{width:32,height:32,borderRadius:"50%",background:C.neonDim,border:`1.5px solid ${C.neonBorder}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <div>
-            <div style={{fontSize:12,fontWeight:700,color:C.black,marginBottom:2}}>PRO — Einmalige Zahlung. Für immer.</div>
-            <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>Du zahlst einmal CHF 6.90 und kannst dein Profil jederzeit anpassen — Sport, Gewicht, Intensität. Die Berechnungen aktualisieren sich automatisch. Kein Abo, keine Folgekosten. Kein Passwort — du gelangst jederzeit per E-Mail-Link zu deinem Profil.</div>
-          </div>
-        </div>
-      </div>
 
     </div>
   );
@@ -2154,7 +2230,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{fontSize:12,color:C.g600,lineHeight:1.5}}>Natrium, Magnesium, exakter Protein- & Kohlenhydratbedarf — sport-spezifisch berechnet. ~92% Genauigkeit.</div>
             </div>
             <button onClick={onUpgrade} style={{background:C.black,color:C.white,border:"none",borderRadius:9,padding:"10px 16px",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,whiteSpace:"nowrap"}}>
-              PRO · CHF 6.90
+              PRO · CHF 9.90
             </button>
           </div>
         )}
@@ -2264,7 +2340,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{isPro?"TREYN+ PRO — Aktiv":"TREYN+ Basic — Kostenlos"}</div>
               <div style={{fontSize:11,color:C.g600}}>{isPro?"Einmalige Zahlung · Profil lebenslang anpassbar":"Pauschale Berechnungen · Upgrade jederzeit möglich"}</div>
             </div>
-            {!isPro&&<button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:9,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>Upgrade CHF 6.90</button>}
+            {!isPro&&<button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:9,padding:"8px 14px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>Upgrade CHF 9.90</button>}
           </div>
         </div>
         <button onClick={onReset} style={{width:"100%",background:"transparent",color:C.g400,border:`1px solid ${C.g200}`,borderRadius:10,padding:"10px",fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
@@ -2336,7 +2412,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
                   <div>
-                    <div style={{fontSize:14,fontWeight:800,color:C.black,letterSpacing:"-.02em"}}>CHF 6.90 <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· einmalig</span></div>
+                    <div style={{fontSize:14,fontWeight:800,color:C.black,letterSpacing:"-.02em"}}>CHF 9.90 <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· einmalig</span></div>
                     <div style={{fontSize:10,color:C.g600}}>Direkt über TREYN+ bestellbar</div>
                   </div>
                   <div style={{display:"flex",gap:5}}>
@@ -2347,7 +2423,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
                 </div>
                 <button onClick={buyBluttest} disabled={loadBlut}
                   style={{width:"100%",background:loadBlut?C.g200:C.black,color:loadBlut?C.g400:C.neon,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:700,cursor:loadBlut?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .15s"}}>
-                  {loadBlut?"Weiterleitung...":"Bluttest bestellen — CHF 6.90 →"}
+                  {loadBlut?"Weiterleitung...":"Bluttest bestellen — CHF 9.90 →"}
                 </button>
               </div>
             )}
@@ -2671,7 +2747,7 @@ export default function App() {
   },[]);
 
   const openStripePayment=(sd,td,pd,ad)=>{
-    const STRIPE_LINK="https://buy.stripe.com/DEIN_PAYMENT_LINK_690";
+    const STRIPE_LINK="https://buy.stripe.com/DEIN_PAYMENT_LINK_990";
     const isPlaceholder=STRIPE_LINK.includes("DEIN_PAYMENT_LINK");
     if(isPlaceholder){
       if(sd)setSportData(sd); if(td)setTrainingData(td); if(pd)setProfilData(pd); if(ad)setAllergenData(ad);
