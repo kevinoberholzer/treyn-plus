@@ -399,11 +399,8 @@ function Intro({onNext}) {
         {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)}/>}
         {btnVisible&&(
           <>
-            {/* Inline country link appended to last line */}
             <div style={{fontSize:14,color:C.g800,lineHeight:1.7,marginTop:-8,marginBottom:0}}>
-              <span
-                onClick={()=>setShowCountries(true)}
-                style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>
+              <span onClick={()=>setShowCountries(true)} style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>
                 22 Ländern
               </span>
               .
@@ -454,7 +451,7 @@ function Intro({onNext}) {
 
 function Demo({onNext}) {
   return (
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:40}}><Logo size="lg"/></div>
         <div className="fu2"><span className="mono">So funktioniert es</span></div>
