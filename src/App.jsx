@@ -323,7 +323,7 @@ function Logo({size="md"}) {
 
 // ─── TYPEWRITER ───────────────────────────────────────────────────────────────
 
-function TypeWriter({lines, onDone, speed=20}) {
+function TypeWriter({lines, onDone, speed=20, onCountryClick}) {
   const [lineIdx,setLineIdx]=useState(0);
   const [charIdx,setCharIdx]=useState(0);
   const [displayed,setDisplayed]=useState([]);
@@ -341,11 +341,20 @@ function TypeWriter({lines, onDone, speed=20}) {
       return()=>clearTimeout(t);
     }else{const t=setTimeout(()=>{setLineIdx(l=>l+1);setCharIdx(0);},line.delay||280);return()=>clearTimeout(t);}
   },[lineIdx,charIdx,lines]);
+
+  const renderText=(l)=>{
+    if(done&&l.text.includes("22 Ländern")&&onCountryClick){
+      const parts=l.text.split("22 Ländern");
+      return <>{parts[0]}<span onClick={onCountryClick} style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>22 Ländern</span>{parts[1]}</>;
+    }
+    return l.text;
+  };
+
   return (
     <div style={{minHeight:220,display:"flex",flexDirection:"column"}}>
       {displayed.map((l,i)=>(
         <div key={i} style={{fontSize:l.size||14,fontWeight:l.weight||400,color:l.highlight?C.black:(l.color||C.black),letterSpacing:l.tracking||"-.01em",lineHeight:l.leading||1.7,marginBottom:l.mb||8,fontFamily:"'Inter',sans-serif",...(l.highlight?{display:"inline-block",background:C.neon,padding:"2px 10px 3px",borderRadius:6,marginLeft:-2}:{})}}>
-          {l.text}{i===lineIdx-1&&!done&&<span style={{opacity:cursor?1:0,color:l.highlight?C.black:C.neon,fontWeight:700,marginLeft:1}}>|</span>}
+          {renderText(l)}{i===lineIdx-1&&!done&&<span style={{opacity:cursor?1:0,color:l.highlight?C.black:C.neon,fontWeight:700,marginLeft:1}}>|</span>}
         </div>
       ))}
     </div>
@@ -381,13 +390,13 @@ function Intro({onNext}) {
   ];
 
   const lines=[
-    {text:"Die präziseste digitale Analyse für Supplements & Sportnahrung auf dem Markt",size:26,weight:700,tracking:"-.04em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Gemessen aus deinen Sport-, Gesundheits- & Leistungsdaten. Wissenschaftlich belegt.",size:14,weight:400,color:C.g800,leading:1.6,mb:28,delay:200},
+    {text:"Die präziseste Analyse für Supplements & Sportnahrung auf dem Markt",size:26,weight:700,tracking:"-.04em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Gemessen aus deinen Gesundheits- & Leistungsdaten. Wissenschaftlich belegt.",size:14,weight:400,color:C.g800,leading:1.6,mb:28,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:14,weight:700,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:14,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:14,weight:700,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:14,weight:400,color:C.g600,leading:1.65,mb:24,delay:180},
-    {text:"Auf Basis deiner Daten berechnet TREYN+ die optimalen Supplemente & Sportnahrung. Kostenlos verfügbar in",size:14,weight:400,color:C.g800,leading:1.7,mb:0,delay:160},
+    {text:"Auf Basis deiner Daten berechnet TREYN+ die optimalen Supplemente & Sportnahrung. Kostenlos verfügbar in 22 Ländern.",size:14,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
 
   return (
@@ -396,15 +405,9 @@ function Intro({onNext}) {
         <div style={{marginBottom:52,opacity:logoVisible?1:0,transform:logoVisible?"scale(1) translateY(0)":"scale(0.75) translateY(10px)",transition:"all .55s cubic-bezier(.34,1.56,.64,1)"}}>
           <Logo size="lg"/>
         </div>
-        {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)}/>}
+        {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)} onCountryClick={()=>setShowCountries(true)}/>}
         {btnVisible&&(
           <>
-            <div style={{fontSize:14,color:C.g800,lineHeight:1.7,marginTop:-8,marginBottom:0}}>
-              <span onClick={()=>setShowCountries(true)} style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>
-                22 Ländern
-              </span>
-              .
-            </div>
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <button className="btn btn-neon" style={{fontSize:15,padding:"14px 32px"}} onClick={onNext}>Analyse starten →</button>
