@@ -1078,7 +1078,8 @@ function calcPro(profilData, trainingData, sportData) {
   const bmr=Math.round(calcBMRfn(gender,w,h,age));
   if(healthOnly) return {bmr,withTraining:Math.round(bmr*1.2),trainingExtra:Math.round(bmr*0.2),
     restDay:bmr,trainingDay:Math.round(bmr*1.2),proteinMin:Math.round(w*1.2),proteinMax:Math.round(w*1.4),
-    carbsG:Math.round(w*3),natriumMg:0,magnesiumMg:300,sweatLitresPerSession:0,ironRisk:isFemale,isFemale,w};
+    carbsG:Math.round(w*3),natriumMg:0,magnesiumMg:300,sweatLitresPerSession:0,ironRisk:isFemale,isFemale,w,
+    waterMl:Math.round(w*35),fatBurnMin:Math.round((220-age)*0.60),fatBurnMax:Math.round((220-age)*0.70)};
   let totalKcal=0, totalSweat=0, totalNa=0, totalMg=0, maxProt=0, maxCarb=0, ironRisk=isFemale, totalDays=0;
   Object.entries(trainingData||{}).forEach(([id,d])=>{
     const intens=d.intensity||"medium", days=d.days||3, durH=(d.duration||60)/60;
@@ -1095,12 +1096,17 @@ function calcPro(profilData, trainingData, sportData) {
   });
   const daysPerWeek=Math.min(totalDays,7);
   const trainingDayKcal=Math.round(bmr+(totalKcal*7/Math.max(daysPerWeek,1)));
+  const waterMl = Math.round(w * 35 + (totalSweat * 1000 * 7) / 7);
+  const maxHR = Math.round(220 - age);
+  const fatBurnMin = Math.round(maxHR * 0.60);
+  const fatBurnMax = Math.round(maxHR * 0.70);
   return {
     bmr, withTraining:Math.round(bmr+totalKcal), trainingExtra:Math.round(totalKcal),
     restDay:bmr, trainingDay:trainingDayKcal,
     sweatLitresPerSession:+totalSweat.toFixed(1), natriumMg:Math.round(totalNa),
     magnesiumMg:Math.round(200+totalMg), proteinMin:Math.round(w*maxProt),
     proteinMax:Math.round(w*(maxProt+0.3)), carbsG:Math.round(w*maxCarb),
+    waterMl, fatBurnMin, fatBurnMax,
     ironRisk, isFemale, w,
   };
 }
@@ -1691,6 +1697,7 @@ const ALLERGEN_GROUPS = [
   {id:"schilddr",   label:"Schilddrüsenerkrankung",   icon:"🦋", ingredients:["Ashwagandha","Jod","Selen"]},
   {id:"nierenprob", label:"Nierenerkrankung",         icon:"🫘", ingredients:["Kreatin","Protein","Kalium","Phosphor"]},
   // Ernährungsweise
+  {id:"alles",         label:"Esse alles",              icon:"🥩", ingredients:[], category:"diet"},
   {id:"vegan",         label:"Vegan",                  icon:"🌱", ingredients:["Whey","Casein","Kollagen","Fischöl","Omega-3 (Fisch)","Gelatine","Honig"], category:"diet"},
   {id:"vegetarisch",   label:"Vegetarisch",             icon:"🥦", ingredients:["Gelatine","Fischöl","Kollagen (Tier)","Fisch"], category:"diet"},
   {id:"pescetarisch",  label:"Pescetarisch",            icon:"🐟", ingredients:["Fleisch","Rinderkollagen","Whey vom Rind"], category:"diet"},
@@ -1707,8 +1714,19 @@ function StepAllergien({onNext, onBack}) {
   const [noAllergens, setNoAllergens] = useState(false);
 
   const toggle = (id) => {
-    setNoAllergens(false);
-    setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s, id]);
+    const isDiet = ALLERGEN_GROUPS.find(g=>g.id===id)?.category==="diet";
+    if(!isDiet) setNoAllergens(false);
+    if(isDiet){
+      if(id==="alles"){
+        // Esse alles — exklusiv, deselektiert alles andere
+        setSelected(s => s.includes("alles") ? s.filter(x=>x!=="alles") : [...s.filter(x=>ALLERGEN_GROUPS.find(g=>g.id===x)?.category!=="diet"),"alles"]);
+      } else {
+        // Andere Ernährungsweisen — Esse alles entfernen, Rest multi-select
+        setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s.filter(x=>x!=="alles"),id]);
+      }
+    } else {
+      setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
+    }
   };
   const handleNoAllergens = () => {
     setNoAllergens(true);
@@ -1718,7 +1736,7 @@ function StepAllergien({onNext, onBack}) {
   };
 
   const hasDiet = selected.some(s => ALLERGEN_GROUPS.find(g=>g.id===s)?.category==="diet");
-  const canContinue = (noAllergens || selected.length > 0 || customTags.length > 0) && (hasDiet || noAllergens);
+  const canContinue = (noAllergens || selected.length > 0 || customTags.length > 0) && hasDiet;
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
@@ -1772,6 +1790,33 @@ function StepAllergien({onNext, onBack}) {
             })}
           </div>}
 
+          {/* Custom allergen input — hidden when no allergens */}
+          {!noAllergens&&(
+            <div style={{marginBottom:16}}>
+              <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Weitere Allergien / Medikamente (optional)</div>
+              <div style={{display:"flex",gap:6,marginBottom:6}}>
+                <input type="text" value={custom} onChange={e=>setCustom(e.target.value)}
+                  onKeyDown={e=>{if(e.key==="Enter"&&custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
+                  placeholder="z.B. Penicillin, Latexallergie..."
+                  style={{flex:1,padding:"10px 14px",border:`1.5px solid ${custom?C.neon:C.g200}`,borderRadius:11,fontSize:13,background:custom?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"}}/>
+                <button onClick={()=>{if(custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
+                  style={{padding:"10px 16px",background:custom.trim()?C.black:C.g200,color:custom.trim()?C.white:C.g400,border:"none",borderRadius:11,fontSize:13,fontWeight:500,cursor:custom.trim()?"pointer":"default",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap",transition:"all .14s"}}>
+                  + Hinzufügen
+                </button>
+              </div>
+              {customTags.length>0&&(
+                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                  {customTags.map((t,i)=>(
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:20,background:C.g100,border:`1px solid ${C.g200}`}}>
+                      <span style={{fontSize:12,color:C.black}}>{t}</span>
+                      <button onClick={()=>setCustomTags(tags=>tags.filter((_,j)=>j!==i))} style={{background:"none",border:"none",cursor:"pointer",color:C.g400,fontSize:14,lineHeight:1,padding:0}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div style={{fontSize:11,color:C.g400,marginBottom:10,fontWeight:500}}>Ernährungsweise: <span style={{color:C.red,fontSize:10}}>Pflichtfeld</span></div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
             {ALLERGEN_GROUPS.filter(a=>a.category==="diet").map(a=>{
@@ -1789,31 +1834,6 @@ function StepAllergien({onNext, onBack}) {
                 </div>
               );
             })}
-          </div>
-
-          {/* Custom input with add button */}
-          <div style={{marginBottom:24}}>
-            <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Weitere Allergien / Medikamente (optional)</div>
-            <div style={{display:"flex",gap:6,marginBottom:6}}>
-              <input type="text" value={custom} onChange={e=>setCustom(e.target.value)}
-                onKeyDown={e=>{if(e.key==="Enter"&&custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
-                placeholder="z.B. Penicillin, Latexallergie..."
-                style={{flex:1,padding:"10px 14px",border:`1.5px solid ${custom?C.neon:C.g200}`,borderRadius:11,fontSize:13,background:custom?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"}}/>
-              <button onClick={()=>{if(custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
-                style={{padding:"10px 16px",background:custom.trim()?C.black:C.g200,color:custom.trim()?C.white:C.g400,border:"none",borderRadius:11,fontSize:13,fontWeight:500,cursor:custom.trim()?"pointer":"default",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap",transition:"all .14s"}}>
-                + Hinzufügen
-              </button>
-            </div>
-            {customTags.length>0&&(
-              <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-                {customTags.map((t,i)=>(
-                  <div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:20,background:C.g100,border:`1px solid ${C.g200}`}}>
-                    <span style={{fontSize:12,color:C.black}}>{t}</span>
-                    <button onClick={()=>setCustomTags(tags=>tags.filter((_,j)=>j!==i))} style={{background:"none",border:"none",cursor:"pointer",color:C.g400,fontSize:14,lineHeight:1,padding:0}}>×</button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
           {selected.length>0&&(
@@ -1851,6 +1871,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
   const pro=calcPro(profilData,trainingData,sportData);
   const [showInfo,setShowInfo]=useState(false);
 
+  const scrollToCards=()=>{ document.getElementById('treyn-cards')?.scrollIntoView({behavior:'smooth',block:'start'}); };
   const openPro=()=>{ onUpgrade(); };
 
   const OK=({acid})=>(
@@ -1874,8 +1895,11 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
     {label:"Detaillierte Supplement-Empfehlungen",        basic:true,  pro:true},
     {label:"Detaillierte Sportnahrungs-Empfehlungen",     basic:true,  pro:true},
     {label:"Protein- & Kohlenhydratbedarf",               basic:true,  pro:true},
+    {label:"Wasserverbrauch / Tag",                       basic:false, pro:true},
+    {label:"Fettverbrennungszone",                        basic:false, pro:true},
+    {label:"Natrium-Verlust",                             basic:false, pro:true},
     {label:"Schweissverlust & Elektrolyte",               basic:false, pro:true},
-    {label:"Eisenbedarf-Prüfung",               basic:false, pro:true},
+    {label:"Eisenbedarf-Prüfung",                         basic:false, pro:true},
     {label:"Einnahme-Protokolle & Timing",                basic:false, pro:true},
     {label:"AI Chat (max. 3 Fragen/Tag)", proLabel:"Unlimited AI Chat", basic:true, pro:false},
   ];
@@ -1890,15 +1914,15 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           Deine Analyse — Nutze PRO für die genausten Werte. Einmalige Zahlung.
         </h2>
         <p style={{fontSize:13,color:C.g600,lineHeight:1.7,maxWidth:480}}>
-          Basic ist kostenlos und sofort nutzbar — mit PRO rechnen wir <strong style={{color:C.black,fontWeight:500}}>bis zu 92% genau</strong> und empfehlen die passgenauen Supplements & Sportnahrung exakt für deinen Körper, Einsatzbereich und Energieverbrauch.
+          Basic ist <strong style={{color:C.black,fontWeight:500}}>72% genau</strong> und wird aus Pauschalwerten berechnet — mit PRO rechnen wir zu <strong style={{color:C.black,fontWeight:500}}>92% genau</strong> und empfehlen die passgenauen Supplements & Sportnahrung exakt für deinen Körper, Einsatzbereich und Energieverbrauch.
         </p>
       </div>
 
       {/* Basic results — Google style */}
       <div className="fu3" style={{borderRadius:16,overflow:"hidden",border:"1px solid #E8E8E8",marginBottom:20,background:C.white}}>
         <div style={{padding:"14px 20px",borderBottom:"1px solid #F0F0F0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-          <span style={{fontSize:12,fontWeight:500,color:"#444"}}>Basic-Analyse deiner Sportarten & Intensitäten</span>
-          <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#F0F0F0",color:"#555",fontFamily:"JetBrains Mono,monospace",fontWeight:600,letterSpacing:".02em"}}>~75% GENAU</span>
+          <span style={{fontSize:12,fontWeight:500,color:"#444"}}>Basic-Analyse deiner Werte auf Pauschal-Berechnung</span>
+          <span style={{fontSize:11,color:"#AAA",fontWeight:400,letterSpacing:".01em"}}>~75% genau</span>
         </div>
         <div style={{padding:"20px"}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
@@ -1916,16 +1940,30 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
             <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
               <div style={{fontSize:10,color:"#888",marginBottom:2}}>Protein / Tag</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Schätzwert</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Sichtbar nach Auswahl</div>
             </div>
             <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
               <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kohlenhydrate / Tag</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Schätzwert</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Sichtbar nach Auswahl</div>
             </div>
           </div>
           <div style={{fontSize:11,color:"#AAA",fontStyle:"italic",marginBottom:16}}>±25% Fehler — pauschale Berechnung ohne sport-spezifische MET-Werte.</div>
+
+          {/* PRO-only preview cards — blurred */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Wasserverbrauch / Tag</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{pro?.waterMl?Math.round(pro.waterMl/100)/10:2.8}L</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Nur mit PRO</div>
+            </div>
+            <div style={{padding:"8px 12px",background:"#FAFAFA",borderRadius:10,border:"1px solid #F0F0F0"}}>
+              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Fettverbrennung</div>
+              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{pro?.fatBurnMin||110}–{pro?.fatBurnMax||128} bpm</div>
+              <div style={{fontSize:10,color:"#999",marginTop:1}}>Nur mit PRO</div>
+            </div>
+          </div>
 
           {/* PRO locked */}
           <div style={{borderRadius:12,overflow:"hidden",border:`1.5px solid ${C.neon}`}}>
@@ -1934,24 +1972,24 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span style={{fontSize:12,fontWeight:500,color:C.black}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
-              <span style={{fontSize:10,color:"rgba(0,0,0,.45)",fontFamily:"JetBrains Mono,monospace",fontWeight:600,whiteSpace:"nowrap",marginLeft:12}}>CHF 9.90 · Einmalig</span>
+              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 9.90 · Einmalig</span>
             </div>
             <div style={{padding:"14px 16px",background:"#FAFFF0"}}>
               <div style={{marginBottom:8,fontSize:10,color:"#999",letterSpacing:".02em"}}>Zusätzlich zu Basic:</div>
               <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
-                {["Exakte kcal via MET","Protein exakt","Kohlenhydrate exakt","Natrium-Verlust","Magnesium","Schweissverlust","Eisenbedarf-Prüfung","Protokolle","Unlimited AI Chat"].map(f=>(
+                {["Exakte kcal via MET","Protein exakt","Kohlenhydrate exakt","Wasserverbrauch / Tag","Fettverbrennungszone","Natrium-Verlust","Magnesium","Schweissverlust","Eisenbedarf-Prüfung","Protokolle","Unlimited AI Chat"].map(f=>(
                   <span key={f} style={{fontSize:11,padding:"3px 9px 3px 6px",borderRadius:20,background:"rgba(0,0,0,.06)",color:"#333",display:"inline-flex",alignItems:"center",gap:4}}><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="6" fill="#222"/><path d="M3.5 6l2 2 3-3" stroke="#C8FF00" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>{f}</span>
                 ))}
               </div>
-              <button onClick={openPro} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
-                {loadPro?"...":"PRO freischalten — CHF 9.90"}
+              <button onClick={scrollToCards} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
+                PRO freischalten — CHF 9.90 ↓
               </button>
+              <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
+                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC nutzen — CHF 4.90 ↓</span>
+              </div>
               <div style={{marginTop:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:8,border:"1px solid #F0F0F0",display:"flex",gap:10,alignItems:"flex-start"}}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <div>
-                  <div style={{fontSize:11,fontWeight:500,color:"#333",marginBottom:2}}>PRO — Einmalige Zahlung. Für immer.</div>
-                  <div style={{fontSize:11,color:"#888",lineHeight:1.55}}>Einmalig CHF 9.90 — Profil jederzeit anpassbar. Kein Abo, keine Folgekosten. Kein Passwort — du gelangst per E-Mail-Link zu deinem Profil.</div>
-                </div>
+                <div style={{fontSize:11,color:"#888",lineHeight:1.6}}><strong style={{color:"#333",fontWeight:600}}>Einmalige Zahlung. Für immer.</strong> Profil jederzeit anpassbar. Kein Abo, keine Folgekosten. Kein Passwort — per E-Mail-Link zu deinem Profil.</div>
               </div>
             </div>
           </div>
@@ -2039,14 +2077,16 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
         </div>
       )}
 
-      <div className="fu3" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18,alignItems:"start"}}>
+      <div id="treyn-cards" className="fu3" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18,alignItems:"start",scrollMarginTop:"24px"}}>
 
         {/* BASIC */}
         <div style={{border:"1px solid #E8E8E8",borderRadius:16,overflow:"hidden",display:"flex",flexDirection:"column"}}>
           <div style={{background:"#FAFAFA",padding:"14px 16px",borderBottom:"1px solid #F0F0F0"}}>
-            <div style={{fontSize:11,fontWeight:400,color:"#999",marginBottom:4}}>CHF 4.90 · Einmalige Zahlung</div>
-            <div style={{fontSize:22,fontWeight:600,color:C.black,marginBottom:8,letterSpacing:"-.02em"}}>BASIC</div>
-            <span style={{fontSize:10,color:"#999",letterSpacing:".02em"}}>~75% genau</span>
+            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:8}}>
+              <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>BASIC</div>
+              <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#EFEFEF",color:"#888",fontWeight:500,marginTop:3}}>~75% genau</span>
+            </div>
+            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 4.90 · Einmalige Zahlung</div>
           </div>
           <div style={{padding:"14px 16px",flex:1}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Schätzung</div>
@@ -2063,7 +2103,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           </div>
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
-              style={{width:"100%",background:C.black,color:C.white,border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+              style={{width:"100%",background:"#EBEBEB",color:"#555",border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
               Basic — CHF 4.90 →
             </button>
           </div>
@@ -2072,9 +2112,11 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
         {/* PRO */}
         <div style={{borderRadius:16,overflow:"hidden",border:`1.5px solid ${C.neon}`,display:"flex",flexDirection:"column",boxShadow:"0 4px 20px rgba(200,255,0,.15)"}}>
           <div style={{background:C.neon,padding:"14px 16px",borderBottom:"1px solid rgba(0,0,0,.08)"}}>
-            <div style={{fontSize:11,fontWeight:400,color:"rgba(0,0,0,.45)",marginBottom:4}}>CHF 9.90 · Einmalige Zahlung</div>
-            <div style={{fontSize:22,fontWeight:600,color:C.black,marginBottom:8,letterSpacing:"-.02em"}}>PRO</div>
-            <span style={{fontSize:10,padding:"3px 9px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontFamily:"JetBrains Mono,monospace"}}>~92% GENAU</span>
+            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",marginBottom:8}}>
+              <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>PRO</div>
+              <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontWeight:600,marginTop:3}}>~92% genau</span>
+            </div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400}}>CHF 9.90 · Einmalige Zahlung</div>
           </div>
           <div style={{padding:"14px 16px",flex:1,background:C.white}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Exaktberechnung</div>
@@ -2203,6 +2245,13 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
           <MetricCard label="Natrium-Verlust / Tag" value={isPro?`${proData.natriumMg.toLocaleString("de-CH")}`:"—"} unit={isPro?"mg":""} locked={!isPro} sub={isPro?"durch Schweiss":""}/>
           <MetricCard label="Magnesium-Bedarf" value={isPro?`${proData.magnesiumMg}`:"—"} unit={isPro?"mg":""} locked={!isPro} sub={isPro?"täglich":""}/>
+        </div>
+
+        {/* Körper & Leistung */}
+        <div style={{marginBottom:8,fontSize:12,fontWeight:500,color:C.g400,letterSpacing:".06em",textTransform:"uppercase"}}>Körper & Leistung</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
+          <MetricCard label="Wasserverbrauch / Tag" value={isPro&&proData?.waterMl?`${Math.round(proData.waterMl/100)/10}`:"—"} unit={isPro?"L":""} locked={!isPro} sub={isPro?"inkl. Trainingszuschlag":""}/>
+          <MetricCard label="Fettverbrennungszone" value={isPro&&proData?.fatBurnMin?`${proData.fatBurnMin}–${proData.fatBurnMax}`:"—"} unit={isPro?"bpm":""} locked={!isPro} sub={isPro?"60–70% Herzfrequenz":""}/>
         </div>
 
         {/* Training */}
