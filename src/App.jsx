@@ -1771,53 +1771,69 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
       <div className="fu2" style={{marginBottom:20}}>
         <div className="mono" style={{marginBottom:6}}>Deine Analyse{fname?` · ${fname}`:""}</div>
         <h2 style={{fontSize:21,fontWeight:700,letterSpacing:"-.03em",lineHeight:1.25,marginBottom:10}}>
-          Deine Analyse — upgrade zu PRO für die präzisesten Werte!
+          Deine Analyse — wechsle zu PRO für die genausten Daten & Werte!
         </h2>
         <p style={{fontSize:13,color:C.g600,lineHeight:1.7}}>
           Basic ist kostenlos und sofort nutzbar — mit PRO rechnet TREYN+ <strong style={{color:C.black}}>bis zu 3× genauer</strong> und empfiehlt die passgenauen Supplements und Sportnahrung exakt für deinen Körper.
         </p>
       </div>
 
-      {/* Basic results teaser — real numbers, PRO locked */}
+      {/* Basic results — kcal + protein + carbs visible */}
       <div className="fu3" style={{borderRadius:14,overflow:"hidden",border:`1px solid ${C.g200}`,marginBottom:18}}>
         <div style={{background:C.g100,padding:"11px 16px",borderBottom:`1px solid ${C.g200}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <span style={{fontSize:11,fontWeight:600,color:C.black}}>Deine Basis-Analyse · {sportLabel}{!healthOnly?` · ${intensityLabel}`:""}</span>
-          <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:C.g200,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>BASIC</span>
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,149,0,.12)",color:C.orange,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>~75% GENAU</span>
+            <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:C.g200,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>BASIC</span>
+          </div>
         </div>
         <div style={{padding:"14px 16px",background:C.white}}>
-          {/* Visible Basic values */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+          {/* kcal */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
             <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>GRUNDUMSATZ</div>
+              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>GRUNDUMSATZ</div>
               <div style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{basic.bmr.toLocaleString("de-CH")}</div>
               <div style={{fontSize:10,color:C.g400}}>kcal / Tag</div>
             </div>
             <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
-              <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>GESCHÄTZTER BEDARF</div>
-              <div style={{fontSize:22,fontWeight:800,color:C.g400,letterSpacing:"-.04em"}}>{basic.withTraining.toLocaleString("de-CH")}</div>
-              <div style={{fontSize:10,color:C.g400}}>kcal · ±25% Fehler</div>
+              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>MIT TRAINING</div>
+              <div style={{fontSize:22,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{basic.withTraining.toLocaleString("de-CH")}</div>
+              <div style={{fontSize:10,color:C.g400}}>kcal / Tag</div>
             </div>
           </div>
-
-          {/* PRO locked values */}
-          <div style={{position:"relative",marginBottom:0}}>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,filter:"blur(6px)",userSelect:"none",pointerEvents:"none"}}>
-              {[
-                {l:"Protein",v:`${pro.proteinMin}–${pro.proteinMax}g`},
-                {l:"Natrium",v:`${pro.natriumMg.toLocaleString("de-CH")}mg`},
-                {l:"Magnesium",v:`${pro.magnesiumMg}mg`},
-              ].map((m,i)=>(
-                <div key={i} style={{padding:"10px 10px",background:C.neonDim,borderRadius:9,textAlign:"center",border:`1px solid ${C.neonBorder}`}}>
-                  <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2,textTransform:"uppercase"}}>{m.l}</div>
-                  <div style={{fontSize:16,fontWeight:800,color:C.black}}>{m.v}</div>
-                </div>
-              ))}
+          {/* Protein + Carbs — basic estimate */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
+              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>PROTEIN / TAG</div>
+              <div style={{fontSize:18,fontWeight:800,color:C.black,letterSpacing:"-.03em"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
+              <div style={{fontSize:10,color:C.g400}}>Schätzwert</div>
             </div>
-            <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.75)"}}>
-              <div style={{textAlign:"center"}}>
-                <div style={{fontSize:11,fontWeight:700,color:C.black,marginBottom:4}}>🔒 Nur mit PRO · CHF 6.90</div>
-                <div style={{fontSize:10,color:C.g600}}>Protein, Elektrolyte, Schweissverlust</div>
+            <div style={{padding:"12px 14px",background:C.g100,borderRadius:10}}>
+              <div style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:2}}>KOHLENHYDRATE / TAG</div>
+              <div style={{fontSize:18,fontWeight:800,color:C.black,letterSpacing:"-.03em"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
+              <div style={{fontSize:10,color:C.g400}}>Schätzwert</div>
+            </div>
+          </div>
+          <div style={{fontSize:10,color:C.g400,fontStyle:"italic",marginBottom:12}}>±25% Fehler — pauschale Berechnung ohne sport-spezifische MET-Werte.</div>
+
+          {/* PRO locked */}
+          <div style={{borderRadius:11,overflow:"hidden",border:`1.5px solid ${C.neon}`}}>
+            <div style={{background:C.black,padding:"8px 12px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:7}}>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.neon} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <span style={{fontSize:10,fontWeight:700,color:C.white}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
+              <span style={{fontSize:9,color:C.neon,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>CHF 6.90 · Einmalig</span>
+            </div>
+            <div style={{padding:"10px 12px",background:C.neonDim}}>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:8}}>
+                {["Exakte kcal via MET-Werte","Protein exakt","Kohlenhydrate exakt","Natrium-Verlust","Magnesium-Bedarf","Schweissverlust","Eisenbedarf-Prüfung","Einnahme-Protokolle","Unlimited AI Chat"].map(f=>(
+                  <span key={f} style={{fontSize:10,padding:"3px 8px",borderRadius:5,background:"rgba(0,0,0,.07)",color:C.black,fontFamily:"JetBrains Mono,monospace"}}>{f}</span>
+                ))}
+              </div>
+              <button onClick={openPro} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:8,padding:"10px",fontSize:13,fontWeight:800,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                {loadPro?"...":"PRO freischalten — CHF 6.90 →"}
+              </button>
             </div>
           </div>
         </div>
@@ -2018,7 +2034,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
 // ─── RESULTS ─────────────────────────────────────────────────────────────────
 
 function Results({sportData,trainingData,profilData,allergenData,tier,onReset,onUpgrade}) {
-  const [tab,setTab]=useState("supplements");
+  const [tab,setTab]=useState("verbrauch");
   const isPro=tier==="pro";
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
@@ -2035,8 +2051,8 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
   const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
 
   const NAV=[
+    {id:"verbrauch",   label:"Übersicht",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
     {id:"supplements", label:"Supplements",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
-    {id:"verbrauch",   label:"Verbrauch",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-4 5"/></svg>},
     {id:"nutrition",   label:"Sportnahrung",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>},
     {id:"shop",        label:"Shop",            icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
     {id:"bluttest",    label:"Bluttest",        icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>, badge:true},
@@ -2066,64 +2082,85 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
   };
 
   // ── VERBRAUCH TAB ──────────────────────────────────────────────────────────
-  const VerbrauchTab=()=>(
-    <div>
-      <div style={{marginBottom:16,padding:"20px 22px",background:C.neon,borderRadius:14}}>
-        <div className="mono" style={{color:"rgba(0,0,0,.45)",marginBottom:8}}>Deine Analyse · {isPro?"PRO":"Basic"}</div>
-        <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:14}}>
-          <span style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{sportLabel}</span>
-          {!healthOnly&&<><span style={{color:"rgba(0,0,0,.3)"}}>·</span><span style={{fontSize:14,fontWeight:600,color:C.black}}>{intensityLabel}</span></>}
-        </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:isPro?8:0}}>
-          <div style={{background:"rgba(0,0,0,.07)",borderRadius:10,padding:"14px 16px"}}>
-            <div style={{fontSize:9,color:"rgba(0,0,0,.45)",marginBottom:4,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase"}}>Grundumsatz</div>
-            <div style={{fontSize:26,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{kcal.bmr.toLocaleString("de-CH")}</div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>kcal / Tag</div>
+  const VerbrauchTab=()=>{
+    const LockIcon=()=><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0}}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+
+    const MetricCard=({label,value,unit,locked,sub})=>(
+      <div style={{padding:"16px 18px",background:C.white,borderRadius:12,border:`1px solid ${locked?"#E8E8E8":C.g200}`}}>
+        <div style={{fontSize:11,color:C.g400,marginBottom:4,letterSpacing:".02em"}}>{label}</div>
+        {locked?(
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            <LockIcon/>
+            <span style={{fontSize:12,color:C.g400}}>Nur mit PRO</span>
+            <button onClick={onUpgrade} style={{marginLeft:"auto",fontSize:10,padding:"2px 8px",borderRadius:5,background:C.neon,color:C.black,border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:600}}>Upgrade</button>
           </div>
-          <div style={{background:"rgba(0,0,0,.07)",borderRadius:10,padding:"14px 16px"}}>
-            <div style={{fontSize:9,color:"rgba(0,0,0,.45)",marginBottom:4,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase"}}>{isPro?"Trainingstag Ø":"Mit Training"}</div>
-            <div style={{fontSize:26,fontWeight:800,color:C.black,letterSpacing:"-.04em"}}>{kcal.withTraining.toLocaleString("de-CH")}</div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>kcal / Tag</div>
-          </div>
+        ):(
+          <>
+            <div style={{fontSize:26,fontWeight:500,color:C.black,letterSpacing:"-.03em",lineHeight:1.1}}>{value}<span style={{fontSize:14,fontWeight:400,color:C.g400,marginLeft:3}}>{unit}</span></div>
+            {sub&&<div style={{fontSize:11,color:C.g400,marginTop:3}}>{sub}</div>}
+          </>
+        )}
+      </div>
+    );
+
+    return (
+      <div>
+        <h2 style={{fontSize:22,fontWeight:400,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Übersicht</h2>
+        <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.6}}>{sportLabel}{!healthOnly?` · ${intensityLabel}`:""} · {isPro?"PRO — Sport-spezifische Berechnungen":"Basic — Pauschale Schätzwerte"}</p>
+
+        {/* Energie */}
+        <div style={{marginBottom:8,fontSize:12,fontWeight:500,color:C.g400,letterSpacing:".06em",textTransform:"uppercase"}}>Energie</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
+          <MetricCard label="Grundumsatz" value={kcal.bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training"/>
+          <MetricCard label={isPro?"Trainingstag":"Mit Training (Schätzung)"} value={kcal.withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"BMR × 1.5 · ±25%"}/>
         </div>
-        {isPro&&proData&&(
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
-            {[
-              {l:"Protein",v:`${proData.proteinMin}–${proData.proteinMax}g`,s:"täglich"},
-              {l:"Natrium",v:`${proData.natriumMg.toLocaleString("de-CH")}mg`,s:"Verlust"},
-              {l:"Magnesium",v:`${proData.magnesiumMg}mg`,s:"Bedarf"},
-            ].map(m=>(
-              <div key={m.l} style={{background:"rgba(0,0,0,.07)",borderRadius:10,padding:"10px 12px"}}>
-                <div style={{fontSize:9,color:"rgba(0,0,0,.4)",fontFamily:"JetBrains Mono,monospace",textTransform:"uppercase",marginBottom:3}}>{m.l}</div>
-                <div style={{fontSize:15,fontWeight:700,color:C.black}}>{m.v}</div>
-                <div style={{fontSize:9,color:"rgba(0,0,0,.4)"}}>{m.s}</div>
+
+        {/* Makronährstoffe */}
+        <div style={{marginBottom:8,fontSize:12,fontWeight:500,color:C.g400,letterSpacing:".06em",textTransform:"uppercase"}}>Makronährstoffe</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
+          <MetricCard label="Protein / Tag" value={isPro?`${proData.proteinMin}–${proData.proteinMax}`:`${Math.round((profilData?.weight||75)*1.4)}–${Math.round((profilData?.weight||75)*1.8)}`} unit="g" sub={isPro?"Sport-spezifisch berechnet":"Schätzwert"}/>
+          <MetricCard label="Kohlenhydrate / Tag" value={isPro?`${proData.carbsG}`:`${Math.round(kcal.withTraining*0.45/4)}–${Math.round(kcal.withTraining*0.55/4)}`} unit="g" sub={isPro?"Exakt berechnet":"Schätzwert"}/>
+        </div>
+
+        {/* Elektrolyte & Mineralien — PRO locked if basic */}
+        <div style={{marginBottom:8,fontSize:12,fontWeight:500,color:C.g400,letterSpacing:".06em",textTransform:"uppercase"}}>Elektrolyte & Mineralien</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
+          <MetricCard label="Natrium-Verlust / Tag" value={isPro?`${proData.natriumMg.toLocaleString("de-CH")}`:"—"} unit={isPro?"mg":""} locked={!isPro} sub={isPro?"durch Schweiss":""}/>
+          <MetricCard label="Magnesium-Bedarf" value={isPro?`${proData.magnesiumMg}`:"—"} unit={isPro?"mg":""} locked={!isPro} sub={isPro?"täglich":""}/>
+        </div>
+
+        {/* Training */}
+        <div style={{marginBottom:8,fontSize:12,fontWeight:500,color:C.g400,letterSpacing:".06em",textTransform:"uppercase"}}>Training</div>
+        <div style={{borderRadius:12,border:`1px solid ${C.g200}`,overflow:"hidden",marginBottom:24}}>
+          {Object.entries(trainingData||{}).map(([id,d],i,arr)=>{
+            const s=SPORT_GROUPS.find(g=>g.id===id);
+            const intLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[d.intensity]||"Mittel";
+            return (
+              <div key={id} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",borderBottom:i<arr.length-1?`1px solid ${C.g100}`:"none",background:C.white}}>
+                <div>
+                  <div style={{fontSize:14,fontWeight:500,color:C.black,marginBottom:2}}>{s?.label||id}</div>
+                  <div style={{fontSize:12,color:C.g400}}>{intLabel} · Ø {d.duration} min{d.hasCompetition?` · ${d.compCount} Wettkämpfe/Jahr`:""}</div>
+                </div>
+                <div style={{fontSize:13,fontWeight:500,color:C.black}}>{d.days}× / Woche</div>
               </div>
-            ))}
+            );
+          })}
+        </div>
+
+        {!isPro&&(
+          <div style={{padding:"16px 18px",background:"#F8F9FA",borderRadius:12,border:"1px solid #E8E8E8",display:"flex",alignItems:"center",gap:14}}>
+            <div style={{flex:1}}>
+              <div style={{fontSize:14,fontWeight:500,color:C.black,marginBottom:3}}>Präzisere Daten mit PRO</div>
+              <div style={{fontSize:12,color:C.g600,lineHeight:1.5}}>Natrium, Magnesium, exakter Protein- & Kohlenhydratbedarf — sport-spezifisch berechnet. ~92% Genauigkeit.</div>
+            </div>
+            <button onClick={onUpgrade} style={{background:C.black,color:C.white,border:"none",borderRadius:9,padding:"10px 16px",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,whiteSpace:"nowrap"}}>
+              PRO · CHF 6.90
+            </button>
           </div>
         )}
-        {!isPro&&<div style={{marginTop:8,fontSize:11,color:"rgba(0,0,0,.5)"}}>Basic: pauschale Schätzung. <span style={{fontWeight:600,cursor:"pointer"}} onClick={onUpgrade}>→ PRO für sport-spezifische Berechnung</span></div>}
       </div>
-      {/* Training details */}
-      <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden"}}>
-        <div style={{background:C.g100,padding:"10px 16px",borderBottom:`1px solid ${C.g200}`}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.black}}>Trainingsübersicht</span>
-        </div>
-        {Object.entries(trainingData||{}).map(([id,d])=>{
-          const s=SPORT_GROUPS.find(g=>g.id===id);
-          const intLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[d.intensity]||"Mittel";
-          return (
-            <div key={id} style={{padding:"12px 16px",borderBottom:`1px solid ${C.g100}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div>
-                <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2}}>{s?.label||id}</div>
-                <div style={{fontSize:11,color:C.g400}}>{intLabel} · Ø {d.duration} min{d.hasCompetition?` · ${d.compCount} Wettkämpfe/Jahr`:""}</div>
-              </div>
-              <span className="chip">{d.days}× / Woche</span>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+    );
+  };
 
   // ── PROFIL TAB ─────────────────────────────────────────────────────────────
   const ProfilTab=()=>{
