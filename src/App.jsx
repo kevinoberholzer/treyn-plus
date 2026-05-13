@@ -69,6 +69,7 @@ const SPORT_GROUPS = [
   ]},
   {id:"fussball",          label:"Fussball",          icon:"FOOT",  subs:null},
   {id:"eishockey",         label:"Eishockey",         icon:"ICE",   subs:null},
+  {id:"tennis",            label:"Tennis",            icon:"TENNIS",subs:null},
   {id:"ski_snow", label:"Ski / Snowboard", icon:"SKI", subs:[
     {id:"ski_alpin",   label:"Alpin",                   children:null},
     {id:"ski_freeride",label:"Freeride",                children:null},
@@ -80,7 +81,6 @@ const SPORT_GROUPS = [
     {id:"skating", label:"Skating", children:null},
     {id:"biathlon",label:"Biathlon",children:null},
   ]},
-  {id:"tennis",            label:"Tennis",            icon:"TENNIS",subs:null},
   {id:"handball_vball", label:"Handball & Volleyball", icon:"HAND", subs:[
     {id:"handball",   label:"Handball",        children:null},
     {id:"volleyball", label:"Volleyball",      children:null},
@@ -107,11 +107,11 @@ const COMPETITION_TYPES = {
 };
 
 const COMPETITION_LABEL = {
-  cycling:"Rennen",running:"Rennen",triathlon:"Rennen",schwimmen:"Wettkämpfe",
-  fussball:"Spiele & Turniere",eishockey:"Spiele & Turniere",
-  fitness:"Wettkämpfe",ski_snow:"Rennen & Contests",langlauf:"Rennen",
-  golf:"Turniere",basketball:"Spiele & Turniere",american_football:"Spiele & Turniere",
-  handball_vball:"Spiele & Turniere",tennis:"Turniere",
+  cycling:"Wettkämpfe / Rennen",running:"Wettkämpfe / Rennen",triathlon:"Wettkämpfe / Rennen",schwimmen:"Wettkämpfe",
+  fussball:"Wettkämpfe / Spiele",eishockey:"Wettkämpfe / Spiele",
+  fitness:"Wettkämpfe",ski_snow:"Wettkämpfe / Rennen",langlauf:"Wettkämpfe / Rennen",
+  golf:"Turniere",basketball:"Wettkämpfe / Spiele",american_football:"Wettkämpfe / Spiele",
+  handball_vball:"Wettkämpfe / Spiele",tennis:"Wettkämpfe / Spiele",
 };
 
 // ─── SVG ICONS ────────────────────────────────────────────────────────────────
@@ -142,11 +142,14 @@ function SportIcon({icon, active, size=18}) {
 // ─── AFFILIATE LINKS ──────────────────────────────────────────────────────────
 
 const AFF = {
-  iherb:     q    => `https://iherb.com/search?kw=${encodeURIComponent(q)}&rcode=DEIN_CODE`,
-  maurten:   slug => `https://www.maurten.com/products/${slug}?ref=DEIN_CODE`,
-  mnstry:    slug => `https://mnstry.com/products/${slug}?ref=DEIN_CODE`,
-  myprotein: q    => `https://www.myprotein.com/search?query=${encodeURIComponent(q)}&affil=DEIN_CODE`,
-  sponser:   q    => `https://www.sponser.ch/de/search?q=${encodeURIComponent(q)}`,
+  iherb:       q    => `https://iherb.com/search?kw=${encodeURIComponent(q)}&rcode=DEIN_CODE`,
+  maurten:     slug => `https://www.maurten.com/products/${slug}?ref=DEIN_CODE`,
+  mnstry:      slug => `https://mnstry.com/products/${slug}?ref=DEIN_CODE`,
+  myprotein:   q    => `https://www.myprotein.com/search?query=${encodeURIComponent(q)}&affil=DEIN_CODE`,
+  sponser:     q    => `https://www.sponser.ch/de/search?q=${encodeURIComponent(q)}`,
+  esn:         slug => `https://www.esn.com/products/${slug}?ref=DEIN_CODE`,
+  morenutrition: slug => `https://www.more-nutrition.de/products/${slug}?ref=DEIN_CODE`,
+  galaxus:     q    => `https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(q)}&tagIds=1394`,
 };
 
 const BASIS = [
@@ -387,13 +390,13 @@ function Intro({onNext, onDemo}) {
   ];
 
   const lines=[
-    {text:"Die präziseste Plattform für Leistungsdaten, Supplements & Sportnahrung auf dem Markt. Vollkommen automatisiert.",size:26,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Gemessen aus deinen Gesundheits- & Leistungsdaten. Wissenschaftlich belegt.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"Die präziseste Gesundheits- & Leistungsanalyse für Vitamine, Supplemente und Sportnahrung.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Berechnet aus genausten MET-Werten. 100% Personalisiert. Wissenschaftlich belegt.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
-    {text:"Auf Basis deiner Daten berechnet TREYN+ die optimalen Supplemente & Sportnahrung. Ab sofort verfügbar in 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Auf Basis deiner Daten berechnet TREYN+ deine Bedarfswerte und optimalen Supplemente & Sportnahrung. Kostenlos verfügbar in 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
 
   return (
@@ -407,9 +410,9 @@ function Intro({onNext, onDemo}) {
           <>
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
-              <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <div style={{display:"flex",alignItems:"center",gap:12}}>
                 <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>Analyse starten →</button>
-                <button onClick={onDemo} style={{padding:"14px 20px",borderRadius:12,border:"1px solid #E0E0E0",background:"#F5F5F5",color:"#666",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>Demo ansehen</button>
+                <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos verfügbar.</span>
               </div>
             </div>
           </>
@@ -520,14 +523,11 @@ function Demo({onNext, onDemo}) {
           <div style={{height:1,flex:1,background:C.g200}}/>
         </div>
         <div className="fu5">
+          <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",marginBottom:10}}>
+            Demo-Plattform ausprobieren →
+          </button>
           <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px"}} onClick={onNext}>Analyse starten →</button>
-          <div style={{textAlign:"center",marginTop:10,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
-          <div style={{marginTop:16,paddingTop:16,borderTop:`1px solid ${C.g200}`}}>
-            <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:"1px solid #E0E0E0",background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Demo-Dashboard ansehen →
-            </button>
-            <div style={{textAlign:"center",marginTop:6,fontSize:10,color:C.g400}}>Musterprofil · Alle PRO-Features sichtbar</div>
-          </div>
+          <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
         </div>
       </div>
     </div>
@@ -778,7 +778,7 @@ function StepTraining({sportData,onNext,onBack}) {
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:d.hasCompetition?14:0}}>
                       <div>
                         <div style={{fontSize:12,fontWeight:500}}>{compLabel}</div>
-                        <div style={{fontSize:11,color:C.g400,marginTop:1}}>Regelmässige {compLabel.toLowerCase()} oder Events</div>
+                        <div style={{fontSize:11,color:C.g400,marginTop:1}}>Nimmst du an {compLabel.toLowerCase() === "rennen" ? "Rennen oder Wettkämpfen" : compLabel.toLowerCase() === "spiele" ? "Spielen oder Turnieren" : "Wettkämpfen, Spielen oder Events"} teil?</div>
                       </div>
                       <div onClick={()=>upd(id,"hasCompetition",!d.hasCompetition)}
                         style={{width:44,height:26,background:d.hasCompetition?C.black:C.g200,borderRadius:100,position:"relative",cursor:"pointer",transition:"background .18s",flexShrink:0}}>
@@ -1028,7 +1028,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:32}}>
             <button className="btn-ghost" onClick={onBack}>← Zurück</button>
             <button className="btn btn-black" style={{opacity:valid?1:.4}} disabled={!valid} onClick={()=>valid&&onNext({...form,platform})}>
-              Berechnungen anzeigen →
+              Weiter →
             </button>
           </div>
         </div>
@@ -1147,7 +1147,7 @@ function calcPro(profilData, trainingData, sportData) {
 }
 
 function calcKcal(profilData, trainingData, healthOnly) {
-  return calcBasic(profilData, trainingData, healthOnly);
+  return calcPro(profilData, trainingData, sportData);
 }
 
 function buildProfile(sportData, trainingData, profilData) {
@@ -1331,30 +1331,9 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
   const hasSynergy=interactions.some(i=>i.type==="synergy");
   return (
     <div style={{border:`1px solid ${hasAllergen?"rgba(255,59,48,.35)":isPrimary?C.g400:C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:hasAllergen?"rgba(255,59,48,.02)":C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0}}>
-      {/* BEST / BUDGET Toggle — nur wenn Budget-Alternative vorhanden */}
-      {s.budget&&(
-        <div style={{display:"flex",borderRadius:8,background:"#F0F0F0",padding:2,marginBottom:12,width:"100%"}}>
-          <button onClick={e=>{e.stopPropagation();setShowBudget(false);}}
-            style={{flex:1,padding:"5px 0",borderRadius:6,border:"none",background:showBudget?"transparent":C.black,color:showBudget?"#888":C.neon,fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"JetBrains Mono,monospace",transition:"all .15s",letterSpacing:".04em"}}>
-            ★ Höchste Qualität
-          </button>
-          <button onClick={e=>{e.stopPropagation();setShowBudget(true);}}
-            style={{flex:1,padding:"5px 0",borderRadius:6,border:"none",background:showBudget?C.black:"transparent",color:showBudget?C.neon:"#888",fontSize:10,fontWeight:700,cursor:"pointer",fontFamily:"JetBrains Mono,monospace",transition:"all .15s",letterSpacing:".04em"}}>
-            💰 BUDGET
-          </button>
-        </div>
-      )}
-      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:8}}>
-        {/* Product image */}
-        {s.barcode&&(
-          <div style={{width:52,height:52,borderRadius:10,border:"1px solid #EBEBEB",background:"#FAFAFA",flexShrink:0,overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
-            {imgUrl&&!imgErr?(
-              <img src={imgUrl} alt={s.name} onError={()=>setImgErr(true)} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
-            ):(
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#CCC" strokeWidth="1.5" strokeLinecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
-            )}
-          </div>
-        )}
+
+      {/* Header: Name + Toggle Switch */}
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
         <div style={{flex:1}}>
           <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginBottom:4}}>
             {isPrimary&&<span className="chip hi" style={{fontSize:9}}>ZWINGEND</span>}
@@ -1363,25 +1342,57 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
             {hasConflict&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,59,48,.1)",color:C.red,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>⚠ INTERAKTION</span>}
             {hasSynergy&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(52,199,89,.1)",color:C.green,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>✓ SYNERGIE</span>}
             {hasAllergen&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,59,48,.12)",color:C.red,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>⚠ ALLERGEN</span>}
-            <span className="mono" style={{fontSize:9}}>{s.when}</span>
           </div>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:2}}>
-            <div style={{fontSize:15,fontWeight:700,letterSpacing:"-.02em"}}>{active.name||s.name}</div>
-          </div>
-          <div style={{fontSize:11,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>{active.dose||s.dose}</div>
+          <div style={{fontSize:15,fontWeight:700,letterSpacing:"-.02em",marginBottom:2}}>{active.name||s.name}</div>
+          <div style={{fontSize:11,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>{active.dose||s.dose} · {s.when}</div>
         </div>
         <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
-                  <a href={active.link||s.link} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:4,background:sc.bg,color:sc.text,padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none",whiteSpace:"nowrap"}}>{active.shop||s.shop} ↗</a>
-                  {!["iHerb","Maurten","MNSTRY","Myprotein","Sponser","ESN","More Nutrition"].includes(active.shop||s.shop)&&(
-                    <a href={`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(s.name)}`} target="_blank" rel="noopener noreferrer" style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none",whiteSpace:"nowrap"}}>Galaxus ↗</a>
-                  )}
-                  {s.productUrl&&<a href={s.productUrl} target="_blank" rel="noopener noreferrer" style={{fontSize:8,color:C.g400,fontFamily:"JetBrains Mono,monospace",textDecoration:"underline",textDecorationStyle:"dotted",whiteSpace:"nowrap"}}>Nährwerte & Inhaltsstoffe ↗</a>}
-                  <span style={{fontSize:8,color:{"iHerb":C.green,"Maurten":C.green,"MNSTRY":C.green,"Myprotein":C.green,"Sponser":C.green}[s.shop]||C.g400,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>{{"iHerb":"PARTNER","Maurten":"PARTNER","MNSTRY":"PARTNER","Myprotein":"PARTNER","Sponser":"PARTNER"}[s.shop]||"EXTERN"}</span>
-                </div>
+          {s.barcode&&(
+            <div style={{width:44,height:44,borderRadius:8,border:"1px solid #EBEBEB",background:"#FAFAFA",overflow:"hidden",display:"flex",alignItems:"center",justifyContent:"center"}}>
+              {imgUrl&&!imgErr?(
+                <img src={imgUrl} alt={s.name} onError={()=>setImgErr(true)} style={{width:"100%",height:"100%",objectFit:"contain"}}/>
+              ):(
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#DDD" strokeWidth="1.5" strokeLinecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-      <div style={{fontSize:13,color:C.g800,lineHeight:1.6,marginBottom:4}}>{showBudget&&s.budget?s.budget.why:(s.personalWhy||s.why)}</div>
-      {showBudget&&s.budget?.price&&<div style={{fontSize:11,color:"#4A7000",fontWeight:600,marginBottom:p?8:4}}>💰 {s.budget.price}</div>}
-      {s.tags&&<div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:p?8:0}}>{s.tags.map(t=><span key={t} className="chip">{t}</span>)}</div>}
+
+      {/* Why — prominent */}
+      <div style={{fontSize:13,color:C.g800,lineHeight:1.65,marginBottom:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:9,borderLeft:`3px solid ${isPrimary?C.neon:C.g300}`}}>
+        {showBudget&&s.budget?s.budget.why:(s.personalWhy||s.why)}
+      </div>
+
+      {/* Budget/Quality Toggle Switch — nur wenn Budget vorhanden */}
+      {s.budget&&(
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderRadius:9,background:"#F8F8F8",marginBottom:10}}>
+          <span style={{fontSize:11,fontWeight:showBudget?400:700,color:showBudget?C.g400:C.black}}>★ Höchste Qualität</span>
+          <div onClick={e=>{e.stopPropagation();setShowBudget(b=>!b);}}
+            style={{width:36,height:20,borderRadius:10,background:showBudget?"#4A7000":"#CCC",cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
+            <div style={{position:"absolute",top:2,left:showBudget?18:2,width:16,height:16,borderRadius:"50%",background:"#fff",transition:"left .2s",boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
+          </div>
+          <span style={{fontSize:11,fontWeight:showBudget?700:400,color:showBudget?C.black:C.g400}}>💰 Budget</span>
+        </div>
+      )}
+      {showBudget&&s.budget?.price&&<div style={{fontSize:11,color:"#4A7000",fontWeight:600,marginBottom:8}}>Preis: {s.budget.price}</div>}
+
+      {/* Shop buttons */}
+      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
+        <a href={active.link||s.link} target="_blank" rel="noopener noreferrer"
+          style={{display:"inline-flex",alignItems:"center",gap:4,background:sc.bg,color:sc.text,padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none"}}>
+          {active.shop||s.shop} ↗
+        </a>
+        {!["iHerb","Maurten","MNSTRY","Myprotein","Sponser","ESN","More Nutrition"].includes(active.shop||s.shop)&&(
+          <a href={`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(s.name)}`} target="_blank" rel="noopener noreferrer"
+            style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
+            Galaxus ↗
+          </a>
+        )}
+        {s.productUrl&&<a href={s.productUrl} target="_blank" rel="noopener noreferrer" style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",textDecoration:"underline",textDecorationStyle:"dotted"}}>Nährwerte ↗</a>}
+      </div>
+
+      {s.tags&&<div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>{s.tags.map(t=><span key={t} className="chip">{t}</span>)}</div>}
 
       {/* Allergen warnings */}
       {allergenWarnings.map((w,i)=>(
@@ -1790,156 +1801,256 @@ const ALLERGEN_GROUPS = [
   {id:"glutenfrei",    label:"Glutenfrei (Präferenz)",  icon:"🚫", ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"], category:"diet"},
 ];
 
-function StepAllergien({onNext, onBack}) {
-  const [selected, setSelected] = useState([]);
-  const [custom, setCustom] = useState("");
-  const [customTags, setCustomTags] = useState([]);
-  const [noAllergens, setNoAllergens] = useState(false);
-
-  const toggle = (id) => {
-    const isDiet = ALLERGEN_GROUPS.find(g=>g.id===id)?.category==="diet";
-    if(!isDiet) setNoAllergens(false);
-    if(isDiet){
-      if(id==="alles"){
-        // Esse alles — exklusiv, deselektiert alles andere
-        setSelected(s => s.includes("alles") ? s.filter(x=>x!=="alles") : [...s.filter(x=>ALLERGEN_GROUPS.find(g=>g.id===x)?.category!=="diet"),"alles"]);
-      } else {
-        // Andere Ernährungsweisen — Esse alles entfernen, Rest multi-select
-        setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s.filter(x=>x!=="alles"),id]);
-      }
-    } else {
-      setSelected(s => s.includes(id) ? s.filter(x=>x!==id) : [...s,id]);
-    }
-  };
-  const handleNoAllergens = () => {
-    setNoAllergens(true);
-    setSelected([]);
-    setCustomTags([]);
-    setCustom("");
-  };
-
-  const hasDiet = selected.some(s => ALLERGEN_GROUPS.find(g=>g.id===s)?.category==="diet");
-  const canContinue = (noAllergens || selected.length > 0 || customTags.length > 0) && hasDiet;
+function StepWillkommen({onNext}) {
+  useEffect(()=>{ window.scrollTo(0,0); },[]);
+  const C={neon:"#C8FF00",black:"#0A0A0A",white:"#fff",g200:"#E8E8E8",g400:"#999",g600:"#666",g800:"#333",neonDim:"#F5FFE0",g100:"#F5F5F5",g300:"#D0D0D0"};
 
   return (
-    <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
-      <div style={{width:"100%",maxWidth:520}}>
-        <Progress step={4} total={5}/>
-        <div className="su">
-          <div className="mono" style={{marginBottom:8}}>Schritt 4 von 5</div>
-          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Allergien & Unverträglichkeiten</h2>
-          <p style={{fontSize:14,color:C.g600,marginBottom:6,lineHeight:1.65}}>TREYN+ gleicht alle Supplement-Empfehlungen mit deinen Angaben ab und warnt dich bei problematischen Inhaltsstoffen.</p>
-
-          {/* Safety disclaimer */}
-          <div style={{marginBottom:20,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>
-              <strong style={{color:C.g800}}>Wichtiger Hinweis:</strong> TREYN AI analysiert auf Basis deiner Angaben — prüfe Inhaltsstoffe und Allergene <strong style={{color:C.g800}}>immer direkt beim Hersteller</strong>. Bei Unsicherheiten oder Erkrankungen konsultiere einen Arzt oder Apotheker. TREYN+ ersetzt keine medizinische Beratung.
-            </div>
-          </div>
-
-          {/* Keine Allergien option */}
-          <div onClick={handleNoAllergens}
-            style={{marginBottom:12,padding:"13px 16px",borderRadius:12,cursor:"pointer",transition:"all .14s",
-              border:`1.5px solid ${noAllergens?C.neon:C.g200}`,
-              background:noAllergens?C.neonDim:C.white,
-              display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:20,height:20,borderRadius:"50%",border:`2px solid ${noAllergens?C.black:C.g300||C.g400}`,background:noAllergens?C.black:"transparent",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-              {noAllergens&&<div style={{width:8,height:8,borderRadius:"50%",background:C.neon}}/>}
-            </div>
-            <div>
-              <div style={{fontSize:13,fontWeight:noAllergens?700:500,color:noAllergens?C.black:C.black,lineHeight:1.3}}>Keine Allergien oder Unverträglichkeiten</div>
-              <div style={{fontSize:11,color:C.g400,marginTop:1}}>Ich vertrage alle Inhaltsstoffe</div>
-            </div>
-          </div>
-
-          <div style={{fontSize:11,color:C.g400,marginBottom:10,fontWeight:500}}>Oder auswählen welche Allergien / Unverträglichkeiten du hast:</div>
-
-          {!noAllergens&&<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
-            {ALLERGEN_GROUPS.filter(a=>!a.category).map(a=>{
-              const on=selected.includes(a.id);
-              return (
-                <div key={a.id} onClick={()=>toggle(a.id)}
-                  style={{padding:"10px 12px",borderRadius:12,cursor:"pointer",transition:"all .14s",
-                    border:`1.5px solid ${on?"rgba(255,59,48,.4)":C.g200}`,
-                    background:on?"rgba(255,59,48,.05)":C.white,
-                    display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:16,flexShrink:0}}>{a.icon}</span>
-                  <div>
-                    <div style={{fontSize:11,fontWeight:on?700:500,color:on?"#C0392B":C.black,lineHeight:1.3}}>{a.label}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>}
-
-          {/* Custom allergen input — hidden when no allergens */}
-          {!noAllergens&&(
-            <div style={{marginBottom:16}}>
-              <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Weitere Allergien / Medikamente (optional)</div>
-              <div style={{display:"flex",gap:6,marginBottom:6}}>
-                <input type="text" value={custom} onChange={e=>setCustom(e.target.value)}
-                  onKeyDown={e=>{if(e.key==="Enter"&&custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
-                  placeholder="z.B. Penicillin, Latexallergie..."
-                  style={{flex:1,padding:"10px 14px",border:`1.5px solid ${custom?C.neon:C.g200}`,borderRadius:11,fontSize:13,background:custom?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"}}/>
-                <button onClick={()=>{if(custom.trim()){setCustomTags(t=>[...t,custom.trim()]);setCustom("");}}}
-                  style={{padding:"10px 16px",background:custom.trim()?C.black:C.g200,color:custom.trim()?C.white:C.g400,border:"none",borderRadius:11,fontSize:13,fontWeight:500,cursor:custom.trim()?"pointer":"default",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap",transition:"all .14s"}}>
-                  + Hinzufügen
-                </button>
+    <div style={{minHeight:"100vh",background:C.white,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,fontFamily:"Inter,sans-serif"}}>
+      <div style={{width:"100%",maxWidth:480}}>
+        <div style={{marginBottom:48}}><Logo size="lg"/></div>
+        <div style={{fontSize:11,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>FAST BEREIT</div>
+        <h2 style={{fontSize:24,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>So funktioniert TREYN+</h2>
+        <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
+        <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
+          {[
+            {icon:"🆓", title:"Kostenlos starten", desc:"Kerndaten sofort sichtbar — Energiebedarf, Protein, wichtigste Supplements. Kein Kreditkarte, kein Abo."},
+            {icon:"🔒", title:"PRO — CHF 6.90 / 6 Monate", desc:"Elektrolyte, VO₂max, Kohlenhydrate pro Stunde, alle Dosierungen und Tagesplan. Jederzeit in deinem Profil aktivierbar."},
+            {icon:"🎯", title:"100% auf dich berechnet", desc:"MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf dein Gewicht, Sport und Intensität."},
+          ].map((item,i)=>(
+            <div key={i} style={{display:"flex",gap:14,padding:"14px 16px",borderRadius:12,border:"1px solid #EBEBEB",background:"#fff"}}>
+              <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{item.icon}</span>
+              <div>
+                <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:3}}>{item.title}</div>
+                <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{item.desc}</div>
               </div>
-              {customTags.length>0&&(
-                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-                  {customTags.map((t,i)=>(
-                    <div key={i} style={{display:"flex",alignItems:"center",gap:5,padding:"3px 10px",borderRadius:20,background:C.g100,border:`1px solid ${C.g200}`}}>
-                      <span style={{fontSize:12,color:C.black}}>{t}</span>
-                      <button onClick={()=>setCustomTags(tags=>tags.filter((_,j)=>j!==i))} style={{background:"none",border:"none",cursor:"pointer",color:C.g400,fontSize:14,lineHeight:1,padding:0}}>×</button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          )}
-
-          <div style={{fontSize:11,color:C.g400,marginBottom:10,fontWeight:500}}>Ernährungsweise: <span style={{color:C.red,fontSize:10}}>Pflichtfeld</span></div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
-            {ALLERGEN_GROUPS.filter(a=>a.category==="diet").map(a=>{
-              const on=selected.includes(a.id);
-              return (
-                <div key={a.id} onClick={()=>toggle(a.id)}
-                  style={{padding:"10px 12px",borderRadius:12,cursor:"pointer",transition:"all .14s",
-                    border:`1.5px solid ${on?C.neon:C.g200}`,
-                    background:on?C.neonDim:C.white,
-                    display:"flex",alignItems:"center",gap:8}}>
-                  <span style={{fontSize:16,flexShrink:0}}>{a.icon}</span>
-                  <div>
-                    <div style={{fontSize:11,fontWeight:on?700:500,color:C.black,lineHeight:1.3}}>{a.label}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {selected.length>0&&(
-            <div style={{marginBottom:16,padding:"10px 14px",background:C.g100,borderRadius:10,fontSize:11,color:C.g600}}>
-              {selected.length} Einschränkung{selected.length>1?"en":""} gespeichert — betroffene Supplements werden markiert oder ausgeblendet.
-            </div>
-          )}
-
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8}}>
-            <button className="btn-ghost" onClick={onBack}>← Zurück</button>
-            <button className="btn btn-black" disabled={!canContinue}
-              style={{opacity:canContinue?1:.4,cursor:canContinue?"pointer":"default"}}
-              onClick={()=>canContinue&&onNext({allergens:selected,customAllergens:customTags.join(", "),noAllergens})}>
-              {noAllergens?"Weiter →":selected.length+customTags.length===0?"Auswahl erforderlich →":`Weiter mit ${selected.length+customTags.length} Angabe${selected.length+customTags.length>1?"n":""} →`}
-            </button>
-          </div>
+          ))}
         </div>
+        <button onClick={onNext} style={{width:"100%",background:"#C8FF00",color:"#000",border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          Analyse starten →
+        </button>
+        <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Dauert wenige Sekunden.</div>
       </div>
     </div>
   );
 }
 
-// ─── ANALYSE PREVIEW ─────────────────────────────────────────────────────────
+function StepPraeferenzen({onNext, onBack}) {
+  useEffect(()=>{ window.scrollTo(0,0); },[]);
+  const [suppForm,setSuppForm]=useState(null);
+  const [energieForm,setEnergieForm]=useState([]);
+  const [proteinForm,setProteinForm]=useState([]);
+  const [recoveryForm,setRecoveryForm]=useState([]);
+
+  const toggleMulti=(arr,setArr,val)=>{
+    if(val==="egal"){ setArr(prev=>prev.includes("egal")?[]:["egal"]); return; }
+    setArr(prev=>{
+      const without=prev.filter(x=>x!=="egal");
+      return without.includes(val)?without.filter(x=>x!==val):[...without,val];
+    });
+  };
+
+  const Chip=({label,active,onClick})=>(
+    <button onClick={onClick}
+      style={{padding:"9px 14px",borderRadius:10,border:`1.5px solid ${active?"#C8FF00":"#E8E8E8"}`,background:active?"#F5FFE0":"#fff",color:"#0A0A0A",fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
+      {label}
+    </button>
+  );
+
+  const Section=({title,children})=>(
+    <div style={{marginBottom:22}}>
+      <div style={{fontSize:12,fontWeight:600,color:"#0A0A0A",marginBottom:10}}>{title}</div>
+      <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{children}</div>
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",background:"#fff",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,fontFamily:"Inter,sans-serif"}}>
+      <div style={{width:"100%",maxWidth:480}}>
+        <div style={{display:"flex",gap:4,marginBottom:32}}>
+          {[1,2,3,4,5].map(i=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=4?"#C8FF00":"#E8E8E8"}}/>)}
+        </div>
+        <div style={{fontSize:11,color:"#999",fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>SCHRITT 4 VON 5</div>
+        <h2 style={{fontSize:24,fontWeight:600,color:"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>Deine Präferenzen</h2>
+        <p style={{fontSize:13,color:"#666",marginBottom:28,lineHeight:1.5}}>So stimmen wir alles noch gezielter auf dich ab. Mehrfachauswahl möglich.</p>
+
+        <Section title="Supplements — welche Form bevorzugst du?">
+          {[{id:"kapsel",l:"Kapseln"},{id:"pulver",l:"Pulver"},{id:"beides",l:"Beides"}].map(o=>(
+            <Chip key={o.id} label={o.l} active={suppForm===o.id} onClick={()=>setSuppForm(suppForm===o.id?null:o.id)}/>
+          ))}
+        </Section>
+
+        <Section title="Energie während Training">
+          {[{id:"gel",l:"Gels"},{id:"riegel",l:"Riegel"},{id:"drink",l:"Drink Mix"},{id:"egal",l:"Egal"}].map(o=>(
+            <Chip key={o.id} label={o.l} active={energieForm.includes(o.id)} onClick={()=>toggleMulti(energieForm,setEnergieForm,o.id)}/>
+          ))}
+        </Section>
+
+        <Section title="Protein — wie nimmst du es am liebsten?">
+          {[{id:"shake",l:"Shake / Pulver"},{id:"riegel",l:"Riegel"},{id:"egal",l:"Egal"}].map(o=>(
+            <Chip key={o.id} label={o.l} active={proteinForm.includes(o.id)} onClick={()=>toggleMulti(proteinForm,setProteinForm,o.id)}/>
+          ))}
+        </Section>
+
+        <Section title="Recovery — wie erholst du dich am liebsten?">
+          {[{id:"massage",l:"Massage / Foam Roll"},{id:"kalt",l:"Kältebad / Eisbad"},{id:"stretching",l:"Stretching"},{id:"schlaf",l:"Schlaf"},{id:"sauna",l:"Sauna"},{id:"kompression",l:"Kompressionsbekleidung"},{id:"egal",l:"Egal"}].map(o=>(
+            <Chip key={o.id} label={o.l} active={recoveryForm.includes(o.id)} onClick={()=>toggleMulti(recoveryForm,setRecoveryForm,o.id)}/>
+          ))}
+        </Section>
+
+        <div style={{display:"flex",gap:10,marginTop:8}}>
+          <button onClick={onBack} style={{padding:"12px 20px",borderRadius:12,border:"1px solid #E8E8E8",background:"transparent",color:"#666",fontSize:14,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            ← Zurück
+          </button>
+          <button onClick={()=>onNext({suppForm:suppForm||"beides",energieForm:energieForm.length?energieForm:["egal"],proteinForm:proteinForm.length?proteinForm:["egal"],recoveryForm:recoveryForm.length?recoveryForm:["egal"]})}
+            style={{flex:1,background:"#C8FF00",color:"#000",border:"none",borderRadius:12,padding:"12px",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Weiter →
+          </button>
+        </div>
+        <div style={{textAlign:"center",marginTop:8,fontSize:11,color:"#AAA"}}>Alle Felder optional — du kannst auch überspringen.</div>
+      </div>
+    </div>
+  );
+}
+
+
+function StepAllergien({onNext, onBack}) {
+  useEffect(()=>{ window.scrollTo(0,0); },[]);
+  const [hasAllergies, setHasAllergies] = useState(null);
+  const [allergens, setAllergens] = useState([]);
+  const [custom, setCustom] = useState("");
+  const [diet, setDiet] = useState([]);
+
+  const ALLERGEN_LIST = [
+    {id:"gluten",    label:"Gluten",        desc:"Weizen, Roggen, Gerste"},
+    {id:"lactose",   label:"Laktose",       desc:"Milch & Milchprodukte"},
+    {id:"soy",       label:"Soja",          desc:"Sojaprodukte"},
+    {id:"nuts",      label:"Nüsse",         desc:"Alle Nussarten"},
+    {id:"egg",       label:"Eier",          desc:"Ei & Eiprodukte"},
+    {id:"fish",      label:"Fisch",         desc:"Fisch & Meeresfrüchte"},
+    {id:"fructose",  label:"Fruktose",      desc:"Fruchtzucker"},
+    {id:"histamine", label:"Histamin",      desc:"Fermentierte Lebensmittel"},
+    {id:"crustacean",label:"Krebstiere",    desc:"Garnelen, Hummer, Krabben"},
+    {id:"mustard",   label:"Senf",          desc:"Senf & Senfprodukte"},
+  ];
+  const [customTags, setCustomTags] = useState([]);
+  const [customInput, setCustomInput] = useState("");
+  const addCustom = () => {
+    const val = customInput.trim();
+    if(val && !customTags.includes(val)){ setCustomTags(prev=>[...prev,val]); }
+    setCustomInput("");
+  };
+
+  const DIET_LIST = [
+    {id:"none",        label:"Keine Einschränkungen", desc:"Isst Fleisch und alles"},
+    {id:"vegan",       label:"Vegan",                 desc:"Keine tierischen Produkte"},
+    {id:"vegetarian",  label:"Vegetarisch",           desc:"Kein Fleisch"},
+    {id:"pescatarian", label:"Pescetarisch",          desc:"Fisch, kein Fleisch"},
+    {id:"glutenfree",  label:"Glutenfrei",            desc:"Strikt glutenfrei"},
+    {id:"lactosefree", label:"Laktosefrei",           desc:"Keine Milchprodukte"},
+    {id:"lowcarb",     label:"Low Carb",              desc:"Reduzierte Kohlenhydrate"},
+    {id:"keto",        label:"Keto",                  desc:"Sehr wenig Kohlenhydrate"},
+    {id:"halal",       label:"Halal",                 desc:"Nach islamischen Richtlinien"},
+    {id:"koscher",     label:"Koscher",               desc:"Nach jüdischen Speisegesetzen"},
+  ];
+
+  const toggleAllergen = (id) => setAllergens(prev => prev.includes(id) ? prev.filter(x=>x!==id) : [...prev,id]);
+  const toggleDiet = (id) => {
+    if(id==="none"){ setDiet(prev=>prev.includes("none")?[]:["none"]); return; }
+    setDiet(prev=>{
+      const without=prev.filter(x=>x!=="none");
+      return without.includes(id)?without.filter(x=>x!==id):[...without,id];
+    });
+  };
+
+  const Chip = ({label, desc, active, onClick}) => (
+    <button onClick={onClick}
+      style={{padding:"10px 12px",borderRadius:10,border:`1.5px solid ${active?"#C8FF00":"#E8E8E8"}`,background:active?"#F5FFE0":"#fff",cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .12s"}}>
+      <div style={{fontSize:12,fontWeight:600,color:"#0A0A0A",marginBottom:2}}>{label}</div>
+      <div style={{fontSize:10,color:"#AAA"}}>{desc}</div>
+    </button>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",background:"#fff",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,fontFamily:"Inter,sans-serif"}}>
+      <div style={{width:"100%",maxWidth:480}}>
+        <div style={{display:"flex",gap:4,marginBottom:32}}>
+          {[1,2,3,4,5].map(i=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=3?"#C8FF00":"#E8E8E8"}}/>)}
+        </div>
+
+        <div style={{fontSize:11,color:"#999",fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>SCHRITT 3 VON 5</div>
+        <h2 style={{fontSize:24,fontWeight:600,color:"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>Allergien & Ernährung</h2>
+        <p style={{fontSize:13,color:"#666",marginBottom:28,lineHeight:1.5}}>So filtern wir Supplements und Sportnahrung korrekt für dich.</p>
+
+        {/* Allergien Toggle */}
+        <div style={{marginBottom:24}}>
+          <div style={{fontSize:12,fontWeight:600,color:"#0A0A0A",marginBottom:10}}>Hast du Allergien oder Unverträglichkeiten?</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:hasAllergies===true?16:0}}>
+            <button onClick={()=>{setHasAllergies(false);setAllergens([]);}}
+              style={{padding:"12px",borderRadius:10,border:`1.5px solid ${hasAllergies===false?"#C8FF00":"#E0E0E0"}`,background:hasAllergies===false?"#F5FFE0":"#fff",color:"#0A0A0A",fontSize:13,fontWeight:hasAllergies===false?700:500,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
+              Keine Allergien
+            </button>
+            <button onClick={()=>setHasAllergies(true)}
+              style={{padding:"12px",borderRadius:10,border:`1.5px solid ${hasAllergies===true?"#C8FF00":"#E0E0E0"}`,background:hasAllergies===true?"#F5FFE0":"#fff",color:"#0A0A0A",fontSize:13,fontWeight:hasAllergies===true?700:500,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
+              Ich habe Allergien
+            </button>
+          </div>
+
+          {hasAllergies===true&&(
+            <div style={{animation:"fadeUp .25s ease forwards"}}>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:10}}>
+                {ALLERGEN_LIST.map(a=><Chip key={a.id} label={a.label} desc={a.desc} active={allergens.includes(a.id)} onClick={()=>toggleAllergen(a.id)}/>)}
+              </div>
+              {/* Custom tag input */}
+              <div style={{display:"flex",gap:8,marginBottom:customTags.length>0?8:0}}>
+                <input value={customInput} onChange={e=>setCustomInput(e.target.value)}
+                  onKeyDown={e=>e.key==="Enter"&&addCustom()}
+                  placeholder="Weitere Allergie hinzufügen..."
+                  style={{flex:1,padding:"10px 14px",borderRadius:10,border:"1px solid #E0E0E0",fontSize:13,fontFamily:"Inter,sans-serif",outline:"none"}}/>
+                <button onClick={addCustom} style={{padding:"10px 14px",borderRadius:10,background:"#C8FF00",color:"#000",border:"none",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>+</button>
+              </div>
+              {customTags.length>0&&(
+                <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+                  {customTags.map(t=>(
+                    <span key={t} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"4px 10px",borderRadius:20,background:"#F5FFE0",border:"1px solid #C8FF00",fontSize:12,color:"#0A0A0A"}}>
+                      {t}
+                      <button onClick={()=>setCustomTags(prev=>prev.filter(x=>x!==t))} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:"#888",padding:0,lineHeight:1}}>×</button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Ernährung — immer sichtbar, separate Sektion */}
+        <div style={{marginBottom:28,paddingTop:20,borderTop:"1px solid #F0F0F0"}}>
+          <div style={{fontSize:12,fontWeight:600,color:"#0A0A0A",marginBottom:4}}>Ernährungsweise</div>
+          <div style={{fontSize:11,color:"#AAA",marginBottom:10}}>Mehrfachauswahl möglich</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {DIET_LIST.map(d=><Chip key={d.id} label={d.label} desc={d.desc} active={diet.includes(d.id)} onClick={()=>toggleDiet(d.id)}/>)}
+          </div>
+        </div>
+
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={onBack}
+            style={{padding:"12px 20px",borderRadius:12,border:"1px solid #E8E8E8",background:"transparent",color:"#666",fontSize:14,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            ← Zurück
+          </button>
+          <button
+            onClick={()=>onNext({allergens,customAllergens:[...customTags].join(", "),noAllergens:hasAllergies===false,diet})}
+            disabled={hasAllergies===null}
+            style={{flex:1,background:hasAllergies!==null?"#C8FF00":"#F0F0F0",color:hasAllergies!==null?"#000":"#AAA",border:"none",borderRadius:12,padding:"12px",fontSize:14,fontWeight:600,cursor:hasAllergies!==null?"pointer":"default",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
+            Weiter →
+          </button>
+        </div>
+        {hasAllergies===null&&<div style={{textAlign:"center",marginTop:8,fontSize:11,color:"#AAA"}}>Bitte oben eine Option auswählen.</div>}
+      </div>
+      <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
+    </div>
+  );
+}
 
 function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}) {
   const [loadPro,setLoadPro]=useState(false);
@@ -1950,7 +2061,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
   const fname=profilData?.firstname||"";
   const weight=profilData?.weight||75;
-  const basic=calcBasic(profilData,trainingData,healthOnly);
+  const basic=calcPro(profilData,trainingData,sportData);
   const pro=calcPro(profilData,trainingData,sportData);
   const [showInfo,setShowInfo]=useState(false);
 
@@ -2056,7 +2167,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span style={{fontSize:12,fontWeight:500,color:C.black}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
-              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 9.90 / 6 Mt.</span>
+              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 6.90 / 6 Mt.</span>
             </div>
             <div style={{padding:"14px 16px",background:"#FAFFF0"}}>
               <div style={{marginBottom:8,fontSize:10,color:"#999",letterSpacing:".02em"}}>Zusätzlich zu Basic:</div>
@@ -2066,10 +2177,10 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 ))}
               </div>
               <button onClick={scrollToCards} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
-                PRO — CHF 9.90 ↓
+                PRO — CHF 6.90 ↓
               </button>
               <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
-                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 6.90 ↓</span>
+                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 9.90 ↓</span>
               </div>
               <div style={{marginTop:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:8,border:"1px solid #F0F0F0",display:"flex",gap:10,alignItems:"flex-start"}}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2170,7 +2281,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>BASIC</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#EFEFEF",color:"#888",fontWeight:500,marginTop:3}}>~75% genau</span>
             </div>
-            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 6.90 <span style={{color:"#BBB"}}>/ 6 Monate · CHF 1.15/Mt.</span></div>
+            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 9.90 <span style={{color:"#BBB"}}>/ 6 Monate · CHF 1.65/Mt.</span></div>
           </div>
           <div style={{padding:"14px 16px",flex:1}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Schätzung</div>
@@ -2188,7 +2299,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
               style={{width:"100%",background:"#EBEBEB",color:"#555",border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Basic — CHF 6.90 →
+              Basic — CHF 9.90 <span style={{fontSize:10,opacity:.6}}>· CHF 1.65/Mt.</span> →
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#AAA",marginTop:5}}>6 Monate Zugang · jederzeit erneuerbar</div>
           </div>
@@ -2201,7 +2312,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>PRO</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontWeight:600,marginTop:3}}>~92% genau</span>
             </div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.45)",fontWeight:400}}>CHF 9.90 <span style={{opacity:.7}}>/ 6 Monate · CHF 1.65/Mt.</span></div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.45)",fontWeight:400}}>CHF 6.90 <span style={{opacity:.7}}>/ 6 Monate · CHF 1.15/Mt.</span></div>
           </div>
           <div style={{padding:"14px 16px",flex:1,background:C.white}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Exaktberechnung</div>
@@ -2221,7 +2332,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 14px",background:C.white}}>
             <button onClick={openPro} disabled={loadPro}
               style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:9,padding:"12px",fontSize:13,fontWeight:800,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",marginBottom:6}}>
-              {loadPro?"...":"Pro — CHF 9.90 →"}
+              {loadPro?"...":"Pro — CHF 6.90 "}{!loadPro&&<span style={{fontSize:10,opacity:.7}}>· CHF 1.15/Mt.</span>}{!loadPro&&" →"}
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#888",marginTop:2}}>6 Monate Zugang · jederzeit erneuerbar</div>
           </div>
@@ -2238,17 +2349,135 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
 
 // ─── RESULTS ─────────────────────────────────────────────────────────────────
 
-function Results({sportData,trainingData,profilData,allergenData,tier,onReset,onUpgrade}) {
-  const [tab,setTab]=useState("verbrauch");
+
+
+// ── BLUR GATE ────────────────────────────────────────────────────────────────
+
+// ── ANALYSING SCREEN ─────────────────────────────────────────────────────────
+function AnalysingScreen({onDone, profilData, sportData}) {
+  
+  const [step, setStep] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  const firstname = profilData?.firstname||"";
+  const sports = (sportData?.selectedSports||[]);
+  const SPORT_NAMES = {cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",run_road:"Strassenlauf",run_trail:"Traillauf",triathlon:"Triathlon",swimming:"Schwimmen",hyrox:"Hyrox",football:"Fussball",icehockey:"Eishockey",ski_alpine:"Ski Alpin",tennis:"Tennis",basketball:"Basketball"};
+  const sportName = SPORT_NAMES[sports[0]]||"deiner Sportart";
+
+  const STEPS = [
+    "Körperdaten werden verarbeitet...",
+    `Trainingsvolumen für ${sportName} berechnen...`,
+    "Energiebedarf & Grundumsatz kalkulieren...",
+    "Supplement-Profil personalisieren...",
+    "Sportnahrung abstimmen...",
+    "Elektrolyte & Hydration berechnen...",
+    "TREYN AI analysiert deine Werte...",
+    "Alles bereit.",
+  ];
+
+  useEffect(()=>{
+    const duration = 3800;
+    const interval = 80;
+    let elapsed = 0;
+    const timer = setInterval(()=>{
+      elapsed += interval;
+      const pct = Math.min((elapsed/duration)*100, 100);
+      setProgress(pct);
+      setStep(Math.min(Math.floor((pct/100)*STEPS.length), STEPS.length-1));
+      if(elapsed >= duration){ clearInterval(timer); setTimeout(onDone, 400); }
+    }, interval);
+    return ()=>clearInterval(timer);
+  },[]);
+
+  return (
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:40,fontFamily:"Inter,sans-serif"}}>
+      <div style={{width:"100%",maxWidth:480}}>
+        {/* Logo */}
+        <div style={{marginBottom:52}}><Logo size="lg"/></div>
+
+        {/* Greeting */}
+        <div style={{fontSize:26,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>
+          {firstname?`${firstname}, deine Analyse läuft.`:"Deine Analyse läuft."}
+        </div>
+        <div style={{fontSize:14,color:C.g600,marginBottom:40,lineHeight:1.6}}>
+          TREYN AI verarbeitet deine Daten und berechnet deinen persönlichen Plan.
+        </div>
+
+        {/* Progress bar */}
+        <div style={{height:3,background:C.g200,borderRadius:2,marginBottom:16,overflow:"hidden"}}>
+          <div style={{height:"100%",width:`${progress}%`,background:C.neon,borderRadius:2,transition:"width .12s ease"}}/>
+        </div>
+
+        {/* Step text */}
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:40}}>
+          <div style={{width:6,height:6,borderRadius:"50%",background:progress<100?C.neon:"#4A7000",flexShrink:0,
+            animation:progress<100?"pulse 1s infinite":"none"}}/>
+          <span style={{fontSize:12,color:progress<100?C.g600:"#4A7000",fontFamily:"JetBrains Mono,monospace",letterSpacing:".02em",transition:"color .3s"}}>
+            {STEPS[step]}
+          </span>
+        </div>
+
+        {/* What we calculate */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+          {[
+            {label:"Grundumsatz",done:progress>15},
+            {label:"Tagesbedarf",done:progress>25},
+            {label:"Proteinbedarf",done:progress>35},
+            {label:"Kohlenhydrate",done:progress>45},
+            {label:"Elektrolyte",done:progress>55},
+            {label:"Supplements",done:progress>65},
+            {label:"Sportnahrung",done:progress>75},
+            {label:"Recovery",done:progress>85},
+          ].map((item,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:7,padding:"7px 10px",borderRadius:8,background:item.done?C.neonDim:"#FAFAFA",border:`1px solid ${item.done?C.neon:C.g200}`,transition:"all .4s"}}>
+              <div style={{width:14,height:14,borderRadius:"50%",background:item.done?C.black:C.g200,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,transition:"background .3s"}}>
+                {item.done&&<svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2.2 2.2L7 1.5" stroke={C.neon} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+              </div>
+              <span style={{fontSize:11,color:item.done?"#2D4A00":C.g400,fontWeight:item.done?600:400,transition:"color .3s"}}>{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}`}</style>
+    </div>
+  );
+}
+
+function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
+  // C is already the global constant
+  if(isPro) return children;
+  return (
+    <div style={{position:"relative",borderRadius:12,overflow:"hidden"}}>
+      <div style={{filter:"blur(4px)",pointerEvents:"none",userSelect:"none",opacity:.6}}>
+        {children}
+      </div>
+      <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.7)",backdropFilter:"blur(2px)"}}>
+        <div style={{textAlign:"center",padding:"16px 20px",background:"#fff",borderRadius:12,boxShadow:"0 4px 20px rgba(0,0,0,.12)",border:"1px solid #EBEBEB",maxWidth:220}}>
+          <div style={{fontSize:18,marginBottom:6}}>🔒</div>
+          <div style={{fontSize:12,fontWeight:700,color:"#0A0A0A",marginBottom:4}}>{label}</div>
+          <div style={{fontSize:11,color:"#888",marginBottom:12,lineHeight:1.5}}>Nur mit PRO verfügbar</div>
+          <button onClick={onUpgrade}
+            style={{background:"#C8FF00",color:"#000",border:"none",borderRadius:8,padding:"8px 16px",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",width:"100%"}}>
+            Upgrade CHF 6.90 →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
+  const [tab,setTab]=useState("summary");
   const isPro=tier==="pro";
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
+  const sports=sportData?.selectedSports||[];
   const sportLabel=SPORT_GROUPS.find(s=>s.id===primarySport)?.label||(healthOnly?"Gesundheit":"Sport");
   const primaryTraining=trainingData?.[primarySport]||{intensity:"medium"};
   const {basis,specific}=getSupplements(primarySport,primaryTraining.intensity,healthOnly);
   const profile=buildProfile(sportData,trainingData,profilData);
   const proData=isPro?calcPro(profilData,trainingData,sportData):null;
-  const kcal=isPro?proData:calcBasic(profilData,trainingData,healthOnly);
+  const kcal=proData||calcPro(profilData,trainingData,sportData);
   const {primSupps,secSupps}=getPersonalizedSupps(profile,[...specific,...basis],[],proData);
   const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport);
   const fname=profilData?.firstname||"";
@@ -2256,14 +2485,17 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
   const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
 
   const NAV=[
+    {id:"summary",     label:"Summary",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
     {id:"verbrauch",   label:"Deine Daten",  icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
-    {id:"produkte",      label:"Deinen Plan", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>},
     {id:"supplements", label:"Supplements", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
     {id:"nutrition",   label:"Sportnahrung",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>},
     {id:"fertiggerichte",label:"Fertiggerichte", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/><path d="M12 12l4-4"/></svg>},
     {id:"recovery",       label:"Recovery Gear",  icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>},
+    {id:"cart",           label:"Warenkorb",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
     {id:"bluttest",      label:"Bluttest",      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>, badge:true, upgrade:true},
+    {id:"produkte",      label:"Deinen Plan", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>},
   ];
+  const AICHAT_NAV={id:"aichat",label:"TREYN AI Chat",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>};
   const PROFIL_NAV={id:"profil",label:"Profil & Zahlung",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>};
   const KONTAKT_NAV={id:"kontakt",label:"Kontakt & Impressum",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>};
 
@@ -2290,132 +2522,208 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
   };
 
   const NutritionTab=()=>{
-            const [filter,setFilter]=useState("optimal");
-            const [ownedSn,setOwnedSn]=useState(()=>{ try{ return JSON.parse(localStorage.getItem("treyn_owned")||"[]"); }catch{ return []; } });
-            const toggleOwnedSn=(id)=>{
-              try{
-                const list=JSON.parse(localStorage.getItem("treyn_owned")||"[]");
-                const next=list.includes(id)?list.filter(x=>x!==id):[...list,id];
-                localStorage.setItem("treyn_owned",JSON.stringify(next));
-                setOwnedSn(next);
-              }catch{}
-            };
-            const FILTERS=[
-              {id:"optimal",  label:"Optimalste Produkte",   desc:"Wissenschaftlich beste Wirkung"},
-              {id:"budget",   label:"Günstigste Alternative",desc:"Ähnliche Wirkung, tieferer Preis"},
-              {id:"premium",  label:"Hochwertigste Auswahl", desc:"Beste verfügbare Qualität"},
-            ];
+    const [rubrik,setRubrik]=useState("energie");
+    const [formPref,setFormPref]=useState(null); // gel/riegel/drink
+    const [dietPref,setDietPref]=useState(null); // standard/vegan
+    const [timingPref,setTimingPref]=useState(null); // vor/waehrend/nach
+    const [ownedSn,setOwnedSn]=useState(()=>{ try{ return JSON.parse(localStorage.getItem("treyn_owned")||"[]"); }catch{ return []; } });
+    const toggleOwnedSn=(id)=>{
+      try{
+        const list=JSON.parse(localStorage.getItem("treyn_owned")||"[]");
+        const next=list.includes(id)?list.filter(x=>x!==id):[...list,id];
+        localStorage.setItem("treyn_owned",JSON.stringify(next));
+        setOwnedSn(next);
+      }catch{}
+    };
 
-            // Extended nutrition data with budget/premium alternatives
-            const ALL_NUTRITION={
-              cycling:{
-                optimal:[
-                  {id:"sn_mau_320",barcode:"73160700",name:"Maurten Drink Mix 320",dose:"80g / 500ml · 1 Flasche/h",when:"Ausfahrten über 2h",why:"Hydrogel-Technologie — minimaler GI-Stress, maximale Kohlenhydrataufnahme. Offizielle Tour de France Nahrung.",link:AFF.maurten("drink-mix-320"),shop:"Maurten",price:"~CHF 4.50/Portion",isPartner:true},
-                  {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & Intervalle",why:"Koffein + Kohlenhydrate für maximale Leistung in Rennsituationen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten",price:"~CHF 4.00/Gel",isPartner:true},
-                ],
-                budget:[
-                  {id:"sn_sp_gel",name:"Sponser Liquid Energy",dose:"1 Beutel alle 45 min",when:"Training & Rennen",why:"Günstigere Alternative mit ähnlichem Kohlenhydratprofil. Gute Verträglichkeit.",link:AFF.sponser("liquid energy"),shop:"Sponser",price:"~CHF 2.20/Portion",isPartner:true},
-                  {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Training ab 60 min",why:"Kostengünstige Elektrolytversorgung — Natrium, Kalium, Magnesium.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser",price:"~CHF 0.50/Tab",isPartner:true},
-                ],
-                premium:[
-                  {id:"sn_mau_320p",name:"Maurten Drink Mix 320 CAF",dose:"80g / 500ml",when:"Wettkampf & harte Intervalle",why:"Premium-Version mit Koffein — maximale Performance für Entscheidungsmomente.",link:AFF.maurten("drink-mix-320"),shop:"Maurten",price:"~CHF 5.50/Portion",isPartner:true},
-                  {id:"sn_mn_heat_2",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor langen Touren (3h+)",why:"Premium Kohlenhydrat-Loading mit natürlichen Zutaten. Genutzt von EF Education.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY",price:"~CHF 5.00/Portion",isPartner:true},
-                ],
-              },
-              running:{
-                optimal:[
-                  {id:"sn_mau_gel",barcode:"73160717",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",when:"Läufe ab 75 min",why:"Magenfreundlichste Option am Markt durch Hydrogel. Ideal für empfindliche Läufermägen.",link:AFF.maurten("gel-100"),shop:"Maurten",price:"~CHF 3.80/Gel",isPartner:true},
-                  {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",when:"Tempoläufe & Rennen",why:"Natürliche Zutaten, niedriger GI-Stress — Favorit der Trail-Running Community.",link:AFF.mnstry("intensity-gel"),shop:"MNSTRY",price:"~CHF 3.50/Gel",isPartner:true},
-                ],
-                budget:[
-                  {id:"sn_sp_run",name:"Sponser Liquid Energy BCAA",dose:"1 Beutel alle 45 min",when:"Läufe ab 60 min",why:"Günstig, mit BCAAs für Muskelschutz. Gute Alternative für Trainingseinheiten.",link:AFF.sponser("liquid energy bcaa"),shop:"Sponser",price:"~CHF 2.00/Portion",isPartner:true},
-                ],
-                premium:[
-                  {id:"sn_mau_gel_p",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 30 min",when:"Wettkampf",why:"Koffein-Boost im Gel-Format — für maximale Rennendspur.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten",price:"~CHF 4.00/Gel",isPartner:true},
-                ],
-              },
-            };
+    const RUBRIKEN=[
+      {id:"energie",  label:"Energie",   icon:"⚡", desc:"Kohlenhydrate für Training & Rennen"},
+      {id:"protein",  label:"Protein",   icon:"💪", desc:"Muskelaufbau & Regeneration"},
+      {id:"recovery", label:"Recovery",  icon:"🌙", desc:"Gelenke, Schlaf & Erholung"},
+    ];
 
-            const getNutrition=()=>{
-              const sport=primarySport;
-              const data=ALL_NUTRITION[sport]||ALL_NUTRITION.cycling;
-              return data[filter]||data.optimal||[];
-            };
+    const ENERGIE_PRODUKTE=[
+      {id:"sn_mau_gel",   form:"gel",    diet:"standard", timing:"waehrend", name:"Maurten Gel 100",         dose:"1 Gel alle 30–40 min",  when:"Ab 75 min Training",      why:"Hydrogel-Technologie — minimaler GI-Stress, maximale Aufnahme.", link:AFF.maurten("gel-100"),          shop:"Maurten", price:"~CHF 3.80/Gel"},
+      {id:"sn_mau_caf",   form:"gel",    diet:"standard", timing:"waehrend", name:"Maurten Gel 100 CAF",     dose:"1 Gel alle 40–45 min",  when:"Rennen & Intervalle",     why:"Koffein + Kohlenhydrate — für maximale Leistung in Rennsituationen.", link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", price:"~CHF 4.00/Gel"},
+      {id:"sn_mn_gel",    form:"gel",    diet:"standard", timing:"waehrend", name:"MNSTRY Intensity Gel",    dose:"1 Gel alle 30–45 min",  when:"Tempoläufe & Rennen",     why:"Natürliche Zutaten, niedriger GI-Stress.", link:AFF.mnstry("intensity-gel"), shop:"MNSTRY", price:"~CHF 3.50/Gel"},
+      {id:"sn_mau_320",   form:"drink",  diet:"standard", timing:"waehrend", name:"Maurten Drink Mix 320",   dose:"80g / 500ml · 1 Flasche/h", when:"Ausfahrten über 2h",   why:"Höchste Kohlenhydratdichte ohne Magen-Probleme.", link:AFF.maurten("drink-mix-320"), shop:"Maurten", price:"~CHF 4.50/Port."},
+      {id:"sn_sp_elek",   form:"drink",  diet:"standard", timing:"waehrend", name:"Sponser Elektrolyt-Tabs", dose:"1 Tab / 500ml",         when:"Ab 60 min Training",      why:"Natrium, Kalium, Magnesium — Krampfprävention.", link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", price:"~CHF 0.50/Tab"},
+      {id:"sn_mn_carb",   form:"riegel", diet:"vegan",    timing:"vor",      name:"MNSTRY Fast Carb Bar",    dose:"1 Riegel 45 min vor Start", when:"Vor langen Einheiten", why:"Natürliches Carb-Loading — pflanzlich, magenfreundlich.", link:AFF.mnstry("fast-carb-heat"), shop:"MNSTRY", price:"~CHF 4.50/Riegel"},
+      {id:"sn_sp_gel",    form:"gel",    diet:"standard", timing:"nach",     name:"Sponser Liquid Energy",   dose:"1 Beutel alle 45 min",  when:"Training & Rennen",       why:"Günstige Alternative mit gutem Kohlenhydratprofil.", link:AFF.sponser("liquid energy"), shop:"Sponser", price:"~CHF 2.20/Port."},
+    ];
 
-            const items=getNutrition();
+    const PROTEIN_PRODUKTE=[
+      {id:"prot_whey",    form:"shake", diet:"standard", timing:"nach",  name:"Whey Protein Isolat",     dose:"25–30g post-workout",     when:"Innerhalb 30 min nach Training", why:"Schnellste Proteinquelle — maximale Muskelreparatur.", link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", price:"~CHF 1.50/Port."},
+      {id:"prot_esn",     form:"shake", diet:"standard", timing:"nach",  name:"ESN Designer Whey",       dose:"25–30g post-workout",     when:"Direkt nach Training",           why:"Marktführer in DACH — hochwertige Zutaten, viele Geschmäcker.", link:AFF.esn("designer-whey-protein"), shop:"ESN", price:"~CHF 1.20/Port."},
+      {id:"prot_more",    form:"shake", diet:"standard", timing:"nach",  name:"More Nutrition Total Protein", dose:"25g post-workout",  when:"Post-Workout & Snack",          why:"High-Protein, Low-Carb — ideal für Lifestyle-Athleten.", link:AFF.morenutrition("total-protein"), shop:"More Nutrition", price:"~CHF 1.30/Port."},
+      {id:"prot_vegan",   form:"shake", diet:"vegan",    timing:"nach",  name:"Myprotein Vegan Protein", dose:"25g post-workout",        when:"Direkt nach Training",           why:"Erbsen + Reis — vollständiges Aminosäureprofil, pflanzlich.", link:AFF.myprotein("vegan protein blend"), shop:"Myprotein", price:"~CHF 1.40/Port."},
+      {id:"prot_riegel",  form:"riegel",diet:"standard", timing:"nach",  name:"Protein Bar (Myprotein)", dose:"1 Riegel post-workout",   when:"Unterwegs / nach Training",      why:"Praktisch für unterwegs — 25g Protein ohne Schütteln.", link:AFF.myprotein("protein bar"), shop:"Myprotein", price:"~CHF 2.50/Riegel"},
+      {id:"prot_casein",  form:"shake", diet:"standard", timing:"nacht", name:"Micellar Casein",         dose:"30g vor dem Schlafen",    when:"Abends vor dem Schlafen",        why:"Langsame Freisetzung — Muskelschutz über Nacht.", link:AFF.myprotein("micellar casein"), shop:"Myprotein", price:"~CHF 1.80/Port."},
+    ];
 
-            return (
-              <div>
-                <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Sportnahrung</h2>
-                <p style={{fontSize:13,color:C.g600,marginBottom:14}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
+    const RECOVERY_PRODUKTE=[
+      {id:"rec_mg",       form:"kapsel", timing:"nacht", name:"Magnesium Bisglycinate",   dose:"300–400mg abends",        when:"Täglich vor dem Schlafen", why:"Beste Bioverfügbarkeit — Muskelentspannung, tiefer Schlaf.", link:AFF.iherb("magnesium bisglycinate"), shop:"iHerb", price:"~CHF 0.15/Tag"},
+      {id:"rec_kolla",    form:"drink",  timing:"vor",   name:"Kollagen + Vitamin C",     dose:"10–15g vor Training",     when:"Täglich vor Einheit",      why:"Sehnen- und Gelenkschutz — besonders bei hohem Laufvolumen.", link:AFF.iherb("collagen vitamin c"), shop:"iHerb", price:"~CHF 0.60/Tag"},
+      {id:"rec_tart",     form:"kapsel", timing:"nach",  name:"Tart Cherry Extrakt",      dose:"480mg täglich",           when:"Nach intensiven Einheiten", why:"Reduziert DOMS um bis zu 20% — natürliches Antioxidans.", link:AFF.iherb("tart cherry"), shop:"iHerb", price:"~CHF 0.40/Tag"},
+      {id:"rec_omega",    form:"kapsel", timing:"vor",   name:"Omega-3 (EPA/DHA)",        dose:"2–3g täglich",            when:"Täglich zum Essen",        why:"Entzündungshemmend — verbessert HRV und Erholung.", link:AFF.iherb("omega 3 epa dha"), shop:"iHerb", price:"~CHF 0.30/Tag"},
+      {id:"rec_ashwa",    form:"kapsel", timing:"nacht", name:"Ashwagandha KSM-66",       dose:"600mg täglich",           when:"Abends vor dem Schlafen",  why:"Senkt Cortisol — verbessert Schlaftiefe und Erholung.", link:AFF.iherb("ashwagandha ksm-66"), shop:"iHerb", price:"~CHF 0.50/Tag"},
+      {id:"rec_vit_d",    form:"kapsel", timing:"vor",   name:"Vitamin D3 + K2",          dose:"2000–4000 IE täglich",    when:"Täglich zum Frühstück",    why:"Immunsystem, Knochen, Hormonstatus — 56% der Sportler mangelversorgt.", link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", price:"~CHF 0.10/Tag"},
+    ];
 
-                {/* AI Disclaimer */}
-              <div style={{marginBottom:12,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>
-                  Ernährungsempfehlungen von TREYN AI — keine medizinische Beratung. Inhaltsstoffe & Wechselwirkungen immer beim Hersteller prüfen. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.
-                </div>
+    const SC={"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Maurten":{bg:"#000",t:C.neon},"MNSTRY":{bg:"#0D0D1A",t:C.neon},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"}};
+
+    const getItems=()=>{
+      let items = rubrik==="energie"?ENERGIE_PRODUKTE:rubrik==="protein"?PROTEIN_PRODUKTE:RECOVERY_PRODUKTE;
+      // Apply user onboarding preference as default filter (can be overridden)
+      if(!formPref && praeferenzenData) {
+        if(rubrik==="energie" && praeferenzenData.energieForm && praeferenzenData.energieForm!=="egal")
+          items=items.filter(p=>p.form===praeferenzenData.energieForm||!p.form);
+        if(rubrik==="protein" && praeferenzenData.proteinForm && praeferenzenData.proteinForm!=="egal")
+          items=items.filter(p=>p.form===praeferenzenData.proteinForm||!p.form);
+      }
+      if(formPref) items=items.filter(p=>p.form===formPref);
+      if(dietPref) items=items.filter(p=>!p.diet||p.diet===dietPref);
+      if(timingPref) items=items.filter(p=>!p.timing||p.timing===timingPref);
+      if(items.length===0) items = rubrik==="energie"?ENERGIE_PRODUKTE:rubrik==="protein"?PROTEIN_PRODUKTE:RECOVERY_PRODUKTE;
+      return items;
+    };
+
+    const items=getItems();
+
+    // Form filters per rubrik
+    const FORM_OPTS={
+      energie: [{id:"gel",label:"Gel"},{id:"drink",label:"Drink"},{id:"riegel",label:"Riegel"}],
+      protein: [{id:"shake",label:"Shake"},{id:"riegel",label:"Riegel"}],
+      recovery:[{id:"kapsel",label:"Kapsel"},{id:"drink",label:"Drink"}],
+    };
+    const TIMING_OPTS={
+      energie: [{id:"vor",label:"Vor Training"},{id:"waehrend",label:"Während Training"},{id:"nach",label:"Nach Training"}],
+      protein: [{id:"nach",label:"Nach Training"},{id:"nacht",label:"Vor Schlaf"}],
+      recovery:[{id:"vor",label:"Morgens/Täglich"},{id:"nach",label:"Post-Workout"},{id:"nacht",label:"Abends"}],
+    };
+
+    const [openDropdown,setOpenDropdown]=useState(null);
+
+    const Dropdown=({id,label,value,options,onSelect})=>{
+      const isOpen=openDropdown===id;
+      const selected=options.find(o=>o.id===value);
+      return (
+        <div style={{flex:1,position:"relative"}}>
+          <button onClick={()=>setOpenDropdown(isOpen?null:id)}
+            style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderRadius:9,border:`1.5px solid ${value?C.black:"#E0E0E0"}`,background:value?C.black:"#fff",cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
+            <span style={{fontSize:11,fontWeight:600,color:value?"#fff":"#888"}}>{selected?selected.label:label}</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={value?"#fff":"#AAA"} strokeWidth="2.5" strokeLinecap="round"><path d={isOpen?"M18 15l-6-6-6 6":"M6 9l6 6 6-6"}/></svg>
+          </button>
+          {isOpen&&(
+            <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,right:0,background:"#fff",borderRadius:10,border:"1px solid #E0E0E0",boxShadow:"0 4px 16px rgba(0,0,0,.1)",zIndex:100,overflow:"hidden"}}>
+              <div onClick={()=>{onSelect(null);setOpenDropdown(null);}}
+                style={{padding:"9px 12px",fontSize:11,color:"#AAA",cursor:"pointer",borderBottom:"1px solid #F5F5F5",background:!value?"#F8F8F8":"#fff"}}>
+                Alle
               </div>
+              {options.map(o=>(
+                <div key={o.id} onClick={()=>{onSelect(o.id);setOpenDropdown(null);}}
+                  style={{padding:"9px 12px",fontSize:11,fontWeight:value===o.id?600:400,color:value===o.id?C.black:"#555",cursor:"pointer",background:value===o.id?C.neonDim:"#fff",borderBottom:"1px solid #F8F8F8"}}>
+                  {o.label}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    return (
+      <div>
+        <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Sportnahrung</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:14}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
 
 
-              {/* Philosophy banner */}
-                <div style={{marginBottom:16,padding:"12px 14px",background:C.g100,borderRadius:11,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>
-                    Wir arbeiten mit ausgewählten Partnershops & Brands zusammen — empfehlen aber alle verfügbaren Supplements & Sportnahrung für deine bestmögliche Performance, unabhängig ob ein Produkt bei uns gelistet ist oder extern verlinkt wird.
+
+        {/* Info */}
+        <div style={{marginBottom:14,borderRadius:12,border:`1px solid ${C.g200}`,overflow:"hidden"}}>
+          <div style={{background:C.g100,padding:"8px 14px",borderBottom:`1px solid ${C.g200}`,display:"flex",alignItems:"center",gap:6}}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span style={{fontSize:10,fontWeight:600,color:C.g600,letterSpacing:".04em",textTransform:"uppercase",fontFamily:"JetBrains Mono,monospace"}}>Hinweis</span>
+          </div>
+          <div style={{padding:"10px 14px",display:"flex",flexDirection:"column",gap:7}}>
+            <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+              <span style={{fontSize:12,flexShrink:0}}>🩺</span>
+              <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>TREYN AI-Empfehlungen sind keine medizinische Beratung. Inhaltsstoffe immer beim Hersteller prüfen. Bei Erkrankungen: Arzt konsultieren.</span>
+            </div>
+            <div style={{height:1,background:C.g100}}/>
+            <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+              <span style={{fontSize:12,flexShrink:0}}>🤝</span>
+              <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir empfehlen alle verfügbaren Produkte für deine Performance — unabhängig von Listung oder Verlinkung.</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 3 Rubriken */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:16}}>
+          {RUBRIKEN.map(r=>(
+            <button key={r.id} onClick={()=>{setRubrik(r.id);setFormPref(null);setTimingPref(null);}}
+              style={{padding:"10px 8px",borderRadius:10,border:`1.5px solid ${rubrik===r.id?C.black:"#EBEBEB"}`,background:rubrik===r.id?C.black:"#fff",cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .14s"}}>
+              <div style={{fontSize:16,marginBottom:3}}>{r.icon}</div>
+              <div style={{fontSize:12,fontWeight:700,color:rubrik===r.id?"#fff":C.black}}>{r.label}</div>
+              <div style={{fontSize:10,color:rubrik===r.id?"rgba(255,255,255,.6)":"#AAA",lineHeight:1.4}}>{r.desc}</div>
+            </button>
+          ))}
+        </div>
+
+        {/* Präferenz-Filter — Dropdowns nebeneinander */}
+        <div style={{display:"flex",gap:6,marginBottom:16}} onClick={e=>e.stopPropagation()}>
+          <Dropdown id="form" label="Format" value={formPref}
+            options={FORM_OPTS[rubrik]||[]}
+            onSelect={setFormPref}/>
+          <Dropdown id="timing" label="Zeitpunkt" value={timingPref}
+            options={TIMING_OPTS[rubrik]||[]}
+            onSelect={setTimingPref}/>
+          {rubrik!=="recovery"&&(
+            <Dropdown id="diet" label="Ernährung" value={dietPref}
+              options={[{id:"standard",label:"Standard"},{id:"vegan",label:"Vegan"}]}
+              onSelect={setDietPref}/>
+          )}
+        </div>
+
+        {/* Produkte */}
+        {items.length===0?(
+          <div style={{padding:"24px",textAlign:"center",background:"#FAFAFA",borderRadius:12,border:"1px solid #EBEBEB"}}>
+            <div style={{fontSize:13,color:"#AAA"}}>Keine Produkte für diese Filterauswahl.</div>
+            <button onClick={()=>{setFormPref(null);setTimingPref(null);setDietPref(null);}} style={{marginTop:8,background:"none",border:"none",color:C.g600,fontSize:12,cursor:"pointer",textDecoration:"underline"}}>Filter zurücksetzen</button>
+          </div>
+        ):(
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+            {items.map((p,i)=>{
+              const sc=SC[p.shop]||{bg:"#333",t:"#fff"};
+              const owned=ownedSn.includes(p.id);
+              return (
+                <div key={p.id} style={{background:"#fff",borderRadius:12,border:"1px solid #EBEBEB",padding:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
+                  <div style={{flex:1,marginBottom:10}}>
+                    <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,lineHeight:1.3}}>{p.name}</div>
+                    <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>{p.dose}</div>
+                    <div style={{fontSize:11,color:"#888",marginBottom:4}}>{p.when}</div>
+                    <div style={{fontSize:11,color:"#555",lineHeight:1.5}}>{p.why}</div>
                   </div>
+                  <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:10,borderTop:"1px solid #F5F5F5",marginBottom:8}}>
+                    <span style={{fontSize:11,fontWeight:500,color:"#333"}}>{p.price}</span>
+                    <a href={p.link} target="_blank" rel="noopener noreferrer"
+                      style={{display:"inline-flex",alignItems:"center",gap:4,background:sc.bg,color:sc.t,padding:"5px 10px",borderRadius:7,fontSize:10,fontWeight:600,textDecoration:"none"}}>
+                      {p.shop} ↗
+                    </a>
+                  </div>
+                  <button onClick={()=>toggleOwnedSn(p.id)}
+                    style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"7px",borderRadius:8,border:`1.5px solid ${owned?C.neon:"#E8E8E8"}`,background:owned?C.neon:"transparent",cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .15s"}}>
+                    {owned&&<svg width="11" height="11" viewBox="0 0 8 8" fill="none"><path d="M1 4l2.2 2.2L7 1.5" stroke="#000" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+                    <span style={{fontSize:10,fontWeight:700,color:owned?"#000":"#888"}}>{owned?"Vorhanden / bestellt":"Ich habe das Produkt bereits"}</span>
+                  </button>
+                  {owned&&<div style={{marginTop:5,fontSize:10,color:"#4A7000",textAlign:"center"}}>Findest du in <strong>Deinen Plan</strong> — inkl. Tagesplan.</div>}
                 </div>
-
-                {/* Filter */}
-                <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
-                  {FILTERS.map(f=>(
-                    <button key={f.id} onClick={()=>setFilter(f.id)}
-                      style={{padding:"8px 14px",borderRadius:9,border:`1.5px solid ${filter===f.id?C.neon:C.g200}`,background:filter===f.id?C.neonDim:C.white,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
-                      <div style={{fontSize:12,fontWeight:filter===f.id?700:500,color:filter===f.id?C.black:C.g800}}>{f.label}</div>
-                      <div style={{fontSize:10,color:C.g400,marginTop:1}}>{f.desc}</div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Products */}
-                {items.length>0?(
-                  items.map((s,i)=>(
-                    <div key={s.id} style={{border:`1px solid ${C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:C.white,animation:`fadeUp .3s ${i*0.05}s ease forwards`,opacity:0}}>
-                      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:12,marginBottom:8}}>
-                        <div style={{flex:1}}>
-                          <div style={{display:"flex",gap:6,marginBottom:4,flexWrap:"wrap"}}>
-                            <span className="chip" style={{background:"rgba(255,149,0,.1)",color:C.orange,border:"1px solid rgba(255,149,0,.25)",fontSize:9}}>SPORTNAHRUNG</span>
-                            <span className="mono" style={{fontSize:9}}>{s.when}</span>
-                            {s.price&&<span style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace"}}>{s.price}</span>}
-                          </div>
-                          <div style={{fontSize:15,fontWeight:700,letterSpacing:"-.02em",marginBottom:2}}>{s.name}</div>
-                          <div style={{fontSize:11,color:C.g600,fontFamily:"JetBrains Mono,monospace"}}>{s.dose}</div>
-                        </div>
-                        <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
-                          <a href={s.link} target="_blank" rel="noopener noreferrer"
-                            style={{display:"inline-flex",alignItems:"center",gap:4,background:{"Maurten":C.black,"MNSTRY":"#0D0D1A"}[s.shop]||"#2D7C2B",color:{"Maurten":C.neon,"MNSTRY":C.neon}[s.shop]||"#fff",padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none",whiteSpace:"nowrap"}}>
-                            {s.shop} ↗
-                          </a>
-                          <span style={{fontSize:8,color:s.isPartner?C.green:C.g400,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>{s.isPartner?"PARTNER":"EXTERN"}</span>
-                        </div>
-                      </div>
-                      <div style={{fontSize:13,color:C.g800,lineHeight:1.6,marginBottom:8}}>{s.why}</div>
-                      <button onClick={()=>toggleOwnedSn(s.id)}
-                        style={{display:"inline-flex",alignItems:"center",gap:6,background:ownedSn.includes(s.id)?C.neonDim:"transparent",border:`1px solid ${ownedSn.includes(s.id)?C.neon:C.g200}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
-                        <div style={{width:13,height:13,borderRadius:"50%",background:ownedSn.includes(s.id)?C.black:C.g100,border:`1.5px solid ${ownedSn.includes(s.id)?C.black:C.g400}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                          {ownedSn.includes(s.id)&&<svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2 3-3" stroke={C.neon} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                        </div>
-                        <span style={{fontSize:10,fontWeight:600,color:ownedSn.includes(s.id)?C.black:C.g600}}>{ownedSn.includes(s.id)?"Vorhanden / bestellt":"Ich habe das Produkt bereits"}</span>
-                      </button>
-                    </div>
-                  ))
-                ):(
-                  <div style={{padding:"20px",textAlign:"center",color:C.g400,fontSize:13}}>Keine Produkte für diese Auswahl verfügbar.</div>
-                )}
-
-
-              </div>
-            );
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const ShopTab=()=>{
@@ -2468,11 +2776,11 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
             </button>
           ))}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
           {items.map((p,i)=>{
             const sc=SC[p.shop]||{bg:"#333",t:"#fff"};
             return (
-              <div key={i} style={{background:"#fff",borderRadius:12,border:"1px solid #EBEBEB",padding:"14px 16px",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
+              <div key={i} style={{background:"#fff",borderRadius:12,border:"1px solid #EBEBEB",padding:"12px 12px",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
                 <div style={{flex:1,marginBottom:10}}>
                   <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,lineHeight:1.3}}>{p.name}</div>
                   {p.dose&&<div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>{p.dose}</div>}
@@ -2497,6 +2805,142 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
     );
   };
 
+  // ── SUMMARY TAB ────────────────────────────────────────────────────────────
+  const SummaryTab=()=>{
+    const calc = calcPro(profilData,trainingData,sportData);
+    const firstname = profilData?.firstname||"";
+    const weight = parseFloat(profilData?.weight||75);
+    const age = new Date().getFullYear()-(+profilData?.birthyear||1990);
+    const localSports = sportData?.selectedSports||sports||[];
+    const isEndurance = localSports.some(s=>["cycling_road","cycling_gravel","cycling_mtb","run_road","run_trail","triathlon","swimming","langlauf"].includes(s));
+
+    const SPORT_NAMES = {cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",run_road:"Strassenlauf",run_trail:"Traillauf",triathlon:"Triathlon",swimming:"Schwimmen",football:"Fussball",icehockey:"Eishockey",ski_alpine:"Ski Alpin",tennis:"Tennis",basketball:"Basketball",hyrox:"Hyrox"};
+    const sportNames = localSports.map(s=>SPORT_NAMES[s]||s).join(", ");
+
+    const KEY_INSIGHTS = [
+      {
+        icon:"🔥",
+        title:"Täglicher Energiebedarf",
+        value:`${calc.withTraining?.toLocaleString("de-CH")||"—"} kcal`,
+        desc:`An Trainingstagen. Grundumsatz: ${calc.bmr?.toLocaleString("de-CH")||"—"} kcal.`,
+        important:true,
+      },
+      {
+        icon:"💪",
+        title:"Proteinbedarf täglich",
+        value:`${calc.protein||"—"}g`,
+        desc:`${Math.round(weight*1.6)}–${Math.round(weight*2.0)}g für optimalen Muskelaufbau & Regeneration.`,
+        important:true,
+      },
+      {
+        icon:"⚡",
+        title:isEndurance?"Kohlenhydrate im Training":"Energie für Training",
+        value:isEndurance?`${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g/Std.`:`${calc.carbs||200}g/Tag`,
+        desc:isEndurance?"Während intensiver Einheiten. Kritisch für Leistung & Ausdauer.":"Ausreichend Kohlenhydrate für Explosivität und Konzentration.",
+        important:true,
+      },
+      {
+        icon:"🌙",
+        title:"Recovery Priorität",
+        value:"Magnesium + Schlaf",
+        desc:"Regeneration ist kein Bonus — sie entscheidet ob du morgen wieder auf Niveau trainieren kannst.",
+        important:false,
+      },
+    ];
+
+    const WARNINGS = [];
+    if(calc.withTraining > 3000) WARNINGS.push("Dein Energiebedarf ist hoch — stelle sicher dass du ausreichend und regelmässig isst.");
+    if(weight > 90) WARNINGS.push(`Bei ${weight}kg ist Proteinqualität besonders wichtig — mindestens ${Math.round(weight*1.6)}g täglich.`);
+    if(isEndurance) WARNINGS.push("Endauersport: Kohlenhydrate während dem Training sind nicht optional — leere Tanks kosten Minuten.");
+
+    return (
+      <div>
+        {/* Header */}
+        <div style={{marginBottom:20}}>
+          <h2 style={{fontSize:20,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.03em"}}>
+            {firstname?`Hallo ${firstname} — hier ist deine Analyse.`:"Deine Analyse."}
+          </h2>
+          <p style={{fontSize:13,color:C.g600,lineHeight:1.6}}>
+            Basierend auf {sportNames} · {age} Jahre · {weight}kg. Die wichtigsten Erkenntnisse auf einen Blick.
+          </p>
+        </div>
+
+        {/* Key Insights */}
+        <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:20}}>
+          {KEY_INSIGHTS.map((ins,i)=>(
+            <div key={i} style={{borderRadius:12,border:`1.5px solid ${ins.important?C.neon:C.g200}`,background:ins.important?C.neonDim:"#fff",padding:"14px 16px",display:"flex",gap:12,alignItems:"flex-start"}}>
+              <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{ins.icon}</span>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8,marginBottom:3}}>
+                  <div style={{fontSize:12,fontWeight:600,color:C.black}}>{ins.title}</div>
+                  <div style={{fontSize:14,fontWeight:700,color:ins.important?"#2D4A00":C.black,flexShrink:0}}>{ins.value}</div>
+                </div>
+                <div style={{fontSize:11,color:ins.important?"#4A7000":C.g600,lineHeight:1.5}}>{ins.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Warnings */}
+        {WARNINGS.length>0&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>BESONDERS BEACHTEN</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {WARNINGS.map((w,i)=>(
+                <div key={i} style={{padding:"10px 14px",borderRadius:10,background:"#FFF8E8",border:"1px solid #FFE082",fontSize:11,color:"#856404",lineHeight:1.6,display:"flex",gap:8}}>
+                  <span style={{flexShrink:0}}>⚠️</span>{w}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* PRO Teaser — blurred sections */}
+        {!isPro&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>NUR MIT PRO VERFÜGBAR</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {["Elektrolyte & Schweissverlust (präzise berechnet)","VO₂max & Leistungszonen","Kohlenhydrate pro Stunde (MET-basiert)","Alle Supplement-Dosierungen","Personalisierter Tagesplan"].map((item,i)=>(
+                <div key={i} style={{padding:"10px 14px",borderRadius:10,background:"#FAFAFA",border:"1px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+                  <span style={{fontSize:11,color:"#AAA",filter:"blur(3px)",userSelect:"none",flex:1}}>{item}</span>
+                  <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"#F0F0F0",color:"#AAA",fontFamily:"JetBrains Mono,monospace",flexShrink:0}}>🔒 PRO</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* CTA */}
+        <div style={{borderRadius:14,border:`1px solid ${C.g200}`,padding:"18px 20px",background:"#fff"}}>
+          {isPro?(
+            <div>
+              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:8}}>Bereit — alle Daten verfügbar.</div>
+              <button onClick={()=>setTab("verbrauch")}
+                style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                Zu Deine Daten →
+              </button>
+            </div>
+          ):(
+            <div>
+              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Auf PRO upgraden</div>
+              <div style={{fontSize:11,color:C.g600,marginBottom:12,lineHeight:1.5}}>Präzise Berechnungen, alle Dosierungen, Elektrolyte, VO₂max und vollständiger Tagesplan. CHF 6.90 / 6 Monate — einmalige Zahlung.</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                <button onClick={()=>setTab("verbrauch")}
+                  style={{background:"#F5F5F5",color:"#555",border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                  Kostenlos weiter →
+                </button>
+                <button onClick={onUpgrade}
+                  style={{background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                  PRO — CHF 6.90 →
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // ── VERBRAUCH TAB ──────────────────────────────────────────────────────────
   const VerbrauchTab=()=>{
     const [localTraining,setLocalTraining]=useState(()=>JSON.parse(JSON.stringify(trainingData||{})));
@@ -2505,7 +2949,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
     const INTENS=[["low","Leicht"],["medium","Mittel"],["high","Intensiv"],["competition","Wettkampf"]];
     const w=+profilData?.weight||75;
     const age=profilData?.birthyear?new Date().getFullYear()-+profilData.birthyear:30;
-    const calc=isPro?calcPro(profilData,localTraining,sportData):calcBasic(profilData,localTraining,healthOnly);
+    const calc=calcPro(profilData,localTraining,sportData);
     if(!calc) return <div style={{padding:24,color:C.g400}}>Lädt...</div>;
     const totalDays=Object.values(localTraining).reduce((s,d)=>s+(d.days||0),0);
     const totalMin=Object.values(localTraining).reduce((s,d)=>s+(d.days||0)*(d.duration||60),0);
@@ -2604,6 +3048,72 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
           })}
         </div>
 
+        {/* ── AI SUMMARY ── */}
+        {(()=>{
+          const AISummary=()=>{
+            const [summary,setSummary]=React.useState("");
+            const [loading,setLoading]=React.useState(false);
+            const [loaded,setLoaded]=React.useState(false);
+
+            const generate=async()=>{
+              if(loaded) return;
+              setLoading(true);
+              const sportsText=(sports||[]).map(id=>{
+                const d=localTraining[id]||{};
+                return `${id}: ${d.days||3}x/Wo, ${d.duration||60}min, Intensität ${d.intensity||"medium"}`;
+              }).join("; ");
+              const prompt=`Du bist TREYN AI, ein präziser Sportnutrition-Coach. Bewerte diese Trainingsdaten kurz und direkt auf Deutsch (3-4 Sätze, kein Markdown, keine Aufzählung):
+
+Sportler: ${profilData?.gender==="f"?"weiblich":"männlich"}, ${new Date().getFullYear()-(+profilData?.birthyear||1990)} Jahre, ${profilData?.weight||75}kg, ${profilData?.height||175}cm
+Training: ${sportsText}
+Grundumsatz: ${calc.bmr} kcal, Tagesbedarf mit Training: ${calc.withTraining} kcal
+Protein: ${calc.protein}g/Tag, Kohlenhydrate: ${calc.carbs}g/Tag
+
+Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr reicht, und gib einen konkreten Tipp. Persönlich und motivierend, nicht technisch.`;
+
+              try{
+                const res=await fetch("https://api.anthropic.com/v1/messages",{
+                  method:"POST",
+                  headers:{"Content-Type":"application/json"},
+                  body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+                });
+                const data=await res.json();
+                const text=data.content?.[0]?.text||"";
+                setSummary(text);
+                setLoaded(true);
+              }catch(e){
+                setSummary("Analyse konnte nicht geladen werden. Bitte versuche es erneut.");
+              }
+              setLoading(false);
+            };
+
+            React.useEffect(()=>{ generate(); },[]);
+
+            return (
+              <div style={{borderRadius:14,border:`1px solid ${C.neonBorder||"#E0FF80"}`,background:C.neonDim,padding:"18px 20px",marginBottom:20}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:8,height:8,borderRadius:"50%",background:loading?"#CCC":C.neon,transition:"background .3s"}}/>
+                    <span style={{fontSize:11,fontWeight:700,color:"#4A7000",fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>TREYN AI · DEINE ANALYSE</span>
+                  </div>
+                  {loaded&&<button onClick={()=>{setLoaded(false);setSummary("");generate();}} style={{background:"none",border:"none",fontSize:10,color:"#AAA",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↺ Neu</button>}
+                </div>
+                {loading&&(
+                  <div style={{display:"flex",gap:4,alignItems:"center"}}>
+                    {[0,1,2].map(i=><div key={i} style={{width:6,height:6,borderRadius:"50%",background:"#4A7000",opacity:.4,animation:`pulse 1.2s ${i*0.2}s infinite`}}/>)}
+                    <span style={{fontSize:12,color:"#4A7000",marginLeft:6}}>Analysiere deine Daten...</span>
+                  </div>
+                )}
+                {!loading&&summary&&(
+                  <p style={{fontSize:13,color:"#2D4A00",lineHeight:1.7,margin:0}}>{summary}</p>
+                )}
+                <style>{`@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}`}</style>
+              </div>
+            );
+          };
+          return <AISummary/>;
+        })()}
+
         {/* ── ENERGIE ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Energie</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
@@ -2625,6 +3135,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
         </div>
 
         {/* ── ELEKTROLYTE ── */}
+        <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Elektrolyte & Hydration">
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Elektrolyte & Flüssigkeit</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:8}}>
           <M label="Natrium-Verlust / Tag" value={isPro?calc.natriumMg.toLocaleString("de-CH"):"—"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
@@ -2635,6 +3146,8 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
           <M label="Schweiss / Session" value={isPro&&calc.sweatLitresPerSession?calc.sweatLitresPerSession:"—"} unit={isPro?"L":""} locked={!isPro} desc="Geschätzter Schweissverlust pro Trainingseinheit — wichtig für die richtige Flüssigkeitszufuhr während dem Sport."/>
         </div>
 
+        </BlurGate>
+        <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Leistungszonen & VO₂max">
         {/* ── LEISTUNGSZONEN ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Leistung & Herzfrequenz-Zonen</div>
         <div style={{display:"grid",gridTemplateColumns:isPro&&calc.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
@@ -2646,6 +3159,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
           )}
         </div>
 
+        </BlurGate>
         {/* ── KOHLENHYDRATE IM TRAINING ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Kohlenhydrate im Training</div>
         <div style={{borderRadius:12,border:"1px solid #EBEBEB",overflow:"hidden",marginBottom:24,background:"#fff"}}>
@@ -2724,9 +3238,150 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{fontSize:13,fontWeight:500,color:"#0A0A0A",marginBottom:2}}>Präzisere Werte mit PRO</div>
               <div style={{fontSize:11,color:"#888",lineHeight:1.5}}>Natrium, Magnesium, Schweiss, Wasser, VO₂max, exakter Protein- & Kohlenhydratbedarf.</div>
             </div>
-            <button onClick={onUpgrade} style={{background:"#0A0A0A",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>PRO · CHF 5.90 / Mt.</button>
+            <button onClick={onUpgrade} style={{background:"#0A0A0A",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>PRO · CHF 6.90 / Mt.</button>
           </div>
         )}
+      </div>
+    );
+  };
+
+  // ── CART TAB ───────────────────────────────────────────────────────────────
+  const CartTab=()=>{
+    const [cart,setCart]=useState(()=>{
+      try{ return JSON.parse(localStorage.getItem("treyn_cart")||"[]"); }catch{ return []; }
+    });
+
+    // Collect ALL products from supplements + nutrition + recovery with shop info
+    const ALL_PRODUCTS=[
+      // Basis Supplements
+      ...([...primSupps,...secSupps]).map(s=>({id:s.id,name:s.name,dose:s.dose,shop:s.shop||"iHerb",link:s.link,category:"Supplement",price:s.price||""})),
+      // Nutrition
+      ...[
+        {id:"sn_mau_gel",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",shop:"Maurten",link:AFF.maurten("gel-100-box"),category:"Sportnahrung",price:"~CHF 3.80"},
+        {id:"sn_mau_320",name:"Maurten Drink Mix 320",dose:"80g/500ml",shop:"Maurten",link:AFF.maurten("drink-mix-320"),category:"Sportnahrung",price:"~CHF 4.50"},
+        {id:"sn_mau_caf",name:"Maurten Gel 100 CAF",dose:"1 Gel alle 40–45 min",shop:"Maurten",link:AFF.maurten("gel-100-caf-100"),category:"Sportnahrung",price:"~CHF 4.00"},
+        {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",shop:"MNSTRY",link:AFF.mnstry("intensity-gel"),category:"Sportnahrung",price:"~CHF 3.50"},
+        {id:"sn_sp_elek",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab/500ml",shop:"Sponser",link:AFF.sponser("elektrolyt tabletten"),category:"Sportnahrung",price:"~CHF 0.50"},
+        {id:"prot_whey",name:"Whey Protein Isolat",dose:"25–30g post-workout",shop:"Myprotein",link:AFF.myprotein("whey protein isolate"),category:"Protein",price:"~CHF 1.50"},
+        {id:"prot_esn",name:"ESN Designer Whey",dose:"25–30g post-workout",shop:"ESN",link:AFF.esn("designer-whey-protein"),category:"Protein",price:"~CHF 1.20"},
+        {id:"prot_more",name:"More Nutrition Total Protein",dose:"25g post-workout",shop:"More Nutrition",link:AFF.morenutrition("total-protein"),category:"Protein",price:"~CHF 1.30"},
+        {id:"prot_vegan",name:"Myprotein Vegan Protein",dose:"25g post-workout",shop:"Myprotein",link:AFF.myprotein("vegan protein blend"),category:"Protein",price:"~CHF 1.40"},
+        {id:"prot_casein",name:"Micellar Casein",dose:"30g vor dem Schlafen",shop:"Myprotein",link:AFF.myprotein("micellar casein"),category:"Protein",price:"~CHF 1.80"},
+        {id:"rec_mg",name:"Magnesium Bisglycinate",dose:"300–400mg abends",shop:"iHerb",link:AFF.iherb("magnesium bisglycinate"),category:"Recovery",price:"~CHF 0.15"},
+        {id:"rec_kolla",name:"Kollagen + Vitamin C",dose:"10–15g vor Training",shop:"iHerb",link:AFF.iherb("collagen vitamin c"),category:"Recovery",price:"~CHF 0.60"},
+        {id:"rec_tart",name:"Tart Cherry Extrakt",dose:"480mg täglich",shop:"iHerb",link:AFF.iherb("tart cherry"),category:"Recovery",price:"~CHF 0.40"},
+        {id:"rec_omega",name:"Omega-3 (EPA/DHA)",dose:"2–3g täglich",shop:"iHerb",link:AFF.iherb("omega 3 epa dha"),category:"Recovery",price:"~CHF 0.30"},
+        {id:"rec_ashwa",name:"Ashwagandha KSM-66",dose:"600mg täglich",shop:"iHerb",link:AFF.iherb("ashwagandha ksm-66"),category:"Recovery",price:"~CHF 0.50"},
+        {id:"rec_vit_d",name:"Vitamin D3 + K2",dose:"2000–4000 IE täglich",shop:"iHerb",link:AFF.iherb("vitamin d3 k2"),category:"Recovery",price:"~CHF 0.10"},
+      ],
+      // Recovery Gear
+      {id:"rec_therabody",name:"Therabody",dose:"",shop:"Therabody",link:"https://www.therabody.com/de-ch",category:"Recovery Gear",price:""},
+      {id:"rec_hyperice",name:"Hyperice / Normatec",dose:"",shop:"Hyperice",link:"https://hyperice.com/",category:"Recovery Gear",price:""},
+      {id:"rec_blackroll",name:"Blackroll",dose:"",shop:"Blackroll",link:"https://www.blackroll.com/ch-de",category:"Recovery Gear",price:""},
+      {id:"rec_compex",name:"Compex",dose:"",shop:"Compex",link:"https://www.compex.com/ch-de",category:"Recovery Gear",price:""},
+    ];
+
+    const owned=JSON.parse(localStorage.getItem("treyn_owned")||"[]");
+    const cartItems=ALL_PRODUCTS.filter(p=>owned.includes(p.id)||cart.includes(p.id));
+
+    // Group by shop
+    const byShop={};
+    cartItems.forEach(p=>{
+      if(!byShop[p.shop]) byShop[p.shop]={shop:p.shop,items:[],link:p.link};
+      byShop[p.shop].items.push(p);
+    });
+
+    const SHOP_COLORS={"Maurten":{bg:"#000",t:"#C8FF00"},"MNSTRY":{bg:"#0D0D1A",t:"#C8FF00"},"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"},"Therabody":{bg:"#1A1A1A",t:"#fff"},"Hyperice":{bg:"#0057FF",t:"#fff"},"Blackroll":{bg:"#000",t:"#fff"},"Compex":{bg:"#E31937",t:"#fff"}};
+
+    // Build shop search URL
+    const getShopUrl=(shop,items)=>{
+      const q=encodeURIComponent(items.map(i=>i.name).join(" "));
+      const urls={
+        "Maurten":"https://www.maurten.com/collections/all?ref=TREYN",
+        "MNSTRY":"https://mnstry.com/collections/all?ref=TREYN",
+        "iHerb":`https://www.iherb.com/search?kw=${q}&rcode=DEIN_CODE`,
+        "Myprotein":`https://www.myprotein.com/search?query=${q}&affil=DEIN_CODE`,
+        "Sponser":"https://www.sponser.ch/de?ref=TREYN",
+        "ESN":"https://www.esn.com/collections/all?ref=TREYN",
+        "More Nutrition":"https://www.more-nutrition.de/collections/all?ref=TREYN",
+        "Therabody":"https://www.therabody.com/de-ch/collections/all",
+        "Hyperice":"https://hyperice.com/collections/all",
+        "Blackroll":"https://www.blackroll.com/ch-de/collections/all",
+        "Compex":"https://www.compex.com/ch-de/collections/all",
+      };
+      return urls[shop]||`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${q}`;
+    };
+
+    if(cartItems.length===0) return (
+      <div>
+        <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Warenkorb</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:24,lineHeight:1.5}}>Alle markierten Produkte gesammelt — direkt zum Partnershop.</p>
+        <div style={{padding:"32px 20px",textAlign:"center",background:"#FAFAFA",borderRadius:14,border:"1px solid #EBEBEB"}}>
+          <div style={{fontSize:32,marginBottom:12}}>🛒</div>
+          <div style={{fontSize:14,fontWeight:500,color:C.black,marginBottom:6}}>Noch keine Produkte im Warenkorb</div>
+          <div style={{fontSize:12,color:"#AAA",lineHeight:1.6}}>Markiere Produkte bei Supplements, Sportnahrung oder Recovery mit "Ich habe das Produkt bereits" — sie erscheinen dann automatisch hier.</div>
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Warenkorb</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{cartItems.length} Produkte bei {Object.keys(byShop).length} Shops — direkt zur Bestellung.</p>
+
+        {/* Info */}
+        <div style={{marginBottom:16,padding:"10px 14px",background:C.neonDim,borderRadius:10,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",lineHeight:1.6}}>
+          💡 Klicke auf "Zum Shop" um alle Produkte dieses Anbieters gesammelt zu bestellen. Die Suche wird mit allen Produktnamen vorausgefüllt.
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:10}}>
+          {Object.values(byShop).map((group,i)=>{
+            const sc=SHOP_COLORS[group.shop]||{bg:"#333",t:"#fff"};
+            const shopUrl=getShopUrl(group.shop,group.items);
+            return (
+              <div key={i} style={{borderRadius:14,border:"1px solid #EBEBEB",overflow:"hidden",background:"#fff",boxShadow:"0 1px 4px rgba(0,0,0,.04)"}}>
+                {/* Shop Header */}
+                <div style={{background:sc.bg,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <span style={{fontSize:14,fontWeight:700,color:sc.t,letterSpacing:"-.01em"}}>{group.shop}</span>
+                    <span style={{fontSize:10,padding:"2px 8px",borderRadius:10,background:"rgba(255,255,255,.15)",color:sc.t,fontFamily:"JetBrains Mono,monospace"}}>{group.items.length} Produkte</span>
+                  </div>
+                  <a href={shopUrl} target="_blank" rel="noopener noreferrer"
+                    style={{display:"inline-flex",alignItems:"center",gap:5,background:"#C8FF00",color:"#000",padding:"7px 14px",borderRadius:8,fontSize:11,fontWeight:700,textDecoration:"none",flexShrink:0}}>
+                    Zum Shop ↗
+                  </a>
+                </div>
+                {/* Products */}
+                <div>
+                  {group.items.map((p,j)=>(
+                    <div key={p.id} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 16px",borderBottom:j<group.items.length-1?"1px solid #F5F5F5":"none"}}>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:12,fontWeight:500,color:C.black}}>{p.name}</div>
+                        <div style={{display:"flex",gap:6,marginTop:2}}>
+                          {p.dose&&<span style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace"}}>{p.dose}</span>}
+                          <span style={{fontSize:10,padding:"1px 6px",borderRadius:6,background:"#F5F5F5",color:"#888",fontFamily:"JetBrains Mono,monospace"}}>{p.category}</span>
+                          {p.price&&<span style={{fontSize:10,color:"#4A7000",fontWeight:600}}>{p.price}</span>}
+                        </div>
+                      </div>
+                      <a href={p.link} target="_blank" rel="noopener noreferrer"
+                        style={{fontSize:10,color:"#AAA",textDecoration:"none",flexShrink:0,marginLeft:8}}>
+                        direkt ↗
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Clear button */}
+        <div style={{marginTop:16,textAlign:"center"}}>
+          <button onClick={()=>{localStorage.setItem("treyn_owned","[]");window.location.reload();}}
+            style={{background:"transparent",border:"1px solid #EBEBEB",color:"#AAA",borderRadius:8,padding:"8px 16px",fontSize:11,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Alle Markierungen entfernen
+          </button>
+        </div>
       </div>
     );
   };
@@ -3067,14 +3722,14 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:isPro?0:12}}>
             <div>
               <div style={{fontSize:14,fontWeight:700,color:C.black,marginBottom:2}}>{isPro?"TREYN+ PRO":"TREYN+ Basic"}</div>
-              <div style={{fontSize:11,color:C.g600}}>{isPro?"6 Monate · Aktiv":"Pauschalberechnungen · CHF 6.90 / 6 Mt."}</div>
+              <div style={{fontSize:11,color:C.g600}}>{isPro?"6 Monate · Aktiv":"Pauschalberechnungen · CHF 9.90 / 6 Mt."}</div>
             </div>
             <span style={{fontSize:10,padding:"3px 8px",borderRadius:6,background:isPro?C.black:"#F0F0F0",color:isPro?C.neon:"#888",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{isPro?"PRO":"BASIC"}</span>
           </div>
           {!isPro&&(
             <button onClick={onUpgrade}
               style={{width:"100%",background:C.black,color:C.neon,border:"none",borderRadius:9,padding:"10px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Upgrade auf PRO — CHF 9.90 / 6 Monate
+              Upgrade auf PRO — CHF 6.90 / 6 Monate
             </button>
           )}
         </div>
@@ -3212,12 +3867,9 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
             <div style={{fontSize:10,fontWeight:700,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",padding:"0 14px",marginBottom:8}}>MEIN PROFIL</div>
             {NAV.map(item=><NavItem key={item.id} item={item}/>)}
             <div style={{flex:1}}/>
-            <div style={{padding:"12px 14px",borderRadius:10,background:C.g100,marginTop:8}}>
-              <div style={{fontSize:10,color:C.g400,marginBottom:4,fontFamily:"JetBrains Mono,monospace"}}>{sportLabel} · {intensityLabel}</div>
-              <div style={{fontSize:12,fontWeight:600,color:C.black}}>{kcal.withTraining.toLocaleString("de-CH")} kcal</div>
-              <div style={{fontSize:10,color:C.g400}}>Trainingstag Ø</div>
-            </div>
+
             <div style={{paddingTop:8,borderTop:`1px solid ${C.g200}`,marginTop:8,display:"flex",flexDirection:"column",gap:2}}>
+              <NavItem item={AICHAT_NAV}/>
               <NavItem item={PROFIL_NAV}/>
               <NavItem item={KONTAKT_NAV}/>
             </div>
@@ -3230,21 +3882,31 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
             <div>
               <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Supplements</h2>
               <p style={{fontSize:13,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-
-              {/* AI Disclaimer */}
-              <div style={{marginBottom:12,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>
-                  Ernährungsempfehlungen von TREYN AI — keine medizinische Beratung. Inhaltsstoffe & Wechselwirkungen immer beim Hersteller prüfen. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.
+              {praeferenzenData?.suppForm&&praeferenzenData.suppForm!=="beides"&&(
+                <div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}>
+                  <span>✓</span> Gefiltert nach deiner Präferenz: <strong>{praeferenzenData.suppForm==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong>
                 </div>
-              </div>
+              )}
 
 
-              {/* Philosophy banner */}
-              <div style={{marginBottom:20,padding:"12px 14px",background:C.g100,borderRadius:11,border:`1px solid ${C.g200}`,display:"flex",gap:10,alignItems:"flex-start"}}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2" strokeLinecap="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <div>
-                  <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir arbeiten mit ausgewählten Partnershops & Brands zusammen — empfehlen aber alle verfügbaren Supplements & Sportnahrung für deine bestmögliche Performance, unabhängig ob ein Produkt bei uns gelistet ist oder extern verlinkt wird.</div>
+              {/* Info Karte */}
+              <div style={{marginBottom:16,borderRadius:12,border:`1px solid ${C.g200}`,overflow:"hidden"}}>
+                <div style={{background:C.g100,padding:"8px 14px",borderBottom:`1px solid ${C.g200}`,display:"flex",alignItems:"center",gap:6}}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span style={{fontSize:10,fontWeight:600,color:C.g600,letterSpacing:".04em",textTransform:"uppercase",fontFamily:"JetBrains Mono,monospace"}}>Hinweis</span>
+                </div>
+                <div style={{padding:"10px 14px"}}>
+                  <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                    <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                      <span style={{fontSize:12,flexShrink:0,marginTop:1}}>🩺</span>
+                      <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>TREYN AI-Empfehlungen sind keine medizinische Beratung. Inhaltsstoffe & Wechselwirkungen immer beim Hersteller prüfen. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.</span>
+                    </div>
+                    <div style={{height:1,background:C.g100}}/>
+                    <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                      <span style={{fontSize:12,flexShrink:0,marginTop:1}}>🤝</span>
+                      <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir arbeiten mit ausgewählten Partnershops zusammen — empfehlen aber alle verfügbaren Produkte für deine bestmögliche Performance, unabhängig von Listung oder Verlinkung.</span>
+                    </div>
+                  </div>
                 </div>
               </div>
               {primSupps.length>0&&<>
@@ -3266,6 +3928,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               <div style={{marginTop:20}}><AiChat context={aiCtx} isPro={isPro}/></div>
             </div>
           )}
+          {tab==="summary"&&<SummaryTab/>}
           {tab==="verbrauch"&&<VerbrauchTab/>}
           {tab==="nutrition"&&<NutritionTab/>}
           {tab==="fertiggerichte"&&(
@@ -3345,6 +4008,7 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
               </div>
             </div>
           )}
+          {tab==="cart"&&<CartTab/>}
           {tab==="recovery"&&(
             <div>
               <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Recovery Gear</h2>
@@ -3430,6 +4094,13 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
             </div>
           )}
           {tab==="produkte"&&<ProduktTab/>}
+          {tab==="aichat"&&(
+            <div>
+              <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten, Supplements und Ernährung — direkt beantwortet von TREYN AI.</p>
+              <AiChat context={aiCtx} isPro={isPro}/>
+            </div>
+          )}
           {tab==="kontakt"&&<KontaktTab/>}
           {tab==="profil"&&(
             <div>
@@ -3445,12 +4116,14 @@ function Results({sportData,trainingData,profilData,allergenData,tier,onReset,on
 }
 
 
-export default function App() {
+export default 
+function App() {
   const [phase,setPhase]=useState("intro");
   const [sportData,setSportData]=useState(null);
   const [trainingData,setTrainingData]=useState(null);
   const [profilData,setProfilData]=useState(null);
   const [allergenData,setAllergenData]=useState(null);
+  const [praeferenzenData,setPraeferenzenData]=useState(null);
   const [tier,setTier]=useState("basic");
   const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setTier("basic");setPhase("intro");};
 
@@ -3485,7 +4158,7 @@ export default function App() {
   };
 
   const [isDemoMode,setIsDemoMode]=useState(false);
-  const devSkip=()=>{ setPhase("preview"); };
+  const devSkip=()=>{ setProfilData({firstname:"Kevin",lastname:"Oberholzer",email:"kevin@test.ch",gender:"m",birthyear:"1988",height:"192",weight:"100",country:"Schweiz",platform:"wahoo",rhr:"48",sleep:"7"}); setPhase("preview"); };
   const startDemo=()=>{
     setIsDemoMode(true);
     setSportData({primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{road:true,gravel:true,run_road:true},childSel:{},healthOnly:false});
@@ -3493,8 +4166,9 @@ export default function App() {
       cycling:{days:5,intensity:"high",duration:120,hasCompetition:true,compCount:12,compTypes:["Rennen"]},
       running:{days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:0,compTypes:[]},
     });
-    setProfilData({firstname:"Alex",lastname:"Demo",email:"alex@demo.ch",gender:"m",birthyear:"1990",height:"178",weight:"72",country:"Schweiz",platform:"garmin",rhr:"52",sleep:"7.5"});
+    setProfilData({firstname:"Selina",lastname:"Demo",email:"selina@demo.ch",gender:"f",birthyear:"1993",height:"168",weight:"62",country:"Schweiz",platform:"garmin",rhr:"58",sleep:"7.5"});
     setAllergenData({allergens:[],customAllergens:"",noAllergens:true});
+    setPraeferenzenData({suppForm:"beides",energieForm:"gel",proteinForm:"shake"});
     setTier("pro");
     setPhase("demo");
   };
@@ -3507,24 +4181,28 @@ export default function App() {
       <style>{css}</style>
       {phase==="intro"&&<button onClick={devSkip} style={{position:"fixed",bottom:20,right:20,zIndex:9999,background:C.black,color:C.neon,border:"none",borderRadius:8,padding:"8px 14px",fontSize:11,fontFamily:"JetBrains Mono,monospace",cursor:"pointer",opacity:.8}}>⚡ Zur Analyse</button>}
       {phase==="intro"      && <Intro           onNext={()=>setPhase("demo")} onDemo={startDemo}/>}
-      {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={isDemoMode?launchDemo:startDemo}/>}
+      {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase(v.healthOnly?"profil":"training");}}/>}
       {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>setPhase("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
       {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>setPhase(sportData?.healthOnly?"sport":"training")} onNext={v=>{setProfilData(v);setPhase("allergien");}}/>}
-      {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("profil")} onNext={v=>{setAllergenData(v);setPhase("preview");}}/>}
+      {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("profil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
+      {phase==="praeferenzen" && <StepPraeferenzen onBack={()=>setPhase("allergien")} onNext={v=>{setPraeferenzenData(v);setPhase("willkommen");}}/>}
+      {phase==="willkommen" && <StepWillkommen onNext={()=>setPhase("analysing")}/>}
       {phase==="preview"    && <AnalysePreview  sportData={sportData} trainingData={trainingData} profilData={profilData}
-        onContinue={()=>{setTier("basic");setPhase("results");}}
+        onContinue={()=>{setTier("basic");setPhase("analysing");}}
         onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData)}/>}
+      {phase==="analysing" && <AnalysingScreen onDone={()=>setPhase("results")} profilData={profilData} sportData={sportData}/>}
       {phase==="results"    && isDemoMode&&(
         <div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,background:"#0A0A0A",padding:"10px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <button onClick={()=>{setIsDemoMode(false);setPhase("demo");}} style={{fontSize:12,color:"rgba(255,255,255,.5)",background:"none",border:"1px solid rgba(255,255,255,.15)",borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>← Zurück</button>
             <span style={{fontSize:10,padding:"2px 8px",borderRadius:4,background:C.neon,color:"#000",fontWeight:700,fontFamily:"JetBrains Mono,monospace"}}>DEMO</span>
             <span style={{fontSize:13,color:"#fff"}}>Musterprofil von Alex · Du siehst alle PRO-Features</span>
           </div>
           <button onClick={()=>{setIsDemoMode(false);setPhase("intro");}} style={{fontSize:12,color:C.neon,background:"none",border:`1px solid ${C.neon}`,borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:500}}>Eigene Analyse starten →</button>
         </div>
       )}
-      {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} tier={tier} onReset={reset}
+      {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={reset}
         onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData)}/>}
     </div>
   );
