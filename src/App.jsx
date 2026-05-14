@@ -701,7 +701,10 @@ function Intro({onNext, onDemo, lang="de", switchLang}) {
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:40}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div style={{marginBottom:52,opacity:logoVisible?1:0,transform:logoVisible?"scale(1) translateY(0)":"scale(0.75) translateY(10px)",transition:"all .55s cubic-bezier(.34,1.56,.64,1)"}}>
-          <Logo size="lg"/>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <Logo size="lg"/>
+            <span style={{fontSize:9,fontWeight:700,letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",background:"#F0F0EE",color:"#888",padding:"3px 8px",borderRadius:5,textTransform:"uppercase"}}>Beta</span>
+          </div>
         </div>
         {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)} onCountryClick={()=>setShowCountries(true)}/>}
         {btnVisible&&(
