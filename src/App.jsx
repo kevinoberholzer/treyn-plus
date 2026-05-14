@@ -927,7 +927,7 @@ const TRANSLATIONS={
     demo_basic_desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo.",
     demo_pro_title:"PRO — alles freigeschaltet",
     demo_pro_desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
-    demo_cta:"Deine kostenlose Analyse entdecken →",
+    demo_cta:"Kostenlose Analyse entdecken →",
 
     // ONBOARDING STEPS
     step_weiter:"Weiter →",
@@ -3752,7 +3752,7 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
           ))}
         </div>
         <button onClick={onNext} style={{width:"100%",background:"#C8FF00",color:"#000",border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-          Deine kostenlose Analyse entdecken →
+          Kostenlose Analyse entdecken →
         </button>
         <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Dauert wenige Sekunden.</div>
       </div>
