@@ -6026,8 +6026,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <M label="Magnesium-Bedarf / Tag" value={isPro?magnesiumMg:"—"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:20}}>
-          <M label={"Wasserverbrauch / Tag"} value={isPro?(Math.round(waterMl/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="Dein persönlicher Wasserbedarf inkl. Trainingszuschlag. Sportler brauchen deutlich mehr als der Richtwert von 2L."/>
-          <M label="Schweiss / Session" value={isPro?sweatL:"—"} unit={isPro?"L":""} locked={!isPro} desc="Geschätzter Schweissverlust pro Trainingseinheit — wichtig für die richtige Flüssigkeitszufuhr während dem Sport."/>
+          <M label={"Wasser Trainingstag"} value={isPro?(Math.round(waterMl/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="Gesamter Wasserbedarf an Trainingstagen — inkl. Schweissverlust und Sportzuschlag. Deutlich mehr als an Ruhetagen." accent/>
+          <M label={"Wasser Ruhetag"} value={isPro?(Math.round(waterMl*0.6/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="An Ruhetagen reicht deutlich weniger Wasser — kein Schweissverlust durch Sport, nur Grundbedarf und Alltagsaktivität."/>
         </div>
 
         </BlurGate>
@@ -6881,7 +6881,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       <div>
         {/* How it works */}
         <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:16}}>
-          <div style={{background:C.neon,padding:"12px 16px"}}>
+          <div style={{background:C.neonDim,padding:"12px 16px",borderBottom:`1px solid ${C.neonBorder}`}}>
             <span style={{fontSize:12,fontWeight:600,color:C.black}}>So funktioniert die Bluttest-Kopplung</span>
           </div>
           <div style={{padding:"16px",background:C.white}}>
