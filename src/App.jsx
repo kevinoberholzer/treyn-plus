@@ -615,7 +615,7 @@ function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
 // ─── LOGO ─────────────────────────────────────────────────────────────────────
 
 function Logo({size="md"}) {
-  const s = size==="lg"?{b:38,f:22,g:13}:size==="sm"?{b:22,f:13,g:8}:{b:30,f:17,g:10};
+  const s=size==="lg"?{b:38,f:22,g:13}:size==="sm"?{b:22,f:13,g:8}:{b:30,f:17,g:10};
   return (
     <div style={{display:"flex",alignItems:"center",gap:8}}>
       <div style={{width:s.b,height:s.b,background:C.black,borderRadius:s.b*.28,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
@@ -720,12 +720,7 @@ function Intro({onNext, onDemo, lang="de", switchLang}) {
                 <span style={{fontSize:11,color:C.g500,fontWeight:500}}>4.9</span>
                 <span style={{fontSize:11,color:C.g400}}>· 87 Google Reviews</span>
               </div>
-              <a href="https://www.treyn.ch/business" target="_blank" rel="noopener noreferrer"
-                style={{fontSize:11,color:C.g600,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:7,fontWeight:500,transition:"all .15s"}}
-                onMouseEnter={e=>{e.currentTarget.style.background=C.g200;e.currentTarget.style.color=C.black}}
-                onMouseLeave={e=>{e.currentTarget.style.background=C.g100;e.currentTarget.style.color=C.g600}}>
-                Für Unternehmen →
-              </a>
+
             </div>
           </>
         )}
@@ -7141,39 +7136,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
 export default 
 
-// ─── PASSWORD GATE ─────────────────────────────────────────────────────────────
-function PasswordGate({onUnlock}) {
-  const [pw, setPw] = React.useState("");
-  const [err, setErr] = React.useState(false);
-  const check = () => {
-    if(pw === "kapdwn") { localStorage.setItem("treyn_pw","ok"); onUnlock(); }
-    else { setErr(true); setTimeout(()=>setErr(false), 1200); }
-  };
-  return (
-    <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",fontFamily:"Inter,sans-serif"}}>
-      <div style={{width:"100%",maxWidth:320,padding:"0 24px"}}>
-        <div style={{marginBottom:32,textAlign:"center",fontFamily:"JetBrains Mono,monospace",fontWeight:700,fontSize:16,letterSpacing:".05em"}}>TREYN+</div>
-        <div style={{fontSize:13,color:"#666",marginBottom:16,textAlign:"center"}}>Passwort eingeben</div>
-        <input
-          type="password"
-          value={pw}
-          onChange={e=>setPw(e.target.value)}
-          onKeyDown={e=>e.key==="Enter"&&check()}
-          autoFocus
-          placeholder="••••••"
-          style={{width:"100%",padding:"12px 14px",borderRadius:10,border:`1px solid ${err?"#ff4444":"#E8E8E6"}`,fontSize:15,fontFamily:"Inter,sans-serif",outline:"none",marginBottom:10,background:err?"#fff5f5":"#fff",transition:"border-color .2s",boxSizing:"border-box"}}
-        />
-        <button onClick={check} style={{width:"100%",padding:"13px",borderRadius:10,background:"#C8FF00",color:"#0A0A0A",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-          Weiter →
-        </button>
-        {err&&<div style={{textAlign:"center",marginTop:10,fontSize:12,color:"#ff4444"}}>Falsches Passwort</div>}
-      </div>
-    </div>
-  );
-}
 
 function App() {
-  const [unlocked,setUnlocked]=useState(()=>localStorage.getItem("treyn_pw")==="ok");
   const [phase,setPhase]=useState("intro");
   const [sportData,setSportData]=useState(null);
   const [trainingData,setTrainingData]=useState(null);
@@ -7259,7 +7223,6 @@ function App() {
     setPhase("results");
   };
 
-  if(!unlocked) return <PasswordGate onUnlock={()=>setUnlocked(true)}/>;
   return (
     <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
       <style>{css}</style>
