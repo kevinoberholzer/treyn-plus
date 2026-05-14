@@ -5817,6 +5817,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const w=+profilData?.weight||75;
     const age=profilData?.birthyear?new Date().getFullYear()-+profilData.birthyear:30;
     const calc=calcPro(profilData,localTraining,sportData);
+    const timingRecs=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
     if(!calc||!profilData||!trainingData) return (
       <div style={{padding:24,textAlign:"center"}}>
         <div style={{fontSize:14,color:C.g400,marginBottom:8}}>Daten werden geladen...</div>
@@ -5889,7 +5890,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{borderRadius:12,border:"1px solid #EBEBEB",overflow:"hidden",marginBottom:24,background:"#fff"}}>
           {Object.entries(localTraining).map(([id,d],i,arr)=>{
             const s=SPORT_GROUPS.find(g=>g.id===id);
-            const met=(SPORT_MET[id]||SPORT_MET.fussball)[d.intensity||"medium"];
+            const met=(SPORT_MET[id]||SPORT_MET.fussball||{})[d.intensity||"medium"]||5;
             const kcalSess=Math.round(met*w*(d.duration||60)/60);
             return (
               <div key={id} style={{padding:"12px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none"}}>
@@ -5951,7 +5952,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 Sportler: ${profilData?.gender==="f"?"weiblich":"männlich"}, ${new Date().getFullYear()-(+profilData?.birthyear||1990)} Jahre, ${profilData?.weight||75}kg, ${profilData?.height||175}cm
 Training: ${sportsText}
 Grundumsatz: ${calc.bmr} kcal, Tagesbedarf mit Training: ${calc.withTraining} kcal
-Protein: ${calc.protein}g/Tag, Kohlenhydrate: ${calc.carbs}g/Tag
+Protein: ${calc.proteinMin||Math.round((+profilData?.weight||75)*1.6)}g/Tag, Kohlenhydrate: ${calc.carbsG||Math.round((calc.withTraining||2500)*0.5/4)}g/Tag
 
 Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr reicht, und gib einen konkreten Tipp. Persönlich und motivierend, nicht technisch.`;
 
@@ -6000,9 +6001,10 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
         {/* ── ENERGIE ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Energie"}</div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-          <M label={"Grundumsatz"} value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen." accent/>
-          <M label={isPro?"Tagesbedarf (Training)":"Mit Training (Schätzung)"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc={isPro?"Dein gesamter Tagesbedarf an Trainingstagen. Berechnet via MET-Werte für jede Sportart.":"Geschätzter Tagesbedarf mit Training. Upgrade auf PRO für sportartspezifische Genauigkeit."}/>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:8}}>
+          <M label={"Grundumsatz"} value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen."/>
+          <M label={"Trainingstag"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc="Gesamtbedarf an Trainingstagen — Grundumsatz plus Kalorienverbrauch durch Sport." accent/>
+          <M label={"Ruhetag"} value={calc.restDay?calc.restDay.toLocaleString("de-CH"):bmr.toLocaleString("de-CH")} unit="kcal" sub="ohne Sportverbrauch" desc="An Ruhetagen deutlich weniger — nur Grundumsatz plus leichte Alltagsaktivität."/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Kaloriendefizit Training" value={(withTraining-bmr||0).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
@@ -6034,7 +6036,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Leistungszonen & VO₂max">
         {/* ── LEISTUNGSZONEN ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Leistung & Herzfrequenz-Zonen"}</div>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isPro&&calc.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isPro&&calc?.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Max. Herzfrequenz" value={220-age} unit="bpm" desc="Deine theoretische maximale Herzfrequenz. Basis für alle Trainingszonenbergechnungen (220 – Alter)."/>
           <M label="Fettverbrennungszone" value={`${Math.round((220-age)*.60)}–${Math.round((220-age)*.70)}`} unit="bpm" desc="In dieser Zone verbrennt dein Körper anteilsmässig am meisten Fett. Ideal für lange, ruhige Ausdauereinheiten."/>
           <M label="Ausdauerzone" value={`${Math.round((220-age)*.70)}–${Math.round((220-age)*.80)}`} unit="bpm" desc="Typische Zone für Grundlagenausdauer. Fordert das Herz-Kreislauf-System ohne zu überlasten."/>
