@@ -4419,7 +4419,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const userCountry=profilData?.country||"Schweiz";
   const isEUR=["Deutschland","Österreich"].includes(userCountry);
   const PRICE_STR=isEUR?"EUR 9.90":"CHF 12.90";
-  const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":PRICE_PERIOD;
+  const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
   const isCH=["Schweiz"].includes(userCountry);
   const isDAch=["Schweiz","Deutschland","Österreich"].includes(userCountry);
   // Shop availability label
