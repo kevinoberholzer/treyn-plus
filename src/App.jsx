@@ -2163,7 +2163,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
 
 function StepLebensstil({onNext, onBack}) {
   const isMobile=useWindowWidth()<=768;
-  const [form,setForm]=useState({goal:"",injuries:[],stressLevel:null,dietQuality:null,altitude:null,recoveryStatus:null,currentSupps:[],medications:[]});
+  const [form,setForm]=useState({goal:"",challenges:[],injuries:[],stressLevel:null,dietQuality:null,altitude:null,recoveryStatus:null,currentSupps:[],medications:[]});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const toggleArr=(k,v)=>setForm(f=>{
     const curr=(f[k]||[]).filter(x=>x!=="none");
@@ -2233,6 +2233,34 @@ function StepLebensstil({onNext, onBack}) {
             </div>
           </div>
 
+
+          {/* ROW: Grösste Herausforderung (optional, max 3) */}
+          <div style={{...card,marginBottom:10}}>
+            <Q label={"Grösste Herausforderung"} sub={`Optional · ${(form.challenges||[]).length}/3 gewählt`}/>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
+              {[
+                {id:"sleep",      l:"Schlaf",              d:"Zu wenig oder schlechte Schlafqualität"},
+                {id:"stress",     l:"Stress & Cortisol",   d:"Hohes Stresslevel, Erholung fällt schwer"},
+                {id:"recovery",   l:"Regeneration",        d:"Körper erholt sich zu langsam"},
+                {id:"weight",     l:"Gewicht halten",      d:"Trotz Training schwer zu kontrollieren"},
+                {id:"energy",     l:"Energie & Fokus",     d:"Müdigkeit, mentale Erschöpfung"},
+                {id:"joints",     l:"Gelenke & Sehnen",    d:"Schmerzen oder Verletzungsanfälligkeit"},
+              ].map(o=>{
+                const active=(form.challenges||[]).includes(o.id);
+                const atMax=(form.challenges||[]).length>=3&&!active;
+                return <Tile key={o.id} id={o.id} label={o.l} desc={o.d}
+                  active={active}
+                  disabled={atMax}
+                  onClick={()=>{
+                    const arr=form.challenges||[];
+                    const on=arr.includes(o.id);
+                    if(on) set("challenges",arr.filter(c=>c!==o.id));
+                    else if(arr.length<3) set("challenges",[...arr,o.id]);
+                  }}
+                />;
+              })}
+            </div>
+          </div>
           {/* ROW 2: Erholungsstatus (full width — 4 options in 2×2 grid) */}
           <div style={{...card,marginBottom:10}}>
             <Q label="Aktueller Erholungsstatus" sub="Beeinflusst Recovery-Priorität und Magnesiumbedarf."/>
@@ -2655,6 +2683,7 @@ function calcPro(profilData, trainingData, sportData) {
 
   // Recovery status → Magnesium + protein multiplier + ashwagandha priority
   const recoveryMgBonus = {excellent:0, good:0, tired:60, recovery:100}[recoveryStatus]||0;
+  const challenges=profilData?.challenges||[];
   const recoveryProtBoost = {excellent:0, good:0, tired:0.1, recovery:0.15}[recoveryStatus]||0;
   const recoveryAshwaNeeded = recoveryStatus==="tired"||recoveryStatus==="recovery";
   const recoveryNote = recoveryStatus==="tired"
@@ -2712,7 +2741,7 @@ function calcPro(profilData, trainingData, sportData) {
     waterMl:Math.round(waterMl+altitudeHydrationBonus),
     fatBurnMin, fatBurnMax, vo2max, vo2maxLabel, sleep,
     ironRisk:ironRisk||altitudeIronNeeded||ironRiskDiet,
-    isFemale, w, goal, primaryTrainingTime, timingRecs,
+    isFemale, w, goal, challenges, primaryTrainingTime, timingRecs,
     // Existing insight flags
     stressAshwaNeeded, stressRecoveryNote, vitDRisk, b12Risk,
     altitudeIronNeeded, altitudeNote, needsCollagen, needsOmega3Extra,
@@ -3183,7 +3212,7 @@ function checkAllergens(suppId, suppName, allergenData) {
 
 // ─── PRODUCT CARD ─────────────────────────────────────────────────────────────
 
-function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
+function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],compact=false}) {
   const [open,setOpen]=useState(false);
   const [showBudget,setShowBudget]=useState(false);
   const active=showBudget&&s.budget?s.budget:s;
@@ -3221,6 +3250,27 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
   const hasCycle=p?.pause&&!p.pause.toLowerCase().includes("keine");
   const hasConflict=interactions.some(i=>i.type==="conflict");
   const hasSynergy=interactions.some(i=>i.type==="synergy");
+  if(compact) return (
+    <div style={{border:`1px solid ${isPrimary?C.g400:C.g200}`,borderRadius:12,padding:"12px 14px",background:C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0,display:"flex",flexDirection:"column",gap:6}}>
+      <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+        {isPrimary&&<span className="chip hi" style={{fontSize:9}}>ZWINGEND</span>}
+        {!isPrimary&&<span className="chip" style={{fontSize:9}}>OPTIONAL</span>}
+        {hasAllergen&&<span style={{fontSize:9,padding:"2px 6px",borderRadius:4,background:"rgba(255,59,48,.12)",color:"#E53E3E",fontWeight:700}}>⚠</span>}
+      </div>
+      <div style={{fontSize:13,fontWeight:700,color:C.black,letterSpacing:"-.02em",lineHeight:1.3}}>{s.name}</div>
+      <div style={{fontSize:10,color:C.g500,fontFamily:"JetBrains Mono,monospace"}}>{s.dose}</div>
+      <div style={{fontSize:11,color:C.g700,lineHeight:1.5,borderLeft:`3px solid ${isPrimary?C.neon:C.g200}`,paddingLeft:8,background:"#FAFAFA",borderRadius:"0 6px 6px 0",padding:"6px 8px"}}>{s.why?.slice(0,80)}{s.why?.length>80?"…":""}</div>
+      <div style={{display:"flex",gap:6,marginTop:2}}>
+        <a href={s.link} target="_blank" rel="noopener noreferrer"
+          style={{flex:1,textAlign:"center",padding:"7px 6px",borderRadius:8,background:C.neon,color:C.black,fontSize:11,fontWeight:700,textDecoration:"none"}}>
+          Kaufen ↗
+        </a>
+        <button onClick={toggleOwned} style={{padding:"7px 10px",borderRadius:8,border:`1px solid ${owned?"rgba(52,199,89,.4)":C.g200}`,background:owned?"rgba(52,199,89,.08)":"transparent",fontSize:10,cursor:"pointer",fontFamily:"Inter,sans-serif",color:owned?"#1A7A35":C.g500}}>
+          {owned?"✓":"＋"}
+        </button>
+      </div>
+    </div>
+  );
   return (
     <div style={{border:`1px solid ${hasMediWarn?"rgba(255,149,0,.5)":hasAllergen?"rgba(255,59,48,.35)":s.alreadyTaking?"rgba(52,199,89,.35)":isPrimary?C.g400:C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:hasMediWarn?"rgba(255,149,0,.03)":hasAllergen?"rgba(255,59,48,.02)":s.alreadyTaking?"rgba(52,199,89,.03)":C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0}}>
 
@@ -4561,14 +4611,18 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {primSupps.length>0&&(
           <div style={{marginBottom:20}}>
             <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>DEIN STACK · ZWINGEND</div>
-            {displayPrim.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={true} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              {displayPrim.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={true} compact={true} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            </div>
             {primSupps.length>3&&<button onClick={()=>setShowAllPrim(x=>!x)} style={{width:"100%",padding:"9px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,color:C.g600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:4}}>{showAllPrim?`Weniger anzeigen`:`+ ${primSupps.length-3} weitere anzeigen`}</button>}
           </div>
         )}
         {secSupps.length>0&&(
           <div style={{marginBottom:20}}>
             <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>OPTIONAL · SINNVOLL</div>
-            {displaySec.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={false} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+              {displaySec.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={false} compact={true} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            </div>
             {secSupps.length>2&&<button onClick={()=>setShowAllSec(x=>!x)} style={{width:"100%",padding:"9px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,color:C.g600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:4}}>{showAllSec?`Weniger anzeigen`:`+ ${secSupps.length-2} weitere anzeigen`}</button>}
           </div>
         )}
@@ -5015,7 +5069,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const calc=calcPro(profilData,trainingData,sportData);
     const t=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
     const w=+profilData?.weight||75;
-    const isEndurance=[...sports].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
+    const isEndurance=[...(sports||[])].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
     const TIME={morning:"Morgen",midday:"Mittag",afternoon:"Nachmittag",evening:"Abend"}[calc?.primaryTrainingTime]||"Training";
 
     const PLAN=[
@@ -5199,7 +5253,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const isMobile=useWindowWidth()<=768;
     const calc=calcPro(profilData,trainingData,sportData);
     const hasComp=Object.values(trainingData||{}).some(d=>d.hasCompetition);
-    const isEndurance=[...sports].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
+    const isEndurance=[...(sports||[])].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
     const carbLoad=Math.round((calc?.carbsG||250)*1.5);
     const raceCarbs=calc?.carbsPerHour||60;
     const w=+profilData?.weight||75;
@@ -5293,6 +5347,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   };
 
   const NutritionTab=()=>{
+    const {energieForm:_nEF=[],proteinForm:_nPF=[],recoveryForm:_nRF=[]}=praeferenzenData||{};
+    const prefEnergy=Array.isArray(_nEF)?_nEF:(_nEF?[_nEF]:["egal"]);
+    const prefProtein=Array.isArray(_nPF)?_nPF:(_nPF?[_nPF]:["egal"]);
+    const prefRecovery=Array.isArray(_nRF)?_nRF:(_nRF?[_nRF]:["egal"]);
     const [rubrik,setRubrik]=useState("energie");
     const [showAll,setShowAll]=useState(false);
     const [formPref,setFormPref]=useState(null); // gel/riegel/drink
