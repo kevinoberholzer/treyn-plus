@@ -848,7 +848,7 @@ function Demo({onNext, onDemo, lang="de"}) {
         </div>
 
         <div className="fu5">
-          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px",marginBottom:10}} onClick={onNext}>Kostenlose Analyse entdecken</button>
+          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px",marginBottom:10}} onClick={onNext}>Kostenlose Analyse entdecken →</button>
           <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
             Demo-Plattform ausprobieren →
           </button>
