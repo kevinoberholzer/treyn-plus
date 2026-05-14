@@ -5259,12 +5259,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const hasComp=Object.values(trainingData||{}).some(d=>d.hasCompetition);
     const isEndurance=[...(sports||[])].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
     const carbLoad=Math.round((calc?.carbsG||250)*1.5);
-    const raceCarbs=calc?.carbsPerHour||60;
+    // Race carbs: 0.8-1.0g/kg/h for trained endurance athletes (higher than training)
+    const raceCarbs=Math.round(w*0.9);  // ~0.9g/kg/h, up to 90g/h max
+    const raceCarbsMax=Math.min(Math.round(w*1.1), 120); // max 120g/h with 2:1 glucose:fructose
     const w=+profilData?.weight||75;
     const na=calc?.natriumMg||1200;
     const meds=profilData?.medications||[];
     const hasBlutdruck=meds.includes("blutdruck");
     const hasBlutverd=meds.includes("blutverd");
+    const primaryDuration=(trainingData||{})[primarySport]?.duration||90;
+    const totalRaceHours=Math.max(1, Math.round(primaryDuration/60));
 
     if(!hasComp) return (
       <div style={{padding:"20px 0",textAlign:"center"}}>
@@ -5278,7 +5282,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {
         label:"3 Tage vorher",icon:"📅",
         items:[
-          {title:"Carb-Loading starten",detail:`Kohlenhydrate auf ${carbLoad}g/Tag erhöhen — Glykogenspeicher maximal füllen`,bold:true},
+          {title:"Carb-Loading starten",detail:`Kohlenhydrate auf ${carbLoad}g/Tag erhöhen (${Math.round(carbLoad/w*10)/10}g/kg) — Glykogenspeicher maximal füllen`,bold:true},
           {title:"Kreatin pausieren",detail:"Letzte Kreatin-Dosis 3 Tage vor Wettkampf — verhindert Magenprobleme"},
           {title:"Koffein reduzieren",detail:"Koffein-Pause 3–5 Tage vor dem Rennen für maximale Wirkung am Wettkampftag"},
           {title:"Schlaf priorisieren",detail:"Mindestens 8h — Schlafdefizit am Renntag lässt sich nicht ausgleichen"},
@@ -5305,9 +5309,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {
         label:"Während Wettkampf",icon:"🏃",
         items:[
-          {title:"Kohlenhydrate/Stunde",detail:`${raceCarbs}–${raceCarbs+15}g/h ab Minute 30 — niemals warten bis Hungergefühl`,bold:true},
-          {title:"Natrium/Stunde",detail:`${Math.round(na/1000*500)}mg Natrium mit jedem halben Liter — Krämpfe verhindern`},
-          {title:"Flüssigkeit",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h — Durst als Guideline, nicht überhydrieren`},
+          {title:"Kohlenhydrate/Stunde",detail:`${raceCarbs}–${raceCarbsMax}g/h ab Minute 30 — niemals warten bis Hungergefühl. Bei 90min+ auf 2:1 Glucose:Fruktose Mix wechseln`,bold:true},
+          {title:"Natrium/Stunde",detail:`${Math.round((calc?.natriumMg||1500)/totalRaceHours/2)}mg Natrium pro 500ml Getränk — oder 1 Elektrolyt-Tab pro Flasche`},
+          {title:"Flüssigkeit",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*0.8)}–${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*1.2)}ml/h — Durst als Guideline, nicht überhydrieren`},
           ...(isEndurance?[{title:"Koffein-Gel strategisch",detail:"1 Koffein-Gel (100mg) 20–30 min vor kritischer Phase oder Schlussspurt"}]:[]),
         ]
       },
@@ -5315,8 +5319,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         label:"Post-Race Recovery",icon:"🏅",
         items:[
           {title:"Sofort: Protein + Carbs",detail:`${Math.round(w*0.4)}g Protein + ${Math.round(calc?.carbsG*0.3)||60}g Kohlenhydrate in den ersten 30 min`,bold:true},
-          {title:"Rehydration",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*1.5)}L Wasser + Elektrolyte für vollständige Rehydration`},
-          {title:"Magnesium hochdosiert",detail:`${Math.round((calc?.magnesiumMg||350)*1.5)}mg Magnesium abends — maximale Muskelregeneration`},
+          {title:"Rehydration",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*1.5*10)/10}L Wasser + Elektrolyte — 150% des Schweissverlusts (${Math.round((calc?.sweatLitresPerSession||0.8)*10)/10}L) für vollständige Rehydration`},
+          {title:"Magnesium abends",detail:`${calc?.magnesiumMg||350}mg Magnesium — deine berechnete Tagesdosis, nicht mehr (GI-Risiko bei Überdosierung)`},
           {title:"72h Recovery",detail:"Kein intensives Training 48–72h nach Wettkampf — aktive Regeneration (Schwimmen, Gehen)"},
         ]
       },
