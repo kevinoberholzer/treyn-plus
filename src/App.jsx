@@ -709,7 +709,7 @@ function Intro({onNext, onDemo, lang="de", switchLang}) {
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
-                <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>Kostenlose Analyse entdecken</button>
+                <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>Analyse starten →</button>
                 <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos starten</span>
 
               </div>
