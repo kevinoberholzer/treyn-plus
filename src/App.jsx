@@ -633,7 +633,7 @@ function Logo({size="md"}) {
 
 // ─── TYPEWRITER ───────────────────────────────────────────────────────────────
 
-function TypeWriter({lines, onDone, speed=20, onCountryClick}) {
+function TypeWriter({lines, onDone, speed=20, onCountryClick, lang="de"}) {
   const [lineIdx,setLineIdx]=useState(0);
   const [charIdx,setCharIdx]=useState(0);
   const [displayed,setDisplayed]=useState([]);
@@ -653,9 +653,10 @@ function TypeWriter({lines, onDone, speed=20, onCountryClick}) {
   },[lineIdx,charIdx,lines]);
 
   const renderText=(l)=>{
-    if(done&&l.text.includes("22 Ländern")&&onCountryClick){
-      const parts=l.text.split("22 Ländern");
-      return <>{parts[0]}<span onClick={onCountryClick} style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>22 Ländern</span>{parts[1]}</>;
+    const clickText=lang==="en"?"22 countries":"22 Ländern";
+    if(done&&l.text.includes(clickText)&&onCountryClick){
+      const parts=l.text.split(clickText);
+      return <>{parts[0]}<span onClick={onCountryClick} style={{fontWeight:700,color:C.black,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>{clickText}</span>{parts[1]}</>;
     }
     return l.text;
   };
@@ -673,10 +674,14 @@ function TypeWriter({lines, onDone, speed=20, onCountryClick}) {
 
 // ─── INTRO ────────────────────────────────────────────────────────────────────
 
-function Intro({onNext, onDemo}) {
+function Intro({onNext, onDemo, lang="de", switchLang}) {
   const [logoVisible,setLogoVisible]=useState(false);
   const [typing,setTyping]=useState(false);
   const [btnVisible,setBtnVisible]=useState(false);
+  // Reset animation when lang changes
+  useEffect(()=>{
+    setBtnVisible(false);
+  },[lang]);
   const [showCountries,setShowCountries]=useState(false);
   useEffect(()=>{
     const t1=setTimeout(()=>setLogoVisible(true),300);
@@ -699,7 +704,7 @@ function Intro({onNext, onDemo}) {
     {flag:"🇺🇸",name:"USA"},
   ];
 
-  const lines=[
+  const DE_LINES=[
     {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung — berechnet auf dein Training.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
     {text:"Die meisten Sportler raten. TREYN+ berechnet — und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
@@ -708,6 +713,16 @@ function Intro({onNext, onDemo}) {
     {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
     {text:"Anhand deiner Daten berechnet TREYN+ deine Bedarfswerte, Supplemente & Sportnahrung — präziser als jede andere Plattform. Verfügbar in 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
+  const EN_LINES=[
+    {text:"The most precise analysis for vitamins, supplements & sports nutrition — calculated for your training.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Most athletes guess. TREYN+ calculates — and explains every value. From 50+ disciplines · 22 data points · 16 calculation models · MET-2024 standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"56% of athletes have insufficient Vitamin D.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
+    {text:"81% of football and basketball players show Vitamin D deficiency — despite training regularly. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
+    {text:"Only 40% of recreational athletes supplement at all.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
+    {text:"The rest hope their diet is enough. It isn't — especially not with intense training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
+    {text:"Based on your data, TREYN+ calculates your requirements, supplements & sports nutrition — more precisely than any other platform. Available in 22 countries.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+  ];
+  const lines=lang==="en"?EN_LINES:DE_LINES;
 
   return (
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:40}}>
@@ -715,14 +730,21 @@ function Intro({onNext, onDemo}) {
         <div style={{marginBottom:52,opacity:logoVisible?1:0,transform:logoVisible?"scale(1) translateY(0)":"scale(0.75) translateY(10px)",transition:"all .55s cubic-bezier(.34,1.56,.64,1)"}}>
           <Logo size="lg"/>
         </div>
-        {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)} onCountryClick={()=>setShowCountries(true)}/>}
+        {typing&&<TypeWriter key={lang} lang={lang} lines={lines} speed={13} onDone={()=>setBtnVisible(true)} onCountryClick={()=>setShowCountries(true)}/>}
         {btnVisible&&(
           <>
             <div style={{animation:"fadeUp .5s .1s ease forwards",opacity:0,marginTop:24}}>
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
-                <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>Analyse starten →</button>
-                <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos starten.</span>
+                <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>{lang==="de"?"Analyse starten →":"Start analysis →"}</button>
+                <span style={{fontSize:12,color:C.g600,fontWeight:500}}>{lang==="de"?"Kostenlos starten.":"Free to start."}</span>
+                <div style={{marginLeft:"auto",display:"flex",gap:4}}>
+                  {["de","en"].map(l=>(
+                    <button key={l} onClick={()=>switchLang&&switchLang(l)} style={{padding:"4px 10px",borderRadius:6,border:`0.5px solid ${lang===l?C.black:C.g200}`,background:lang===l?C.black:"transparent",color:lang===l?C.neon:C.g400,fontFamily:"JetBrains Mono,monospace",fontSize:11,fontWeight:700,cursor:"pointer",textTransform:"uppercase",transition:"all .13s"}}>
+                      {l}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
             <div style={{marginTop:20,paddingTop:16,borderTop:`0.5px solid ${C.g100}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -749,8 +771,8 @@ function Intro({onNext, onDemo}) {
           <div style={{position:"relative",background:C.white,borderRadius:18,padding:"22px",maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,.2)"}} onClick={e=>e.stopPropagation()}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
               <div>
-                <div style={{fontSize:14,fontWeight:700,color:C.black}}>Verfügbare Länder</div>
-                <div style={{fontSize:11,color:C.g400,marginTop:2}}>22 Länder · CH, EU & USA</div>
+                <div style={{fontSize:14,fontWeight:700,color:C.black}}>{lang==="en"?"Available Countries":"Verfügbare Länder"}</div>
+                <div style={{fontSize:11,color:C.g400,marginTop:2}}>{lang==="en"?"22 Countries · CH, EU & USA":"22 Länder · CH, EU & USA"}</div>
               </div>
               <button onClick={()=>setShowCountries(false)} style={{width:26,height:26,borderRadius:"50%",border:`1px solid ${C.g200}`,background:C.g100,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Inter,sans-serif"}}>
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -777,7 +799,8 @@ function Intro({onNext, onDemo}) {
 
 // ─── DEMO ─────────────────────────────────────────────────────────────────────
 
-function Demo({onNext, onDemo}) {
+function Demo({onNext, onDemo, lang="de"}) {
+  setGlobalLang(lang);
   const isMobile=useWindowWidth()<=768;
   return (
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
@@ -917,6 +940,447 @@ function ReviewsCompact(){
     </div>
   );
 }
+
+
+// ─── i18n TRANSLATION SYSTEM ──────────────────────────────────────────────────
+const TRANSLATIONS={
+  de:{
+    // NAV & GLOBAL
+    nav_neue_analyse:"Neue Analyse",
+    nav_pro:"PRO",
+    nav_hallo:"Hallo",
+    nav_unternehmen:"Für Unternehmen →",
+
+    // INTRO
+    intro_start:"Analyse starten →",
+    intro_free:"Kostenlos starten.",
+    intro_b2b:"Für Unternehmen →",
+    intro_countries:"Verfügbare Länder",
+    intro_countries_sub:"22 Länder · CH, EU & USA",
+    intro_close:"Schliessen",
+
+    // DEMO
+    demo_title:"So funktioniert TREYN+",
+    demo_basic_title:"Basicdaten — sofort sichtbar",
+    demo_basic_desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo.",
+    demo_pro_title:"PRO — alles freigeschaltet",
+    demo_pro_desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
+    demo_cta:"Deine kostenlose Analyse entdecken →",
+
+    // ONBOARDING STEPS
+    step_weiter:"Weiter →",
+    step_zurueck:"← Zurück",
+    step_sport_title:"Welche Sportarten betreibst du?",
+    step_sport_sub:"Mehrfachauswahl möglich — wähle alle aktiven Sportarten.",
+    step_training_title:"Wie trainierst du?",
+    step_profil_title:"Dein Profil",
+    step_lebensstil_title:"Lebensstil & Kontext",
+    step_allergien_title:"Allergien & Ernährung",
+    step_praeferenzen_title:"Deine Präferenzen",
+    step_willkommen_title:"Bereit.",
+
+    // RESULTS NAV
+    tab_summary:"Summary",
+    tab_zahlen:"Deine Zahlen",
+    tab_tagesplan:"Tagesplan",
+    tab_empfehlungen:"Empfehlungen",
+    tab_protokolle:"Protokolle",
+    tab_wettkampf:"Wettkampf",
+    tab_einkauf:"Einkauf",
+    tab_aichat:"AI Chat",
+    tab_profil:"Profil",
+    tab_kontakt:"Kontakt & Impressum",
+
+    // SUMMARY
+    summary_progress_label:"DEINE ANALYSE · BASIC",
+    summary_progress_pct:"30% sichtbar",
+    summary_locked:"Vollständige Analyse — gesperrt",
+    summary_upgrade_title:"Alles was du brauchst. Einmalig. Für 6 Monate.",
+    summary_upgrade_price:"CHF 12.90",
+    summary_upgrade_period:"/ 6 Monate · CHF 2.15/Mt.",
+    summary_upgrade_cta:"Jetzt PRO freischalten →",
+    summary_free_cta:"Kostenlos weiter",
+    summary_no_sub:"Kein Passwort · Kein Abo · Jederzeit erneuerbar",
+
+    // EMPFEHLUNGEN TABS
+    emp_supplements:"Supplements",
+    emp_nahrung:"Sportnahrung",
+    emp_mahlzeiten:"Mahlzeiten",
+    emp_hydration:"Hydration",
+    emp_recovery:"Recovery Gear",
+    emp_wearables:"Wearables",
+
+    // WEARABLES
+    wear_why_title:"Warum ein Wearable deine TREYN+ Analyse verbessert",
+    wear_science:"TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen) steigt die Präzision auf ~95%.",
+
+    // HYDRATION
+    hyd_during:"HYDRATION WÄHREND DEM TAG",
+    hyd_during_sub:"Wasser ist öde? Diese Produkte machen Trinken zum Erlebnis.",
+    hyd_after:"NACH DEM TRAINING",
+    hyd_after_sub:"Recovery-Drinks die wirklich funktionieren.",
+    hyd_science:"WISSENSCHAFT",
+
+    // COMMON
+    top_pick:"TOP PICK",
+    pro_locked:"PRO",
+    affiliate_badge:"TOP PICK",
+    discover:"Entdecken ↗",
+    buy:"Kaufen →",
+    more_show:"weitere anzeigen",
+    less_show:"Weniger anzeigen",
+    mandatory:"ZWINGEND",
+    optional:"OPTIONAL",
+
+    // PROFIL
+    profil_title:"Profil",
+    profil_sub:"Deine persönlichen Angaben anpassen.",
+    profil_personal:"Persönliche Daten",
+    profil_edit:"Bearbeiten",
+    profil_save:"Speichern",
+    profil_cancel:"Abbrechen",
+    profil_abo:"Abo-Status",
+    profil_basic:"BASIC",
+    profil_upgrade:"Auf PRO upgraden",
+
+    // KONTAKT
+    kontakt_title:"Kontakt & Impressum",
+    kontakt_sub:"Fragen, Feedback oder rechtliche Informationen.",
+    kontakt_datenschutz:"Datenschutz",
+    kontakt_nutzung:"Nutzungsbedingungen",
+    kontakt_violations:"Verstösse melden:",
+    kontakt_b2b_title:"Für Unternehmen & Partner",
+    kontakt_b2b_sub:"Widget · API · White-Label",
+    kontakt_b2b_btn:"Mehr →",
+
+    // TAGESPLAN
+    tagesplan_title:"Tagesplan",
+    tagesplan_sub:"Dein personalisierter Supplement- und Ernährungsplan.",
+    tagesplan_ziele:"TAGESZIELE",
+
+    // PROTOKOLLE
+    protokoll_title:"Protokolle",
+    protokoll_sub:"Einnahme-Protokolle für deine Supplements.",
+    protokoll_timing:"Einnahme-Timing",
+    protokoll_dauer:"Dauer",
+    protokoll_pause:"Pause",
+    protokoll_hinweis:"WICHTIGER HINWEIS",
+
+    // WETTKAMPF
+    wettkampf_title:"Wettkampf",
+    wettkampf_sub:"Race-Day Strategie — personalisiert auf dein Profil.",
+    wettkampf_no_comp:"Kein Wettkampf aktiviert",
+    wettkampf_no_comp_desc:"Aktiviere 'Wettkämpfe' in deinen Trainingsangaben.",
+
+    // EINKAUF
+    einkauf_title:"Einkauf",
+    einkauf_sub:"Dein Warenkorb und Bluttest — alles an einem Ort.",
+    einkauf_bluttest:"Bluttest",
+    einkauf_bluttest_sub:"Echte Laborwerte direkt in deine Berechnungen.",
+
+    // AI CHAT
+    aichat_title:"TREYN AI Chat",
+    aichat_sub:"Stelle Fragen zu deinen Daten, Supplements und Ernährung.",
+
+    // UPGRADE
+    upgrade_title:"PRO freischalten",
+    upgrade_per_month:"/ Mt.",
+    sport_cycling:"Rennrad",
+    sport_running:"Laufen",
+    sport_triathlon:"Triathlon", 
+    sport_swimming:"Schwimmen",
+    sport_fitness:"Fitness",
+    sport_ski:"Ski",
+    summary_hello:"Hallo",
+    summary_your_analysis:"Deine Analyse",
+    summary_energy:"Energie",
+    summary_protein:"Protein",
+    summary_water:"Wasser",
+    summary_sleep:"Schlaf",
+    summary_per_day:"/ Tag",
+    summary_daily:"täglich",
+    summary_rest_day:"Ruhetag",
+    summary_training_day:"Trainingstag",
+    summary_unlocked:"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?",
+    summary_unlock_desc:"6 gesperrte Datenkarten, alle Supplement-Dosierungen, Sportnahrung mit exakten Intervallen und deine persönliche Race-Day-Strategie — 100% auf dein Gewicht, deine Sportart und deine Intensität berechnet.",
+    summary_one_time:"Einmalig · Jederzeit erneuerbar",
+    summary_no_cc:"Kein Passwort · Kein Abo · Jederzeit erneuerbar",
+    intensity_low:"Leicht",
+    intensity_medium:"Mittel",
+    intensity_high:"Intensiv",
+    intensity_competition:"Wettkampf",
+    time_morning:"Morgentraining",
+    time_midday:"Mittagstraining",
+    time_afternoon:"Nachmittagstraining",
+    time_evening:"Abendtraining",
+    zahlen_energie:"Energie",
+    zahlen_makros:"Makronährstoffe",
+    zahlen_grundumsatz:"Grundumsatz",
+    zahlen_tagesbedarf:"Tagesbedarf (Training)",
+    zahlen_protein:"Protein / Tag",
+    zahlen_carbs:"Kohlenhydrate / Tag",
+    zahlen_fat:"Fett / Tag",
+    zahlen_elektrolyte:"Elektrolyte & Flüssigkeit",
+    zahlen_leistung:"Leistung & Herzfrequenz-Zonen",
+    zahlen_sport:"Deine Sportarten",
+    zahlen_anpassen:"Anpassen",
+    zahlen_fertig:"✓ Fertig",
+    zahlen_weekly:"× / Woche",
+    zahlen_kcal:"kcal",
+    zahlen_training_weekly:"Training / Woche",
+    race_3days:"3 Tage vorher",
+    race_day_before:"Tag vorher",
+    race_morning:"Race Morning",
+    race_during:"Während Wettkampf",
+    race_after:"Post-Race Recovery",
+    race_note:"Diese Strategie ist eine wissenschaftliche Basis-Empfehlung. Teste alle Protokolle im Training bevor du sie im Wettkampf anwendest.",
+    plan_wakeup:"Aufwachen",
+    plan_preworkout:"Pre-Workout",
+    plan_training:"Training",
+    plan_postworkout:"Post-Workout",
+    plan_lunch:"Mittag",
+    plan_evening:"Abend",
+    plan_sleep:"Vor dem Schlafen",
+    kontakt_contact:"Kontakt",
+    kontakt_privacy:"Datenschutz",
+    kontakt_terms:"Nutzungsbedingungen",
+    profil_status:"Abo-Status",
+    profil_age:"Jahre",
+    profil_height:"cm",
+    profil_weight:"kg",
+  },
+
+  en:{
+    // NAV & GLOBAL
+    nav_neue_analyse:"New Analysis",
+    nav_pro:"PRO",
+    nav_hallo:"Hi",
+    nav_unternehmen:"For Business →",
+
+    // INTRO
+    intro_start:"Start analysis →",
+    intro_free:"Free to start.",
+    intro_b2b:"For Business →",
+    intro_countries:"Available countries",
+    intro_countries_sub:"22 countries · CH, EU & USA",
+    intro_close:"Close",
+
+    // DEMO
+    demo_title:"How TREYN+ works",
+    demo_basic_title:"Basic data — instantly visible",
+    demo_basic_desc:"Energy expenditure, protein and hydration needs. No credit card, no subscription.",
+    demo_pro_title:"PRO — everything unlocked",
+    demo_pro_desc:"All data, all recommendations — incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan. Unlock anytime.",
+    demo_cta:"Discover your free analysis →",
+
+    // ONBOARDING STEPS
+    step_weiter:"Continue →",
+    step_zurueck:"← Back",
+    step_sport_title:"Which sports do you practise?",
+    step_sport_sub:"Multiple selection — choose all active sports.",
+    step_training_title:"How do you train?",
+    step_profil_title:"Your Profile",
+    step_lebensstil_title:"Lifestyle & Context",
+    step_allergien_title:"Allergies & Nutrition",
+    step_praeferenzen_title:"Your Preferences",
+    step_willkommen_title:"Ready.",
+
+    // RESULTS NAV
+    tab_summary:"Summary",
+    tab_zahlen:"Your Numbers",
+    tab_tagesplan:"Daily Plan",
+    tab_empfehlungen:"Recommendations",
+    tab_protokolle:"Protocols",
+    tab_wettkampf:"Race Day",
+    tab_einkauf:"Shop",
+    tab_aichat:"AI Chat",
+    tab_profil:"Profile",
+    tab_kontakt:"Contact & Legal",
+
+    // SUMMARY
+    summary_progress_label:"YOUR ANALYSIS · BASIC",
+    summary_progress_pct:"30% visible",
+    summary_locked:"Full analysis — locked",
+    summary_upgrade_title:"Everything you need. Once. For 6 months.",
+    summary_upgrade_price:"CHF 12.90",
+    summary_upgrade_period:"/ 6 months · CHF 2.15/mo.",
+    summary_upgrade_cta:"Unlock PRO now →",
+    summary_free_cta:"Continue free",
+    summary_no_sub:"No password · No subscription · Renew anytime",
+
+    // EMPFEHLUNGEN TABS
+    emp_supplements:"Supplements",
+    emp_nahrung:"Sports Nutrition",
+    emp_mahlzeiten:"Meals",
+    emp_hydration:"Hydration",
+    emp_recovery:"Recovery Gear",
+    emp_wearables:"Wearables",
+
+    // WEARABLES
+    wear_why_title:"Why a wearable improves your TREYN+ analysis",
+    wear_science:"TREYN+ calculates with MET values and your inputs — giving ~85% accuracy. With real wearable data (HRV, VO₂max, sleep stages) precision rises to ~95%.",
+
+    // HYDRATION
+    hyd_during:"HYDRATION DURING THE DAY",
+    hyd_during_sub:"Water boring? These products make drinking enjoyable.",
+    hyd_after:"AFTER TRAINING",
+    hyd_after_sub:"Recovery drinks that actually work.",
+    hyd_science:"SCIENCE",
+
+    // COMMON
+    top_pick:"TOP PICK",
+    pro_locked:"PRO",
+    affiliate_badge:"TOP PICK",
+    discover:"Discover ↗",
+    buy:"Buy →",
+    more_show:"show more",
+    less_show:"Show less",
+    mandatory:"ESSENTIAL",
+    optional:"OPTIONAL",
+
+    // PROFIL
+    profil_title:"Profile",
+    profil_sub:"Update your personal details.",
+    profil_personal:"Personal Data",
+    profil_edit:"Edit",
+    profil_save:"Save",
+    profil_cancel:"Cancel",
+    profil_abo:"Subscription",
+    profil_basic:"BASIC",
+    profil_upgrade:"Upgrade to PRO",
+
+    // KONTAKT
+    kontakt_title:"Contact & Legal",
+    kontakt_sub:"Questions, feedback or legal information.",
+    kontakt_datenschutz:"Privacy Policy",
+    kontakt_nutzung:"Terms of Use",
+    kontakt_violations:"Report violations:",
+    kontakt_b2b_title:"For Business & Partners",
+    kontakt_b2b_sub:"Widget · API · White-Label",
+    kontakt_b2b_btn:"More →",
+
+    // TAGESPLAN
+    tagesplan_title:"Daily Plan",
+    tagesplan_sub:"Your personalised supplement and nutrition plan.",
+    tagesplan_ziele:"DAILY TARGETS",
+
+    // PROTOKOLLE
+    protokoll_title:"Protocols",
+    protokoll_sub:"Intake protocols for your supplements.",
+    protokoll_timing:"Timing",
+    protokoll_dauer:"Duration",
+    protokoll_pause:"Break",
+    protokoll_hinweis:"IMPORTANT NOTE",
+
+    // WETTKAMPF
+    wettkampf_title:"Race Day",
+    wettkampf_sub:"Race-day strategy — personalised to your profile.",
+    wettkampf_no_comp:"No competition activated",
+    wettkampf_no_comp_desc:"Enable 'Competitions' in your training details.",
+
+    // EINKAUF
+    einkauf_title:"Shop",
+    einkauf_sub:"Your cart and blood test — all in one place.",
+    einkauf_bluttest:"Blood Test",
+    einkauf_bluttest_sub:"Real lab values directly in your calculations.",
+
+    // AI CHAT
+    aichat_title:"TREYN AI Chat",
+    aichat_sub:"Ask questions about your data, supplements and nutrition.",
+
+    // UPGRADE
+    upgrade_title:"Unlock PRO",
+    upgrade_per_month:"/ mo.",
+    // SPORT NAMES (shown in SummaryTab tags)
+    sport_cycling:"Cycling",
+    sport_running:"Running", 
+    sport_triathlon:"Triathlon",
+    sport_swimming:"Swimming",
+    sport_fitness:"Fitness",
+    sport_ski:"Skiing",
+
+    // SUMMARY visible strings
+    summary_hello:"Hello",
+    summary_your_analysis:"Your Analysis",
+    summary_energy:"Energy",
+    summary_protein:"Protein",
+    summary_water:"Water",
+    summary_sleep:"Sleep",
+    summary_per_day:"per day",
+    summary_daily:"daily",
+    summary_rest_day:"rest day",
+    summary_training_day:"training day",
+    summary_unlocked:"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?",
+    summary_unlock_desc:"All locked data cards, supplement dosages, sports nutrition with exact intervals and your personal race-day strategy — 100% calculated for your weight, sport and intensity.",
+    summary_one_time:"One-time · Renewable anytime",
+    summary_no_cc:"No password · No subscription · Renew anytime",
+
+    // INTENSITY LABELS
+    intensity_low:"Easy",
+    intensity_medium:"Moderate",
+    intensity_high:"Intense",
+    intensity_competition:"Race",
+
+    // TRAINING TIME
+    time_morning:"Morning training",
+    time_midday:"Midday training",
+    time_afternoon:"Afternoon training",
+    time_evening:"Evening training",
+
+    // DEINE ZAHLEN visible strings
+    zahlen_energie:"Energy",
+    zahlen_makros:"Macronutrients",
+    zahlen_grundumsatz:"Basal metabolic rate",
+    zahlen_tagesbedarf:"Daily requirement (training)",
+    zahlen_protein:"Protein / day",
+    zahlen_carbs:"Carbohydrates / day",
+    zahlen_fat:"Fat / day",
+    zahlen_elektrolyte:"Electrolytes & Fluids",
+    zahlen_leistung:"Performance & Heart Rate Zones",
+    zahlen_sport:"Your Sports",
+    zahlen_anpassen:"Adjust",
+    zahlen_fertig:"✓ Done",
+    zahlen_weekly:"× / week",
+    zahlen_kcal:"kcal",
+    zahlen_training_weekly:"Training / week",
+
+    // WETTKAMPF phases
+    race_3days:"3 days before",
+    race_day_before:"Day before",
+    race_morning:"Race Morning",
+    race_during:"During race",
+    race_after:"Post-Race Recovery",
+    race_note:"This strategy is a science-based recommendation. Test all protocols in training before applying them in competition.",
+
+    // TAGESPLAN phases  
+    plan_wakeup:"Wake up",
+    plan_preworkout:"Pre-Workout",
+    plan_training:"Training",
+    plan_postworkout:"Post-Workout",
+    plan_lunch:"Lunch",
+    plan_evening:"Evening",
+    plan_sleep:"Before sleep",
+
+    // KONTAKT
+    kontakt_contact:"Contact",
+    kontakt_privacy:"Privacy Policy",
+    kontakt_terms:"Terms of Use",
+
+    // PROFIL visible
+    profil_status:"Subscription Status",
+    profil_age:"years",
+    profil_height:"cm",
+    profil_weight:"kg",
+  },
+};
+
+// Global translation function - used everywhere
+let _currentLang="de";
+const setGlobalLang=(l)=>{_currentLang=l;};
+const t=(key,vars={})=>{
+  const str=TRANSLATIONS[_currentLang]?.[key]||TRANSLATIONS["de"]?.[key]||key;
+  return Object.entries(vars).reduce((s,[k,v])=>s.replace(`{${k}}`,v),str);
+};
 
 // ─── PROGRESS ─────────────────────────────────────────────────────────────────
 
@@ -2997,12 +3461,12 @@ function StepWillkommen({onNext}) {
       <div style={{width:"100%",maxWidth:480}}>
         <div style={{marginBottom:48}}><Logo size="lg"/></div>
         <div style={{fontSize:11,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>FAST BEREIT</div>
-        <h2 style={{fontSize:24,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>So funktioniert TREYN+</h2>
+        <h2 style={{fontSize:24,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>{t("demo_title")}</h2>
         <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
           {[
-            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo."},
-            {icon:"🔒", title:"PRO — CHF 12.90 / 6 Monate (CHF 2.15/Mt.)", desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar."},
+            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:t("demo_basic_desc")},
+            {icon:"🔒", title:"PRO — CHF 12.90 / 6 Monate (CHF 2.15/Mt.)", desc:t("demo_pro_desc")},
             {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf dein Gewicht, Sport und Intensität."},
           ].map((item,i)=>(
             <div key={i} style={{display:"flex",gap:14,padding:"14px 16px",borderRadius:12,border:"1px solid #EBEBEB",background:"#fff"}}>
@@ -3254,7 +3718,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
   const healthOnly=sportData?.healthOnly;
   const sportLabel=SPORT_GROUPS.find(s=>s.id===primarySport)?.label||(healthOnly?"Gesundheit":"Sport");
   const primaryTraining=trainingData?.[primarySport]||{intensity:"medium"};
-  const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
+  const intensityLabel={"low":t("intensity_low"),"medium":t("intensity_medium"),"high":t("intensity_high"),"competition":t("intensity_competition")}[primaryTraining.intensity]||t("intensity_medium");
   const fname=profilData?.firstname||"";
   const weight=profilData?.weight||75;
   const basic=calcPro(profilData,trainingData,sportData);
@@ -3670,7 +4134,8 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
   );
 }
 
-function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
+function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade,lang="de",switchLang}) {
+  setGlobalLang(lang); // sync before any t() call
   const [tab,setTab]=useState("summary");
   const isMobile=useWindowWidth()<=768;
   const isPro=tier==="pro";
@@ -3727,24 +4192,24 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const {primSupps,secSupps}=getPersonalizedSupps(profile,[...specific,...basis],[],proData);
   const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport,sportData?.subSel,sportData?.childSel||{});
   const fname=profilData?.firstname||"";
-  const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
+  const intensityLabel={"low":t("intensity_low"),"medium":t("intensity_medium"),"high":t("intensity_high"),"competition":t("intensity_competition")}[primaryTraining.intensity]||t("intensity_medium");
   const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
 
   const NAV_BASIC=[
-    {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
-    {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>, locked:true},
-    {id:"profil",       label:"Profil",           icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
+    {id:"summary",      label:t("tab_summary"),         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
+    {id:"empfehlungen", label:t("tab_empfehlungen"),    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>, locked:true},
+    {id:"profil",       label:t("tab_profil"),           icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
   ];
   const NAV_PRO=[
-    {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
-    {id:"zahlen",       label:"Deine Zahlen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
-    {id:"tagesplan",    label:"Tagesplan",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>},
-    {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
-    {id:"protokolle",   label:"Protokolle",      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>},
-    {id:"wettkampf",    label:"Wettkampf",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>},
-    {id:"einkauf",      label:"Einkauf",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
-    {id:"aichat",       label:"AI Chat",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>},
-    {id:"profil",       label:"Profil",          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
+    {id:"summary",      label:t("tab_summary"),         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
+    {id:"zahlen",       label:t("tab_zahlen"),    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
+    {id:"tagesplan",    label:t("tab_tagesplan"),       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>},
+    {id:"empfehlungen", label:t("tab_empfehlungen"),    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
+    {id:"protokolle",   label:t("tab_protokolle"),      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>},
+    {id:"wettkampf",    label:t("tab_wettkampf"),       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>},
+    {id:"einkauf",      label:t("tab_einkauf"),         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
+    {id:"aichat",       label:t("tab_aichat"),         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>},
+    {id:"profil",       label:t("tab_profil"),          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
   ];
   const NAV=isPro?NAV_PRO:NAV_BASIC;
   const AICHAT_NAV={id:"aichat",label:"TREYN AI Chat",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>};
@@ -3890,15 +4355,54 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       },
       {
         name:"Oura Ring 4",
-        badge:"Ring · Schlaf · HRV",
+        badge:"Ring · Schlaf · HRV · MARKTFÜHRER",
         affiliate:true,
         category:"Sleep & Recovery",
-        why:"Der unauffälligste Tracker der Welt. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen.",
+        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen. Abo CHF 5.99/Mt. für volle Features.",
         metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
         price:"ab CHF 349 + Abo",
         shops:[
           {name:"Oura",link:"https://ouraring.com/de"},
           {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/oura-ring",affiliate:true},
+        ],
+      },
+      {
+        name:"Ultrahuman Ring PRO",
+        badge:"Ring · 15 Tage Akku · Kein Abo · TOP PICK",
+        affiliate:true,
+        category:"Sleep & Recovery",
+        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig. Neu auf dem Markt (2026) mit eigenem Prozessor und Machine Learning direkt auf dem Ring.",
+        metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
+        price:"ab CHF 399",
+        shops:[
+          {name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/ultrahuman-ring",affiliate:true},
+        ],
+      },
+      {
+        name:"RingConn Gen 2",
+        badge:"Ring · 10–12 Tage Akku · Kein Abo",
+        affiliate:false,
+        category:"Sleep & Recovery",
+        why:"Die günstigste Alternative ohne Abo. 10–12 Tage Akku, Schlafapnoe-Erkennung, leichtester Smart Ring auf dem Markt. Gutes Preis-Leistungs-Verhältnis für Einsteiger.",
+        metrics:["HRV","Schlaf","SpO₂","Schritt-Tracking","Schlafapnoe"],
+        price:"ab CHF 299",
+        shops:[
+          {name:"RingConn",link:"https://ringconn.com/products/ringconn-gen-2"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/ringconn-gen-2",affiliate:true},
+        ],
+      },
+      {
+        name:"Samsung Galaxy Ring",
+        badge:"Ring · Samsung-Ökosystem · Kein Abo",
+        affiliate:false,
+        category:"Sleep & Recovery",
+        why:"Ideal für Samsung-Nutzer. Nahtlose Integration mit Galaxy Watch und Samsung Health — alle Daten auf einer Plattform. Kein Abo für Basisfunktionen.",
+        metrics:["HRV","Schlaf","Energiepunkte","Menstruationszyklus","SpO₂"],
+        price:"ab CHF 399",
+        shops:[
+          {name:"Samsung",link:"https://www.samsung.com/ch/smartphones/galaxy-ring/"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/samsung-galaxy-ring",affiliate:true},
         ],
       },
       {
@@ -3944,7 +4448,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       <div>
         {/* Section toggle */}
         <div style={{display:"flex",gap:6,marginBottom:20}}>
-          {[{id:"wearables",l:"Wearables"},{id:"burgerstein",l:"Burgerstein"}].map(s=>(
+          {[{id:"wearables",l:t("emp_wearables")},{id:"burgerstein",l:"Burgerstein"}].map(s=>(
             <button key={s.id} onClick={()=>setSection(s.id)}
               style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${section===s.id?C.black:C.g200}`,background:section===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:section===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
               {s.l}
@@ -3956,7 +4460,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div>
             {/* Why you need it */}
             <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
-              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
+              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>{t("wear_why_title")}</div>
               <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
                 TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%. Konkret: ein Garmin oder Polar liefert deinen echten VO₂max-Wert, echte HRV-Trends und präzise Erholungszeiten — alles direkt in deine Berechnungen.
               </div>
@@ -4137,7 +4641,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{p.badge}</div>
         <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:8}}>{p.why}</div>
         <div style={{padding:"8px 12px",background:C.g100,borderRadius:8,marginBottom:10}}>
-          <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:3}}>WISSENSCHAFT</div>
+          <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:3}}>{t("hyd_science")}</div>
           <div style={{fontSize:11,color:C.g600,lineHeight:1.5}}>{p.science}</div>
         </div>
         <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
@@ -4152,12 +4656,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     return (
       <div>
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>HYDRATION WÄHREND DEM TAG</div>
-        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>Wasser ist öde? Diese Produkte machen Trinken zum Erlebnis — und sind trotzdem wissenschaftlich sinnvoll.</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>{t("hyd_during")}</div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>{t("hyd_during_sub")}</div>
         {DURING.map((p,i)=><ProductCard key={i} p={p}/>)}
 
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10,marginTop:20}}>NACH DEM TRAINING</div>
-        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>Recovery-Drinks die wirklich funktionieren — von Wissenschaft belegt, trotzdem Spass.</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10,marginTop:20}}>{t("hyd_after")}</div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>{t("hyd_after_sub")}</div>
         {AFTER.map((p,i)=><ProductCard key={i} p={p}/>)}
 
 
@@ -4226,7 +4730,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     const PLAN=[
       {
-        time:"06:00–07:00",phase:"Aufwachen",
+        time:"06:00–07:00",phase:t("plan_wakeup"),
         items:[
           {label:"Wasser",detail:"500ml direkt nach dem Aufstehen — Rehydration nach 7–8h Schlaf",icon:"💧"},
           ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:`${calc?.altitude==="alpine"?"4000":"2000–3000"} IE mit erstem Essen — fettlöslich, braucht Mahlzeit`,icon:"☀️"}]:[]),
@@ -4242,7 +4746,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ]
       },
       {
-        time:"Training",phase:"Während Training",
+        time:"Training",phase:t("plan_training"),
         items:[
           {label:"Wasser + Elektrolyte",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h bei intensivem Training`,icon:"⚡"},
           ...(isEndurance&&(trainingData?.[primarySport]?.duration||60)>60?[{label:"Kohlenhydrate",detail:`${calc?.carbsPerHour||45}g/h ab Minute 45 — Gels oder Drink Mix`,icon:"🔋"}]:[]),
@@ -4257,7 +4761,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ]
       },
       {
-        time:"12:00–13:00",phase:"Mittag",
+        time:"12:00–13:00",phase:t("plan_lunch"),
         items:[
           {label:"Hauptmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.35)} kcal, ${Math.round((calc?.proteinMin||140)*0.3)}g Protein`,icon:"🥗"},
           ...(!calc?.suppressKreatin?[{label:"Kreatin",detail:t.creatine+" · 5g täglich — mit Kohlenhydraten",icon:"💊"}]:[]),
@@ -4272,7 +4776,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ]
       },
       {
-        time:"22:00",phase:"Vor dem Schlafen",
+        time:"22:00",phase:t("plan_sleep"),
         items:[
           {label:"Ziel: 7–9h Schlaf",detail:"Unter 7h = Cortisol hoch, Muskelabbau, schlechtere Regeneration",icon:"😴"},
           ...(calc?.sleep<7?[{label:"⚠ Schlafdefizit erkannt",detail:`Aktuell ${calc?.sleep}h — das ist dein wichtigster Performance-Hebel`,icon:"⚠️"}]:[]),
@@ -4369,9 +4873,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 <div style={{padding:"12px 16px",background:C.white,borderTop:`0.5px solid ${C.g200}`}}>
                   <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:8,marginBottom:12}}>
                     {[
-                      {l:"Einnahme-Timing",v:p.timing},
-                      {l:"Dauer",v:p.dauer},
-                      ...(p.pause&&p.pause!=="Keine"?[{l:"Pause",v:p.pause}]:[]),
+                      {l:t("protokoll_timing"),v:p.timing},
+                      {l:t("protokoll_dauer"),v:p.dauer},
+                      ...(p.pause&&p.pause!=="Keine"?[{l:t("protokoll_pause"),v:p.pause}]:[]),
                     ].map(r=>(
                       <div key={r.l} style={{background:C.g100,borderRadius:8,padding:"9px 12px"}}>
                         <div style={{fontSize:10,color:C.g400,marginBottom:3}}>{r.l}</div>
@@ -4381,7 +4885,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                   </div>
                   {p.hinweis&&(
                     <div style={{padding:"10px 12px",background:"#FFFBF0",border:"0.5px solid #FFE082",borderRadius:8}}>
-                      <div style={{fontSize:10,color:"#856404",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>WICHTIGER HINWEIS</div>
+                      <div style={{fontSize:10,color:"#856404",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>{t("protokoll_hinweis")}</div>
                       <div style={{fontSize:11,color:"#7D5A00",lineHeight:1.65}}>{p.hinweis}</div>
                     </div>
                   )}
@@ -4414,8 +4918,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     if(!hasComp) return (
       <div style={{padding:"20px 0",textAlign:"center"}}>
         <div style={{fontSize:32,marginBottom:12}}>🏁</div>
-        <div style={{fontSize:14,fontWeight:600,color:C.black,marginBottom:6}}>Kein Wettkampf aktiviert</div>
-        <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>Aktiviere "Wettkämpfe" in deinen Trainingsangaben um die Race-Day-Strategie freizuschalten.</div>
+        <div style={{fontSize:14,fontWeight:600,color:C.black,marginBottom:6}}>{t("wettkampf_no_comp")}</div>
+        <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{t("wettkampf_no_comp_desc")}</div>
       </div>
     );
 
@@ -4492,7 +4996,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ))}
 
         <div style={{padding:"12px 14px",background:C.g100,borderRadius:10,border:`0.5px solid ${C.g200}`,marginTop:8}}>
-          <div style={{fontSize:11,color:C.g400,lineHeight:1.65}}>Diese Strategie ist eine wissenschaftliche Basis-Empfehlung. Teste alle Protokolle im Training bevor du sie im Wettkampf anwendest — besonders Gel-Frequenz und Flüssigkeitsmenge.</div>
+          <div style={{fontSize:11,color:C.g400,lineHeight:1.65}}>{t("race_note")}</div>
         </div>
       </div>
     );
@@ -4934,7 +5438,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ))}
 
         {/* Locked 2-col grid */}
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Vollständige Analyse — gesperrt</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>{t("summary_locked")}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
           {[
             {title:"Elektrolyte & Schweiss",rows:[{l:"Natrium/h",v:"████ mg"},{l:"Magnesium",v:"████ mg"},{l:"Schweiss/h",v:"█.█ L"}]},
@@ -4996,7 +5500,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
         {/* CTA acid */}
         <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
-          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?</div>
+          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{t("summary_unlocked")}</div>
           <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:8}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
           <div style={{fontSize:11,color:"rgba(0,0,0,.55)",lineHeight:1.7,marginBottom:14}}>6 gesperrte Datenkarten, alle Supplement-Dosierungen, Sportnahrung mit exakten Intervallen und deine persönliche Race-Day-Strategie — 100% auf dein Gewicht, deine Sportart und deine Intensität berechnet.</div>
           <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:16}}>
@@ -5008,7 +5512,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             ))}
           </div>
           <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:14}}>
-            <div style={{fontSize:28,fontWeight:700,color:C.black,letterSpacing:"-.04em"}}>CHF 12.90</div>
+            <div style={{fontSize:28,fontWeight:700,color:C.black,letterSpacing:"-.04em"}}>{t("summary_upgrade_price")}</div>
             <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>/ 6 Monate · CHF 2.15/Mt.</div>
           </div>
           <button onClick={onUpgrade} style={{width:"100%",padding:15,borderRadius:11,border:"none",background:C.black,color:C.neon,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:"-.01em",marginBottom:8}}>
@@ -5017,7 +5521,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <button onClick={()=>setTab("verbrauch")} style={{width:"100%",padding:11,borderRadius:11,border:"1px solid rgba(0,0,0,.15)",background:"rgba(255,255,255,.4)",color:"rgba(0,0,0,.45)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
             Kostenlos weiter
           </button>
-          <div style={{textAlign:"center",marginTop:10,fontSize:10,color:"rgba(0,0,0,.35)"}}>Kein Passwort · Kein Abo · Jederzeit erneuerbar</div>
+          <div style={{textAlign:"center",marginTop:10,fontSize:10,color:"rgba(0,0,0,.35)"}}>{t("summary_no_sub")}</div>
         </div>
       </div>
     );
@@ -5097,7 +5601,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase"}}>Deine Sportarten</div>
           <button onClick={()=>setShowEditor(e=>!e)} style={{fontSize:11,color:showEditor?"#0A0A0A":"#888",background:showEditor?C.neonDim:"#F5F5F5",border:`1px solid ${showEditor?C.neon:"#E8E8E8"}`,borderRadius:20,padding:"3px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:showEditor?600:400,transition:"all .12s"}}>
-            {showEditor?"✓ Fertig":"Anpassen"}
+            {showEditor?t("zahlen_fertig"):t("zahlen_anpassen")}
           </button>
         </div>
         <div style={{borderRadius:12,border:"1px solid #EBEBEB",overflow:"hidden",marginBottom:24,background:"#fff"}}>
@@ -5213,7 +5717,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         })()}
 
         {/* ── ENERGIE ── */}
-        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Energie</div>
+        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{t("zahlen_energie")}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
           <M label="Grundumsatz" value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen." accent/>
           <M label={isPro?"Tagesbedarf (Training)":"Mit Training (Schätzung)"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc={isPro?"Dein gesamter Tagesbedarf an Trainingstagen. Berechnet via MET-Werte für jede Sportart.":"Geschätzter Tagesbedarf mit Training. Upgrade auf PRO für sportartspezifische Genauigkeit."}/>
@@ -5225,7 +5729,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         </div>
 
         {/* ── MAKROS ── */}
-        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Makronährstoffe</div>
+        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{t("zahlen_makros")}</div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Protein / Tag" value={isPro?`${proteinMin}–${proteinMax}`:`${Math.round(w*1.4)}–${Math.round(w*1.8)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport."/>
           <M label="Kohlenhydrate / Tag" value={isPro?`${carbsG}`:`${Math.round(withTraining*0.45/4)}–${Math.round(withTraining*0.55/4)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."/>
@@ -5234,7 +5738,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
         {/* ── ELEKTROLYTE ── */}
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Elektrolyte & Hydration">
-        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Elektrolyte & Flüssigkeit</div>
+        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{t("zahlen_elektrolyte")}</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:8}}>
           <M label="Natrium-Verlust / Tag" value={isPro?natriumMg.toLocaleString("de-CH"):"—"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
           <M label="Magnesium-Bedarf / Tag" value={isPro?magnesiumMg:"—"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
@@ -5247,7 +5751,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         </BlurGate>
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Leistungszonen & VO₂max">
         {/* ── LEISTUNGSZONEN ── */}
-        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Leistung & Herzfrequenz-Zonen</div>
+        <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{t("zahlen_leistung")}</div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isPro&&calc.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Max. Herzfrequenz" value={220-age} unit="bpm" desc="Deine theoretische maximale Herzfrequenz. Basis für alle Trainingszonenbergechnungen (220 – Alter)."/>
           <M label="Fettverbrennungszone" value={`${Math.round((220-age)*.60)}–${Math.round((220-age)*.70)}`} unit="bpm" desc="In dieser Zone verbrennt dein Körper anteilsmässig am meisten Fett. Ideal für lange, ruhige Ausdauereinheiten."/>
@@ -5673,7 +6177,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {/* Kontakt */}
       <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:12}}>
         <div style={{background:C.g100,padding:"12px 16px",borderBottom:`1px solid ${C.g200}`}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.black}}>Kontakt</span>
+          <span style={{fontSize:11,fontWeight:600,color:C.black}}>{t("kontakt_contact")}</span>
         </div>
         <div style={{padding:"16px"}}>
           <div style={{fontSize:12,color:"#333",lineHeight:1.9,marginBottom:12}}>
@@ -5692,7 +6196,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {/* Datenschutz */}
       <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:12}}>
         <div style={{background:C.g100,padding:"12px 16px",borderBottom:`1px solid ${C.g200}`}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.black}}>Datenschutz</span>
+          <span style={{fontSize:11,fontWeight:600,color:C.black}}>{t("kontakt_privacy")}</span>
         </div>
         <div style={{padding:"16px",fontSize:11,color:C.g600,lineHeight:1.8}}>
           TREYN+ erhebt ausschliesslich die Daten, die du bei der Registrierung und Nutzung angibst (Sport, Körperdaten, Ernährungspräferenzen). Diese Daten werden verschlüsselt gespeichert und nicht an Dritte weitergegeben.
@@ -5706,7 +6210,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {/* Nutzungsbedingungen */}
       <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:12}}>
         <div style={{background:C.g100,padding:"12px 16px",borderBottom:`1px solid ${C.g200}`}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.black}}>Nutzungsbedingungen</span>
+          <span style={{fontSize:11,fontWeight:600,color:C.black}}>{t("kontakt_terms")}</span>
         </div>
         <div style={{padding:"16px",fontSize:11,color:C.g600,lineHeight:1.8}}>
           TREYN+ ist eine digitale Ernährungs- und Supplement-Empfehlungsplattform. Alle Empfehlungen basieren auf allgemeinen Ernährungsrichtlinien und ersetzen keine medizinische Beratung. Die Nutzung erfolgt auf eigene Verantwortung.
@@ -5744,15 +6248,15 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung — auch auszugsweise oder durch KI-gestützte Tools — ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
         </div>
         <div style={{marginTop:10,paddingTop:10,borderTop:`0.5px solid ${C.g200}`,fontSize:10,color:C.g300}}>
-          Verstösse melden: info@treynplus.com
+          {t("kontakt_violations")} info@treynplus.com
         </div>
       </div>
 
       {/* B2B Link */}
       <div style={{marginTop:16,padding:"12px 16px",border:`0.5px solid ${C.g200}`,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div>
-          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:2}}>Für Unternehmen & Partner</div>
-          <div style={{fontSize:11,color:C.g400}}>Widget · API · White-Label</div>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:2}}>{t("kontakt_b2b_title")}</div>
+          <div style={{fontSize:11,color:C.g400}}>{t("kontakt_b2b_sub")}</div>
         </div>
         <a href="https://www.treyn.ch/business" target="_blank" rel="noopener noreferrer"
           style={{fontSize:11,padding:"6px 14px",borderRadius:7,background:C.neon,color:C.black,fontWeight:600,textDecoration:"none",flexShrink:0}}>
@@ -6180,17 +6684,17 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     const [subTab,setSubTab]=useState("supplements");
     const prefSupp=praeferenzenData?.suppForm||"beides";
     const SUB=[
-      {id:"supplements",l:"Supplements"},
-      {id:"nahrung",l:"Sportnahrung"},
-      {id:"mahlzeiten",l:"Mahlzeiten"},
-      {id:"hydration",l:"Hydration"},
-      {id:"recovery",l:"Recovery Gear"},
-      {id:"wearables",l:"Wearables"},
+      {id:"supplements",l:t("emp_supplements")},
+      {id:"nahrung",l:t("emp_nahrung")},
+      {id:"mahlzeiten",l:t("emp_mahlzeiten")},
+      {id:"hydration",l:t("emp_hydration")},
+      {id:"recovery",l:t("emp_recovery")},
+      {id:"wearables",l:t("emp_wearables")},
     ];
     return (
       <div>
-        <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
+        <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("tab_empfehlungen")}</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{lang==="de"?"100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.":"100% calculated on your data — supplements, sports nutrition, meals & recovery."}</p>
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {SUB.map(s=>(
             <button key={s.id} onClick={()=>setSubTab(s.id)}
@@ -6230,10 +6734,17 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {/* Top bar */}
       <div style={{background:C.white,borderBottom:`1px solid ${C.g200}`,padding:isMobile?"10px 16px":"12px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <Logo/>
-        <div style={{display:"flex",alignItems:"center",gap:10}}>
-          {fname&&!isMobile&&<span style={{fontSize:13,color:C.g600}}>Hallo, {fname}</span>}
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          {fname&&!isMobile&&<span style={{fontSize:13,color:C.g600}}>{lang==="de"?"Hallo":"Hi"}, {fname}</span>}
           {isPro&&<span style={{fontSize:10,padding:"3px 8px",borderRadius:5,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>}
-          <button onClick={onReset} style={{fontSize:11,color:C.g400,background:"none",border:`0.5px solid ${C.g200}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↩ Neu</button>
+          <div style={{display:"flex",gap:3}}>
+            {["de","en"].map(l=>(
+              <button key={l} onClick={()=>switchLang&&switchLang(l)} style={{padding:"3px 8px",borderRadius:5,border:`0.5px solid ${lang===l?C.black:C.g200}`,background:lang===l?C.black:"transparent",color:lang===l?C.neon:C.g400,fontFamily:"JetBrains Mono,monospace",fontSize:10,fontWeight:700,cursor:"pointer",textTransform:"uppercase",transition:"all .13s"}}>
+                {l}
+              </button>
+            ))}
+          </div>
+          <button onClick={onReset} style={{fontSize:11,color:C.g400,background:"none",border:`0.5px solid ${C.g200}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↩ {lang==="de"?"Neu":"Reset"}</button>
         </div>
       </div>
 
@@ -6241,14 +6752,14 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {isMobile?(
         <div style={{padding:"16px 16px 90px"}}>
           {tab==="summary"&&<SummaryTab/>}
-          {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deine Zahlen</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.</p><VerbrauchTab/></div>)}
+          {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("tab_zahlen")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{lang==="de"?"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.":"All data — precisely calculated for your profile."}</p><VerbrauchTab/></div>)}
           {tab==="tagesplan"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein personalisierter Tagesplan mit Supplement-Timing.</p><TagesplanTab/></div>)}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
-          {tab==="protokolle"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Protokolle</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Einnahme-Protokolle für deine Supplements.</p><ProtokollTab/></div>)}
-          {tab==="wettkampf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Wettkampf</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Profil.</p><WettkampfTab/></div>)}
-          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Einkauf</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Warenkorb und Bluttest.</p><CartTab/><div style={{marginTop:24}}><h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3><BluttestTab/></div></div>)}
-          {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten und Empfehlungen.</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
-          {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine persönlichen Angaben anpassen.</p><ProfilTab/></div>)}
+          {tab==="protokolle"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("protokoll_title")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{t("protokoll_sub")}</p><ProtokollTab/></div>)}
+          {tab==="wettkampf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("wettkampf_title")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{t("wettkampf_sub")}</p><WettkampfTab/></div>)}
+          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("einkauf_title")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{t("einkauf_sub")}</p><CartTab/><div style={{marginTop:24}}><h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3><BluttestTab/></div></div>)}
+          {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("aichat_title")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{t("aichat_sub")}</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
+          {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("profil_title")}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>{t("profil_sub")}</p><ProfilTab/></div>)}
           {tab==="kontakt"&&<KontaktTab/>}
         </div>
       ):(
@@ -6275,8 +6786,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
           {/* ── DEINE ZAHLEN (PRO only) ──────────────────────────────────── */}
           {tab==="zahlen"&&(<div>
-            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deine Zahlen</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.</p>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("tab_zahlen")}</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{lang==="de"?"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.":"All consumption and performance data — precisely calculated for your profile."}</p>
             <VerbrauchTab/>
           </div>)}
 
@@ -6307,8 +6818,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {/* ── EINKAUF ──────────────────────────────────────────────────── */}
           {tab==="einkauf"&&(
             <div>
-              <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Einkauf</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein Warenkorb und Bluttest — alles an einem Ort.</p>
+              <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{t("einkauf_title")}</h2>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{t("einkauf_sub")}</p>
               <CartTab/>
               <div style={{marginTop:24}}>
                 <h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3>
@@ -6360,7 +6871,12 @@ function App() {
   const [allergenData,setAllergenData]=useState(null);
   const [praeferenzenData,setPraeferenzenData]=useState(null);
   const [tier,setTier]=useState("basic");
+  const [lang,setLang]=useState(()=>localStorage.getItem("treyn_lang")||"de");
   const [devMode]=useState(()=>new URLSearchParams(window.location.search).get("dev")==="1");
+  const switchLang=(l)=>{setLang(l);localStorage.setItem("treyn_lang",l);};
+
+  // Sync global lang synchronously (before any render uses t())
+  setGlobalLang(lang);
 
   // Ensure proper mobile viewport
   useEffect(()=>{
@@ -6453,8 +6969,8 @@ function App() {
           ))}
         </div>
       )}
-      {phase==="intro"      && <Intro           onNext={()=>setPhase("demo")} onDemo={startDemo}/>}
-      {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
+      {phase==="intro"      && <Intro           lang={lang} switchLang={switchLang} onNext={()=>setPhase("demo")} onDemo={startDemo}/>}
+      {phase==="demo"       && <Demo            lang={lang} onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase("training");}}/>}
       {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>setPhase("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
       {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>setPhase("training")} onNext={v=>{setProfilData(v);setPhase("lebensstil");}}/>}
@@ -6476,7 +6992,7 @@ function App() {
           <button onClick={()=>{setIsDemoMode(false);setPhase("intro");}} style={{fontSize:12,color:C.neon,background:"none",border:`1px solid ${C.neon}`,borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:500}}>Eigene Analyse starten →</button>
         </div>
       )}
-      {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={reset}
+      {phase==="results"    && <Results         lang={lang} switchLang={switchLang} sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={reset}
         onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData)}/>}
     </div>
   );
