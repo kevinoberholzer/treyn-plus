@@ -35,6 +35,15 @@ const css = `
   input[type=text],input[type=email],input[type=number],select{font-family:'Inter',sans-serif;outline:none;transition:border-color .14s;}
   input[type=range]{-webkit-appearance:none;width:100%;height:3px;background:${C.g200};border-radius:2px;outline:none;}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:${C.black};border-radius:50%;cursor:pointer;}
+  .mob-nav{display:none;}
+  @media(max-width:768px){
+    .mob-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:${C.white};border-top:0.5px solid ${C.g200};z-index:200;padding:0 4px 2px;padding-bottom:max(8px,env(safe-area-inset-bottom));}
+    .desktop-sidebar{display:none !important;}
+    .su{padding-bottom:20px;}
+    .fu2,.fu3,.fu4,.fu5{animation:fadeUp .4s ease forwards;opacity:0;}
+    button{min-height:40px;}
+  }
+  @media(min-width:769px){.mob-nav{display:none !important;}}
 `;
 
 // ─── SPORT GROUPS ─────────────────────────────────────────────────────────────
@@ -681,6 +690,7 @@ function Intro({onNext, onDemo}) {
 // ─── DEMO ─────────────────────────────────────────────────────────────────────
 
 function Demo({onNext, onDemo}) {
+  const isMobile=useWindowWidth()<=768;
   return (
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
       <div style={{width:"100%",maxWidth:520}}>
@@ -750,7 +760,7 @@ function Demo({onNext, onDemo}) {
         </div>
 
         {/* Platform Stats */}
-        <div className="fu4" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6,marginBottom:16}}>
+        <div className="fu4" style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr 1fr 1fr 1fr",gap:6,marginBottom:16}}>
           {[
             {val:"50+",  label:"Sport­dis­zip­linen"},
             {val:"12",   label:"Daten­punkte pro User"},
@@ -774,6 +784,18 @@ function Demo({onNext, onDemo}) {
       </div>
     </div>
   );
+}
+
+
+// ─── RESPONSIVE HOOK ──────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [w,setW]=useState(()=>typeof window!=="undefined"?window.innerWidth:1024);
+  useEffect(()=>{
+    const fn=()=>setW(window.innerWidth);
+    window.addEventListener("resize",fn);
+    return()=>window.removeEventListener("resize",fn);
+  },[]);
+  return w;
 }
 
 // ─── REVIEWS ──────────────────────────────────────────────────────────────────
@@ -1217,6 +1239,7 @@ function calcBMR(gender,weight,height,age){
 }
 
 function StepProfil({sportData,trainingData,onNext,onBack}) {
+  const isMobile=useWindowWidth()<=768;
   const [platform,setPlatform]=useState(null);
   const [appleConnecting,setAppleConnecting]=useState(false);
   const [appleConnected,setAppleConnected]=useState(false);
@@ -1250,7 +1273,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
           <div style={{marginBottom:24}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Welche Plattform nutzt du?</div>
             <div style={{fontSize:12,color:C.g400,marginBottom:10,lineHeight:1.5}}>Verbinde eine Plattform um Körperdaten automatisch zu importieren.</div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:7}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:7}}>
               {PLATFORMS.map(p=>(
                 <div key={p.id} onClick={()=>handlePlatform(p.id)}
                   style={{padding:"11px 10px",borderRadius:11,cursor:"pointer",transition:"all .14s",border:`1.5px solid ${platform===p.id?C.neon:C.g200}`,background:platform===p.id?C.neonDim:C.white,textAlign:"center",position:"relative"}}>
@@ -1271,7 +1294,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
             <select value={form.country} onChange={e=>set("country",e.target.value)} style={sel}>{COUNTRIES.map(c=><option key={c.v} value={c.v}>{c.flag} {c.v}</option>)}</select>
           </div>
           {platform&&(<>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr 1fr 1fr",gap:10,marginBottom:10}}>
               <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geschlecht *</div><select value={form.gender} onChange={e=>set("gender",e.target.value)} style={sel}><option value="">— wählen</option><option value="m">Männlich</option><option value="f">Weiblich</option></select></div>
               <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geburtsjahr *</div><input type="number" value={form.birthyear} onChange={e=>set("birthyear",e.target.value)} placeholder="1990" min="1940" max={new Date().getFullYear()-16} style={{...inp(form.birthyear),width:"100%"}}/></div>
               <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Grösse (cm) *</div><input type="number" value={form.height} onChange={e=>set("height",e.target.value)} placeholder="180" style={{...inp(form.height),width:"100%"}}/></div>
@@ -3540,6 +3563,7 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
 
 function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
   const [tab,setTab]=useState("summary");
+  const isMobile=useWindowWidth()<=768;
   const isPro=tier==="pro";
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
@@ -3600,8 +3624,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const PROFIL_NAV={id:"profil",label:"Profil & Zahlung",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>};
   const KONTAKT_NAV={id:"kontakt",label:"Kontakt & Impressum",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>};
 
-  const NavItem=({item})=>{
+  const NavItem=({item,mobile=false})=>{
     const active=tab===item.id;
+    if(mobile) return (
+      <button onClick={()=>item.locked?onUpgrade():setTab(item.id)}
+        style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:3,padding:"8px 4px 6px",border:"none",cursor:"pointer",background:"transparent",fontFamily:"Inter,sans-serif",borderTop:active?`2px solid ${C.neon}`:"2px solid transparent",transition:"all .14s"}}>
+        <span style={{color:active?C.black:item.locked?C.g300:C.g400,display:"flex"}}>{item.icon}</span>
+        <span style={{fontSize:9,fontWeight:active?700:400,color:active?C.black:item.locked?C.g300:C.g500,letterSpacing:".01em",whiteSpace:"nowrap"}}>{item.label}</span>
+        {item.locked&&<span style={{fontSize:7,color:C.g300,fontFamily:"JetBrains Mono,monospace"}}>PRO</span>}
+      </button>
+    );
     return (
       <button onClick={()=>item.locked?onUpgrade():setTab(item.id)} style={{
         display:"flex",alignItems:"center",gap:10,width:"100%",
@@ -3653,6 +3685,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   };
 
   const EmpfehlungenTab=()=>{
+    const isMobile=useWindowWidth()<=768;
     const [subTab,setSubTab]=useState("supplements");
     const prefSupp=praeferenzenData?.suppForm||"beides";
     const SUB=[
@@ -4169,7 +4202,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             </button>
           ))}
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
           {items.map((p,i)=>{
             const sc=SC[p.shop]||{bg:"#333",t:"#fff"};
             return (
@@ -4200,6 +4233,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   // ── SUMMARY TAB ────────────────────────────────────────────────────────────
   const SummaryTab=()=>{
+    const isMobile=useWindowWidth()<=768;
     const calc=calcPro(profilData,trainingData,sportData);
     const firstname=profilData?.firstname||"";
     const weight=parseFloat(profilData?.weight||75);
@@ -4403,6 +4437,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
   };
   const VerbrauchTab=()=>{
+    const isMobile=useWindowWidth()<=768;
     const [localTraining,setLocalTraining]=useState(()=>JSON.parse(JSON.stringify(trainingData||{})));
     React.useEffect(()=>{ if(trainingData&&Object.keys(trainingData).length>0) setLocalTraining(JSON.parse(JSON.stringify(trainingData))); },[JSON.stringify(trainingData)]);
     const [showEditor,setShowEditor]=useState(false);
@@ -4410,7 +4445,24 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const w=+profilData?.weight||75;
     const age=profilData?.birthyear?new Date().getFullYear()-+profilData.birthyear:30;
     const calc=calcPro(profilData,localTraining,sportData);
-    if(!calc) return <div style={{padding:24,color:C.g400}}>Lädt...</div>;
+    if(!calc||!profilData||!trainingData) return (
+      <div style={{padding:24,textAlign:"center"}}>
+        <div style={{fontSize:14,color:C.g400,marginBottom:8}}>Daten werden geladen...</div>
+        <div style={{fontSize:12,color:C.g300}}>Falls dies bestehen bleibt, bitte Seite neu laden.</div>
+      </div>
+    );
+    // Safe accessors
+    const safeNum=(v,fb=0)=>isNaN(+v)||v==null?fb:+v;
+    const safeStr=(v,fb="—")=>v==null||v===undefined?fb:String(v);
+    const bmr=safeNum(calc.bmr,2000);
+    const withTraining=safeNum(calc.withTraining,2500);
+    const proteinMin=safeNum(calc.proteinMin,Math.round((+profilData?.weight||75)*1.4));
+    const proteinMax=safeNum(calc.proteinMax,Math.round((+profilData?.weight||75)*1.8));
+    const carbsG=safeNum(calc.carbsG,Math.round(withTraining*0.5/4));
+    const waterMl=safeNum(calc.waterMl,2500);
+    const natriumMg=safeNum(calc.natriumMg,1500);
+    const magnesiumMg=safeNum(calc.magnesiumMg,350);
+    const sweatL=safeNum(calc.sweatLitresPerSession,0.8);
     const totalDays=Object.values(localTraining).reduce((s,d)=>s+(d.days||0),0);
     const totalMin=Object.values(localTraining).reduce((s,d)=>s+(d.days||0)*(d.duration||60),0);
 
@@ -4577,40 +4629,40 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {/* ── ENERGIE ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Energie</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-          <M label="Grundumsatz" value={calc.bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen." accent/>
-          <M label={isPro?"Tagesbedarf (Training)":"Mit Training (Schätzung)"} value={calc.withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc={isPro?"Dein gesamter Tagesbedarf an Trainingstagen. Berechnet via MET-Werte für jede Sportart.":"Geschätzter Tagesbedarf mit Training. Upgrade auf PRO für sportartspezifische Genauigkeit."}/>
+          <M label="Grundumsatz" value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen." accent/>
+          <M label={isPro?"Tagesbedarf (Training)":"Mit Training (Schätzung)"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc={isPro?"Dein gesamter Tagesbedarf an Trainingstagen. Berechnet via MET-Werte für jede Sportart.":"Geschätzter Tagesbedarf mit Training. Upgrade auf PRO für sportartspezifische Genauigkeit."}/>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:20}}>
-          <M label="Kaloriendefizit Training" value={(calc.withTraining-calc.bmr).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
+          <M label="Kaloriendefizit Training" value={(withTraining-bmr).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
           <M label="Training / Woche" value={totalDays} unit="×" sub={`${Math.round(totalMin/60)}h total`} desc="Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."/>
-          <M label="Kcal / Monat (Training)" value={((calc.withTraining-calc.bmr)*totalDays*4).toLocaleString("de-CH")} unit="kcal" desc="Hochgerechneter Kalorienverbrauch durch Training pro Monat."/>
+          <M label="Kcal / Monat (Training)" value={((withTraining-bmr)*totalDays*4).toLocaleString("de-CH")} unit="kcal" desc="Hochgerechneter Kalorienverbrauch durch Training pro Monat."/>
         </div>
 
         {/* ── MAKROS ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Makronährstoffe</div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:20}}>
-          <M label="Protein / Tag" value={isPro?`${calc.proteinMin}–${calc.proteinMax}`:`${Math.round(w*1.4)}–${Math.round(w*1.8)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport."/>
-          <M label="Kohlenhydrate / Tag" value={isPro?`${calc.carbsG}`:`${Math.round(calc.withTraining*0.45/4)}–${Math.round(calc.withTraining*0.55/4)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."/>
-          <M label="Fett / Tag" value={Math.round(calc.withTraining*0.25/9)} unit="g" sub="~25% Kalorien" desc="Wichtig für Hormonsynthese, fettlösliche Vitamine und Langzeitenergie."/>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
+          <M label="Protein / Tag" value={isPro?`${proteinMin}–${proteinMax}`:`${Math.round(w*1.4)}–${Math.round(w*1.8)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport."/>
+          <M label="Kohlenhydrate / Tag" value={isPro?`${carbsG}`:`${Math.round(withTraining*0.45/4)}–${Math.round(withTraining*0.55/4)}`} unit="g" sub={isPro?"exakt":"Schätzwert"} desc="Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."/>
+          <M label="Fett / Tag" value={Math.round(withTraining*0.25/9)} unit="g" sub="~25% Kalorien" desc="Wichtig für Hormonsynthese, fettlösliche Vitamine und Langzeitenergie."/>
         </div>
 
         {/* ── ELEKTROLYTE ── */}
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Elektrolyte & Hydration">
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Elektrolyte & Flüssigkeit</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:8}}>
-          <M label="Natrium-Verlust / Tag" value={isPro?calc.natriumMg.toLocaleString("de-CH"):"—"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
-          <M label="Magnesium-Bedarf / Tag" value={isPro?calc.magnesiumMg:"—"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
+          <M label="Natrium-Verlust / Tag" value={isPro?natriumMg.toLocaleString("de-CH"):"—"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
+          <M label="Magnesium-Bedarf / Tag" value={isPro?magnesiumMg:"—"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:20}}>
-          <M label="Wasserverbrauch / Tag" value={isPro&&calc.waterMl?(Math.round(calc.waterMl/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="Dein persönlicher Wasserbedarf inkl. Trainingszuschlag. Sportler brauchen deutlich mehr als der Richtwert von 2L."/>
-          <M label="Schweiss / Session" value={isPro&&calc.sweatLitresPerSession?calc.sweatLitresPerSession:"—"} unit={isPro?"L":""} locked={!isPro} desc="Geschätzter Schweissverlust pro Trainingseinheit — wichtig für die richtige Flüssigkeitszufuhr während dem Sport."/>
+          <M label="Wasserverbrauch / Tag" value={isPro?(Math.round(waterMl/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="Dein persönlicher Wasserbedarf inkl. Trainingszuschlag. Sportler brauchen deutlich mehr als der Richtwert von 2L."/>
+          <M label="Schweiss / Session" value={isPro?sweatL:"—"} unit={isPro?"L":""} locked={!isPro} desc="Geschätzter Schweissverlust pro Trainingseinheit — wichtig für die richtige Flüssigkeitszufuhr während dem Sport."/>
         </div>
 
         </BlurGate>
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} label="Leistungszonen & VO₂max">
         {/* ── LEISTUNGSZONEN ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>Leistung & Herzfrequenz-Zonen</div>
-        <div style={{display:"grid",gridTemplateColumns:isPro&&calc.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
+        <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isPro&&calc.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Max. Herzfrequenz" value={220-age} unit="bpm" desc="Deine theoretische maximale Herzfrequenz. Basis für alle Trainingszonenbergechnungen (220 – Alter)."/>
           <M label="Fettverbrennungszone" value={`${Math.round((220-age)*.60)}–${Math.round((220-age)*.70)}`} unit="bpm" desc="In dieser Zone verbrennt dein Körper anteilsmässig am meisten Fett. Ideal für lange, ruhige Ausdauereinheiten."/>
           <M label="Ausdauerzone" value={`${Math.round((220-age)*.70)}–${Math.round((220-age)*.80)}`} unit="bpm" desc="Typische Zone für Grundlagenausdauer. Fordert das Herz-Kreislauf-System ohne zu überlasten."/>
@@ -4698,7 +4750,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         )}
 
         {/* ── WOCHENSUMMARY ── */}
-        <div style={{padding:"14px 16px",background:"#FAFAFA",borderRadius:11,border:"1px solid #EBEBEB",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:24,textAlign:"center"}}>
+        <div style={{padding:"14px 16px",background:"#FAFAFA",borderRadius:11,border:"1px solid #EBEBEB",display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:12,marginBottom:24,textAlign:"center"}}>
           {[
             {l:"Training / Woche",v:`${totalDays}×`,s:`${Math.round(totalMin/60)} Stunden`},
             {l:"Kcal / Woche",v:((calc.withTraining-calc.bmr)*totalDays).toLocaleString("de-CH"),s:"durch Training"},
@@ -5092,7 +5144,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             {l:"Affiliate-Hinweis",v:"Diese Plattform enthält Affiliate-Links. Bei Käufen über diese Links erhalten wir eine Provision — für dich entstehen keine Mehrkosten."},
           ].map((r,i,arr)=>(
             <div key={r.l} style={{display:"flex",gap:12,padding:"9px 0",borderBottom:i<arr.length-1?`1px solid ${C.g100}`:"none"}}>
-              <span style={{fontSize:11,color:"#AAA",minWidth:110,flexShrink:0}}>{r.l}</span>
+              <span style={{fontSize:11,color:"#AAA",minWidth:80,flexShrink:0}}>{r.l}</span>
               <span style={{fontSize:11,color:C.black,lineHeight:1.5}}>{r.v}</span>
             </div>
           ))}
@@ -5100,12 +5152,12 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       </div>
 
       {/* Copyright */}
-      <div style={{marginTop:10,padding:"14px 16px",background:C.black,borderRadius:12}}>
-        <div style={{fontSize:11,fontWeight:600,color:C.neon,marginBottom:6,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>© {new Date().getFullYear()} TREYN+ · WBCS GmbH</div>
-        <div style={{fontSize:11,color:"rgba(255,255,255,.6)",lineHeight:1.7}}>
+      <div style={{marginTop:10,padding:"14px 16px",background:C.g100,borderRadius:12,border:`0.5px solid ${C.g200}`}}>
+        <div style={{fontSize:11,fontWeight:600,color:C.g600,marginBottom:6,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>© {new Date().getFullYear()} TREYN+ · WBCS GmbH</div>
+        <div style={{fontSize:11,color:C.g400,lineHeight:1.7}}>
           Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung — auch auszugsweise oder durch KI-gestützte Tools — ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
         </div>
-        <div style={{marginTop:10,paddingTop:10,borderTop:"1px solid rgba(255,255,255,.1)",fontSize:10,color:"rgba(255,255,255,.35)"}}>
+        <div style={{marginTop:10,paddingTop:10,borderTop:`0.5px solid ${C.g200}`,fontSize:10,color:C.g300}}>
           Verstösse melden: info@treyn.ch
         </div>
       </div>
@@ -5528,33 +5580,49 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
   return (
     <div style={{minHeight:"100vh",background:"#FAFAFA",fontFamily:"Inter,sans-serif"}}>
       {/* Top bar */}
-      <div style={{background:C.white,borderBottom:`1px solid ${C.g200}`,padding:"12px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
+      <div style={{background:C.white,borderBottom:`1px solid ${C.g200}`,padding:isMobile?"10px 16px":"12px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <Logo/>
         <div style={{display:"flex",alignItems:"center",gap:10}}>
-          {fname&&<span style={{fontSize:13,color:C.g600}}>Hallo, {fname}</span>}
+          {fname&&!isMobile&&<span style={{fontSize:13,color:C.g600}}>Hallo, {fname}</span>}
           {isPro&&<span style={{fontSize:10,padding:"3px 8px",borderRadius:5,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>}
+          <button onClick={onReset} style={{fontSize:11,color:C.g400,background:"none",border:`0.5px solid ${C.g200}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↩ Neu</button>
         </div>
       </div>
 
-      <div style={{display:"flex",maxWidth:1100,margin:"0 auto",padding:"0 16px"}}>
+      {/* Mobile: full width content + bottom nav */}
+      {isMobile?(
+        <div style={{padding:"16px 16px 90px"}}>
+          {tab==="summary"&&<SummaryTab/>}
+          {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deine Zahlen</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.</p><VerbrauchTab/></div>)}
+          {tab==="empfehlungen"&&<EmpfehlungenTab/>}
+          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Einkauf</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Warenkorb und Bluttest.</p><CartTab/><div style={{marginTop:24}}><h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3><BluttestTab/></div></div>)}
+          {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten und Empfehlungen.</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
+          {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine Angaben anpassen.</p><ProfilTab/></div>)}
+          {tab==="kontakt"&&<KontaktTab/>}
+          {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten und Empfehlungen.</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
+          {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine persönlichen Angaben anpassen.</p><ProfilTab/></div>)}
+          {tab==="kontakt"&&<KontaktTab/>}
+        </div>
+      ):(
+        <div style={{display:"flex",maxWidth:1100,margin:"0 auto",padding:"0 16px"}}>
 
-        {/* ── LEFT NAV ─────────────────────────────────────────────────────── */}
-        <div style={{width:220,flexShrink:0,padding:"24px 12px 24px 0"}}>
-          <div style={{position:"sticky",top:64,display:"flex",flexDirection:"column",gap:2,minHeight:"calc(100vh - 88px)"}}>
-            <div style={{fontSize:10,fontWeight:700,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",padding:"0 14px",marginBottom:8}}>MEIN PROFIL</div>
-            {NAV.map(item=><NavItem key={item.id} item={item}/>)}
-            <div style={{flex:1}}/>
-            <div style={{paddingTop:8,borderTop:`1px solid ${C.g200}`,marginTop:8,display:"flex",flexDirection:"column",gap:2}}>
-              <button onClick={()=>setTab("kontakt")} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="kontakt"?C.neon:"transparent",color:tab==="kontakt"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                Kontakt & Impressum
-              </button>
+          {/* ── LEFT NAV ─────────────────────────────────────────────────────── */}
+          <div className="desktop-sidebar" style={{width:220,flexShrink:0,padding:"24px 12px 24px 0"}}>
+            <div style={{position:"sticky",top:64,display:"flex",flexDirection:"column",gap:2,minHeight:"calc(100vh - 88px)"}}>
+              <div style={{fontSize:10,fontWeight:700,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",padding:"0 14px",marginBottom:8}}>MEIN PROFIL</div>
+              {NAV.map(item=><NavItem key={item.id} item={item}/>)}
+              <div style={{flex:1}}/>
+              <div style={{paddingTop:8,borderTop:`1px solid ${C.g200}`,marginTop:8,display:"flex",flexDirection:"column",gap:2}}>
+                <button onClick={()=>setTab("kontakt")} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="kontakt"?C.neon:"transparent",color:tab==="kontakt"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                  Kontakt & Impressum
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ── MAIN CONTENT ─────────────────────────────────────────────────── */}
-        <div style={{flex:1,minWidth:0,padding:"24px 0 80px 24px",borderLeft:`1px solid ${C.g200}`}}>
+          {/* ── MAIN CONTENT ─────────────────────────────────────────────────── */}
+          <div style={{flex:1,minWidth:0,padding:"24px 0 80px 24px",borderLeft:`1px solid ${C.g200}`}}>
           {tab==="summary"&&<SummaryTab/>}
 
           {/* ── DEINE ZAHLEN (PRO only) ──────────────────────────────────── */}
@@ -5603,6 +5671,12 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {tab==="kontakt"&&<KontaktTab/>}
         </div>
       </div>
+      )} {/* end desktop layout */}
+
+      {/* ── MOBILE BOTTOM NAV ────────────────────────────────────────────── */}
+      <div className="mob-nav">
+        {NAV.map(item=><NavItem key={item.id} item={item} mobile={true}/>)}
+      </div>
     </div>
   );
 }
@@ -5618,6 +5692,14 @@ function App() {
   const [praeferenzenData,setPraeferenzenData]=useState(null);
   const [tier,setTier]=useState("basic");
   const [devMode]=useState(()=>new URLSearchParams(window.location.search).get("dev")==="1");
+
+  // Ensure proper mobile viewport
+  useEffect(()=>{
+    let vp=document.querySelector("meta[name=viewport]");
+    if(!vp){vp=document.createElement("meta");vp.name="viewport";document.head.appendChild(vp);}
+    vp.content="width=device-width,initial-scale=1,viewport-fit=cover";
+  },[]);
+
   const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
 
   // Dev shortcut — only active when ?dev=1 in URL
