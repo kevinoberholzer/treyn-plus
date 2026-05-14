@@ -4523,7 +4523,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
   };
 
+  // Interaction checker - returns warnings for supplement combinations
+  const checkInteractions=(suppIds)=>{
+    const warnings=[];
+    if(suppIds.includes("koffein")&&suppIds.includes("beta_ala")) warnings.push({ids:["koffein","beta_ala"],text:"Koffein + Beta-Alanin: Kribbeln (Parästhesien) kann sich verstärken. Einzeln einnehmen."});
+    if(suppIds.includes("eisen")&&suppIds.includes("kalk")) warnings.push({ids:["eisen","kalk"],text:"Eisen + Kalzium: Nicht gleichzeitig einnehmen — hemmen gegenseitig die Aufnahme."});
+    if(suppIds.includes("zink")&&suppIds.includes("kalk")) warnings.push({ids:["zink","kalk"],text:"Zink + Kalzium: Zeitversetzt einnehmen für optimale Absorption."});
+    return warnings;
+  };
   const SupplementsContent=({isPro,primSupps,secSupps,allergenData,proData})=>{
+    const [showAllPrim,setShowAllPrim]=useState(false);
     const prefSupp=praeferenzenData?.suppForm||"beides";
     const country=profilData?.country||"Schweiz";
     const isCH=["Schweiz"].includes(country);
