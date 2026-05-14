@@ -5683,9 +5683,9 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <div>8866 Ziegelbrücke, Schweiz</div>
             <div style={{marginTop:6,color:C.g600}}>Inhaber: Kevin Oberholzer</div>
           </div>
-          <a href="mailto:info@treyn.ch"
+          <a href="mailto:info@treynplus.com"
             style={{display:"inline-flex",alignItems:"center",gap:6,background:C.neon,color:"#000",padding:"8px 16px",borderRadius:9,fontSize:11,fontWeight:700,textDecoration:"none"}}>
-            ✉ info@treyn.ch
+            ✉ info@treynplus.com
           </a>
         </div>
       </div>
@@ -5700,7 +5700,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <br/><br/>
           Affiliate-Links zu Partnershops (iHerb, Maurten etc.) werden beim Klick mit einem Tracking-Parameter versehen — dies ist für die Provisionszuordnung notwendig. Es werden keine Cookies ohne deine Zustimmung gesetzt.
           <br/><br/>
-          Du hast jederzeit das Recht auf Auskunft, Berichtigung oder Löschung deiner Daten. Anfragen an: <span style={{color:C.black,fontWeight:600}}>info@treyn.ch</span>
+          Du hast jederzeit das Recht auf Auskunft, Berichtigung oder Löschung deiner Daten. Anfragen an: <span style={{color:C.black,fontWeight:600}}>info@treynplus.com</span>
         </div>
       </div>
 
@@ -5726,7 +5726,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             {l:"Betreiber",v:"WBCS GmbH"},
             {l:"Adresse",v:"Berufsschulstrasse 18, 8866 Ziegelbrücke"},
             {l:"Inhaber",v:"Kevin Oberholzer"},
-            {l:"E-Mail",v:"info@treyn.ch"},
+            {l:"E-Mail",v:"info@treynplus.com"},
             {l:"Rechtsform",v:"GmbH, Handelsregister Kanton Glarus"},
             {l:"Affiliate-Hinweis",v:"Diese Plattform enthält Affiliate-Links. Bei Käufen über diese Links erhalten wir eine Provision — für dich entstehen keine Mehrkosten."},
           ].map((r,i,arr)=>(
@@ -5745,7 +5745,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung — auch auszugsweise oder durch KI-gestützte Tools — ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
         </div>
         <div style={{marginTop:10,paddingTop:10,borderTop:`0.5px solid ${C.g200}`,fontSize:10,color:C.g300}}>
-          Verstösse melden: info@treyn.ch
+          Verstösse melden: info@treynplus.com
         </div>
       </div>
 
