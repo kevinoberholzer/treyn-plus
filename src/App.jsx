@@ -3614,7 +3614,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const NAV_PRO=[
     {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
     {id:"zahlen",       label:"Deine Zahlen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
+    {id:"tagesplan",    label:"Tagesplan",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>},
     {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
+    {id:"protokolle",   label:"Protokolle",      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>},
+    {id:"wettkampf",    label:"Wettkampf",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>},
     {id:"einkauf",      label:"Einkauf",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
     {id:"aichat",       label:"AI Chat",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>},
     {id:"profil",       label:"Profil",          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
@@ -4077,6 +4080,289 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       ))}
     </div>
   );
+
+  // ── TAGESPLAN TAB ──────────────────────────────────────────────────────────
+  const TagesplanTab=()=>{
+    const isMobile=useWindowWidth()<=768;
+    const calc=calcPro(profilData,trainingData,sportData);
+    const t=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
+    const w=+profilData?.weight||75;
+    const isEndurance=[...sports].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
+    const TIME={morning:"Morgen",midday:"Mittag",afternoon:"Nachmittag",evening:"Abend"}[calc?.primaryTrainingTime]||"Training";
+
+    const PLAN=[
+      {
+        time:"06:00–07:00",phase:"Aufwachen",
+        items:[
+          {label:"Wasser",detail:"500ml direkt nach dem Aufstehen — Rehydration nach 7–8h Schlaf",icon:"💧"},
+          ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:`${calc?.altitude==="alpine"?"4000":"2000–3000"} IE mit erstem Essen — fettlöslich, braucht Mahlzeit`,icon:"☀️"}]:[]),
+          ...(calc?.suppressMag?[]:[{label:"Omega-3",detail:"2–3g EPA/DHA zu einer Mahlzeit",icon:"🐟"}]),
+        ]
+      },
+      {
+        time:t.preWorkout,phase:`Pre-Workout (${TIME})`,
+        items:[
+          {label:"Mahlzeit / Snack",detail:`${Math.round(calc?.carbsG*0.25)||60}g Kohlenhydrate, 1.5–2h vor Training`,icon:"🍌"},
+          ...(!calc?.suppressKoffein?[{label:"Koffein 100–200mg",detail:"45 min vor Training — Leistung +3–5%",icon:"☕"}]:[]),
+          {label:"Wasser",detail:"400–600ml in der Stunde vor dem Training",icon:"💧"},
+        ]
+      },
+      {
+        time:"Training",phase:"Während Training",
+        items:[
+          {label:"Wasser + Elektrolyte",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h bei intensivem Training`,icon:"⚡"},
+          ...(isEndurance&&(trainingData?.[primarySport]?.duration||60)>60?[{label:"Kohlenhydrate",detail:`${calc?.carbsPerHour||45}g/h ab Minute 45 — Gels oder Drink Mix`,icon:"🔋"}]:[]),
+        ]
+      },
+      {
+        time:t.postWorkout,phase:"Post-Workout",
+        items:[
+          {label:"Protein",detail:`${Math.round((calc?.proteinMin||140)*0.25)}–${Math.round((calc?.proteinMax||180)*0.25)}g innerhalb 30 min — anaboles Fenster`,icon:"💪"},
+          {label:"Kohlenhydrate",detail:"30–50g für Glykogen-Wiederauffüllung",icon:"🍚"},
+          ...(calc?.needsCollagen?[{label:"Kollagen + Vit C",detail:"10–15g vor Training (nicht danach!) — Sehnen & Gelenke",icon:"🦴"}]:[]),
+        ]
+      },
+      {
+        time:"12:00–13:00",phase:"Mittag",
+        items:[
+          {label:"Hauptmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.35)} kcal, ${Math.round((calc?.proteinMin||140)*0.3)}g Protein`,icon:"🥗"},
+          ...(!calc?.suppressKreatin?[{label:"Kreatin",detail:t.creatine+" · 5g täglich — mit Kohlenhydraten",icon:"💊"}]:[]),
+        ]
+      },
+      {
+        time:"18:00–19:00",phase:"Abend",
+        items:[
+          {label:"Abendmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.30)} kcal, proteinreich`,icon:"🍽️"},
+          {label:"Magnesium Bisglycinate",detail:`${calc?.magnesiumMg||350}mg — 1h vor Schlaf für beste Schlafwirkung`,icon:"🌙"},
+          ...(calc?.stressAshwaNeeded||calc?.recoveryAshwaNeeded?[{label:"Ashwagandha KSM-66",detail:"600mg abends — Cortisol senken, Schlaf verbessern",icon:"🌿"}]:[]),
+        ]
+      },
+      {
+        time:"22:00",phase:"Vor dem Schlafen",
+        items:[
+          {label:"Ziel: 7–9h Schlaf",detail:"Unter 7h = Cortisol hoch, Muskelabbau, schlechtere Regeneration",icon:"😴"},
+          ...(calc?.sleep<7?[{label:"⚠ Schlafdefizit erkannt",detail:`Aktuell ${calc?.sleep}h — das ist dein wichtigster Performance-Hebel`,icon:"⚠️"}]:[]),
+        ]
+      },
+    ];
+
+    return (
+      <div>
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:4}}>DEIN TAGESPLAN · {TIME.toUpperCase()}TRAINING</div>
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>Personalisiert auf {w}kg, {calc?.primaryTrainingTime==="morning"?"Morgen":calc?.primaryTrainingTime==="evening"?"Abend":"Mittel"}training und deine aktiven Supplements.</div>
+        </div>
+
+        {/* Timeline */}
+        <div style={{position:"relative"}}>
+          {PLAN.map((block,i)=>(
+            <div key={i} style={{display:"flex",gap:12,marginBottom:16}}>
+              {/* Timeline line */}
+              <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:44,flexShrink:0}}>
+                <div style={{width:10,height:10,borderRadius:"50%",background:i===1?C.neon:C.g200,flexShrink:0,marginTop:4}}/>
+                {i<PLAN.length-1&&<div style={{width:1,flex:1,background:C.g100,margin:"4px 0"}}/>}
+              </div>
+              {/* Content */}
+              <div style={{flex:1,paddingBottom:i<PLAN.length-1?8:0}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                  <div style={{fontSize:11,fontWeight:700,color:C.black}}>{block.phase}</div>
+                  <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace"}}>{block.time}</div>
+                </div>
+                <div style={{background:i===1?C.neonDim:C.white,border:`0.5px solid ${i===1?C.neon:C.g200}`,borderRadius:10,padding:"10px 12px",display:"flex",flexDirection:"column",gap:8}}>
+                  {block.items.map((item,j)=>(
+                    <div key={j} style={{display:"flex",alignItems:"flex-start",gap:8}}>
+                      <span style={{fontSize:14,flexShrink:0,marginTop:1}}>{item.icon}</span>
+                      <div>
+                        <div style={{fontSize:12,fontWeight:600,color:C.black}}>{item.label}</div>
+                        <div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:1}}>{item.detail}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Daily summary */}
+        <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginTop:8}}>
+          <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>TAGESZIELE</div>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:8}}>
+            {[
+              {l:"Kalorien",v:`${(calc?.withTraining||2500).toLocaleString("de-CH")} kcal`},
+              {l:"Protein",v:`${calc?.proteinMin||140}–${calc?.proteinMax||180}g`},
+              {l:"Wasser",v:`${((calc?.waterMl||2500)/1000).toFixed(1)}L`},
+              {l:"Schlaf",v:`${calc?.sleep||7}h+`},
+            ].map(s=>(
+              <div key={s.l} style={{textAlign:"center"}}>
+                <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.v}</div>
+                <div style={{fontSize:10,color:C.g400,marginTop:2}}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // ── PROTOKOLLE TAB ─────────────────────────────────────────────────────────
+  const ProtokollTab=()=>{
+    const isMobile=useWindowWidth()<=768;
+    const [open,setOpen]=useState(null);
+    const allSupps=[...primSupps,...secSupps].filter(s=>s.protocol);
+
+    if(!allSupps.length) return (
+      <div style={{padding:24,textAlign:"center",color:C.g400,fontSize:13}}>Keine Supplement-Protokolle für dein Profil verfügbar.</div>
+    );
+
+    return (
+      <div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.65}}>Einnahme-Protokolle für jedes deiner Supplements — Dauer, Pausen und wichtige Hinweise.</div>
+        {allSupps.map((s,i)=>{
+          const p=s.protocol;
+          const isOpen=open===i;
+          return (
+            <div key={i} style={{border:`0.5px solid ${C.g200}`,borderRadius:12,marginBottom:8,overflow:"hidden"}}>
+              <div onClick={()=>setOpen(isOpen?null:i)}
+                style={{padding:"13px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",cursor:"pointer",background:isOpen?C.neonDim:C.white}}>
+                <div>
+                  <div style={{fontSize:13,fontWeight:600,color:C.black}}>{s.name}</div>
+                  <div style={{fontSize:11,color:C.g400,marginTop:2}}>{s.dose} · {p?.timing||"Täglich"}</div>
+                </div>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{transform:isOpen?"rotate(180deg)":"none",transition:"transform .2s",flexShrink:0}}><path d="M6 9l6 6 6-6"/></svg>
+              </div>
+              {isOpen&&(
+                <div style={{padding:"12px 16px",background:C.white,borderTop:`0.5px solid ${C.g200}`}}>
+                  <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:8,marginBottom:12}}>
+                    {[
+                      {l:"Einnahme-Timing",v:p.timing},
+                      {l:"Dauer",v:p.dauer},
+                      ...(p.pause&&p.pause!=="Keine"?[{l:"Pause",v:p.pause}]:[]),
+                    ].map(r=>(
+                      <div key={r.l} style={{background:C.g100,borderRadius:8,padding:"9px 12px"}}>
+                        <div style={{fontSize:10,color:C.g400,marginBottom:3}}>{r.l}</div>
+                        <div style={{fontSize:12,fontWeight:500,color:C.black,lineHeight:1.4}}>{r.v}</div>
+                      </div>
+                    ))}
+                  </div>
+                  {p.hinweis&&(
+                    <div style={{padding:"10px 12px",background:"#FFFBF0",border:"0.5px solid #FFE082",borderRadius:8}}>
+                      <div style={{fontSize:10,color:"#856404",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>WICHTIGER HINWEIS</div>
+                      <div style={{fontSize:11,color:"#7D5A00",lineHeight:1.65}}>{p.hinweis}</div>
+                    </div>
+                  )}
+                  {s.link&&(
+                    <a href={s.link} target="_blank" rel="noopener noreferrer"
+                      style={{display:"inline-flex",alignItems:"center",gap:4,marginTop:10,background:C.neon,color:C.black,padding:"7px 14px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none"}}>
+                      {s.shop||"Kaufen"} →
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  // ── WETTKAMPF TAB ──────────────────────────────────────────────────────────
+  const WettkampfTab=()=>{
+    const isMobile=useWindowWidth()<=768;
+    const calc=calcPro(profilData,trainingData,sportData);
+    const hasComp=Object.values(trainingData||{}).some(d=>d.hasCompetition);
+    const isEndurance=[...sports].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
+    const carbLoad=Math.round((calc?.carbsG||250)*1.5);
+    const raceCarbs=calc?.carbsPerHour||60;
+    const w=+profilData?.weight||75;
+    const na=calc?.natriumMg||1200;
+
+    if(!hasComp) return (
+      <div style={{padding:"20px 0",textAlign:"center"}}>
+        <div style={{fontSize:32,marginBottom:12}}>🏁</div>
+        <div style={{fontSize:14,fontWeight:600,color:C.black,marginBottom:6}}>Kein Wettkampf aktiviert</div>
+        <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>Aktiviere "Wettkämpfe" in deinen Trainingsangaben um die Race-Day-Strategie freizuschalten.</div>
+      </div>
+    );
+
+    const PHASES=[
+      {
+        label:"3 Tage vorher",icon:"📅",
+        items:[
+          {title:"Carb-Loading starten",detail:`Kohlenhydrate auf ${carbLoad}g/Tag erhöhen — Glykogenspeicher maximal füllen`,bold:true},
+          {title:"Kreatin pausieren",detail:"Letzte Kreatin-Dosis 3 Tage vor Wettkampf — verhindert Magenprobleme"},
+          {title:"Koffein reduzieren",detail:"Koffein-Pause 3–5 Tage vor dem Rennen für maximale Wirkung am Wettkampftag"},
+          {title:"Schlaf priorisieren",detail:"Mindestens 8h — Schlafdefizit am Renntag lässt sich nicht ausgleichen"},
+        ]
+      },
+      {
+        label:"Tag vorher",icon:"🌙",
+        items:[
+          {title:"Pasta-/Reis-Mahlzeit Abend",detail:`${Math.round(carbLoad*0.6)}g Kohlenhydrate, wenig Fett — leicht verdaulich, kein Risiko`,bold:true},
+          {title:"Magnesium + Salz",detail:`${calc?.magnesiumMg||350}mg Magnesium, zusätzliches Natrium im Essen — Krämpfprophylaxe`},
+          {title:"Hydration aufbauen",detail:"2.5–3L Wasser über den Tag — kein übermässiges Trinken abends"},
+          {title:"Kein neues Essen",detail:"Nur bekannte Lebensmittel — niemals Unbekanntes vor einem Wettkampf"},
+        ]
+      },
+      {
+        label:"Race Morning",icon:"☀️",
+        items:[
+          {title:`${isEndurance?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${Math.round(carbLoad*0.4)}g Kohlenhydrate, ${Math.round(w*0.3)}g Protein — Hafer, Brot, Banane`,bold:true},
+          {title:"45 min vor Start: Koffein",detail:`${hasBlutdruck?"⚠ Blutdruckmedikamente beachten — Arzt fragen":"150–200mg Koffein für maximale Wirkung beim Start"}`},
+          {title:"30 min vor Start: Gel",detail:isEndurance?`1 Gel (${raceCarbs}g Carbs) für sofortigen Energieschub`:"Optional: 1 Gel oder Banane"},
+          {title:"Warm-up Hydration",detail:`400–600ml Wasser mit 1 Elektrolyt-Tab — ${na}mg Natrium laden`},
+        ]
+      },
+      {
+        label:"Während Wettkampf",icon:"🏃",
+        items:[
+          {title:"Kohlenhydrate/Stunde",detail:`${raceCarbs}–${raceCarbs+15}g/h ab Minute 30 — niemals warten bis Hungergefühl`,bold:true},
+          {title:"Natrium/Stunde",detail:`${Math.round(na/1000*500)}mg Natrium mit jedem halben Liter — Krämpfe verhindern`},
+          {title:"Flüssigkeit",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h — Durst als Guideline, nicht überhydrieren`},
+          ...(isEndurance?[{title:"Koffein-Gel strategisch",detail:"1 Koffein-Gel (100mg) 20–30 min vor kritischer Phase oder Schlussspurt"}]:[]),
+        ]
+      },
+      {
+        label:"Post-Race Recovery",icon:"🏅",
+        items:[
+          {title:"Sofort: Protein + Carbs",detail:`${Math.round(w*0.4)}g Protein + ${Math.round(calc?.carbsG*0.3)||60}g Kohlenhydrate in den ersten 30 min`,bold:true},
+          {title:"Rehydration",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*1.5)}L Wasser + Elektrolyte für vollständige Rehydration`},
+          {title:"Magnesium hochdosiert",detail:`${Math.round((calc?.magnesiumMg||350)*1.5)}mg Magnesium abends — maximale Muskelregeneration`},
+          {title:"72h Recovery",detail:"Kein intensives Training 48–72h nach Wettkampf — aktive Regeneration (Schwimmen, Gehen)"},
+        ]
+      },
+    ];
+
+    return (
+      <div>
+        <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"13px 16px",marginBottom:20}}>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4}}>Race-Day Strategie · {sportLabel}</div>
+          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.65}}>Personalisiert auf {w}kg, {raceCarbs}g Carbs/h und {na}mg Natrium/h. Alle Angaben basieren auf deinen Trainingsdaten und MET-2024 Berechnungen.</div>
+        </div>
+
+        {PHASES.map((phase,i)=>(
+          <div key={i} style={{marginBottom:14}}>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+              <span style={{fontSize:18}}>{phase.icon}</span>
+              <div style={{fontSize:13,fontWeight:700,color:C.black}}>{phase.label}</div>
+            </div>
+            <div style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,overflow:"hidden"}}>
+              {phase.items.map((item,j)=>(
+                <div key={j} style={{padding:"10px 14px",borderBottom:j<phase.items.length-1?`0.5px solid ${C.g100}`:"none"}}>
+                  <div style={{fontSize:12,fontWeight:item.bold?700:600,color:item.bold?C.black:C.black,marginBottom:3}}>{item.title}</div>
+                  <div style={{fontSize:11,color:C.g500,lineHeight:1.55}}>{item.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        <div style={{padding:"12px 14px",background:C.g100,borderRadius:10,border:`0.5px solid ${C.g200}`,marginTop:8}}>
+          <div style={{fontSize:11,color:C.g400,lineHeight:1.65}}>Diese Strategie ist eine wissenschaftliche Basis-Empfehlung. Teste alle Protokolle im Training bevor du sie im Wettkampf anwendest — besonders Gel-Frequenz und Flüssigkeitsmenge.</div>
+        </div>
+      </div>
+    );
+  };
 
   const NutritionTab=()=>{
     const [rubrik,setRubrik]=useState("energie");
@@ -5803,11 +6089,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{padding:"16px 16px 90px"}}>
           {tab==="summary"&&<SummaryTab/>}
           {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deine Zahlen</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.</p><VerbrauchTab/></div>)}
+          {tab==="tagesplan"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein personalisierter Tagesplan mit Supplement-Timing.</p><TagesplanTab/></div>)}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
+          {tab==="protokolle"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Protokolle</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Einnahme-Protokolle für deine Supplements.</p><ProtokollTab/></div>)}
+          {tab==="wettkampf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Wettkampf</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Profil.</p><WettkampfTab/></div>)}
           {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Einkauf</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Warenkorb und Bluttest.</p><CartTab/><div style={{marginTop:24}}><h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3><BluttestTab/></div></div>)}
-          {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten und Empfehlungen.</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
-          {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine Angaben anpassen.</p><ProfilTab/></div>)}
-          {tab==="kontakt"&&<KontaktTab/>}
           {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten und Empfehlungen.</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
           {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine persönlichen Angaben anpassen.</p><ProfilTab/></div>)}
           {tab==="kontakt"&&<KontaktTab/>}
@@ -5841,8 +6127,29 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <VerbrauchTab/>
           </div>)}
 
+          {/* ── TAGESPLAN ────────────────────────────────────────────────── */}
+          {tab==="tagesplan"&&(<div>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein personalisierter Supplement- und Ernährungsplan für heute.</p>
+            <TagesplanTab/>
+          </div>)}
+
           {/* ── EMPFEHLUNGEN ─────────────────────────────────────────────── */}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
+
+          {/* ── PROTOKOLLE ───────────────────────────────────────────────── */}
+          {tab==="protokolle"&&(<div>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Protokolle</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Einnahme-Protokolle für deine Supplements — Dauer, Pausen und wichtige Hinweise.</p>
+            <ProtokollTab/>
+          </div>)}
+
+          {/* ── WETTKAMPF ────────────────────────────────────────────────── */}
+          {tab==="wettkampf"&&(<div>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Wettkampf</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
+            <WettkampfTab/>
+          </div>)}
 
           {/* ── EINKAUF ──────────────────────────────────────────────────── */}
           {tab==="einkauf"&&(
