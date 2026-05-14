@@ -5258,11 +5258,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const calc=calcPro(profilData,trainingData,sportData);
     const hasComp=Object.values(trainingData||{}).some(d=>d.hasCompetition);
     const isEndurance=[...(sports||[])].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
-    const carbLoad=Math.round((calc?.carbsG||250)*1.5);
-    // Race carbs: 0.8-1.0g/kg/h for trained endurance athletes (higher than training)
-    const raceCarbs=Math.round(w*0.9);  // ~0.9g/kg/h, up to 90g/h max
-    const raceCarbsMax=Math.min(Math.round(w*1.1), 120); // max 120g/h with 2:1 glucose:fructose
     const w=+profilData?.weight||75;
+    const carbLoad=Math.round((calc?.carbsG||250)*1.5);
+    const raceCarbs=Math.round(w*0.9);
+    const raceCarbsMax=Math.min(Math.round(w*1.1),120);
     const na=calc?.natriumMg||1200;
     const meds=profilData?.medications||[];
     const hasBlutdruck=meds.includes("blutdruck");
