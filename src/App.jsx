@@ -776,7 +776,7 @@ function Demo({onNext, onDemo, lang="de"}) {
         <div className="fu2"><span className="mono">So funktioniert es</span></div>
         <h2 className="fu2" style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
         <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>3 Minuten Eingabe. Lebenslanges Profil — automatisch aktualisiert. Aus einer riesigen Datenbank & Partnershops empfehlen wir die für dich besten Produkte.</p>
-        <div className="fu3" style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)",gap:6,marginBottom:20}}>
+        <div className="fu3" style={{display:"grid",gridTemplateColumns:isMobile?"repeat(5,minmax(64px,1fr))":"repeat(5,1fr)",gap:6,marginBottom:20,overflowX:isMobile?"auto":"visible",paddingBottom:isMobile?6:0}}>
           {/* Step 1 */}
           <div style={{background:C.white,borderRadius:12,border:`0.5px solid ${C.g200}`,padding:"12px 10px"}}>
             <div style={{background:C.black,color:C.neon,fontSize:10,fontWeight:700,width:20,height:20,borderRadius:6,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10}}>1</div>
@@ -2164,6 +2164,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
 // ─── STEP 4: LEBENSSTIL ───────────────────────────────────────────────────────
 
 function StepLebensstil({onNext, onBack}) {
+  const isMobile=useWindowWidth()<=768;
   const [form,setForm]=useState({goal:"",injuries:[],stressLevel:null,dietQuality:null,altitude:null,recoveryStatus:null,currentSupps:[],medications:[]});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
   const toggleArr=(k,v)=>setForm(f=>{
@@ -2222,7 +2223,7 @@ function StepLebensstil({onNext, onBack}) {
           {/* ROW 1: Ziel (full width — 6 options in 2×3 grid) */}
           <div style={{...card,marginBottom:10}}>
             <Q label={"Primäres Ziel"}/>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"performance", l:"Leistung steigern",     d:"Schneller, stärker, weiter"},
                 {id:"muscle",      l:"Muskelaufbau",           d:"Muskeln aufbauen & definieren"},
@@ -2237,7 +2238,7 @@ function StepLebensstil({onNext, onBack}) {
           {/* ROW 2: Erholungsstatus (full width — 4 options in 2×2 grid) */}
           <div style={{...card,marginBottom:10}}>
             <Q label="Aktueller Erholungsstatus" sub="Beeinflusst Recovery-Priorität und Magnesiumbedarf."/>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"excellent", l:"Top-Form",              d:"Gut erholt, leistungsbereit"},
                 {id:"good",      l:"Normal",                d:"Kein Defizit, solide Basis"},
@@ -2248,7 +2249,7 @@ function StepLebensstil({onNext, onBack}) {
           </div>
 
           {/* ROW 3: Stress + Ernährung side by side */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10,marginBottom:10}}>
             <div style={{...card}}>
               <Q label={"Stresslevel"} sub="Wie belastet bist du im Alltag ausserhalb des Sports?"/>
               <select value={form.stressLevel||""} onChange={e=>set("stressLevel",+e.target.value||null)} style={ddStyle(form.stressLevel)}>
@@ -2273,7 +2274,7 @@ function StepLebensstil({onNext, onBack}) {
           </div>
 
           {/* ROW 4: Höhe + Verletzungen side by side */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10,marginBottom:10}}>
             <div style={{...card}}>
               <Q label="Trainingshöhe" sub="Wo lebst und trainierst du meistens?"/>
               <div style={{display:"flex",flexDirection:"column",gap:6}}>
@@ -2303,7 +2304,7 @@ function StepLebensstil({onNext, onBack}) {
           </div>
 
           {/* ROW 5: Supplements + Medikamente side by side */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:10,marginBottom:10}}>
             <div style={{...card}}>
               <Q label="Aktuelle Supplements?" sub="Verhindert Doppelempfehlungen, mehrere möglich."/>
               <div style={{display:"flex",flexDirection:"column",gap:6}}>
@@ -3765,6 +3766,7 @@ function StepWillkommen({onNext, priceStr=priceStr}) {
 }
 
 function StepPraeferenzen({onNext, onBack}) {
+  const isMobile=useWindowWidth()<=768;
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const [suppForm,setSuppForm]=useState(null);
   const [energieForm,setEnergieForm]=useState([]);
@@ -3853,6 +3855,7 @@ function StepPraeferenzen({onNext, onBack}) {
 
 
 function StepAllergien({onNext, onBack}) {
+  const isMobile=useWindowWidth()<=768;
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const [hasAllergies, setHasAllergies] = useState(null);
   const [allergens, setAllergens] = useState([]);
@@ -4421,7 +4424,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   useEffect(()=>{window.__TREYN_PROFIL__=profilData;},[profilData]);
   const userCountry=profilData?.country||"Schweiz";
   const isEUR=["Deutschland","Österreich"].includes(userCountry);
-  const PRICE_STR=isEUR?"EUR 9.90":PRICE_STR;
+  const PRICE_STR=isEUR?"EUR 9.90":"CHF 12.90";
   const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":PRICE_PERIOD;
   const isCH=["Schweiz"].includes(userCountry);
   const isDAch=["Schweiz","Deutschland","Österreich"].includes(userCountry);
