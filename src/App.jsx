@@ -3730,7 +3730,7 @@ const ALLERGEN_GROUPS = [
   {id:"glutenfrei",    label:"Glutenfrei (Präferenz)",  icon:"🚫", ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"], category:"diet"},
 ];
 
-function StepWillkommen({onNext, priceStr=priceStr}) {
+function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const C={neon:"#C8FF00",black:"#0A0A0A",white:"#fff",g200:"#E8E8E8",g400:"#999",g600:"#666",g800:"#333",neonDim:"#F5FFE0",g100:"#F5F5F5",g300:"#D0D0D0"};
 
@@ -7152,7 +7152,7 @@ function PasswordGate({onUnlock}) {
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",fontFamily:"Inter,sans-serif"}}>
       <div style={{width:"100%",maxWidth:320,padding:"0 24px"}}>
-        <div style={{marginBottom:32,textAlign:"center"}}><Logo size="lg"/></div>
+        <div style={{marginBottom:32,textAlign:"center",fontFamily:"JetBrains Mono,monospace",fontWeight:700,fontSize:16,letterSpacing:".05em"}}>TREYN+</div>
         <div style={{fontSize:13,color:"#666",marginBottom:16,textAlign:"center"}}>Passwort eingeben</div>
         <input
           type="password"
