@@ -1313,7 +1313,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
               <div className="mono" style={{color:"rgba(0,0,0,.5)",marginBottom:10}}>Erste Schätzung · wird nach Analyse präzisiert</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                 <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Grundumsatz (Ruhe)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr.toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
-                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{Math.round(bmr*1.65).toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
+                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr?Math.round(bmr*1.65).toLocaleString("de-CH"):"—"}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
               </div>
             </div>
           )}
@@ -3684,48 +3684,207 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
   };
 
-  const EmpfehlungenTab=()=>{
-    const isMobile=useWindowWidth()<=768;
-    const [subTab,setSubTab]=useState("supplements");
-    const prefSupp=praeferenzenData?.suppForm||"beides";
-    const SUB=[
-      {id:"supplements",l:"Supplements"},
-      {id:"nahrung",l:"Sportnahrung"},
-      {id:"mahlzeiten",l:"Mahlzeiten"},
-      {id:"hydration",l:"Hydration"},
-      {id:"recovery",l:"Recovery Gear"},
+  const WearablesContent=()=>{
+    const WEARABLES=[
+      {
+        name:"Garmin Forerunner 965",
+        badge:"GPS · HRV · VO₂max · TOP PICK",
+        affiliate:true,
+        category:"Multisport",
+        why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand — alles was TREYN+ für präzisere Berechnungen nutzen kann.",
+        metrics:["VO₂max","HRV","Schlaf","Training Load","Erholungsstatus"],
+        price:"ab CHF 599",
+        shops:[
+          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/735158"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/garmin-forerunner-965",affiliate:true},
+        ],
+      },
+      {
+        name:"Garmin Fenix 8",
+        badge:"Premium · Outdoor · Multisport",
+        affiliate:true,
+        category:"Premium GPS",
+        why:"Für den Athleten der alles will. Solarladung, Topo-Karten, Tauchen — und alle Gesundheitsmetriken die TREYN+ für optimale Berechnungen braucht.",
+        metrics:["VO₂max","HRV","Schlaf","Altitude Training","Körperbatterie"],
+        price:"ab CHF 899",
+        shops:[
+          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/994307"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/garmin-fenix-8",affiliate:true},
+        ],
+      },
+      {
+        name:"Polar Vantage V3",
+        badge:"Polar · Ausdauer · HRV",
+        affiliate:true,
+        category:"Ausdauer",
+        why:"Polars Flaggschiff für Ausdauersportler. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk — einzigartig präzise für Regenerationsberechnungen.",
+        metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
+        price:"ab CHF 499",
+        shops:[
+          {name:"Polar CH",link:"https://www.polar.com/de/vantage/v3"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/polar-vantage-v3",affiliate:true},
+        ],
+      },
+      {
+        name:"Polar Pacer Pro",
+        badge:"Laufen · Leicht · Präzise",
+        affiliate:true,
+        category:"Running",
+        why:"Leichtest mögliche GPS-Uhr für Läufer mit allen wichtigen Metriken. Nur 45g — man vergisst sie beim Training.",
+        metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
+        price:"ab CHF 299",
+        shops:[
+          {name:"Polar CH",link:"https://www.polar.com/de/pacer-pro"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/polar-pacer-pro",affiliate:true},
+        ],
+      },
+      {
+        name:"WHOOP 4.0",
+        badge:"Recovery · HRV · Sleep",
+        affiliate:false,
+        category:"Recovery Tracker",
+        why:"Kein Display, kein Ablenkung — nur Daten. WHOOP misst HRV, Schlafqualität und Strain rund um die Uhr. Die beste Lösung für Recovery-Tracking ohne Uhr.",
+        metrics:["HRV","Schlaf","Strain Score","Respiratory Rate","SPO₂"],
+        price:"ab CHF 239 + Abo",
+        shops:[
+          {name:"WHOOP",link:"https://www.whoop.com/de-de/"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/whoop-4",affiliate:true},
+        ],
+      },
+      {
+        name:"Oura Ring 4",
+        badge:"Ring · Schlaf · HRV",
+        affiliate:true,
+        category:"Sleep & Recovery",
+        why:"Der unauffälligste Tracker der Welt. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen.",
+        metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
+        price:"ab CHF 349 + Abo",
+        shops:[
+          {name:"Oura",link:"https://ouraring.com/de"},
+          {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/oura-ring",affiliate:true},
+        ],
+      },
+      {
+        name:"Apple Watch Ultra 2",
+        badge:"Apple · GPS · LTE",
+        affiliate:false,
+        category:"Smartwatch",
+        why:"Für Apple-Nutzer die alles integriert wollen. Apple Health verbindet direkt mit TREYN+ — Körperdaten fliessen automatisch in deine Analysen.",
+        metrics:["VO₂max","HRV","Schlaf","Crasherkennung","Temperatur"],
+        price:"ab CHF 899",
+        shops:[
+          {name:"Apple CH",link:"https://www.apple.com/ch-de/shop/buy-watch/apple-watch-ultra"},
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/apple-watch-ultra-2",affiliate:true},
+        ],
+      },
+      {
+        name:"Fitbit Charge 6",
+        badge:"Günstig · Alltag · Google",
+        affiliate:true,
+        category:"Fitness Tracker",
+        why:"Der beste Einstiegs-Tracker. EKG, SpO₂ und Google Maps integriert. Für Sportler die kein Budget für eine Premiumuhr haben aber trotzdem gute Daten wollen.",
+        metrics:["Herzfrequenz","Schlaf","SpO₂","EKG","Stress"],
+        price:"ab CHF 149",
+        shops:[
+          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/fitbit-charge-6",affiliate:true},
+          {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/fitbit",affiliate:true},
+        ],
+      },
     ];
+
+    // Supplements via nu3/Zur Rose
+    const BURGERSTEIN=[
+      {name:"Burgerstein Sport",desc:"Das Basisprodukt für Breiten- und Leistungssportler — entwickelt mit Sportärzten. Antioxidantien, Vitamine, Mineralien.",price:"CHF 29.90",link:"https://www.nu3.ch/products/burgerstein-sport",shop:"nu3.ch",affiliate:true},
+      {name:"Burgerstein Magnesium",desc:"Hochdosiertes Magnesium in optimaler Form — für Muskelkrampfprävention und Regeneration.",price:"CHF 24.90",link:"https://www.nu3.ch/products/burgerstein-magnesium-vital",shop:"nu3.ch",affiliate:true},
+      {name:"Burgerstein Omega-3",desc:"Hochreines Fischöl mit Friend of the Sea Zertifikat — entzündungshemmend und herzkardioprotektiv.",price:"CHF 34.90",link:"https://www.zur-rose.ch/de/burgerstein-omega-3",shop:"Zur Rose",affiliate:true},
+      {name:"Burgerstein Vitamin D3",desc:"Vitamin D3 in optimaler Dosierung — 70% aller Schweizer sind mangelhaft, Sportler besonders gefährdet.",price:"CHF 19.90",link:"https://www.nu3.ch/products/burgerstein-vitamin-d3",shop:"nu3.ch",affiliate:true},
+      {name:"Burgerstein Zink",desc:"Organisches Zink für Immunsystem, Hormonhaushalt und Wundheilung — bei Ausdauersportlern oft defizitär.",price:"CHF 22.90",link:"https://www.zur-rose.ch/de/burgerstein-zink",shop:"Zur Rose",affiliate:true},
+    ];
+
+    const [section,setSection]=useState("wearables");
+
     return (
       <div>
-        <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
-        <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
-          {SUB.map(s=>(
-            <button key={s.id} onClick={()=>setSubTab(s.id)}
-              style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
+        {/* Section toggle */}
+        <div style={{display:"flex",gap:6,marginBottom:20}}>
+          {[{id:"wearables",l:"Wearables"},{id:"burgerstein",l:"Burgerstein"}].map(s=>(
+            <button key={s.id} onClick={()=>setSection(s.id)}
+              style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${section===s.id?C.black:C.g200}`,background:section===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:section===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
               {s.l}
             </button>
           ))}
         </div>
-        {subTab==="supplements"&&(
+
+        {section==="wearables"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-            {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
-            <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
+            {/* Why you need it */}
+            <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
+              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
+              <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
+                TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%. Konkret: ein Garmin oder Polar liefert deinen echten VO₂max-Wert, echte HRV-Trends und präzise Erholungszeiten — alles direkt in deine Berechnungen.
+              </div>
+              <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
+                {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
+                  <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Product cards */}
+            {WEARABLES.map((w,i)=>(
+              <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:10,position:"relative"}}>
+                {w.affiliate&&w.shops.some(s=>s.affiliate)&&(
+                  <div style={{position:"absolute",top:12,right:12,fontSize:8,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>TOP PICK</div>
+                )}
+                <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:8}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.black,paddingRight:w.affiliate?60:0}}>{w.name}</div>
+                    <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginTop:2}}>{w.badge}</div>
+                  </div>
+                </div>
+                <div style={{fontSize:11,color:C.g600,lineHeight:1.65,marginBottom:10}}>{w.why}</div>
+                <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
+                  {w.metrics.map(m=><span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.g100,color:C.g600}}>{m}</span>)}
+                </div>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
+                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{w.price}</span>
+                  <span style={{fontSize:10,color:C.g400}}>{w.category}</span>
+                </div>
+                <div style={{display:"flex",gap:6}}>
+                  {w.shops.map((s,j)=>(
+                    <a key={j} href={s.link} target="_blank" rel="noopener noreferrer"
+                      style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:s.affiliate?C.neon:C.g100,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:600,textDecoration:"none"}}>
+                      {s.name} →
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         )}
-        {subTab==="nahrung"&&<NutritionTab/>}
-        {subTab==="mahlzeiten"&&(
+
+        {section==="burgerstein"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
-            <FertiggerichteContent/>
-          </div>
-        )}
-        {subTab==="hydration"&&<HydrationContent/>}
-        {subTab==="recovery"&&(
-          <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
-            <RecoveryContent/>
+            <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"12px 16px",marginBottom:16}}>
+              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4}}>Burgerstein — die Schweizer Referenz</div>
+              <div style={{fontSize:11,color:C.g600,lineHeight:1.65}}>Official Supplier von Swiss Ski, Swiss Triathlon und Swiss Tennis. Entwickelt von Sportärzten für Sportler — seit 50 Jahren. Erhältlich via nu3.ch und Zur Rose mit schneller CH-Lieferung.</div>
+            </div>
+            {BURGERSTEIN.map((p,i)=>(
+              <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"13px 16px",marginBottom:8}}>
+                <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>{p.name}</div>
+                <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:10}}>{p.desc}</div>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{p.price}</span>
+                  <a href={p.link} target="_blank" rel="noopener noreferrer"
+                    style={{display:"inline-flex",alignItems:"center",gap:4,background:C.neon,color:C.black,padding:"7px 14px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>
+                    {p.shop} →
+                  </a>
+                </div>
+              </div>
+            ))}
+            <div style={{marginTop:8,padding:"10px 14px",background:C.g100,borderRadius:10,fontSize:11,color:C.g400,lineHeight:1.6}}>
+              Burgerstein verkauft ausschliesslich über Apotheken und autorisierte Partner — nu3.ch und Zur Rose sind offizielle Händler mit Schweizer Qualitätsgarantie.
+            </div>
           </div>
         )}
       </div>
@@ -3919,7 +4078,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     </div>
   );
 
-    const NutritionTab=()=>{
+  const NutritionTab=()=>{
     const [rubrik,setRubrik]=useState("energie");
     const [showAll,setShowAll]=useState(false);
     const [formPref,setFormPref]=useState(null); // gel/riegel/drink
@@ -4633,9 +4792,9 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <M label={isPro?"Tagesbedarf (Training)":"Mit Training (Schätzung)"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · ±8%":"Schätzung · ±25%"} desc={isPro?"Dein gesamter Tagesbedarf an Trainingstagen. Berechnet via MET-Werte für jede Sportart.":"Geschätzter Tagesbedarf mit Training. Upgrade auf PRO für sportartspezifische Genauigkeit."}/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
-          <M label="Kaloriendefizit Training" value={(withTraining-bmr).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
+          <M label="Kaloriendefizit Training" value={(withTraining-bmr||0).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
           <M label="Training / Woche" value={totalDays} unit="×" sub={`${Math.round(totalMin/60)}h total`} desc="Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."/>
-          <M label="Kcal / Monat (Training)" value={((withTraining-bmr)*totalDays*4).toLocaleString("de-CH")} unit="kcal" desc="Hochgerechneter Kalorienverbrauch durch Training pro Monat."/>
+          <M label="Kcal / Monat (Training)" value={((withTraining-bmr||0)*totalDays*4).toLocaleString("de-CH")} unit="kcal" desc="Hochgerechneter Kalorienverbrauch durch Training pro Monat."/>
         </div>
 
         {/* ── MAKROS ── */}
@@ -4753,7 +4912,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{padding:"14px 16px",background:"#FAFAFA",borderRadius:11,border:"1px solid #EBEBEB",display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:12,marginBottom:24,textAlign:"center"}}>
           {[
             {l:"Training / Woche",v:`${totalDays}×`,s:`${Math.round(totalMin/60)} Stunden`},
-            {l:"Kcal / Woche",v:((calc.withTraining-calc.bmr)*totalDays).toLocaleString("de-CH"),s:"durch Training"},
+            {l:"Kcal / Woche",v:((withTraining-bmr)*totalDays).toLocaleString("de-CH"),s:"durch Training"},
             {l:"Kcal / Monat",v:((calc.withTraining-calc.bmr)*totalDays*4).toLocaleString("de-CH"),s:"hochgerechnet"},
           ].map(({l,v,s},i)=>(
             <div key={i}>
@@ -5573,6 +5732,56 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>
           <BluttestUpload isPro={true}/>
         </div>
+      </div>
+    );
+  };
+
+  const EmpfehlungenTab=()=>{
+    const isMobile=useWindowWidth()<=768;
+    const [subTab,setSubTab]=useState("supplements");
+    const prefSupp=praeferenzenData?.suppForm||"beides";
+    const SUB=[
+      {id:"supplements",l:"Supplements"},
+      {id:"nahrung",l:"Sportnahrung"},
+      {id:"mahlzeiten",l:"Mahlzeiten"},
+      {id:"hydration",l:"Hydration"},
+      {id:"recovery",l:"Recovery Gear"},
+      {id:"wearables",l:"Wearables"},
+    ];
+    return (
+      <div>
+        <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
+        <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
+          {SUB.map(s=>(
+            <button key={s.id} onClick={()=>setSubTab(s.id)}
+              style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
+              {s.l}
+            </button>
+          ))}
+        </div>
+        {subTab==="supplements"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
+            {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
+            <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
+          </div>
+        )}
+        {subTab==="nahrung"&&<NutritionTab/>}
+        {subTab==="mahlzeiten"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
+            <FertiggerichteContent/>
+          </div>
+        )}
+        {subTab==="hydration"&&<HydrationContent/>}
+        {subTab==="recovery"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
+            <RecoveryContent/>
+          </div>
+        )}
+        {subTab==="wearables"&&<WearablesContent/>}
       </div>
     );
   };
