@@ -202,23 +202,100 @@ function SportIcon({icon, active, size=18}) {
 
 // ─── AFFILIATE LINKS ──────────────────────────────────────────────────────────
 
+// Country detection - reads from profilData at runtime, falls back to CH
+const getUserCountry=()=>{
+  try{
+    const pd=window.__TREYN_PROFIL__;
+    return pd?.country||"Schweiz";
+  }catch{return "Schweiz";}
+};
+
+// Country groups
+const CH_COUNTRIES=["Schweiz"];
+const DACH_COUNTRIES=["Schweiz","Deutschland","Österreich"];
+const EU_COUNTRIES=["Schweiz","Deutschland","Österreich","Frankreich","Italien","Spanien","Portugal","Niederlande","Belgien","Luxemburg","Dänemark","Schweden","Norwegen","Finnland","Polen","Tschechien","Ungarn","Rumänien","Griechenland","Irland","Vereinigtes Königreich"];
+
+// Build locale-aware shop links
+const getShopLinks=(supp,country)=>{
+  const isCH=CH_COUNTRIES.includes(country);
+  const isDAch=DACH_COUNTRIES.includes(country);
+  const isEU=EU_COUNTRIES.includes(country);
+  const isUS=country==="USA";
+
+  // iHerb ships globally - always works
+  // Myprotein has locale sites
+  // CH-only shops: Bodylab24, Sponser, Galaxus, Zur Rose, nu3.ch
+  return {isCH,isDAch,isEU,isUS};
+};
+
 const AFF = {
+  // Global - works everywhere
   iherb:       q    => `https://iherb.com/search?kw=${encodeURIComponent(q)}&rcode=DEIN_CODE`,
   maurten:     slug => `https://www.maurten.com/products/${slug}?ref=DEIN_CODE`,
   mnstry:      slug => `https://mnstry.com/products/${slug}?ref=DEIN_CODE`,
-  myprotein:   q    => `https://www.myprotein.com/search?query=${encodeURIComponent(q)}&affil=DEIN_CODE`,
-  sponser:     q    => `https://www.sponser.ch/de/search?q=${encodeURIComponent(q)}`,
-  esn:         slug => `https://www.esn.com/products/${slug}?ref=DEIN_CODE`,
-  morenutrition: slug => `https://www.more-nutrition.de/products/${slug}?ref=DEIN_CODE`,
-  galaxus:     q    => `https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(q)}&tagIds=1394`,
-  more_sirup:  () => `https://www.more-nutrition.de/collections/sirup?ref=DEIN_CODE`,
+  // Myprotein - locale-aware
+  myprotein:   (q,country="Schweiz") => {
+    const locale=CH_COUNTRIES.includes(country)?"de-ch":DACH_COUNTRIES.includes(country)?"de-de":country==="USA"?"us":"de-de";
+    return `https://www.myprotein.com/${locale}/search?query=${encodeURIComponent(q)}&affil=DEIN_CODE`;
+  },
+  // CH-only shops - fallback to iHerb for non-CH
+  sponser:     (q,country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.sponser.ch/de/search?q=${encodeURIComponent(q)}`
+    : `https://iherb.com/search?kw=${encodeURIComponent(q)}&rcode=DEIN_CODE`,
+  bodylab24:   (slug,country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.bodylab24.ch/shop/${slug}`
+    : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
+  galaxus:     (q,country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(q)}&tagIds=1394`
+    : `https://www.amazon.de/s?k=${encodeURIComponent(q)}`,
+  zur_rose:    (slug,country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.zurrose-shop.ch/de/${slug}`
+    : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
+  nu3:         (slug,country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://www.nu3.ch/${slug}`
+    : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
+  // ESN / More - DE-focused, good for DACH
+  esn:         (slug,country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://www.esn.com/products/${slug}?ref=DEIN_CODE`
+    : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
+  morenutrition: (slug,country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://www.more-nutrition.de/products/${slug}?ref=DEIN_CODE`
+    : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
+  // Hydration
+  more_sirup:  (country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://www.more-nutrition.de/collections/sirup?ref=DEIN_CODE`
+    : `https://iherb.com/search?kw=flavor+drops&rcode=DEIN_CODE`,
   lmnt:        () => `https://drinklmnt.com/?via=DEIN_CODE`,
   erdinger:    () => `https://www.erdinger.de/bierspezialitaeten/erdinger-alkoholfrei.html`,
   athletic:    () => `https://athleticbrewing.com/?ref=DEIN_CODE`,
-  therabody:   () => `https://www.therabody.com/de-ch?ref=DEIN_CODE`,
+  // Recovery gear - global sites
+  therabody:   (country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.therabody.com/de-ch?ref=DEIN_CODE`
+    : DACH_COUNTRIES.includes(country)
+    ? `https://www.therabody.com/de-de?ref=DEIN_CODE`
+    : `https://www.therabody.com?ref=DEIN_CODE`,
   hyperice:    () => `https://hyperice.com/?ref=DEIN_CODE`,
-  blackroll:   () => `https://www.blackroll.com/ch-de?ref=DEIN_CODE`,
-  compex:      () => `https://www.compex.com/ch-de?ref=DEIN_CODE`,
+  blackroll:   (country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.blackroll.com/ch-de?ref=DEIN_CODE`
+    : `https://www.blackroll.com/de?ref=DEIN_CODE`,
+  compex:      (country="Schweiz") => CH_COUNTRIES.includes(country)
+    ? `https://www.compex.com/ch-de?ref=DEIN_CODE`
+    : `https://www.compex.com/de-de?ref=DEIN_CODE`,
+  // New brands
+  sis:         (slug,country="Schweiz") => EU_COUNTRIES.includes(country)||CH_COUNTRIES.includes(country)
+    ? `https://www.scienceinsport.com/eu/${slug}?awc=DEIN_AWIN_CODE`
+    : `https://www.scienceinsport.com/${slug}?awc=DEIN_AWIN_CODE`,
+  foodspring:  (slug,country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://www.foodspring.ch/${slug}?awc=DEIN_AWIN_CODE`
+    : `https://www.foodspring.com/${slug}?awc=DEIN_AWIN_CODE`,
+  ers226:      (slug) => `https://www.226ers.com/en/${slug}`,
+  naak:        (slug) => `https://www.naak.com/${slug}`,
+  skyr:        (slug) => `https://www.skyr.com/${slug}`,
+  huel:        (slug,country="Schweiz") => DACH_COUNTRIES.includes(country)
+    ? `https://huel.com/de/${slug}?ref=DEIN_CODE`
+    : `https://huel.com/${slug}?ref=DEIN_CODE`,
+  baouw:       (slug) => `https://www.baouw.com/en/${slug}`,
+  veloforte:   (slug) => `https://veloforte.com/${slug}?ref=DEIN_CODE`,
 };
 
 const BASIS = [
@@ -649,7 +726,19 @@ function Intro({onNext, onDemo}) {
                 <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos starten.</span>
               </div>
             </div>
-            <ReviewsRow/>
+            <div style={{marginTop:20,paddingTop:16,borderTop:`0.5px solid ${C.g100}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <div style={{display:"flex",alignItems:"center",gap:6}}>
+                <ReviewStars n={5} size={11}/>
+                <span style={{fontSize:11,color:C.g500,fontWeight:500}}>4.9</span>
+                <span style={{fontSize:11,color:C.g400}}>· 87 Google Reviews</span>
+              </div>
+              <a href="https://www.treyn.ch/business" target="_blank" rel="noopener noreferrer"
+                style={{fontSize:11,color:C.g600,textDecoration:"none",display:"inline-flex",alignItems:"center",gap:4,padding:"5px 12px",background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:7,fontWeight:500,transition:"all .15s"}}
+                onMouseEnter={e=>{e.currentTarget.style.background=C.g200;e.currentTarget.style.color=C.black}}
+                onMouseLeave={e=>{e.currentTarget.style.background=C.g100;e.currentTarget.style.color=C.g600}}>
+                Für Unternehmen →
+              </a>
+            </div>
           </>
         )}
       </div>
@@ -2455,20 +2544,41 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
       )}
       {showBudget&&s.budget?.price&&<div style={{fontSize:11,color:"#4A7000",fontWeight:600,marginBottom:8}}>Preis: {s.budget.price}</div>}
 
-      {/* Shop buttons */}
-      <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
-        <a href={active.link||s.link} target="_blank" rel="noopener noreferrer"
-          style={{display:"inline-flex",alignItems:"center",gap:4,background:sc.bg,color:sc.text,padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none"}}>
-          {active.shop||s.shop} ↗
-        </a>
-        {!["iHerb","Maurten","MNSTRY","Myprotein","Sponser","ESN","More Nutrition"].includes(active.shop||s.shop)&&(
-          <a href={`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(s.name)}`} target="_blank" rel="noopener noreferrer"
-            style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
-            Galaxus ↗
-          </a>
-        )}
-        {s.productUrl&&<a href={s.productUrl} target="_blank" rel="noopener noreferrer" style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",textDecoration:"underline",textDecorationStyle:"dotted"}}>Nährwerte ↗</a>}
-      </div>
+      {/* Shop buttons - country-aware */}
+      {(()=>{
+        const country=window.__TREYN_PROFIL__?.country||"Schweiz";
+        const isCH=["Schweiz"].includes(country);
+        const isDAch=["Schweiz","Deutschland","Österreich"].includes(country);
+        const shopId=active.shop||s.shop;
+        const shopLink=active.link||s.link;
+        const chOnly=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+        const dachOnly=["ESN","More Nutrition","nu3"];
+        const needsSwap=(chOnly.includes(shopId)&&!isCH)||(dachOnly.includes(shopId)&&!isDAch);
+        const finalLink=needsSwap?AFF.iherb(s.name):shopLink;
+        const finalShop=needsSwap?"iHerb":shopId;
+        const finalSc=needsSwap?{bg:"#2D7C2B",text:"#fff"}:sc;
+        return (
+          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:10}}>
+            <a href={finalLink} target="_blank" rel="noopener noreferrer"
+              style={{display:"inline-flex",alignItems:"center",gap:4,background:finalSc.bg,color:finalSc.text,padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none"}}>
+              {finalShop} ↗
+            </a>
+            {isCH&&!["iHerb","Maurten","MNSTRY","Myprotein","Sponser","ESN","More Nutrition"].includes(finalShop)&&(
+              <a href={`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(s.name)}`} target="_blank" rel="noopener noreferrer"
+                style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
+                Galaxus ↗
+              </a>
+            )}
+            {!isCH&&!["iHerb","Maurten","MNSTRY","Myprotein"].includes(finalShop)&&(
+              <a href={AFF.iherb(s.name)} target="_blank" rel="noopener noreferrer"
+                style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
+                iHerb ↗
+              </a>
+            )}
+            {s.productUrl&&<a href={s.productUrl} target="_blank" rel="noopener noreferrer" style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",textDecoration:"underline",textDecorationStyle:"dotted"}}>Nährwerte ↗</a>}
+          </div>
+        );
+      })()}
 
       {s.tags&&<div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>{s.tags.map(t=><span key={t} className="chip">{t}</span>)}</div>}
 
@@ -3565,6 +3675,21 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const [tab,setTab]=useState("summary");
   const isMobile=useWindowWidth()<=768;
   const isPro=tier==="pro";
+  // Expose country for AFF locale routing
+  useEffect(()=>{window.__TREYN_PROFIL__=profilData;},[profilData]);
+  const userCountry=profilData?.country||"Schweiz";
+  const isCH=["Schweiz"].includes(userCountry);
+  const isDAch=["Schweiz","Deutschland","Österreich"].includes(userCountry);
+  // Shop availability label
+  const shopAvail=(shopId)=>{
+    const CH_ONLY=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+    const DACH_ONLY=["ESN","More Nutrition","nu3"];
+    if(CH_ONLY.includes(shopId)&&!isCH) return "iHerb";
+    if(DACH_ONLY.includes(shopId)&&!isDAch) return "iHerb";
+    return shopId;
+  };
+
+
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
   const sports=sportData?.selectedSports||[];
@@ -3655,7 +3780,17 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   const SupplementsContent=({isPro,primSupps,secSupps,allergenData,proData})=>{
     const prefSupp=praeferenzenData?.suppForm||"beides";
-    const [showAllPrim,setShowAllPrim]=useState(false);
+    const country=profilData?.country||"Schweiz";
+    const isCH=["Schweiz"].includes(country);
+    const isDAch=["Schweiz","Deutschland","Österreich"].includes(country);
+    // Get best shop link based on user country
+    const getLink=(s)=>{
+      const chOnlyShops=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+      const dachOnlyShops=["ESN","More Nutrition","nu3"];
+      if(chOnlyShops.includes(s.shop)&&!isCH) return {link:s.budget?.link||AFF.iherb(s.name),shop:"iHerb"};
+      if(dachOnlyShops.includes(s.shop)&&!isDAch) return {link:s.budget?.link||AFF.iherb(s.name),shop:"iHerb"};
+      return {link:s.link,shop:s.shop};
+    };
     const [showAllSec,setShowAllSec]=useState(false);
     const allergenWarnings=(s)=>{
       if(!allergenData?.allergens?.length) return [];
@@ -4620,20 +4755,27 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {name:"Rote Beete Nitrat",dose:"400–600mg Nitrat",shop:"iHerb",price:"~CHF 0.50/Tag",link:AFF.iherb("beet root nitrate"),desc:"Verbessert O2-Effizienz um 1–3%",tags:["Ausdauer","Pre-Training"]},
     ];
     const SPORT=[
-      {name:"Maurten Gel 100",dose:"1 Gel alle 30–45 min",shop:"Maurten",price:"~CHF 4.00",link:AFF.maurten("gel-100-box"),desc:"Hydrogel-Technologie — minimaler GI-Stress",tags:["Race-Day","Kohlenhydrate"]},
-      {name:"Maurten Gel 100 CAF",dose:"1 Gel bei Rennen",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("gel-100-caf-100"),desc:"Koffein + Kohlenhydrate für maximale Leistung",tags:["Race-Day","Koffein"]},
-      {name:"Maurten Drink Mix 320",dose:"80g / 500ml",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("drink-mix-320"),desc:"Hohe Kohlenhydratdichte ohne GI-Probleme",tags:["Ausdauer","Kohlenhydrate"]},
-      {name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",shop:"MNSTRY",price:"~CHF 3.50",link:AFF.mnstry("intensity-gel"),desc:"Magenfreundlich — genutzt von Canyon//SRAM",tags:["Race-Day","Carbs"]},
-      {name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",shop:"Sponser",price:"~CHF 0.50",link:AFF.sponser("elektrolyt tabletten"),desc:"Natrium, Kalium, Magnesium — Krampfprävention",tags:["Hydration","Sommer"]},
-      {name:"Koffein 100–200mg",dose:"30–45 min vor Wettkampf",shop:"iHerb",price:"~CHF 0.15",link:AFF.iherb("caffeine 100mg"),desc:"Kognitive Leistung + Ausdauer",tags:["Pre-Race","Koffein"]},
+      {name:"Maurten Gel 100",dose:"1 Gel alle 30–45 min",shop:"Maurten",price:"~CHF 4.00",link:AFF.maurten("gel-100-box"),desc:"Hydrogel-Technologie — minimaler GI-Stress",tags:["Race-Day","Kohlenhydrate"],affiliate:true},
+      {name:"Maurten Gel 100 CAF",dose:"1 Gel bei Rennen",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("gel-100-caf-100"),desc:"Koffein + Kohlenhydrate für maximale Leistung",tags:["Race-Day","Koffein"],affiliate:true},
+      {name:"Maurten Drink Mix 320",dose:"80g / 500ml",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("drink-mix-320"),desc:"Hohe Kohlenhydratdichte ohne GI-Probleme",tags:["Ausdauer","Kohlenhydrate"],affiliate:true},
+      {name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",shop:"MNSTRY",price:"~CHF 3.50",link:AFF.mnstry("intensity-gel"),desc:"Magenfreundlich — genutzt von Canyon//SRAM & EF Education",tags:["Race-Day","Carbs"],affiliate:true},
+      {name:"SiS Beta Fuel Gel",dose:"1 Gel alle 30–40 min",shop:"SiS",price:"~CHF 3.80",link:AFF.sis("collections/gels"),desc:"40g Kohlenhydrate, 2:1 Maltodextrin:Fructose — für Einheiten über 90 min",tags:["Ausdauer","80g Carbs"],affiliate:true},
+      {name:"SiS GO Isotonic Gel",dose:"1 Gel alle 20–30 min",shop:"SiS",price:"~CHF 2.80",link:AFF.sis("collections/gels"),desc:"Kein Wasser nötig — isotonisch, sofort verfügbar",tags:["Einsteiger","Isotonisch"],affiliate:true},
+      {name:"226ERS Sub9 Gel",dose:"1 Gel alle 30–45 min",shop:"226ERS",price:"~CHF 3.20",link:AFF.ers226("collections/gels"),desc:"Speziell für Ironman & Ultra — bis zu 60g Carbs/h möglich",tags:["Ultra","Triathlon"],affiliate:false},
+      {name:"226ERS High Energy Bar",dose:"1 Riegel alle 45–60 min",shop:"226ERS",price:"~CHF 2.80",link:AFF.ers226("collections/bars"),desc:"Bio-Zutaten, hohe Kohlenhydratdichte — ideal für lange Ausfahrten",tags:["Riegel","Bio"],affiliate:false},
+      {name:"Näak Ultra Energy Bar",dose:"1 Riegel alle 60 min",shop:"Näak",price:"~CHF 4.50",link:AFF.naak("collections/energy-bars"),desc:"Grillen-Protein + pflanzliche Kohlenhydrate — nachhaltig und effektiv",tags:["Nachhaltig","Ultra"],affiliate:false},
+      {name:"Veloforte Di Bosco",dose:"1 Riegel alle 45 min",shop:"Veloforte",price:"~CHF 3.90",link:AFF.veloforte("products/di-bosco"),desc:"Echte Lebensmittel, kein künstlicher Beigeschmack — Wildblaubeere & Haselnuss",tags:["Rennrad","Real Food"],affiliate:true},
+      {name:"BAOUW Energieriegel",dose:"1 Riegel alle 45–60 min",shop:"BAOUW",price:"~CHF 3.50",link:AFF.baouw("collections/all"),desc:"100% natürliche Zutaten, keine Zusatzstoffe — für sensible Mägen",tags:["Natürlich","Vegan"],affiliate:false},
+      {name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",shop:"Sponser",price:"~CHF 0.50",link:AFF.sponser("elektrolyt tabletten"),desc:"Natrium, Kalium, Magnesium — Krampfprävention. Schweizer Qualität.",tags:["Hydration","Sommer"],affiliate:false},
+      {name:"Koffein 100–200mg",dose:"30–45 min vor Wettkampf",shop:"iHerb",price:"~CHF 0.15",link:AFF.iherb("caffeine 100mg"),desc:"Kognitive Leistung + Ausdauer",tags:["Pre-Race","Koffein"],affiliate:true},
     ];
     const FERTIG=[
-      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","TOP PICK"]},
-      {name:"Huel",desc:"Vollwertige Mahlzeiten & Shakes — alle 26 Vitamine & Mineralien",price:"ab CHF 2.50 / Mahlzeit",link:"https://huel.com/ch?ref=TREYN",tags:["Vegan","Vollwertig"]},
-      {name:"Foodspring",desc:"Sport-Nutrition Mahlzeiten — Protein-Porridge, Recovery Shakes",price:"ab CHF 4.90 / Portion",link:"https://www.foodspring.ch?ref=TREYN",tags:["Sport","CH/DE/AT"]},
-      {name:"Saturo",desc:"Flüssige Vollmahlzeiten — sofort trinkfertig, 0 Min. Zubereitung",price:"ab CHF 3.50 / Flasche",link:"https://saturo.com/de?ref=TREYN",tags:["Vegan","Sofort"]},
+      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","TOP PICK"],affiliate:true},
+      {name:"Huel",desc:"Vollwertige Mahlzeiten & Shakes — alle 26 Vitamine & Mineralien",price:"ab CHF 2.50 / Mahlzeit",link:AFF.huel("collections/all"),tags:["Vegan","Vollwertig"],affiliate:true},
+      {name:"Foodspring",desc:"Sport-Nutrition Mahlzeiten — Protein-Porridge, Recovery Shakes",price:"ab CHF 4.90 / Portion",link:AFF.foodspring("collections/all"),tags:["Sport","CH/DE/AT"],affiliate:true},
+      {name:"Saturo",desc:"Flüssige Vollmahlzeiten — sofort trinkfertig, 0 Min. Zubereitung",price:"ab CHF 3.50 / Flasche",link:"https://saturo.com/de?ref=TREYN",tags:["Vegan","Sofort"],affiliate:false},
     ];
-    const SC={"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Maurten":{bg:"#000",t:C.neon},"MNSTRY":{bg:"#0D0D1A",t:C.neon},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"}};
+    const SC={"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Maurten":{bg:"#000",t:C.neon},"MNSTRY":{bg:"#0D0D1A",t:C.neon},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"},"SiS":{bg:"#00A651",t:"#fff"},"226ERS":{bg:"#E30613",t:"#fff"},"Näak":{bg:"#1C1C1C",t:"#fff"},"Veloforte":{bg:"#F5A623",t:"#fff"},"BAOUW":{bg:"#2E7D32",t:"#fff"},"Huel":{bg:"#7C4DFF",t:"#fff"},"Foodspring":{bg:"#FF5A00",t:"#fff"}};
     const items=shopCat==="supplements"?SUPPS:shopCat==="sportnahrung"?SPORT:FERTIG;
     return (
       <div>
@@ -5605,6 +5747,18 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{marginTop:10,paddingTop:10,borderTop:`0.5px solid ${C.g200}`,fontSize:10,color:C.g300}}>
           Verstösse melden: info@treyn.ch
         </div>
+      </div>
+
+      {/* B2B Link */}
+      <div style={{marginTop:16,padding:"12px 16px",border:`0.5px solid ${C.g200}`,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:2}}>Für Unternehmen & Partner</div>
+          <div style={{fontSize:11,color:C.g400}}>Widget · API · White-Label</div>
+        </div>
+        <a href="https://www.treyn.ch/business" target="_blank" rel="noopener noreferrer"
+          style={{fontSize:11,padding:"6px 14px",borderRadius:7,background:C.neon,color:C.black,fontWeight:600,textDecoration:"none",flexShrink:0}}>
+          Mehr →
+        </a>
       </div>
     </div>
   );
