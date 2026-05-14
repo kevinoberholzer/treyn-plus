@@ -202,6 +202,14 @@ const AFF = {
   esn:         slug => `https://www.esn.com/products/${slug}?ref=DEIN_CODE`,
   morenutrition: slug => `https://www.more-nutrition.de/products/${slug}?ref=DEIN_CODE`,
   galaxus:     q    => `https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(q)}&tagIds=1394`,
+  more_sirup:  () => `https://www.more-nutrition.de/collections/sirup?ref=DEIN_CODE`,
+  lmnt:        () => `https://drinklmnt.com/?via=DEIN_CODE`,
+  erdinger:    () => `https://www.erdinger.de/bierspezialitaeten/erdinger-alkoholfrei.html`,
+  athletic:    () => `https://athleticbrewing.com/?ref=DEIN_CODE`,
+  therabody:   () => `https://www.therabody.com/de-ch?ref=DEIN_CODE`,
+  hyperice:    () => `https://hyperice.com/?ref=DEIN_CODE`,
+  blackroll:   () => `https://www.blackroll.com/ch-de?ref=DEIN_CODE`,
+  compex:      () => `https://www.compex.com/ch-de?ref=DEIN_CODE`,
 };
 
 const BASIS = [
@@ -3538,17 +3546,20 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
   const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
 
-  const NAV=[
-    {id:"summary",     label:"Summary",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
-    {id:"verbrauch",   label:"Deine Daten",  icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
-    {id:"supplements", label:"Supplements", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
-    {id:"nutrition",   label:"Sportnahrung",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>},
-    {id:"fertiggerichte",label:"Fertiggerichte", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/><path d="M12 12l4-4"/></svg>},
-    {id:"recovery",       label:"Recovery Gear",  icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>},
-    {id:"cart",           label:"Warenkorb",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
-    {id:"bluttest",      label:"Bluttest",      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>, badge:true, upgrade:true},
-    {id:"produkte",      label:"Deinen Plan", icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>},
+  const NAV_BASIC=[
+    {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
+    {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>, locked:true},
+    {id:"profil",       label:"Profil",           icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
   ];
+  const NAV_PRO=[
+    {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
+    {id:"zahlen",       label:"Deine Zahlen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
+    {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
+    {id:"einkauf",      label:"Einkauf",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
+    {id:"aichat",       label:"AI Chat",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>},
+    {id:"profil",       label:"Profil",          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
+  ];
+  const NAV=isPro?NAV_PRO:NAV_BASIC;
   const AICHAT_NAV={id:"aichat",label:"TREYN AI Chat",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>};
   const PROFIL_NAV={id:"profil",label:"Profil & Zahlung",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>};
   const KONTAKT_NAV={id:"kontakt",label:"Kontakt & Impressum",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>};
@@ -3556,26 +3567,243 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const NavItem=({item})=>{
     const active=tab===item.id;
     return (
-      <button onClick={()=>setTab(item.id)} style={{
+      <button onClick={()=>item.locked?onUpgrade():setTab(item.id)} style={{
         display:"flex",alignItems:"center",gap:10,width:"100%",
         padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",
         background:active?C.neon:"transparent",
-        color:active?C.black:C.g600,
+        color:active?C.black:item.locked?C.g300:C.g600,
         fontFamily:"Inter,sans-serif",fontSize:13,fontWeight:active?600:400,
         transition:"all .14s",textAlign:"left",position:"relative",
       }}>
-        <span style={{color:active?C.black:C.g400,flexShrink:0}}>{item.icon}</span>
+        <span style={{color:active?C.black:item.locked?C.g300:C.g400,flexShrink:0}}>{item.icon}</span>
         {item.label}
-        {item.upgrade&&<span style={{
-          marginLeft:"auto",fontSize:8,padding:"2px 6px",borderRadius:4,
-          background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",
-          fontWeight:700,
-        }}>UPGRADE</span>}
+        {item.locked&&<span style={{marginLeft:"auto",fontSize:9,padding:"2px 6px",borderRadius:4,background:C.g100,color:C.g400,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>}
       </button>
     );
   };
 
-  const NutritionTab=()=>{
+  const SupplementsContent=({isPro,primSupps,secSupps,allergenData,proData})=>{
+    const prefSupp=praeferenzenData?.suppForm||"beides";
+    const [showAllPrim,setShowAllPrim]=useState(false);
+    const [showAllSec,setShowAllSec]=useState(false);
+    const allergenWarnings=(s)=>{
+      if(!allergenData?.allergens?.length) return [];
+      return ALLERGEN_GROUPS.filter(g=>g.ingredients.some(ing=>
+        (s.name||"").toLowerCase().includes(ing.toLowerCase())||
+        (s.why||"").toLowerCase().includes(ing.toLowerCase())
+      ));
+    };
+    const interactions=checkInteractions(primSupps.map(s=>s.id));
+    const displayPrim=showAllPrim?primSupps:primSupps.slice(0,3);
+    const displaySec=showAllSec?secSupps:secSupps.slice(0,2);
+    return (
+      <div>
+        {primSupps.length>0&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>DEIN STACK · ZWINGEND</div>
+            {displayPrim.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={true} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            {primSupps.length>3&&<button onClick={()=>setShowAllPrim(x=>!x)} style={{width:"100%",padding:"9px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,color:C.g600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:4}}>{showAllPrim?`Weniger anzeigen`:`+ ${primSupps.length-3} weitere anzeigen`}</button>}
+          </div>
+        )}
+        {secSupps.length>0&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>OPTIONAL · SINNVOLL</div>
+            {displaySec.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={false} interactions={interactions.filter(x=>x.ids?.includes(s.id))} allergenWarnings={allergenWarnings(s)}/>)}
+            {secSupps.length>2&&<button onClick={()=>setShowAllSec(x=>!x)} style={{width:"100%",padding:"9px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,color:C.g600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:4}}>{showAllSec?`Weniger anzeigen`:`+ ${secSupps.length-2} weitere anzeigen`}</button>}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const HydrationContent=()=>{
+    const DURING=[
+      {
+        name:"MORE Nutrition Sirup",
+        badge:"Ohne Zucker · CH-Bestseller",
+        affiliate:true,
+        why:"Der einfachste Weg mehr zu trinken — über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
+        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40–60%. Kein Zucker = kein Insulin-Spike.",
+        tags:["Täglich","Ohne Zucker"],
+        link:AFF.more_sirup(),
+        shop:"MORE Nutrition",
+        img:"https://www.more-nutrition.de/cdn/shop/products/MORE_Sirup_Mango-Maracuja_500ml.jpg",
+      },
+      {
+        name:"LMNT Elektrolyt-Packets",
+        badge:"1000mg Natrium · Kein Zucker",
+        affiliate:true,
+        why:"Extrem hochdosiert — 3× mehr Natrium als normale Elektrolyte. Ideal für Intensiv-Sportler und Keto-Athleten.",
+        science:"Natrium ist der stärkste Hydrations-Trigger. Mehr Natrium = mehr Trinkbereitschaft = bessere Hydration.",
+        tags:["Elektrolyte","High Sodium"],
+        link:AFF.lmnt(),
+        shop:"LMNT",
+        img:"https://drinklmnt.com/cdn/shop/files/LMNT-Sparkling_Citrus_Salt_12-Pack.png",
+      },
+      {
+        name:"Sponser Elektrolyt-Tabs",
+        badge:"Bewährt · Schweizer Qualität",
+        affiliate:false,
+        why:"Kompaktes Format — einfach in die Trinkflasche, überall dabei. Schweizer Qualitätsstandard.",
+        science:"Elektrolyt-Balance verbessert Flüssigkeitstransport in die Zellen. Ohne Elektrolyte bleibt Wasser im Darm.",
+        tags:["Elektrolyte","Kompakt"],
+        link:AFF.sponser("elektrolyt tabletten"),
+        shop:"Sponser",
+        img:null,
+      },
+      {
+        name:"Kokoswasser",
+        badge:"Natürlich · Isotonisch",
+        affiliate:false,
+        why:"Natürlich isotonisch mit Kalium, Magnesium und Natrium. Idealer Ersatz für Sportgetränke — ohne Zucker-Overhead.",
+        science:"Ähnliche Elektrolyt-Zusammensetzung wie menschliches Blutplasma. Studien zeigen gleiche Rehydrations-Wirkung wie kommerzielle Sportdrinks.",
+        tags:["Natürlich","Kalium"],
+        link:"https://www.galaxus.ch/de/s1/product/vita-coco-kokoswasser",
+        shop:"Galaxus",
+        img:null,
+      },
+    ];
+    const AFTER=[
+      {
+        name:"Erdinger Alkoholfrei",
+        badge:"Isotonisch · Polyphenole · Bestseller",
+        affiliate:false,
+        why:"Das bekannteste Recovery-Getränk der Sportwelt. Schmeckt nach Bier, enthält aber alles was dein Körper nach dem Training braucht.",
+        science:"FC Bayern München Studie: Sportler die Erdinger AF tranken hatten 3× weniger Infekte in der Saison. Isotonisch, B-Vitamine, Polyphenole, 0% Alkohol.",
+        tags:["Recovery","Isotonisch","Polyphenole"],
+        link:AFF.erdinger(),
+        shop:"Erdinger",
+        img:"https://www.erdinger.de/typo3temp/assets/_processed_/1/6/csm_ERDINGER_Weissbier_alkoholfrei_Flasche_2020_RGB_300dpi_3db53a2b78.jpg",
+        highlight:true,
+      },
+      {
+        name:"Athletic Brewing Co.",
+        badge:"Craft Bier · 0% Alkohol",
+        affiliate:true,
+        why:"Das beste alkoholfreie Bier das je gemacht wurde — für alle die nach einem harten Training das Bier-Feeling wollen ohne Alkohol.",
+        science:"0% Alkohol eliminiert den wichtigsten Recovery-Killer. Alkohol hemmt Proteinsynthese, Testosteron und Schlafqualität — Athletic Brewing gibt dir das Ritual ohne die Kosten.",
+        tags:["0% Alkohol","Craft","Recovery"],
+        link:AFF.athletic(),
+        shop:"Athletic Brewing",
+        img:null,
+      },
+      {
+        name:"Schokoladenmilch",
+        badge:"Klassiker der Sportwissenschaft",
+        affiliate:false,
+        why:"Klingt banal — ist aber ernsthaft eines der meistgetesteten Recovery-Getränke der Sportwissenschaft. Günstig, zugänglich, effektiv.",
+        science:"Ideales 1:4 Protein-zu-Carb-Verhältnis für Muskelreparatur und Glykogen-Wiederauffüllung. Studien zeigen: gleich effektiv wie kommerzielle Recovery-Drinks.",
+        tags:["Protein","Carbs","Günstig"],
+        link:"https://www.migros.ch",
+        shop:"Migros / Coop",
+        img:null,
+      },
+      {
+        name:"Kefir",
+        badge:"Probiotika · Protein · Unterschätzt",
+        affiliate:false,
+        why:"Für Sportler die ihren Darm ernst nehmen. Kefir enthält mehr Probiotika als Joghurt und liefert gleichzeitig Protein und Elektrolyte.",
+        science:"Intensive Trainingsbelastung erhöht Darmpermeabilität ('Leaky Gut'). Probiotika reduzieren Inflammation und verbessern Nährstoffaufnahme — direkt relevant für Recovery.",
+        tags:["Probiotika","Darm","Protein"],
+        link:"https://www.migros.ch",
+        shop:"Migros / Coop",
+        img:null,
+      },
+    ];
+
+    const ProductCard=({p})=>(
+      <div style={{background:C.white,border:`1px solid ${p.highlight?C.neon:C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:8,position:"relative"}}>
+        {p.affiliate&&(
+          <div style={{position:"absolute",top:12,right:12,fontSize:8,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>TOP PICK</div>
+        )}
+        {p.highlight&&(
+          <div style={{marginBottom:8,display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",background:C.neon,borderRadius:100}}>
+            <span style={{fontSize:10,fontWeight:700,color:C.black}}>⭐ WISSENSCHAFTLICH BELEGT</span>
+          </div>
+        )}
+        <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,paddingRight:p.affiliate?60:0}}>{p.name}</div>
+        <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{p.badge}</div>
+        <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:8}}>{p.why}</div>
+        <div style={{padding:"8px 12px",background:C.g100,borderRadius:8,marginBottom:10}}>
+          <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:3}}>WISSENSCHAFT</div>
+          <div style={{fontSize:11,color:C.g600,lineHeight:1.5}}>{p.science}</div>
+        </div>
+        <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
+          {p.tags.map(t=><span key={t} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.g100,color:C.g600}}>{t}</span>)}
+        </div>
+        <a href={p.link} target="_blank" rel="noopener noreferrer"
+          style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:p.affiliate?C.neon:C.g100,color:C.black,padding:"9px 14px",borderRadius:9,fontSize:11,fontWeight:600,textDecoration:"none"}}>
+          <span>{p.shop} →</span>
+        </a>
+      </div>
+    );
+
+    return (
+      <div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>HYDRATION WÄHREND DEM TAG</div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>Wasser ist öde? Diese Produkte machen Trinken zum Erlebnis — und sind trotzdem wissenschaftlich sinnvoll.</div>
+        {DURING.map((p,i)=><ProductCard key={i} p={p}/>)}
+
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10,marginTop:20}}>NACH DEM TRAINING</div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>Recovery-Drinks die wirklich funktionieren — von Wissenschaft belegt, trotzdem Spass.</div>
+        {AFTER.map((p,i)=><ProductCard key={i} p={p}/>)}
+
+
+      </div>
+    );
+  };
+
+  const FertiggerichteContent=()=>(
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {[
+        {name:"Löwenanteil",badge:"Bio · High Protein · TOP PICK",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30–42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
+        {name:"HelloFresh",badge:"Meal Kit · Flexible Lieferung",desc:"Wochentliche Meal Kits mit ausgewogenen Mahlzeiten — einfach zu kochen, sportlergerecht.",products:[{l:"Kalorien",v:"500–800 kcal"},{l:"Protein",v:"25–40g"},{l:"Preis",v:"ab CHF 8.90"}],link:"https://www.hellofresh.ch",img:"https://img.hellofresh.com/hellofresh_s3/image/5f7c6b2f3e36d0000c4e4b1a.jpg"},
+      ].map((b,i)=>(
+        <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+          <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+            <img src={b.img} alt={b.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
+          </div>
+          <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
+            <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{b.name}</div>
+            <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:6}}>{b.badge}</div>
+            <div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginBottom:10,flex:1}}>{b.desc}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:10}}>
+              {b.products.map(p=><div key={p.l} style={{display:"flex",justifyContent:"space-between",background:C.g100,borderRadius:7,padding:"4px 8px"}}><span style={{fontSize:10,color:C.g600}}>{p.l}</span><span style={{fontSize:10,fontWeight:600,color:C.black}}>{p.v}</span></div>)}
+            </div>
+            <a href={b.link} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>Entdecken ↗</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const RecoveryContent=()=>(
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+      {[
+        {name:"Therabody",badge:"Massage Guns · Boots",desc:"Weltmarktführer in Perkussionstherapie. Genutzt von Profiteams in NBA, NFL und Tour de France.",products:[{n:"Theragun PRO Plus",p:"CHF 599"},{n:"Theragun Mini",p:"CHF 199"},{n:"JetBoots PRO",p:"CHF 1'149"}],link:"https://www.therabody.com/de-ch",img:"https://cdn.shopify.com/s/files/1/0624/4657/products/TBY-PRO5-BLK_1.png"},
+        {name:"Hyperice",badge:"Kompression · Massage",desc:"Gold Standard für Kompressionsboots — Ironman, NBA und Tour de France. Hypervolt als günstige Alternative.",products:[{n:"Hypervolt 2",p:"CHF 229"},{n:"Normatec 3 Legs",p:"CHF 899"},{n:"Normatec Elite",p:"CHF 1'099"}],link:"https://hyperice.com/",img:"https://hyperice.com/cdn/shop/products/Normatec3Leg_Lifestyle_ProductPage_1.jpg"},
+        {name:"Blackroll",badge:"Faszienrollen · Selbstmassage",desc:"Schweizer Marktführer für Faszientherapie. Einsteigerfreundlich — ideal für tägliche Selbstmassage.",products:[{n:"Standard Rolle",p:"CHF 35"},{n:"Massage Gun",p:"CHF 149"},{n:"Ball",p:"CHF 15"}],link:"https://www.blackroll.com/ch-de",img:"https://www.blackroll.com/cdn/shop/products/blackroll-standard-rolle-schwarz_1.jpg"},
+        {name:"Compex",badge:"EMS Muskelstimulation",desc:"Pionier in Elektrostimulation — genutzt von Physios und Profiathleten. Aktive Recovery und Muskelaufbau.",products:[{n:"Edge 3.0",p:"CHF 199"},{n:"Performance 3.0",p:"CHF 249"},{n:"Sport Elite 3.0",p:"CHF 349"}],link:"https://www.compex.com/ch-de",img:"https://www.compex.com/medias/sys_master/root/h2e/hef/8796266717214/compex-sp-8-0-wireless.jpg"},
+      ].map((b,i)=>(
+        <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+          <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
+            <img src={b.img} alt={b.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
+          </div>
+          <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
+            <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{b.name}</div>
+            <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:6}}>{b.badge}</div>
+            <div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginBottom:10,flex:1}}>{b.desc}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:10}}>
+              {b.products.map(p=><div key={p.n} style={{display:"flex",justifyContent:"space-between",background:C.g100,borderRadius:7,padding:"4px 8px"}}><span style={{fontSize:10,color:C.g600}}>{p.n}</span><span style={{fontSize:10,fontWeight:600,color:C.black}}>{p.p}</span></div>)}
+            </div>
+            <a href={b.link} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>Entdecken ↗</a>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+    const NutritionTab=()=>{
     const [rubrik,setRubrik]=useState("energie");
     const [showAll,setShowAll]=useState(false);
     const [formPref,setFormPref]=useState(null); // gel/riegel/drink
@@ -5233,248 +5461,108 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <div style={{fontSize:10,fontWeight:700,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",padding:"0 14px",marginBottom:8}}>MEIN PROFIL</div>
             {NAV.map(item=><NavItem key={item.id} item={item}/>)}
             <div style={{flex:1}}/>
-
             <div style={{paddingTop:8,borderTop:`1px solid ${C.g200}`,marginTop:8,display:"flex",flexDirection:"column",gap:2}}>
-              <NavItem item={AICHAT_NAV}/>
-              <NavItem item={PROFIL_NAV}/>
-              <NavItem item={KONTAKT_NAV}/>
+              <button onClick={()=>setTab("kontakt")} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="kontakt"?C.neon:"transparent",color:tab==="kontakt"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                Kontakt & Impressum
+              </button>
             </div>
           </div>
         </div>
 
         {/* ── MAIN CONTENT ─────────────────────────────────────────────────── */}
         <div style={{flex:1,minWidth:0,padding:"24px 0 80px 24px",borderLeft:`1px solid ${C.g200}`}}>
-          {tab==="supplements"&&(
-            <div>
-              <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Supplements</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-              {prefSupp!=="beides"&&(
-                <div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}>
-                  <span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.
-                </div>
-              )}
-
-
-              {/* Info Karte */}
-              <div style={{marginBottom:16,borderRadius:12,border:`1px solid ${C.g200}`,overflow:"hidden"}}>
-                <div style={{background:C.g100,padding:"8px 14px",borderBottom:`1px solid ${C.g200}`,display:"flex",alignItems:"center",gap:6}}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  <span style={{fontSize:10,fontWeight:600,color:C.g600,letterSpacing:".04em",textTransform:"uppercase",fontFamily:"JetBrains Mono,monospace"}}>Hinweis</span>
-                </div>
-                <div style={{padding:"10px 14px"}}>
-                  <div style={{display:"flex",flexDirection:"column",gap:7}}>
-                    <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
-                      <span style={{fontSize:12,flexShrink:0,marginTop:1}}>🩺</span>
-                      <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>TREYN AI-Empfehlungen sind keine medizinische Beratung. Inhaltsstoffe & Wechselwirkungen immer beim Hersteller prüfen. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.</span>
-                    </div>
-                    <div style={{height:1,background:C.g100}}/>
-                    <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
-                      <span style={{fontSize:12,flexShrink:0,marginTop:1}}>🤝</span>
-                      <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir arbeiten mit ausgewählten Partnershops zusammen — empfehlen aber alle verfügbaren Produkte für deine bestmögliche Performance, unabhängig von Listung oder Verlinkung.</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {primSupps.length>0&&<>
-                <SectionHeader label="Zwingend empfohlen" count={`${primSupps.length} Produkte`} color={C.neon}/>
-                <div style={{marginBottom:12,padding:"10px 14px",background:C.neonDim,borderRadius:10,border:`1px solid ${C.neonBorder}`,fontSize:12,color:C.g800}}>
-                  {isPro?"Priorisiert auf Basis sport-spezifischer Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{(()=>{const allIds=[...primSupps,...secSupps].map(s=>s.id);return primSupps.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={true} interactions={getSupplementInteractions(s.id,allIds.filter(id=>id!==s.id))} allergenWarnings={checkAllergens(s.id,s.name,allergenData)}/>);})()}</div>
-              </>}
-              {secSupps.length>0&&<>
-                <div style={{marginTop:24,marginBottom:12}}>
-                  <SectionHeader label="Sinnvoll, aber optional" count={`${secSupps.length} Produkte`} color={C.g400}/>
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>{(()=>{const allIds=[...primSupps,...secSupps].map(s=>s.id);return secSupps.map((s,i)=><ProductCard key={s.id} s={s} index={i} isPrimary={false} interactions={getSupplementInteractions(s.id,allIds.filter(id=>id!==s.id))} allergenWarnings={checkAllergens(s.id,s.name,allergenData)}/>);})()}</div>
-              </>}
-              <div style={{marginTop:20,padding:"12px 14px",background:C.g100,borderRadius:11,fontSize:11,color:C.g600,lineHeight:1.6}}>
-                <strong style={{color:C.g800}}>Hinweis:</strong> Alle Empfehlungen sind Schätzwerte. Eisen nur nach ärztlichem Bluttest supplementieren.
-              </div>
-              <div style={{marginTop:20}}><AiChat context={aiCtx} isPro={isPro}/></div>
-            </div>
-          )}
           {tab==="summary"&&<SummaryTab/>}
-          {tab==="verbrauch"&&<VerbrauchTab/>}
-          {tab==="nutrition"&&<NutritionTab/>}
-          {tab==="fertiggerichte"&&(
-            <div>
-              <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Fertiggerichte</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
 
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-                {[
-                  {
-                    name:"Löwenanteil",
-                    badge:"Bio · High Protein",
-                    img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg",
-                    products:[{l:"Protein",v:"30–42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],
-                    tags:["Bio","High Protein","Kein Kühlschrank"],
-                    link:"https://www.loewenanteil.com?ref=TREYN",
-                  },
-                  {
-                    name:"Huel",
-                    badge:"Vollwertige Mahlzeit · 26 Vitamine",
-                    img:"https://huel.com/cdn/shop/files/Huel-Black-Edition-Chocolate-Lifestyle.jpg",
-                    products:[{l:"Protein",v:"20–40g"},{l:"Zubereitung",v:"2 Min."},{l:"Preis",v:"ab CHF 2.50"}],
-                    tags:["Vollwertig","Vegan","26 Vitamine"],
-                    link:"https://huel.com/ch?ref=TREYN",
-                  },
-                  {
-                    name:"Foodspring",
-                    badge:"Sport Nutrition · CH/DE/AT",
-                    img:"https://www.foodspring.ch/cdn/shop/products/protein-porridge.jpg",
-                    products:[{l:"Protein",v:"20–35g"},{l:"Zubereitung",v:"3–5 Min."},{l:"Preis",v:"ab CHF 4.90"}],
-                    tags:["Sport","Bio","CH/DE/AT"],
-                    link:"https://www.foodspring.ch?ref=TREYN",
-                  },
-                  {
-                    name:"Saturo",
-                    badge:"Liquid Meal · Sofort trinkfertig",
-                    img:"https://saturo.com/cdn/shop/products/saturo-drink-original.jpg",
-                    products:[{l:"Protein",v:"20g"},{l:"Zubereitung",v:"0 Min."},{l:"Preis",v:"ab CHF 3.50"}],
-                    tags:["Sofort","Vegan","EU-weit"],
-                    link:"https://saturo.com/de?ref=TREYN",
-                  },
-                ].map((b,i)=>(
-                  <div key={i} style={{borderRadius:12,border:"1px solid #EBEBEB",background:"#fff",overflow:"hidden",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
-                    {/* Product image */}
-                    <div style={{background:"#F8F8F8",height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-                      <img src={b.img} alt={b.name}
-                        style={{width:"100%",height:"100%",objectFit:"cover"}}
-                        onError={e=>{e.target.style.display="none";e.target.parentNode.style.background="#F0F0F0";}}/>
-                    </div>
-                    <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
-                      <div style={{fontSize:13,fontWeight:700,color:"#0A0A0A",marginBottom:2}}>{b.name}</div>
-                      <div style={{fontSize:9,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{b.badge}</div>
-                      {/* Stats */}
-                      <div style={{display:"flex",flexDirection:"column",gap:3,marginBottom:8}}>
-                        {b.products.map(p=>(
-                          <div key={p.l} style={{display:"flex",justifyContent:"space-between",background:"#F8F8F8",borderRadius:6,padding:"3px 8px"}}>
-                            <span style={{fontSize:10,color:"#888"}}>{p.l}</span>
-                            <span style={{fontSize:10,fontWeight:600,color:"#0A0A0A"}}>{p.v}</span>
-                          </div>
-                        ))}
-                      </div>
-                      {/* Tags */}
-                      <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:10,flex:1}}>
-                        {b.tags.map(t=><span key={t} style={{fontSize:9,padding:"2px 6px",borderRadius:7,background:"#F0F0F0",color:"#666",fontFamily:"JetBrains Mono,monospace"}}>{t}</span>)}
-                      </div>
-                      <a href={b.link} target="_blank" rel="noopener noreferrer"
-                        style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:"#000",padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>
-                        Entdecken ↗
-                      </a>
-                    </div>
+          {/* ── DEINE ZAHLEN (PRO only) ──────────────────────────────────── */}
+          {tab==="zahlen"&&(<div>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deine Zahlen</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil.</p>
+            <VerbrauchTab/>
+          </div>)}
+
+          {/* ── EMPFEHLUNGEN ─────────────────────────────────────────────── */}
+          {tab==="empfehlungen"&&(()=>{
+            const [subTab,setSubTab]=React.useState("supplements");
+            const SUB=[
+              {id:"supplements",l:"Supplements"},
+              {id:"nahrung",l:"Sportnahrung"},
+              {id:"mahlzeiten",l:"Mahlzeiten"},
+              {id:"hydration",l:"Hydration"},
+              {id:"recovery",l:"Recovery Gear"},
+            ];
+            return (
+              <div>
+                <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
+                <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
+                {/* Sub-Tab Pills */}
+                <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
+                  {SUB.map(s=>(
+                    <button key={s.id} onClick={()=>setSubTab(s.id)}
+                      style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
+                      {s.l}
+                    </button>
+                  ))}
+                </div>
+                {subTab==="supplements"&&(
+                  <div>
+                    <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
+                    {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
+                    <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
                   </div>
-                ))}
-              </div>
-
-              <div style={{marginTop:12,padding:"10px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`,fontSize:11,color:C.g400,lineHeight:1.6}}>
-                Wir arbeiten mit ausgewählten Partnershops zusammen — empfehlen aber alle verfügbaren Fertiggerichte für deine bestmögliche Performance.
-              </div>
-            </div>
-          )}
-          {tab==="cart"&&<CartTab/>}
-          {tab==="recovery"&&(
-            <div>
-              <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Recovery Gear</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
-
-              {/* Brand overview */}
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
-                {[
-                  {
-                    name:"Therabody",
-                    badge:"Massage Guns · Boots",
-                    img:"https://cdn.shopify.com/s/files/1/0624/4657/products/TBY-PRO5-BLK_1.png",
-                    imgFallback:"https://images.ctfassets.net/e4jnsuoywi72/6YVrOqAB8TJlKGiP2h3dFI/d6b3e8c7e1e8f6d9e9e9e9e9/theragun-pro.png",
-                    desc:"Weltmarktführer in Perkussionstherapie. Genutzt von Profiteams in NBA, NFL und Tour de France.",
-                    products:[{n:"Theragun PRO Plus",p:"CHF 599"},{n:"Theragun Mini",p:"CHF 199"},{n:"JetBoots PRO",p:"CHF 1'149"}],
-                    link:"https://www.therabody.com/de-ch",
-                  },
-                  {
-                    name:"Hyperice / Normatec",
-                    badge:"Massage Guns · Boots",
-                    img:"https://hyperice.com/cdn/shop/products/Normatec3Leg_Lifestyle_ProductPage_1.jpg",
-                    imgFallback:null,
-                    desc:"Gold Standard für Kompressionsboots — Ironman, NBA und Tour de France. Hypervolt als günstige Alternative.",
-                    products:[{n:"Hypervolt 2",p:"CHF 229"},{n:"Normatec 3 Legs",p:"CHF 899"},{n:"Normatec Elite",p:"CHF 1'099"}],
-                    link:"https://hyperice.com/",
-                  },
-                  {
-                    name:"Blackroll",
-                    badge:"Faszienrollen · Selbstmassage",
-                    img:"https://www.blackroll.com/cdn/shop/products/blackroll-standard-rolle-schwarz_1.jpg",
-                    imgFallback:null,
-                    desc:"Schweizer Marktführer für Faszientherapie. Einsteigerfreundlich — ideal für tägliche Selbstmassage.",
-                    products:[{n:"Standard Rolle",p:"CHF 35"},{n:"Massage Gun",p:"CHF 149"},{n:"Ball",p:"CHF 15"}],
-                    link:"https://www.blackroll.com/ch-de",
-                  },
-                  {
-                    name:"Compex",
-                    badge:"EMS Muskelstimulation",
-                    img:"https://www.compex.com/medias/sys_master/root/h2e/hef/8796266717214/compex-sp-8-0-wireless.jpg",
-                    imgFallback:null,
-                    desc:"Pionier in Elektrostimulation — genutzt von Physios und Profiathleten. Aktive Recovery und Muskelaufbau.",
-                    products:[{n:"Edge 3.0",p:"CHF 199"},{n:"Performance 3.0",p:"CHF 249"},{n:"Sport Elite 3.0",p:"CHF 349"}],
-                    link:"https://www.compex.com/ch-de",
-                  },
-                ].map((b,i)=>(
-                  <div key={i} style={{borderRadius:12,border:"1px solid #EBEBEB",background:"#fff",overflow:"hidden",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
-                    {/* Product image */}
-                    <div style={{background:"#F8F8F8",height:130,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-                      <img src={b.img} alt={b.name}
-                        style={{width:"100%",height:"100%",objectFit:"cover"}}
-                        onError={e=>{e.target.style.display="none";e.target.parentNode.style.background="#F0F0F0";}}/>
-                    </div>
-                    {/* Content */}
-                    <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
-                      <div style={{fontSize:13,fontWeight:700,color:"#0A0A0A",marginBottom:2}}>{b.name}</div>
-                      <div style={{fontSize:9,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:6}}>{b.badge}</div>
-                      <div style={{fontSize:11,color:"#555",lineHeight:1.5,marginBottom:10,flex:1}}>{b.desc}</div>
-                      {/* Product chips */}
-                      <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:10}}>
-                        {b.products.map(p=>(
-                          <div key={p.n} style={{display:"flex",justifyContent:"space-between",alignItems:"center",background:"#F8F8F8",borderRadius:7,padding:"4px 8px"}}>
-                            <span style={{fontSize:10,color:"#555"}}>{p.n}</span>
-                            <span style={{fontSize:10,fontWeight:600,color:"#0A0A0A"}}>{p.p}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <a href={b.link} target="_blank" rel="noopener noreferrer"
-                        style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:"#000",padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>
-                        Entdecken ↗
-                      </a>
-                    </div>
+                )}
+                {subTab==="nahrung"&&<NutritionTab/>}
+                {subTab==="mahlzeiten"&&(
+                  <div>
+                    <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
+                    <FertiggerichteContent/>
                   </div>
-                ))}
+                )}
+                {subTab==="hydration"&&<HydrationContent/>}
+                {subTab==="recovery"&&(
+                  <div>
+                    <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
+                    <RecoveryContent/>
+                  </div>
+                )}
               </div>
+            );
+          })()}
 
-            </div>
-          )}
-          {tab==="bluttest"&&(
+          {/* ── EINKAUF ──────────────────────────────────────────────────── */}
+          {tab==="einkauf"&&(
             <div>
-              <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Bluttest</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20}}>Echte Laborwerte direkt in deine Berechnungen importieren.</p>
-              <BluttestTab/>
+              <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Einkauf</h2>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein Warenkorb und Bluttest — alles an einem Ort.</p>
+              <CartTab/>
+              <div style={{marginTop:24}}>
+                <h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3>
+                <p style={{fontSize:13,color:C.g600,marginBottom:16}}>Echte Laborwerte direkt in deine Berechnungen importieren.</p>
+                <BluttestTab/>
+              </div>
             </div>
           )}
-          {tab==="produkte"&&<ProduktTab/>}
+
+          {/* ── AI CHAT ──────────────────────────────────────────────────── */}
           {tab==="aichat"&&(
             <div>
-              <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2>
+              <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2>
               <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten, Supplements und Ernährung — direkt beantwortet von TREYN AI.</p>
               <AiChat context={aiCtx} isPro={isPro}/>
             </div>
           )}
-          {tab==="kontakt"&&<KontaktTab/>}
+
+          {/* ── PROFIL ───────────────────────────────────────────────────── */}
           {tab==="profil"&&(
             <div>
-              <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil & Zahlung</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine persönlichen Daten und Abo-Übersicht.</p>
+              <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Profil</h2>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20}}>Deine persönlichen Angaben anpassen.</p>
               <ProfilTab/>
             </div>
           )}
+
+          {/* ── KONTAKT ──────────────────────────────────────────────────── */}
+          {tab==="kontakt"&&<KontaktTab/>}
         </div>
       </div>
     </div>
