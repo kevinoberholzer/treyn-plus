@@ -3263,7 +3263,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
           Kaufen ↗
         </a>
         <button onClick={toggleOwned} style={{padding:"7px 10px",borderRadius:8,border:`1px solid ${owned?"rgba(52,199,89,.4)":C.g200}`,background:owned?"rgba(52,199,89,.08)":"transparent",fontSize:10,cursor:"pointer",fontFamily:"Inter,sans-serif",color:owned?"#1A7A35":C.g500}}>
-          {owned?"✓":"＋"}
+          {owned?"✓ Im Warenkorb":"＋ Merken"}
         </button>
       </div>
     </div>
@@ -3430,7 +3430,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         ):(
           <div style={{width:13,height:13,borderRadius:"50%",border:`1.5px solid ${C.g300||C.g400}`,flexShrink:0}}/>
         )}
-        <span style={{fontSize:11,fontWeight:700,color:owned?"#000":C.g500}}>{owned?"Vorhanden / bestellt":"Ich habe das Produkt bereits"}</span>
+        <span style={{fontSize:11,fontWeight:700,color:owned?"#000":C.g500}}>{owned?"✓ Im Warenkorb":"+ Zum Warenkorb"}</span>
       </button>
       {owned&&<div style={{marginTop:6,fontSize:10,color:"#4A7000",textAlign:"center",lineHeight:1.5}}>Findest du in <strong>Deinen Plan</strong> — inkl. Einnahme-Tagesplan.</div>}
     </div>
@@ -4653,8 +4653,98 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   };
 
   const WearablesContent=()=>{
+    const [cartTick,setCartTick]=useState(0);
     const WEARABLES=[
       {
+        name:"Ultrahuman Ring PRO",
+        badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
+        affiliate:true,
+        category:"Sleep & Recovery",
+        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
+        metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
+        price:"ab CHF 399",
+        shops:[
+          {name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true},
+        ],
+      },
+    ];
+
+
+    return (
+      <div>
+        {/* Why you need it */}
+        <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
+          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
+            TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%.
+          </div>
+          <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
+            {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
+              <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Product cards */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+        {WEARABLES.map((w,i)=>(
+          <div key={i} style={{background:C.white,border:`0.5px solid ${i===0?C.neon:C.g200}`,borderRadius:12,padding:"14px 16px",position:"relative"}}>
+
+            <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:10}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:C.g400,letterSpacing:".06em",marginBottom:3}}>{w.badge}</div>
+                <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.02em",marginBottom:4}}>{w.name}</div>
+                <div style={{fontSize:12,color:C.g700,lineHeight:1.6}}>{w.why}</div>
+              </div>
+              <div style={{fontSize:13,fontWeight:600,color:C.black,flexShrink:0,textAlign:"right"}}>
+                {w.price}
+              </div>
+            </div>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
+              {(w.metrics||[]).map(m=>(
+                <span key={m} style={{fontSize:9,padding:"2px 7px",borderRadius:100,background:"#F5F5F5",color:"#555",fontFamily:"JetBrains Mono,monospace"}}>{m}</span>
+              ))}
+            </div>
+            <div style={{display:"flex",gap:6}}>
+              {w.shops.map((sh,j)=>(
+                <a key={j} href={sh.link} target="_blank" rel="noopener noreferrer"
+                  style={{flex:1,textAlign:"center",padding:"8px 6px",borderRadius:8,background:sh.affiliate?C.neon:"#F5F5F5",color:sh.affiliate?C.black:"#555",fontSize:11,fontWeight:sh.affiliate?700:400,textDecoration:"none"}}>
+                  {sh.name} ↗
+                </a>
+              ))}
+              <button onClick={()=>{
+                try{
+                  const id=`wear_${w.name.replace(/\s/g,"_")}`;
+                  const list=JSON.parse(localStorage.getItem("treyn_owned")||"[]");
+                  const next=list.includes(id)?list.filter(x=>x!==id):[...list,id];
+                  localStorage.setItem("treyn_owned",JSON.stringify(next));
+                  // Force re-render
+                  setCartTick(t=>t+1);
+                }catch{}
+              }} style={{padding:"8px 10px",borderRadius:8,border:`1px solid ${(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"rgba(52,199,89,.4)":C.g200;}catch{return C.g200;}})()}`,background:(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"rgba(52,199,89,.08)":"transparent";}catch{return "transparent";}})(),fontSize:10,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,color:(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"#1A7A35":C.g500;}catch{return C.g500;}})()}}>
+                {(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"✓":"＋";}catch{return "＋";}})()}
+              </button>
+            </div>
+          </div>
+        ))}
+        </div>
+      </div>
+    );
+  };
+
+  const HydrationContent=()=>{
+    const DURING=[
+      {
+        name:"MORE Nutrition Sirup",
+        badge:"Ohne Zucker · CH-Bestseller",
+        affiliate:true,
+        why:"Der einfachste Weg mehr zu trinken — über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
+        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40–60%. Kein Zucker = kein Insulin-Spike.",
+        tags:["Täglich","Ohne Zucker"],
+        link:AFF.more_sirup(),
+        shop:"MORE Nutrition",
+        img:"https://www.more-nutrition.de/cdn/shop/products/MORE_Sirup_Mango-Maracuja_500ml.jpg",
+      },      {
         name:"Garmin Forerunner 965",
         badge:"GPS · HRV · VO₂max · TOP PICK",
         affiliate:true,
@@ -4715,82 +4805,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/oura-ring",affiliate:true},
         ],
       },
-      {
-        name:"Ultrahuman Ring PRO",
-        badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
-        affiliate:true,
-        category:"Sleep & Recovery",
-        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
-        metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
-        price:"ab CHF 399",
-        shops:[
-          {name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true},
-        ],
-      },
-    ];
 
-
-    return (
-      <div>
-        {/* Why you need it */}
-        <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
-          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
-          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
-            TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%.
-          </div>
-          <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
-            {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
-              <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Product cards */}
-        {WEARABLES.map((w,i)=>(
-          <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:10,position:"relative"}}>
-
-            <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:10}}>
-              <div style={{flex:1}}>
-                <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:C.g400,letterSpacing:".06em",marginBottom:3}}>{w.badge}</div>
-                <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.02em",marginBottom:4}}>{w.name}</div>
-                <div style={{fontSize:12,color:C.g700,lineHeight:1.6}}>{w.why}</div>
-              </div>
-              <div style={{fontSize:13,fontWeight:600,color:C.black,flexShrink:0,textAlign:"right"}}>
-                {w.price}
-              </div>
-            </div>
-            <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
-              {(w.metrics||[]).map(m=>(
-                <span key={m} style={{fontSize:9,padding:"2px 7px",borderRadius:100,background:"#F5F5F5",color:"#555",fontFamily:"JetBrains Mono,monospace"}}>{m}</span>
-              ))}
-            </div>
-            <div style={{display:"flex",gap:6}}>
-              {w.shops.map((sh,j)=>(
-                <a key={j} href={sh.link} target="_blank" rel="noopener noreferrer"
-                  style={{flex:1,textAlign:"center",padding:"8px 6px",borderRadius:8,background:sh.affiliate?C.neon:"#F5F5F5",color:sh.affiliate?C.black:"#555",fontSize:11,fontWeight:sh.affiliate?700:400,textDecoration:"none"}}>
-                  {sh.name} ↗
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
-  const HydrationContent=()=>{
-    const DURING=[
-      {
-        name:"MORE Nutrition Sirup",
-        badge:"Ohne Zucker · CH-Bestseller",
-        affiliate:true,
-        why:"Der einfachste Weg mehr zu trinken — über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
-        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40–60%. Kein Zucker = kein Insulin-Spike.",
-        tags:["Täglich","Ohne Zucker"],
-        link:AFF.more_sirup(),
-        shop:"MORE Nutrition",
-        img:"https://www.more-nutrition.de/cdn/shop/products/MORE_Sirup_Mango-Maracuja_500ml.jpg",
-      },
       {
         name:"LMNT Elektrolyt-Packets",
         badge:"1000mg Natrium · Kein Zucker",
@@ -5581,7 +5596,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                   <button onClick={()=>toggleOwnedSn(p.id)}
                     style={{display:"flex",alignItems:"center",justifyContent:"center",gap:6,width:"100%",padding:"7px",borderRadius:8,border:`1.5px solid ${owned?C.neon:"#E8E8E8"}`,background:owned?C.neon:"transparent",cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .15s"}}>
                     {owned&&<svg width="11" height="11" viewBox="0 0 8 8" fill="none"><path d="M1 4l2.2 2.2L7 1.5" stroke="#000" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
-                    <span style={{fontSize:10,fontWeight:700,color:owned?"#000":"#888"}}>{owned?"Vorhanden / bestellt":"Ich habe das Produkt bereits"}</span>
+                    <span style={{fontSize:10,fontWeight:700,color:owned?"#000":"#888"}}>{owned?"✓ Im Warenkorb":"+ Zum Warenkorb"}</span>
                   </button>
                   {owned&&<div style={{marginTop:5,fontSize:10,color:"#4A7000",textAlign:"center"}}>Findest du in <strong>Deinen Plan</strong> — inkl. Tagesplan.</div>}
                 </div>
@@ -6257,6 +6272,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {id:"rec_ashwa",name:"Ashwagandha KSM-66",dose:"600mg täglich",shop:"iHerb",link:AFF.iherb("ashwagandha ksm-66"),category:"Recovery",price:"~CHF 0.50"},
         {id:"rec_vit_d",name:"Vitamin D3 + K2",dose:"2000–4000 IE täglich",shop:"iHerb",link:AFF.iherb("vitamin d3 k2"),category:"Recovery",price:"~CHF 0.10"},
       ],
+      // Wearables
+      ...WEARABLES.map(w=>({id:`wear_${w.name.replace(/\s/g,"_")}`,name:w.name,dose:"",shop:w.shops[0]?.name||"Shop",link:w.shops[0]?.link||"#",category:"Wearable",price:w.price})),
       // Recovery Gear
       {id:"rec_therabody",name:"Therabody",dose:"",shop:"Therabody",link:"https://www.therabody.com/de-ch",category:"Recovery Gear",price:""},
       {id:"rec_hyperice",name:"Hyperice / Normatec",dose:"",shop:"Hyperice",link:"https://hyperice.com/",category:"Recovery Gear",price:""},
@@ -6274,7 +6291,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       byShop[p.shop].items.push(p);
     });
 
-    const SHOP_COLORS={"Maurten":{bg:"#000",t:"#C8FF00"},"MNSTRY":{bg:"#0D0D1A",t:"#C8FF00"},"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"},"Therabody":{bg:"#1A1A1A",t:"#fff"},"Hyperice":{bg:"#0057FF",t:"#fff"},"Blackroll":{bg:"#000",t:"#fff"},"Compex":{bg:"#E31937",t:"#fff"}};
+    const SHOP_COLORS={"Maurten":{bg:"#000",t:"#C8FF00"},"MNSTRY":{bg:"#0D0D1A",t:"#C8FF00"},"iHerb":{bg:"#2D7C2B",t:"#fff"},"Myprotein":{bg:"#CC0000",t:"#fff"},"Sponser":{bg:"#003087",t:"#fff"},"ESN":{bg:"#1A1A2E",t:"#fff"},"More Nutrition":{bg:"#E8272A",t:"#fff"},"Therabody":{bg:"#1A1A1A",t:"#fff"},"Hyperice":{bg:"#0057FF",t:"#fff"},"Blackroll":{bg:"#000",t:"#fff"},"Compex":{bg:"#E31937",t:"#fff"},"Garmin CH":{bg:"#007DC3",t:"#fff"},"Polar CH":{bg:"#D01012",t:"#fff"},"Oura":{bg:"#0A0A0A",t:"#C8FF00"},"Ultrahuman":{bg:"#0A0A0A",t:"#C8FF00"}};
 
     // Build shop search URL
     const getShopUrl=(shop,items)=>{
