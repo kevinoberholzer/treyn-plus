@@ -3992,7 +3992,7 @@ function StepAllergien({onNext, onBack}) {
   );
 }
 
-function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,priceStr=priceStr}) {
+function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,priceStr="CHF 12.90"}) {
 
   const [loadPro,setLoadPro]=useState(false);
   const primarySport=sportData?.primarySport;
@@ -7140,7 +7140,40 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
 
 export default 
+
+// ─── PASSWORD GATE ─────────────────────────────────────────────────────────────
+function PasswordGate({onUnlock}) {
+  const [pw, setPw] = React.useState("");
+  const [err, setErr] = React.useState(false);
+  const check = () => {
+    if(pw === "kapdwn") { localStorage.setItem("treyn_pw","ok"); onUnlock(); }
+    else { setErr(true); setTimeout(()=>setErr(false), 1200); }
+  };
+  return (
+    <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#FAFAFA",fontFamily:"Inter,sans-serif"}}>
+      <div style={{width:"100%",maxWidth:320,padding:"0 24px"}}>
+        <div style={{marginBottom:32,textAlign:"center"}}><Logo size="lg"/></div>
+        <div style={{fontSize:13,color:"#666",marginBottom:16,textAlign:"center"}}>Passwort eingeben</div>
+        <input
+          type="password"
+          value={pw}
+          onChange={e=>setPw(e.target.value)}
+          onKeyDown={e=>e.key==="Enter"&&check()}
+          autoFocus
+          placeholder="••••••"
+          style={{width:"100%",padding:"12px 14px",borderRadius:10,border:`1px solid ${err?"#ff4444":"#E8E8E6"}`,fontSize:15,fontFamily:"Inter,sans-serif",outline:"none",marginBottom:10,background:err?"#fff5f5":"#fff",transition:"border-color .2s",boxSizing:"border-box"}}
+        />
+        <button onClick={check} style={{width:"100%",padding:"13px",borderRadius:10,background:"#C8FF00",color:"#0A0A0A",border:"none",fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          Weiter →
+        </button>
+        {err&&<div style={{textAlign:"center",marginTop:10,fontSize:12,color:"#ff4444"}}>Falsches Passwort</div>}
+      </div>
+    </div>
+  );
+}
+
 function App() {
+  const [unlocked,setUnlocked]=useState(()=>localStorage.getItem("treyn_pw")==="ok");
   const [phase,setPhase]=useState("intro");
   const [sportData,setSportData]=useState(null);
   const [trainingData,setTrainingData]=useState(null);
@@ -7226,6 +7259,7 @@ function App() {
     setPhase("results");
   };
 
+  if(!unlocked) return <PasswordGate onUnlock={()=>setUnlocked(true)}/>;
   return (
     <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
       <style>{css}</style>
