@@ -4671,8 +4671,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         metrics:["VO₂max","HRV","Schlaf","Training Load","Erholungsstatus"],
         price:"ab CHF 599",
         shops:[
-          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/735158"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/garmin-forerunner-965",affiliate:true},
+          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/735158",affiliate:true},
         ],
       },
       {
@@ -4684,8 +4683,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         metrics:["VO₂max","HRV","Schlaf","Altitude Training","Körperbatterie"],
         price:"ab CHF 899",
         shops:[
-          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/994307"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/garmin-fenix-8",affiliate:true},
+          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/994307",affiliate:true},
         ],
       },
       {
@@ -4697,8 +4695,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
         price:"ab CHF 499",
         shops:[
-          {name:"Polar CH",link:"https://www.polar.com/de/vantage/v3"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/polar-vantage-v3",affiliate:true},
+          {name:"Polar CH",link:"https://www.polar.com/de/vantage/v3",affiliate:true},
         ],
       },
       {
@@ -4710,8 +4707,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
         price:"ab CHF 299",
         shops:[
-          {name:"Polar CH",link:"https://www.polar.com/de/pacer-pro"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/polar-pacer-pro",affiliate:true},
+          {name:"Polar CH",link:"https://www.polar.com/de/pacer-pro",affiliate:true},
         ],
       },
       {
@@ -4729,7 +4725,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       },
       {
         name:"Ultrahuman Ring PRO",
-        badge:"Ring · 15 Tage Akku · Kein Abo · TOP PICK",
+        badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
         affiliate:true,
         category:"Sleep & Recovery",
         why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
@@ -4737,23 +4733,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         price:"ab CHF 399",
         shops:[
           {name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/ultrahuman-ring",affiliate:true},
-        ],
-      },
-      {
-        name:"Fitbit Charge 6",
-        badge:"Einstieg · Alltag · Google",
-        affiliate:true,
-        category:"Fitness Tracker",
-        why:"Der beste Einstiegs-Tracker. EKG, SpO₂ und Google Maps integriert — gute Daten ohne Premium-Budget.",
-        metrics:["Herzfrequenz","Schlaf","SpO₂","EKG","Stress"],
-        price:"ab CHF 149",
-        shops:[
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/fitbit-charge-6",affiliate:true},
-          {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/fitbit",affiliate:true},
         ],
       },
     ];
+
 
     return (
       <div>
@@ -5149,7 +5132,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>RUHETAG ZIELE</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,textAlign:"center"}}>
                 {[
-                  {l:"Kalorien",v:`${calc?.restDay?.toLocaleString("de-CH")||"—"} kcal`,s:"~${Math.round(((calc?.restDay||1800)-(calc?.bmr||1800))/10)*10} unter Trainingstag"},
+                  {l:"Kalorien",v:`${calc?.restDay?.toLocaleString("de-CH")||"—"} kcal`,s:`~${Math.round((calc?.withTraining||2500)-(calc?.restDay||1800))} kcal unter Trainingstag`},
                   {l:"Protein",v:`${Math.round((calc?.proteinMin||140)*0.85)}–${Math.round((calc?.proteinMax||180)*0.85)}g`,s:"leicht reduziert"},
                   {l:"Wasser",v:`${Math.round((calc?.waterMl||2500)*0.6/100)/10}L`,s:"ohne Schweissverlust"},
                 ].map(({l,v,s},i)=>(
