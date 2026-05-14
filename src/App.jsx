@@ -3889,203 +3889,208 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   // ── SUMMARY TAB ────────────────────────────────────────────────────────────
   const SummaryTab=()=>{
-    const calc = calcPro(profilData,trainingData,sportData);
-    const firstname = profilData?.firstname||"";
-    const weight = parseFloat(profilData?.weight||75);
-    const age = new Date().getFullYear()-(+profilData?.birthyear||1990);
-    const localSports = sportData?.selectedSports||sports||[];
-    const isEndurance = localSports.some(s=>["cycling_road","cycling_gravel","cycling_mtb","run_road","run_trail","triathlon","swimming","langlauf"].includes(s));
-    const SPORT_NAMES = {cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",run_road:"Strassenlauf",run_trail:"Traillauf",triathlon:"Triathlon",swimming:"Schwimmen",football:"Fussball",icehockey:"Eishockey",ski_alpine:"Ski Alpin",tennis:"Tennis",basketball:"Basketball",hyrox:"Hyrox"};
-    const sportNames = localSports.map(s=>SPORT_NAMES[s]||s).join(", ");
-    const GOAL_LABEL = {performance:"Leistung steigern",muscle:"Muskelaufbau",endurance:"Ausdauer verbessern",weightloss:"Gewicht reduzieren",health:"Gesundheit & Longevity",recovery:"Regeneration"}[calc.goal]||"";
-    const ALTITUDE_LABEL = {low:"Flachland (0–500m)",medium:"Mittelland (500–1500m)",high:"Voralpen (1500–2500m)",alpine:"Hochgebirge (2500m+)"}[calc.altitude]||"";
-    const TIME_LABEL = {morning:"Morgentraining",midday:"Mittagstraining",afternoon:"Nachmittagstraining",evening:"Abendtraining"}[calc.primaryTrainingTime]||"Training";
-    const STRESS_LABEL = {1:"sehr niedrig",2:"niedrig",3:"mittel",4:"hoch",5:"sehr hoch"}[calc.stressLevel]||"mittel";
-    const DIET_LABEL = {excellent:"sehr ausgewogen",good:"gut",average:"durchschnittlich",poor:"verbesserungswürdig"}[calc.dietQuality]||"gut";
+    const calc=calcPro(profilData,trainingData,sportData);
+    const firstname=profilData?.firstname||"";
+    const weight=parseFloat(profilData?.weight||75);
+    const age=new Date().getFullYear()-(+profilData?.birthyear||1990);
+    const localSports=sportData?.selectedSports||sports||[];
+    const SPORT_NAMES={cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",cycling_mtb_xc:"MTB XC",cycling_mtb_end:"MTB Enduro",cycling_mtb_dh:"MTB DH",run_road:"Strassenlauf",run_road_5k:"5–10km Lauf",run_road_hm:"Halbmarathon",run_road_m:"Marathon",run_road_ultra:"Ultra",run_trail:"Trail",run_trail_ultra:"Ultra Trail",triathlon:"Triathlon",tri_sprint:"Tri Sprint",tri_olympic:"Tri Olympic",tri_half:"70.3 Half",tri_full:"Ironman",swimming:"Schwimmen",swim_sprint:"Schwimmen Sprint",swim_open:"Open Water",football:"Fussball",icehockey:"Eishockey",hyrox:"Hyrox",krafttraining:"Krafttraining",crossfit:"CrossFit",powerlifting:"Powerlifting",ski_alpin:"Ski Alpin",ski_freeride:"Freeride",ski_touring:"Skitouren",snowboard:"Snowboard",langlauf_klassisch:"Langlauf",langlauf_skating:"Skating",biathlon:"Biathlon",tennis:"Tennis",padel:"Padel",basketball:"Basketball",kampfsport:"Kampfsport",handball:"Handball",volleyball:"Volleyball"};
+    const sportNames=localSports.map(s=>SPORT_NAMES[s]||s).join(", ");
+    const GOAL_LABEL={performance:"Leistung steigern",muscle:"Muskelaufbau",endurance:"Ausdauer verbessern",weightloss:"Gewicht reduzieren",health:"Gesundheit & Longevity",recovery:"Regeneration"}[calc.goal]||"";
+    const TIME_LABEL={morning:"Morgentraining",midday:"Mittagstraining",afternoon:"Nachmittagstraining",evening:"Abendtraining"}[calc.primaryTrainingTime]||"Training";
+    const STRESS_LABEL={1:"sehr niedrig",2:"niedrig",3:"mittel",4:"hoch",5:"sehr hoch"}[calc.stressLevel]||"mittel";
+    const primaryDays=trainingData?.[primarySport]?.days||3;
+    const isEndurance=localSports.some(s=>["cycling_road","cycling_gravel","cycling_mtb_xc","run_road","run_road_m","run_road_hm","run_road_ultra","run_trail","run_trail_ultra","triathlon","tri_full","tri_half","swimming","swim_open","langlauf_klassisch","langlauf_skating"].includes(s));
 
-    // Build personalized insights — fully context-aware
-    const INSIGHTS = [
-      {
-        icon:"🔥",
-        title:"Dein täglicher Energiebedarf",
-        value:`${calc.withTraining?.toLocaleString("de-CH")||"—"} kcal`,
-        color:"#C8FF00",
-        explain: (()=>{
-          const sportCtxNotes = localSports.map(id=>SPORT_CONTEXT[id]?.note).filter(Boolean);
-          let base = `Basierend auf ${sportNames}, ${weight}kg Körpergewicht und MET-2024 Werten. Dein Grundumsatz beträgt ${calc.bmr?.toLocaleString("de-CH")} kcal — alles darüber hinaus verbrennst du durch Training.`;
-          if(localSports.includes("cycling_ebike")) base += " E-Bike reduziert den Verbrauch um ~60% vs. Rennrad — trotzdem echter Kalorienverbrauch und Elektrolytbedarf.";
-          if(calc.altitude==="high"||calc.altitude==="alpine") base += " Auf "+ALTITUDE_LABEL+" erhöht sich dein Verbrauch um bis zu 20% — dein Körper arbeitet härter um O₂ aufzunehmen.";
-          return base;
-        })(),
-      },
-      {
-        icon:"💪",
-        title:"Dein Proteinbedarf",
-        value:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g/Tag`,
-        color:"#C8FF00",
-        explain: `Für dein Ziel "${GOAL_LABEL}" brauchst du ${calc.proteinMin}–${calc.proteinMax}g Protein täglich.${calc.goal==="muscle"?" Muskelaufbau braucht mehr Protein als der Standard — verteile es auf 4–5 Mahlzeiten.":calc.goal==="weightloss"?" Hohe Proteinzufuhr beim Abnehmen schützt deine Muskelmasse — kritisch für Athleten.":""} Direkt nach dem Training: ${calc.timingRecs?.postWorkout||"so schnell wie möglich"}.`,
-      },
-      {
-        icon:"⚡",
-        title: isEndurance?"Kohlenhydrate im Training":"Energie für dein Training",
-        value: isEndurance?`${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g/Std.`:`${calc.carbsG||"—"}g/Tag`,
-        color:"#C8FF00",
-        explain: isEndurance
-          ?`Bei ${TIME_LABEL} brauchst du ${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g Kohlenhydrate pro Stunde. Dein Körper kann maximal ~90g/Std. aufnehmen — trainiere deinen Darm frühzeitig. Leere Tanks kosten beim ${sportNames} direkt Minuten.`
-          :`${sportNames} ist hochintensiv: ohne ausreichend Carbs bricht Reaktionszeit, Explosivität und Konzentration zuerst ein. Verteile ${calc.carbsG}g auf den Tag — Schwerpunkt vor und nach dem Training.`,
-      },
-      {
-        icon:"💧",
-        title:"Hydration & Elektrolyte",
-        value:`${(calc.waterMl/1000).toFixed(1)}L/Tag`,
-        color:"#4A7000",
-        explain: `Du verlierst ca. ${calc.sweatLitresPerSession}L Schweiss pro Trainingseinheit${calc.sweatLitresPerSession>1.5?" — du schwitz stark, das ist mehr als der Durchschnitt":""}. Dein Natriumbedarf: ${calc.natriumMg?.toLocaleString("de-CH")}mg, Magnesium: ${calc.magnesiumMg}mg täglich.`+(calc.altitude==="high"||calc.altitude==="alpine"?" Auf "+ALTITUDE_LABEL+": trockene Höhenluft erhöht deinen Flüssigkeitsverlust zusätzlich — trinke mehr als du denkst.":""),
-      },
-      {
-        icon:"🌙",
-        title:"Recovery & Regeneration",
-        value:calc.sleep<7?"Schlafdefizit":"Timing optimiert",
-        color:calc.sleep<7?"#856404":"#4A7000",
-        explain: `Du schläfst ${calc.sleep}h pro Nacht.${calc.sleep<7?" Warnung: unter 7h Schlaf erhöht Cortisol, hemmt Muskelproteinsynthese und verlängert Regenerationszeit. Das ist dein wichtigster Hebel.":calc.sleep>=8?" Ausgezeichnet — 8h+ Schlaf maximiert Wachstumshormon-Ausschüttung und Muskelreparatur.":""} Bei ${TIME_LABEL}: ${calc.timingRecs?.note||"Recovery ist Training — behandle sie so"}.`,
-      },
-    ];
+    // Personalized hero text
+    const heroLines=(()=>{
+      const lines=[];
+      if(primaryDays>=5) lines.push(`Du trainierst in den <strong>oberen 10%</strong> — ${primaryDays} intensive Einheiten pro Woche auf ${localSports.length>1?"zwei der anspruchsvollsten Disziplinen":"einer der anspruchsvollsten Disziplinen"}.`);
+      else if(primaryDays>=3) lines.push(`Du trainierst regelmässig — <strong>${primaryDays}× pro Woche</strong>, strukturiert und mit klarem Ziel.`);
+      else lines.push(`Du trainierst ${primaryDays}× pro Woche — solide Basis mit Potenzial nach oben.`);
+      if(calc.withTraining>3000) lines.push(`Dein Energiebedarf liegt <strong>weit über dem Durchschnitt</strong>. Die meisten Athleten in deiner Situation ernähren sich falsch — nicht weil sie es nicht wollen, sondern weil niemand ihnen die richtigen Zahlen gibt. <strong>Das ändern wir.</strong>`);
+      else lines.push(`Dein Körper arbeitet hart. Ohne die richtigen Zahlen lässt du Leistung auf dem Tisch. <strong>Das ändern wir.</strong>`);
+      return lines;
+    })();
 
-    // Personalized warnings with full explanations
-    const WARNINGS = [];
-    if(calc.stressLevel>=4) WARNINGS.push({
-      icon:"🧠",
-      text:`Dein Stresslevel ist ${STRESS_LABEL}. Hoher Stress erhöht Cortisol — das hemmt Regeneration, baut Muskeln ab und reduziert Schlafqualität. Ashwagandha (KSM-66) und erhöhtes Magnesium (${calc.magnesiumMg}mg/Tag) sind für dich besonders wichtig.`
-    });
-    if(calc.vitDRisk) WARNINGS.push({
-      icon:"☀️",
-      text:`Bei ${DIET_LABEL}er Ernährung ist Vitamin D-Mangel häufig — 56% aller Sportler sind unterversorgt. Supplementiere 2000–4000 IE täglich, besonders in den Wintermonaten.`
-    });
-    if(calc.needsCollagen) WARNINGS.push({
-      icon:"🦴",
-      text:`Bei deinen Beschwerden (${(calc.injuries||[]).filter(x=>x!=="none").join(", ")}) ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam für Sehnen- und Gelenkschutz. 10–15g, 30–60 Min. vor der Einheit.`
-    });
-    if(calc.needsOmega3Extra) WARNINGS.push({
-      icon:"🐟",
-      text:`Omega-3 (EPA/DHA, 2–3g/Tag) reduziert systemische Entzündungen — bei Muskel- und Rückenproblemen direkt messbar. Priorisiere Fisch 2×/Woche oder hochwertiges Supplement.`
-    });
-    if(calc.altitudeIronNeeded) WARNINGS.push({
-      icon:"🏔️",
-      text:`Auf ${ALTITUDE_LABEL} produziert dein Körper mehr rote Blutkörperchen — dein Eisenbedarf steigt. Regelmässige Kontrolle und eisenreiche Ernährung (rotes Fleisch, Hülsenfrüchte) oder Supplementierung sind wichtig.`
-    });
-    if(calc.b12Risk) WARNINGS.push({
-      icon:"🌱",
-      text:`Bei veganer Ernährung ist Vitamin B12 nicht aus der Nahrung aufnehmbar. Supplementierung ist zwingend (500–1000µg/Tag Methylcobalamin) — ein Mangel führt zu Erschöpfung, Nervenschäden und Leistungseinbruch.`
-    });
-    // Sport-specific warnings
-    if(localSports.includes("cycling_ebike")) WARNINGS.push({
-      icon:"⚡",
-      text:`E-Bike: Dein Kalorienverbrauch ist ~60% tiefer als beim konventionellen Radfahren (MET ${(4.0).toFixed(1)} vs. ${(9.0).toFixed(1)}). Elektrolyte, Protein und Regeneration bleiben aber gleich wichtig — der Motor hilft den Beinen, nicht dem Rest des Körpers.`
-    });
-    if(localSports.includes("cycling_mtb_dh")) WARNINGS.push({
-      icon:"🏔️",
-      text:"Downhill: Anaerobe, explosive Belastung mit hohem Muskel- und Gelenkstress. Kreatin, Kollagen und schnelle Proteinzufuhr direkt nach den Runs sind besonders wichtig."
-    });
-    if(localSports.includes("cycling_mtb_end")) WARNINGS.push({
-      icon:"🔄",
-      text:"Enduro: Asymmetrische Belastung (Uphills + technische Abfahrten) erhöht den Regenerationsbedarf. Omega-3 und Kollagen für Sehnen und Gelenke — besonders nach intensiven Enduro-Tagen."
-    });
-    if(calc.ironRisk&&calc.isFemale) WARNINGS.push({
-      icon:"🩸",
-      text:`Sportlerinnen haben ein erhöhtes Eisenrisiko durch Menstruationsverlust und Sport-Hämolyse. Ferritin regelmässig testen — Zielwert für Athletinnen: >50 µg/L.`
-    });
+    // Warnings
+    const WARNINGS=[];
+    if(calc.stressLevel>=4) WARNINGS.push({text:`<strong>Stresslevel ${STRESS_LABEL} erkannt.</strong> Cortisol hemmt aktiv deine Regeneration und Muskelproteinsynthese. Das bremst dich mehr als jedes fehlende Supplement — Ashwagandha und erhöhtes Magnesium sind für dich jetzt besonders relevant.`});
+    if(calc.needsCollagen&&(calc.injuries||[]).some(x=>x!=="none")) WARNINGS.push({text:`<strong>Gelenke & Sehnen.</strong> Bei deinen Beschwerden ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam. 10–15g, 30 min vor der Einheit.`});
+    if(calc.ironRisk&&calc.isFemale) WARNINGS.push({text:`<strong>Eisenbedarf erhöht.</strong> Sportlerinnen haben durch Menstruationsverlust und Sport-Hämolyse ein erhöhtes Risiko. Ferritin regelmässig testen — Zielwert: >50 µg/L.`});
+    if(calc.sleep<7) WARNINGS.push({text:`<strong>Schlafdefizit erkannt (${calc.sleep}h).</strong> Unter 7h Schlaf erhöht Cortisol, hemmt Muskelproteinsynthese und verlängert Regenerationszeit. Dein wichtigster Hebel.`});
+
+    // Tags from selected sports + training context
+    const sportTags=localSports.slice(0,3).map(s=>SPORT_NAMES[s]||s);
+    const contextTags=[`${primaryDays}×/Woche`,intensityLabel,TIME_LABEL];
 
     return (
       <div>
-        {/* Header */}
-        <div style={{marginBottom:20}}>
-          <h2 style={{fontSize:20,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.03em"}}>
-            {firstname?`Hallo ${firstname} — deine persönliche Analyse.`:"Deine persönliche Analyse."}
-          </h2>
-          <p style={{fontSize:12,color:C.g600,lineHeight:1.6}}>
-            {sportNames} · {age} Jahre · {weight}kg · Ziel: {GOAL_LABEL}{ALTITUDE_LABEL?` · ${ALTITUDE_LABEL}`:""}
-          </p>
+        {/* Progress */}
+        <div style={{marginBottom:14}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:5}}>
+            <span style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>DEINE ANALYSE · BASIC</span>
+            <span style={{fontSize:10,color:C.g400}}>30% sichtbar</span>
+          </div>
+          <div style={{height:3,background:C.g100,borderRadius:2,overflow:"hidden"}}>
+            <div style={{height:"100%",width:"30%",background:C.neon,borderRadius:2}}/>
+          </div>
         </div>
 
-        {/* Key Insights */}
-        <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:20}}>
-          {INSIGHTS.map((ins,i)=>(
-            <div key={i} style={{borderRadius:12,border:`1.5px solid ${ins.color==="#C8FF00"?C.neon:C.g200}`,background:ins.color==="#C8FF00"?C.neonDim:"#fff",padding:"14px 16px"}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
-                <div style={{display:"flex",alignItems:"center",gap:7}}>
-                  <span style={{fontSize:18}}>{ins.icon}</span>
-                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{ins.title}</span>
-                </div>
-                <span style={{fontSize:14,fontWeight:700,color:ins.color==="#C8FF00"?"#2D4A00":C.black,flexShrink:0,marginLeft:8}}>{ins.value}</span>
+        {/* Hero */}
+        <div style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:14,padding:"18px 18px 16px",marginBottom:8}}>
+          <div style={{fontSize:18,fontWeight:600,color:C.black,letterSpacing:"-.03em",marginBottom:6}}>
+            {firstname?`Hallo ${firstname}.`:"Deine Analyse."}
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:12}}>
+            {sportTags.map(t=><span key={t} style={{display:"inline-flex",padding:"3px 10px",borderRadius:100,background:C.neon,color:C.black,fontSize:10,fontWeight:700,marginRight:2}}>{t}</span>)}
+            {contextTags.map(t=><span key={t} style={{display:"inline-flex",padding:"3px 10px",borderRadius:100,background:C.g100,color:C.g600,fontSize:10,fontWeight:500,marginRight:2}}>{t}</span>)}
+          </div>
+          <div style={{fontSize:12,color:"#555",lineHeight:1.75}} dangerouslySetInnerHTML={{__html:heroLines.join(" ")}}/>
+          <div style={{height:"0.5px",background:C.g100,margin:"12px 0"}}/>
+          <div style={{display:"flex"}}>
+            {[
+              {v:calc.withTraining?.toLocaleString("de-CH")||"—",l:"kcal / Tag"},
+              {v:`${calc.proteinMin||"—"}g`,l:"Protein"},
+              {v:`${(calc.waterMl/1000).toFixed(1)}L`,l:"Wasser"},
+              {v:`${calc.sleep||"—"}h`,l:"Schlaf"},
+            ].map((s,i,arr)=>(
+              <div key={s.l} style={{flex:1,textAlign:"center",borderLeft:i>0?`0.5px solid ${C.g100}`:"none"}}>
+                <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.v}</div>
+                <div style={{fontSize:9,color:C.g400,marginTop:1}}>{s.l}</div>
               </div>
-              <div style={{fontSize:11,color:ins.color==="#C8FF00"?"#4A7000":C.g600,lineHeight:1.6}}>{ins.explain}</div>
+            ))}
+          </div>
+        </div>
+
+        {/* Key metrics */}
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Basisdaten — sichtbar</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+          {[
+            {label:"ENERGIEBEDARF",val:calc.withTraining?.toLocaleString("de-CH")||"—",unit:"kcal / Tag",hi:true},
+            {label:"PROTEIN",val:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g`,unit:"täglich",hi:true},
+            {label:"WASSER",val:`${(calc.waterMl/1000).toFixed(1)}L`,unit:"täglich",hi:false},
+            {label:"GRUNDUMSATZ",val:calc.bmr?.toLocaleString("de-CH")||"—",unit:"kcal Ruhe",hi:false},
+          ].map(m=>(
+            <div key={m.label} style={{background:m.hi?C.neon:C.white,border:`0.5px solid ${m.hi?C.neon:C.g200}`,borderRadius:12,padding:14}}>
+              <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.45)":C.g400,marginBottom:4}}>{m.label}</div>
+              <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{m.val}</div>
+              <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.4)":C.g400,marginTop:2}}>{m.unit}</div>
             </div>
           ))}
         </div>
 
+        {/* 2 insights */}
+        {[
+          {title:"Energiebedarf",val:`${calc.withTraining?.toLocaleString("de-CH")||"—"} kcal`,text:`Basierend auf ${sportNames}, ${weight}kg und ${primaryDays}× Training. An harten Tagen steigt dein Bedarf auf ~${Math.round((calc.withTraining||3000)*1.1).toLocaleString("de-CH")} kcal — die meisten Athleten unterschätzen das um 400–600 kcal täglich.`},
+          {title:"Proteinbedarf",val:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g`,text:`Für "${GOAL_LABEL}" brauchst du 1.8–2.2g/kg täglich. Schützt deine Muskelmasse beim intensiven Training. Post-Workout Fenster: innerhalb 30 min nach der Einheit für maximale Proteinsynthese.`},
+        ].map((ins,i)=>(
+          <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:8}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+              <div style={{fontSize:13,fontWeight:600,color:C.black}}>{ins.title}</div>
+              <div style={{background:C.neon,color:C.black,fontSize:11,fontWeight:700,padding:"2px 10px",borderRadius:100,whiteSpace:"nowrap"}}>{ins.val}</div>
+            </div>
+            <div style={{fontSize:11,color:C.g600,lineHeight:1.65}}>{ins.text}</div>
+          </div>
+        ))}
+
         {/* Warnings */}
-        {WARNINGS.length>0&&(
-          <div style={{marginBottom:20}}>
-            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>WICHTIGE HINWEISE FÜR DICH</div>
-            <div style={{display:"flex",flexDirection:"column",gap:6}}>
-              {WARNINGS.map((w,i)=>(
-                <div key={i} style={{padding:"11px 14px",borderRadius:10,background:"#FFFBF0",border:"1px solid #FFE082",display:"flex",gap:10,alignItems:"flex-start"}}>
-                  <span style={{fontSize:16,flexShrink:0}}>{w.icon}</span>
-                  <div style={{fontSize:11,color:"#5D4037",lineHeight:1.65}}>{w.text}</div>
-                </div>
-              ))}
-            </div>
+        {WARNINGS.map((w,i)=>(
+          <div key={i} style={{background:"#FFFBF0",border:"0.5px solid #FFE082",borderRadius:10,padding:"11px 14px",marginBottom:8,display:"flex",gap:10}}>
+            <div style={{fontSize:14,flexShrink:0}}>⚠</div>
+            <div style={{fontSize:11,color:"#7D5A00",lineHeight:1.65}} dangerouslySetInnerHTML={{__html:w.text}}/>
           </div>
-        )}
+        ))}
 
-        {/* PRO Teaser */}
-        {!isPro&&(
-          <div style={{marginBottom:20}}>
-            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>NUR MIT PRO — VOLLSTÄNDIGE ANALYSE</div>
-            <div style={{display:"flex",flexDirection:"column",gap:5}}>
-              {[
-                "Elektrolyte & Schweissverlust — präzise auf dein Gewicht und Sportart",
-                "VO₂max & Leistungszonen — dein Ausdauer-Fingerabdruck",
-                "Kohlenhydrate pro Stunde — MET-basiert, intervall-genau",
-                "Alle Supplement-Dosierungen — inkl. Timing-Plan",
-                "Personalisierter Tagesplan — Pre/Post-Workout bis Schlafen",
-              ].map((item,i)=>(
-                <div key={i} style={{padding:"9px 14px",borderRadius:9,background:"#FAFAFA",border:"1px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-                  <span style={{fontSize:11,color:"#CCC",filter:"blur(3px)",userSelect:"none",flex:1}}>{item}</span>
-                  <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"#F0F0F0",color:"#AAA",fontFamily:"JetBrains Mono,monospace",flexShrink:0}}>🔒 PRO</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* CTA */}
-        <div style={{borderRadius:14,border:`1px solid ${C.g200}`,padding:"16px 20px",background:"#fff"}}>
-          {isPro?(
-            <>
-              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:8}}>Alle Daten verfügbar — legen wir los.</div>
-              <button onClick={()=>setTab("verbrauch")} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                Zu Deine Daten →
-              </button>
-            </>
-          ):(
-            <>
-              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Bereit für die vollständige Analyse?</div>
-              <div style={{fontSize:11,color:C.g600,marginBottom:12,lineHeight:1.5}}>CHF 12.90 / 6 Monate — einmalig. Kündigung jederzeit möglich.</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                <button onClick={()=>setTab("verbrauch")} style={{background:"#F5F5F5",color:"#555",border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                  Kostenlos weiter
-                </button>
-                <button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                  PRO — CHF 12.90 →
-                </button>
+        {/* Locked 2-col grid */}
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Vollständige Analyse — gesperrt</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+          {[
+            {title:"Elektrolyte & Schweiss",rows:[{l:"Natrium/h",v:"████ mg"},{l:"Magnesium",v:"████ mg"},{l:"Schweiss/h",v:"█.█ L"}]},
+            {title:"VO₂max & Zonen",rows:[{l:"VO₂max",v:"██ ml/kg"},{l:"Zone 2",v:"███ W"},{l:"Laktatschwelle",v:"███ bpm"}]},
+            {title:"Carbs & Energie",rows:[{l:"Carbs/Stunde",v:"██–██ g"},{l:"Carbs/Tag",v:"████ g"},{l:"Pre-Workout",v:"██ g"}]},
+            {title:"Supplement-Tagesplan",rows:[{l:"Morgens",v:"██████"},{l:"Pre-Workout",v:"██████"},{l:"Post-Workout",v:"██████"}]},
+            {title:"Recovery & Schlaf",rows:[{l:"Magnesium Abends",v:"████ mg"},{l:"Ashwagandha",v:"████ mg"},{l:"HRV-Zielbereich",v:"██–██"}]},
+            {title:"Wettkampf-Strategie",rows:[{l:"Carb-Loading",v:"████ g"},{l:"Race-Day Timing",v:"██████"},{l:"Koffein-Einsatz",v:"████ mg"}]},
+          ].map((card,i)=>(
+            <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,overflow:"hidden"}}>
+              <div style={{padding:"11px 13px 8px",display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:6}}>
+                <div style={{fontSize:11,fontWeight:600,color:C.black,lineHeight:1.3}}>{card.title}</div>
+                <div style={{fontSize:8,padding:"2px 6px",borderRadius:3,background:C.g100,color:C.g400,fontFamily:"JetBrains Mono,monospace",fontWeight:700,flexShrink:0}}>🔒 PRO</div>
               </div>
-            </>
-          )}
+              <div style={{borderTop:`0.5px solid #F5F5F3`,padding:"8px 13px 10px",display:"flex",flexDirection:"column",gap:5}}>
+                {card.rows.map((r,j)=>(
+                  <div key={j} style={{display:"flex",flexDirection:"column",gap:1}}>
+                    <div style={{fontSize:10,color:C.g200}}>{r.l}</div>
+                    <div style={{fontSize:11,fontWeight:600,background:"#EFEFED",color:"transparent",borderRadius:3,padding:"0 3px",userSelect:"none",letterSpacing:".08em",display:"inline-block"}}>{r.v}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Supplement teaser */}
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Empfehlungen — gesperrt</div>
+        {[
+          {icon:"💊",title:"Supplements — 100% auf dich",sub:"Dosierungen & Timing exakt berechnet",more:"+ 6 weitere Empfehlungen für dich",rows:[{v:"████ ████████████"},{v:"█████ ████████████████"}]},
+          {icon:"⚡",title:"Sportnahrung — präzise getimed",sub:"Gels, Drinks & Riegel mit exakten Intervallen",more:"+ Race-Day Ernährungsplan",rows:[{v:"██████████████████"},{v:"███████████████████████"}]},
+        ].map((card,i)=>(
+          <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:8}}>
+            <div style={{padding:"12px 14px 10px",display:"flex",alignItems:"center",gap:10}}>
+              <div style={{width:28,height:28,borderRadius:7,background:C.g100,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>{card.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:600,color:C.black}}>{card.title}</div>
+                <div style={{fontSize:10,color:C.g400,marginTop:1}}>{card.sub}</div>
+              </div>
+              <div style={{fontSize:8,padding:"2px 6px",borderRadius:3,background:C.g100,color:C.g400,fontFamily:"JetBrains Mono,monospace",fontWeight:700,flexShrink:0}}>🔒 PRO</div>
+            </div>
+            <div style={{borderTop:`0.5px solid #F5F5F3`}}>
+              {card.rows.map((r,j)=>(
+                <div key={j} style={{padding:"8px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:`0.5px solid #F8F8F6`}}>
+                  <div style={{display:"flex",alignItems:"center",gap:7}}>
+                    <div style={{width:5,height:5,borderRadius:"50%",background:"#E0E0DE",flexShrink:0}}/>
+                    <div style={{fontSize:11,color:C.g200,userSelect:"none",letterSpacing:".02em"}}>{r.v}</div>
+                  </div>
+                  <div style={{fontSize:10,background:"#EFEFED",color:"transparent",borderRadius:3,padding:"1px 7px",userSelect:"none",letterSpacing:".06em"}}>████ mg</div>
+                </div>
+              ))}
+            </div>
+            <div style={{padding:"9px 14px",display:"flex",alignItems:"center",justifyContent:"space-between",background:C.g100,borderTop:`0.5px solid ${C.g200}`}}>
+              <div style={{fontSize:11,color:C.black,fontWeight:600}}>{card.more}</div>
+              <div style={{fontSize:8,padding:"2px 7px",borderRadius:3,background:C.g200,color:C.g600,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>🔒 PRO</div>
+            </div>
+          </div>
+        ))}
+
+        {/* CTA acid */}
+        <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
+          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?</div>
+          <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:8}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
+          <div style={{fontSize:11,color:"rgba(0,0,0,.55)",lineHeight:1.7,marginBottom:14}}>6 gesperrte Datenkarten, alle Supplement-Dosierungen, Sportnahrung mit exakten Intervallen und deine persönliche Race-Day-Strategie — 100% auf dein Gewicht, deine Sportart und deine Intensität berechnet.</div>
+          <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:16}}>
+            {["Elektrolyte, VO₂max & Kohlenhydrate/h","Supplement-Dosierungen & Tagesplan","Sportnahrung mit exakten Timing-Intervallen","Race-Day Strategie für deine Wettkämpfe","Kein Abo — einmalig, jederzeit erneuerbar"].map((f,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(0,0,0,.1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:C.black,fontWeight:700,flexShrink:0}}>✓</div>
+                <div style={{fontSize:12,color:"rgba(0,0,0,.7)"}}>{f}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:14}}>
+            <div style={{fontSize:28,fontWeight:700,color:C.black,letterSpacing:"-.04em"}}>CHF 12.90</div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>/ 6 Monate · CHF 2.15/Mt.</div>
+          </div>
+          <button onClick={onUpgrade} style={{width:"100%",padding:15,borderRadius:11,border:"none",background:C.black,color:C.neon,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:"-.01em",marginBottom:8}}>
+            Jetzt PRO freischalten →
+          </button>
+          <button onClick={()=>setTab("verbrauch")} style={{width:"100%",padding:11,borderRadius:11,border:"1px solid rgba(0,0,0,.15)",background:"rgba(255,255,255,.4)",color:"rgba(0,0,0,.45)",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Kostenlos weiter
+          </button>
+          <div style={{textAlign:"center",marginTop:10,fontSize:10,color:"rgba(0,0,0,.35)"}}>Kein Passwort · Kein Abo · Jederzeit erneuerbar</div>
         </div>
       </div>
     );
   };
-
   const VerbrauchTab=()=>{
     const [localTraining,setLocalTraining]=useState(()=>JSON.parse(JSON.stringify(trainingData||{})));
     React.useEffect(()=>{ if(trainingData&&Object.keys(trainingData).length>0) setLocalTraining(JSON.parse(JSON.stringify(trainingData))); },[JSON.stringify(trainingData)]);
