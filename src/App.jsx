@@ -4410,8 +4410,7 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
   );
 }
 
-function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade,lang="de",switchLang}) {
-  setGlobalLang(lang); // sync before any t() call
+function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
   const [tab,setTab]=useState("summary");
   const isMobile=useWindowWidth()<=768;
   const isPro=tier==="pro";
@@ -7255,7 +7254,7 @@ function App() {
       {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("lebensstil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
       {phase==="praeferenzen" && <StepPraeferenzen onBack={()=>setPhase("allergien")} onNext={v=>{setPraeferenzenData(v);setPhase("willkommen");}}/>}
       {phase==="willkommen" && <StepWillkommen priceStr={PRICE_GLOBAL} onNext={()=>setPhase("analysing")}/>}
-      {phase==="preview"    && <AnalysePreview  sportData={sportData} trainingData={trainingData} profilData={profilData}
+      {phase==="preview"    && <AnalysePreview  priceStr={PRICE_GLOBAL} sportData={sportData} trainingData={trainingData} profilData={profilData}
         onContinue={()=>{setTier("basic");setPhase("analysing");}}
         onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData)}/>}
       {phase==="analysing" && <AnalysingScreen onDone={()=>setPhase("results")} profilData={profilData} sportData={sportData}/>}
