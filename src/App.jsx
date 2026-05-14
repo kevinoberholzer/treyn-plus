@@ -3652,6 +3652,53 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
   };
 
+  const EmpfehlungenTab=()=>{
+    const [subTab,setSubTab]=useState("supplements");
+    const prefSupp=praeferenzenData?.suppForm||"beides";
+    const SUB=[
+      {id:"supplements",l:"Supplements"},
+      {id:"nahrung",l:"Sportnahrung"},
+      {id:"mahlzeiten",l:"Mahlzeiten"},
+      {id:"hydration",l:"Hydration"},
+      {id:"recovery",l:"Recovery Gear"},
+    ];
+    return (
+      <div>
+        <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
+        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
+        <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
+          {SUB.map(s=>(
+            <button key={s.id} onClick={()=>setSubTab(s.id)}
+              style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
+              {s.l}
+            </button>
+          ))}
+        </div>
+        {subTab==="supplements"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
+            {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
+            <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
+          </div>
+        )}
+        {subTab==="nahrung"&&<NutritionTab/>}
+        {subTab==="mahlzeiten"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
+            <FertiggerichteContent/>
+          </div>
+        )}
+        {subTab==="hydration"&&<HydrationContent/>}
+        {subTab==="recovery"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
+            <RecoveryContent/>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const HydrationContent=()=>{
     const DURING=[
       {
@@ -4117,7 +4164,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {CATS.map(c=>(
             <button key={c.id} onClick={()=>setShopCat(c.id)}
-              style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${shopCat===c.id?"#0A0A0A":"#E0E0E0"}`,background:shopCat===c.id?"#0A0A0A":"transparent",color:shopCat===c.id?"#fff":"#666",fontSize:12,fontWeight:shopCat===c.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+              style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${shopCat===c.id?C.black:C.g200}`,background:shopCat===c.id?C.neon:"transparent",color:shopCat===c.id?C.black:C.g600,fontSize:12,fontWeight:shopCat===c.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
               {c.label}
             </button>
           ))}
@@ -4368,7 +4415,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const totalMin=Object.values(localTraining).reduce((s,d)=>s+(d.days||0)*(d.duration||60),0);
 
     const Pill=({label,active,onClick})=>(
-      <button onClick={onClick} style={{padding:"4px 10px",borderRadius:20,border:`1px solid ${active?"#0A0A0A":"#E0E0E0"}`,background:active?"#0A0A0A":"transparent",color:active?"#fff":"#888",fontSize:11,fontWeight:active?500:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
+      <button onClick={onClick} style={{padding:"4px 10px",borderRadius:20,border:`1px solid ${active?C.black:C.g200}`,background:active?C.neon:"transparent",color:active?C.black:C.g600,fontSize:11,fontWeight:active?500:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
         {label}
       </button>
     );
@@ -4381,7 +4428,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{display:"flex",alignItems:"center",gap:6}}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#CCC" strokeWidth="2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             <span style={{fontSize:11,color:"#CCC"}}>Nur mit PRO</span>
-            <button onClick={onUpgrade} style={{marginLeft:"auto",fontSize:9,padding:"2px 6px",borderRadius:4,background:C.neon,color:"#000",border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:600}}>↑</button>
+            <button onClick={onUpgrade} style={{marginLeft:"auto",fontSize:9,padding:"2px 6px",borderRadius:4,background:C.neon,color:C.black,border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:600}}>PRO →</button>
           </div>
         ):(
           <>
@@ -5518,52 +5565,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>)}
 
           {/* ── EMPFEHLUNGEN ─────────────────────────────────────────────── */}
-          {tab==="empfehlungen"&&(()=>{
-            const [subTab,setSubTab]=React.useState("supplements");
-            const SUB=[
-              {id:"supplements",l:"Supplements"},
-              {id:"nahrung",l:"Sportnahrung"},
-              {id:"mahlzeiten",l:"Mahlzeiten"},
-              {id:"hydration",l:"Hydration"},
-              {id:"recovery",l:"Recovery Gear"},
-            ];
-            return (
-              <div>
-                <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Empfehlungen</h2>
-                <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery.</p>
-                {/* Sub-Tab Pills */}
-                <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
-                  {SUB.map(s=>(
-                    <button key={s.id} onClick={()=>setSubTab(s.id)}
-                      style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
-                      {s.l}
-                    </button>
-                  ))}
-                </div>
-                {subTab==="supplements"&&(
-                  <div>
-                    <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-                    {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
-                    <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
-                  </div>
-                )}
-                {subTab==="nahrung"&&<NutritionTab/>}
-                {subTab==="mahlzeiten"&&(
-                  <div>
-                    <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
-                    <FertiggerichteContent/>
-                  </div>
-                )}
-                {subTab==="hydration"&&<HydrationContent/>}
-                {subTab==="recovery"&&(
-                  <div>
-                    <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
-                    <RecoveryContent/>
-                  </div>
-                )}
-              </div>
-            );
-          })()}
+          {tab==="empfehlungen"&&<EmpfehlungenTab/>}
 
           {/* ── EINKAUF ──────────────────────────────────────────────────── */}
           {tab==="einkauf"&&(
