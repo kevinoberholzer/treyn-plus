@@ -7051,6 +7051,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {id:"hydration",l:"Hydration"},
       {id:"recovery",l:"Recovery Gear"},
       {id:"wearables",l:"Wearables"},
+      {id:"bluttest",l:"Bluttest"},
     ];
     return (
       <div>
@@ -7086,6 +7087,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>
         )}
         {subTab==="wearables"&&<WearablesContent/>}
+        {subTab==="bluttest"&&<BluttestTab/>}
       </div>
     );
   };
@@ -7111,7 +7113,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
           {tab==="protokolle"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Protokolle"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"Einnahme-Protokolle für deine Supplements — Dauer, Pausen und wichtige Hinweise."}</p><ProtokollTab/></div>)}
           {tab==="wettkampf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Wettkampf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität."}</p><WettkampfTab/></div>)}
-          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p><CartTab/><div style={{marginTop:24}}><h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3><BluttestTab/></div></div>)}
+          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p><CartTab/></div>)}
           {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"TREYN AI Chat"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{"Stelle Fragen zu deinen Daten, Supplements und Ernährung."}</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
           {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Profil"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>{"Deine persönlichen Angaben anpassen."}</p><ProfilTab/></div>)}
           {tab==="kontakt"&&<KontaktTab/>}
@@ -7175,11 +7177,6 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
               <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2>
               <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p>
               <CartTab/>
-              <div style={{marginTop:24}}>
-                <h3 style={{fontSize:15,fontWeight:600,color:C.black,marginBottom:4}}>Bluttest</h3>
-                <p style={{fontSize:13,color:C.g600,marginBottom:16}}>Echte Laborwerte direkt in deine Berechnungen importieren.</p>
-                <BluttestTab/>
-              </div>
             </div>
           )}
 
