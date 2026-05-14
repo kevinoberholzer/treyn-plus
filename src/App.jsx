@@ -40,52 +40,98 @@ const css = `
 // ─── SPORT GROUPS ─────────────────────────────────────────────────────────────
 
 const SPORT_GROUPS = [
-  {id:"cycling", label:"Cycling", icon:"CYCLING", subs:[
-    {id:"road",    label:"Strasse",children:null},
-    {id:"gravel",  label:"Gravel", children:null},
-    {id:"mtb",     label:"MTB",    children:[{id:"mtb_xc",label:"XC"},{id:"mtb_enduro",label:"Enduro"},{id:"mtb_dh",label:"Downhill"}]},
-    {id:"track_cy",label:"Bahn",   children:null},
+  {id:"cycling",        label:"Cycling",             icon:"CYCLE", subs:[
+    {id:"cycling_road",   label:"Rennrad",             children:null},
+    {id:"cycling_gravel", label:"Gravel",              children:null},
+    {id:"cycling_mtb",    label:"MTB",                 children:[
+      {id:"cycling_mtb_xc",  label:"XC"},
+      {id:"cycling_mtb_end", label:"Enduro"},
+      {id:"cycling_mtb_dh",  label:"Downhill"},
+    ]},
+    {id:"cycling_track",  label:"Bahn",                children:null},
+    {id:"cycling_ebike",  label:"E-Bike",              children:null},
   ]},
-  {id:"running", label:"Running", icon:"RUN", subs:[
-    {id:"run_road", label:"Strasse",children:[{id:"run_short",label:"Kurzdistanz"},{id:"run_half",label:"Halbmarathon"},{id:"run_marathon",label:"Marathon"},{id:"run_ultra",label:"Ultra 50–100K+"}]},
-    {id:"run_trail",label:"Trail",  children:[{id:"trail_short",label:"Kurzdistanz"},{id:"trail_ultra",label:"Ultra 50–100K+"}]},
-    {id:"run_track",label:"Bahn",   children:null},
+  {id:"running",        label:"Running",             icon:"RUN",   subs:[
+    {id:"run_road",       label:"Strassenlauf",        children:[
+      {id:"run_road_5k",    label:"5–10km"},
+      {id:"run_road_10k",   label:"10–20km"},
+      {id:"run_road_hm",    label:"Halbmarathon"},
+      {id:"run_road_m",     label:"Marathon"},
+      {id:"run_road_ultra", label:"Ultra"},
+    ]},
+    {id:"run_trail",      label:"Trail Running",       children:[
+      {id:"run_trail_short", label:"Short (bis 30km)"},
+      {id:"run_trail_ultra", label:"Ultra (30km+)"},
+    ]},
+    {id:"run_track",      label:"Bahnlauf",            children:null},
   ]},
-  {id:"triathlon", label:"Triathlon", icon:"TRI", subs:[
-    {id:"sprint", label:"Sprint", children:null},
-    {id:"olympic",label:"Olympia",children:null},
-    {id:"t100",   label:"T100",   children:null},
-    {id:"ironman",label:"Ironman",children:[{id:"tri_703",label:"70.3 — Half"},{id:"tri_full",label:"140.6 — Full"},{id:"tri_ultra",label:"Ultra Triathlon"}]},
+  {id:"triathlon",      label:"Triathlon",           icon:"TRI",   subs:[
+    {id:"tri_sprint",     label:"Sprint",              children:null},
+    {id:"tri_olympic",    label:"Olympische Distanz",  children:null},
+    {id:"tri_half",       label:"70.3 Half",           children:null},
+    {id:"tri_full",       label:"Ironman Full",        children:null},
+    {id:"tri_ultra",      label:"Ultra (T100 / Deca)", children:null},
   ]},
-  {id:"schwimmen", label:"Schwimmen", icon:"SWIM", subs:[
-    {id:"pool",     label:"Pool (25–50m)",children:null},
-    {id:"openwater",label:"Open Water",   children:null},
+  {id:"swimming",       label:"Schwimmen",           icon:"SWIM",  subs:[
+    {id:"swim_sprint",    label:"Sprint / Kurzbahn",   children:null},
+    {id:"swim_mid",       label:"Mitteldistanz",       children:null},
+    {id:"swim_open",      label:"Freiwasser / Open Water", children:null},
   ]},
-  {id:"fitness", label:"Hyrox & Kraftsport", icon:"GYM", subs:[
-    {id:"hyrox",       label:"HYROX",        children:null},
-    {id:"crossfit_d",  label:"CrossFit",     children:null},
-    {id:"kraft",       label:"Krafttraining",children:null},
-    {id:"powerlifting",label:"Powerlifting", children:null},
+  {id:"football",       label:"Fussball",            icon:"FOOT",  subs:null},
+  {id:"icehockey",      label:"Eishockey",           icon:"ICE",   subs:null},
+  {id:"fitness",        label:"Hyrox & Kraftsport",  icon:"GYM",   subs:[
+    {id:"hyrox",          label:"Hyrox",               children:null},
+    {id:"krafttraining",  label:"Krafttraining",       children:null},
+    {id:"crossfit",       label:"CrossFit",            children:null},
+    {id:"powerlifting",   label:"Powerlifting",        children:null},
   ]},
-  {id:"fussball",          label:"Fussball",          icon:"FOOT",  subs:null},
-  {id:"eishockey",         label:"Eishockey",         icon:"ICE",   subs:null},
-  {id:"tennis",            label:"Tennis",            icon:"TENNIS",subs:null},
-  {id:"ski_snow", label:"Ski / Snowboard", icon:"SKI", subs:[
-    {id:"ski_alpin",   label:"Alpin",                   children:null},
-    {id:"ski_freeride",label:"Freeride",                children:null},
-    {id:"ski_free",    label:"Freestyle",               children:null},
-    {id:"ski_touring", label:"Ski Touring / Splitboard",children:null},
+  {id:"ski_snow",       label:"Ski & Snowboard",     icon:"SKI",   subs:[
+    {id:"ski_alpin",      label:"Ski Alpin",           children:null},
+    {id:"ski_freeride",   label:"Freeride & Freestyle",children:null},
+    {id:"ski_touring",    label:"Skitouren / Splitboard",children:null},
+    {id:"snowboard",      label:"Snowboard",           children:null},
   ]},
-  {id:"langlauf", label:"Langlauf & Biathlon", icon:"XC", subs:[
-    {id:"classic", label:"Classic", children:null},
-    {id:"skating", label:"Skating", children:null},
-    {id:"biathlon",label:"Biathlon",children:null},
+  {id:"langlauf",       label:"Langlauf & Biathlon", icon:"XC",    subs:[
+    {id:"langlauf_klassisch", label:"Langlauf Klassisch", children:[
+      {id:"langlauf_klassisch_kurz",  label:"Kurz (bis 15km)"},
+      {id:"langlauf_klassisch_mittel",label:"Mittel (15–50km)"},
+      {id:"langlauf_klassisch_lang",  label:"Lang (50km+)"},
+    ]},
+    {id:"langlauf_skating",   label:"Skating",             children:[
+      {id:"langlauf_skating_kurz",  label:"Kurz (bis 15km)"},
+      {id:"langlauf_skating_mittel",label:"Mittel (15–50km)"},
+      {id:"langlauf_skating_lang",  label:"Lang (50km+)"},
+    ]},
+    {id:"biathlon",           label:"Biathlon",            children:null},
   ]},
-  {id:"handball_vball", label:"Handball & Volleyball", icon:"HAND", subs:[
-    {id:"handball",   label:"Handball",        children:null},
-    {id:"volleyball", label:"Volleyball",      children:null},
+  {id:"tennis",         label:"Tennis & Padel",      icon:"TENNIS",subs:[
+    {id:"tennis",         label:"Tennis",              children:null},
+    {id:"padel",          label:"Padel",               children:null},
   ]},
-  {id:"basketball",        label:"Basketball",        icon:"BBALL", subs:null},
+  {id:"leichtathletik", label:"Leichtathletik",      icon:"ATHLETICS", subs:[
+    {id:"la_sprint",      label:"Sprint (100m–400m)",  children:null},
+    {id:"la_mittel",      label:"Mittelstrecke",       children:null},
+    {id:"la_lang",        label:"Langstrecke (5km+)",  children:null},
+    {id:"la_wurf",        label:"Wurf & Stoss",        children:null},
+    {id:"la_sprung",      label:"Sprung",              children:null},
+    {id:"la_mehr",        label:"Mehrkampf",           children:null},
+  ]},
+  {id:"golf",           label:"Golf",                icon:"GOLF",  subs:null},
+  {id:"klettern",       label:"Klettern",            icon:"CLIMB", subs:null},
+  {id:"kampfsport",     label:"Kampfsport",          icon:"FIGHT", subs:[
+    {id:"boxing",         label:"Boxen",               children:null},
+    {id:"mma",            label:"MMA",                 children:null},
+    {id:"wrestling",      label:"Ringen / Grappling",  children:null},
+    {id:"judo",           label:"Judo",                children:null},
+    {id:"karate",         label:"Karate / Taekwondo",  children:null},
+    {id:"bjj",            label:"Brazilian Jiu-Jitsu", children:null},
+  ]},
+  {id:"basketball",     label:"Basketball",          icon:"BALL",  subs:null},
+  {id:"handball_vball", label:"Hand- & Volleyball",  icon:"HBALL", subs:[
+    {id:"handball",       label:"Handball",            children:null},
+    {id:"volleyball",     label:"Volleyball",          children:null},
+    {id:"beachvolley",    label:"Beach Volleyball",    children:null},
+  ]},
 ];
 
 // Sport-spezifische Wettkampf-Typen
@@ -120,6 +166,7 @@ function SportIcon({icon, active, size=18}) {
   const col = active ? C.black : C.g600;
   const s = size;
   const icons = {
+    CYCLE:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 6l-3 5h8"/><path d="M12 17.5l3-5.5 3 5.5"/></svg>,
     CYCLING:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 6l-3 5h8"/><path d="M12 17.5l3-5.5 3 5.5"/></svg>,
     RUN:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="13" cy="4" r="1.5"/><path d="M5 21l4-5 3 3 2-5"/><path d="M17 13l-3.5-5L16 4"/><path d="M10 8l2 5"/></svg>,
     TRI:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M5 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M19 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M5 16l4-8 3 3 3-3 4 8"/><path d="M9 6.5l3-2.5 3 2.5"/></svg>,
@@ -129,12 +176,17 @@ function SportIcon({icon, active, size=18}) {
     XC:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="17" cy="4" r="1.5"/><path d="M4 20l5-14M20 20l-5-14"/><path d="M4 20l5-14 3 6 3-6 5 14"/><path d="M7.5 13h9"/></svg>,
     FOOT:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9.5"/><polygon points="12,5.5 13.8,8.3 12,11.5 10.2,8.3" strokeLinejoin="round"/><polygon points="5.2,9.8 8.4,9.2 10.2,11.8 8,13.8 5.2,12.8" strokeLinejoin="round"/><polygon points="18.8,9.8 15.6,9.2 13.8,11.8 16,13.8 18.8,12.8" strokeLinejoin="round"/><polygon points="7.5,17.2 8,13.8 10.5,14.8 11,18" strokeLinejoin="round"/><polygon points="16.5,17.2 16,13.8 13.5,14.8 13,18" strokeLinejoin="round"/></svg>,
     ICE:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><line x1="5.5" y1="4.5" x2="16.5" y2="15.5"/><path d="M15.5 14.5L19 16.5 18 20 14.5 19 Z"/><ellipse cx="11" cy="17" rx="5.5" ry="2" /></svg>,
+    BALL:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/><path d="M3.4 9h17.2M3.4 15h17.2"/></svg>,
+    HBALL:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c0 5-4.5 8.5-9 9"/><path d="M12 3c0 5 4.5 8.5 9 9"/><path d="M3.5 14.5c4 .5 7 3.5 8.5 6.5"/><path d="M20.5 14.5c-4 .5-7 3.5-8.5 6.5"/></svg>,
     VBALL:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c0 5-4.5 8.5-9 9"/><path d="M12 3c0 5 4.5 8.5 9 9"/><path d="M3.5 14.5c4 .5 7 3.5 8.5 6.5"/><path d="M20.5 14.5c-4 .5-7 3.5-8.5 6.5"/></svg>,
     BBALL:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3a14.5 14.5 0 0 0 0 18M3 12h18"/><path d="M3.4 9h17.2M3.4 15h17.2"/></svg>,
     NFL:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="12" rx="9" ry="5.5" transform="rotate(-35 12 12)"/><path d="M9.5 6.5l5 11M14.5 6.5l-5 11"/><path d="M7 10l10 4M7 14l10-4"/></svg>,
     HAND:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>,
     GOLF:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 18V3l7 4-7 4"/><path d="M5 21c0-2 3-3 7-3s7 1 7 3"/><line x1="12" y1="18" x2="12" y2="15"/></svg>,
     TENNIS:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c2 3 2 6 0 9s-2 6 0 9"/><path d="M3 12c3 2 6 2 9 0s6-2 9 0"/></svg>,
+    ATHLETICS:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="4" r="1.5"/><path d="M8 21l4-10 4 10"/><path d="M6 9h12"/><path d="M9 21h6"/></svg>,
+    CLIMB:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="4" r="1.5"/><path d="M10 6v6l-3 4"/><path d="M10 12l3 3"/><path d="M7 10l6 1"/><path d="M13 15l2 6"/><path d="M7 20l3-6"/></svg>,
+    FIGHT:<svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke={col} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 5c1-1.5 3-1.5 4 0s1 3-.5 4l-8 8c-1.5 1.5-3.5 1.5-4.5.5s-1-3 .5-4.5l8-8z"/><path d="M8 12l-3 3c-1 1-1 2.5 0 3.5"/><path d="M20 8l1.5-1.5"/></svg>,
   };
   return icons[icon] || <svg width={s} height={s} viewBox="0 0 24 24"/>;
 }
@@ -260,7 +312,146 @@ const SPORT_SUPP = {
        protocol:{dauer:"Ganzjährig (Wintersaison besonders wichtig)", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Fussballer trainieren oft in Hallen (Winter) — Vit D-Mangel besonders verbreitet. Bluttest Oktober und März empfohlen."}},
     ],
   },
-};
+  // ─── SKI (Alpin, Freeride, Freestyle, Snowboard) ────────────────────────────
+  ski:{
+    performance:[
+      {id:"krea_ski", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"Explosivität und Schnellkraft für kurze maximale Belastungen — perfekt für Alpin.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Training oder Abends", hinweis:"Besonders wertvoll in Wettkampfblöcken und intensiven Trainingslagern."}},
+      {id:"koff_ski", name:"Koffein 100–200mg", dose:"100–200mg", when:"45 min vor erstem Lauf", why:"Reaktionszeit, Fokus und Kältestress-Pufferung — an Wettkampftagen kritisch.", tags:["Pre-Race","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Wettkampf- und Intensivtage", pause:"Koffein-Pause 1 Woche vor Hauptrennen", timing:"45 min vor Start", hinweis:"Kältewetter steigert Koffeinwirkung leicht. Kein Koffein nach 16 Uhr."}},
+    ],
+    recovery:[
+      {id:"whey_ski", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Fahrtag", why:"Intensive Muskelarbeit (Oberschenkel, Rumpf) — Reparatur nach dem Fahren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Ganzjährig nach intensiven Tagen", pause:"Keine", timing:"Innerhalb 30 min nach letztem Lauf", hinweis:"Mit 50–60g Kohlenhydraten kombinieren."}},
+      {id:"koll_ski", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor erstem Lauf", why:"Knöchel, Knie und Sehnen unter extremer Belastung — Prävention kritisch.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Saisonbegleitend, täglich", pause:"Keine", timing:"30 min VOR dem Fahren", hinweis:"Typ II Kollagen für Gelenkknorpel bevorzugen."}},
+    ],
+    endurance:[
+      {id:"elek_ski", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Während Fahrtag", why:"Kältewetter täuscht über Flüssigkeitsverlust — Hydration trotzdem kritisch.", tags:["Hydration","Kälte"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
+       protocol:{dauer:"Ganzjährig bei intensivem Betrieb", pause:"Keine", timing:"Alle 60–90 min auf der Piste", hinweis:"Im Winter trinken viele zu wenig — Durstgefühl ist gedämpft bei Kälte."}},
+    ],
+    health:[
+      {id:"vd3_ski", name:"Vitamin D3 + K2", dose:"3000–4000 IE", when:"Morgens", why:"Knochen, Muskelkraft, Immunsystem — Ski-Saison = wenig direkte Sonne.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig, Winter: höhere Dosis", pause:"Keine", timing:"Morgens mit fetthaltiger Mahlzeit", hinweis:"Bluttest Oktober und März empfohlen."}},
+    ],
+  },
+  // ─── SKI TOURING / SPLITBOARD ───────────────────────────────────────────────
+  ski_touring:{
+    performance:[
+      {id:"mau_gel_st", name:"Maurten Gel 100", dose:"1 Gel alle 45–60 min", when:"Aufstieg über 90 min", why:"Ausdauerleistung für lange Aufstiege — magenfreundlich auch bei Kälte.", tags:["Aufstieg","Carbs"], link:AFF.maurten("gel-100"), shop:"Maurten", priority:1,
+       protocol:{dauer:"Bei Touren, kein Zyklus", pause:"Keine", timing:"Ab 30 min, alle 45–60 min", hinweis:"Bei Kälte Gels nahe am Körper tragen — verhindert Eingefrieren."}},
+    ],
+    recovery:[
+      {id:"koll_st", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Tour", why:"Knie und Hüfte unter langen Abstiegen besonders belastet.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig bei intensivem Tourenfahren", pause:"Keine", timing:"30 min VOR der Tour", hinweis:"Abstiege belasten Gelenke stärker als Aufstiege — nicht vergessen."}},
+      {id:"whey_st", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Tour", why:"Lange Ausdauerbelastung mit Kraft-Komponente — Muskelreparatur wichtig.", tags:["Post-Tour","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Nach jeder langen Tour", pause:"Keine", timing:"Innerhalb 30–45 min", hinweis:"Mit Kohlenhydraten kombinieren für maximale Recovery."}},
+    ],
+    endurance:[
+      {id:"elek_st", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Langer Ausdaueroutput bei Kälte — Elektrolyte trotz gedämpftem Durstgefühl.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+       protocol:{dauer:"Bei Touren", pause:"Keine", timing:"Regelmässig alle 60 min", hinweis:"Thermosflaschen verwenden um Einfrieren zu vermeiden."}},
+    ],
+    health:[
+      {id:"vd3_st", name:"Vitamin D3 + K2", dose:"3000 IE", when:"Morgens", why:"Knochen und Muskeln für Skitouren-Belastung vorbereiten.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Besonders im Winter erhöhen."}},
+    ],
+  },
+  // ─── LANGLAUF & BIATHLON ────────────────────────────────────────────────────
+  langlauf:{
+    performance:[
+      {id:"mau_gel_xl", name:"Maurten Gel 100 CAF 100", dose:"1 Gel alle 30–40 min", when:"Rennen & Intervalle", why:"Koffein + Carbs für maximale Ausdauerleistung — einer der höchsten VO2max-Sportarten.", tags:["Race-Day","Koffein"], link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", priority:1,
+       protocol:{dauer:"Wettkampftage", pause:"Nicht täglich", timing:"30–40 min vor Start oder während", hinweis:"Langlauf hat einen der höchsten Energieumsätze aller Sportarten — Kohlenhydrate kritisch."}},
+      {id:"rbeete_xl", name:"Rote Beete Nitrat", dose:"400–600mg Nitrat", when:"2–3h vor Training", why:"O2-Effizienz verbessern — bei Langläufern besonders relevant durch Altitude-Einsatz.", tags:["Pre-Training","Natürlich"], link:AFF.iherb("beet root nitrate"), shop:"iHerb", priority:2,
+       protocol:{dauer:"6–7 Tage laden, dann täglich", pause:"Keine", timing:"2–3h vor Start", hinweis:"Kein Mundwasser vor Training — hemmt Nitratumwandlung durch Mundbakterien."}},
+    ],
+    endurance:[
+      {id:"mau_320_xl", name:"Maurten Drink Mix 320", dose:"80g / 500ml", when:"Einheiten über 90 min", why:"Höchste Kohlenhydratdichte für Langlauf-typische 2–4h Ausdauereinheiten.", tags:["Training","Carbs"], link:AFF.maurten("drink-mix-320"), shop:"Maurten", priority:1,
+       protocol:{dauer:"Bei langen Einheiten", pause:"Keine", timing:"Ab 30 min, 1 Flasche pro Stunde", hinweis:"Bei Kälte: Thermosflasche, GI-Training im Sommer."}},
+      {id:"elek_xl", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Hoher Natriumverlust auch bei Kälte — Krampfprävention essentiell.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Regelmässig alle 60 min", hinweis:"Langlauf hat hohe Schweissraten trotz Kälteempfinden."}},
+    ],
+    recovery:[
+      {id:"whey_xl", name:"Whey Protein Isolat", dose:"25–30g", when:"Direkt nach Einheit", why:"Ganzkörper-Ausdauerbelastung mit hohem Muskelabbau — schnelle Reparatur.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Ganzjährig nach Einheiten", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 60–80g Kohlenhydraten kombinieren."}},
+    ],
+    health:[
+      {id:"eisen_xl", name:"Eisen (Ferrochel)", dose:"25–50mg nach Bluttest", when:"Morgens nüchtern", why:"Langlauf = einer der höchsten Eisenbedarfe aller Sportarten durch hohes Volumen.", tags:["Bluttest","Basis"], link:AFF.iherb("iron ferrochel"), shop:"iHerb", priority:1,
+       protocol:{dauer:"3–6 Monate", pause:"Nur bei nachgewiesenem Mangel", timing:"Morgens nüchtern + Vit C", hinweis:"Bluttest zwingend: Ferritin-Zielwert Sportler >50 ng/ml."}},
+      {id:"vd3_xl", name:"Vitamin D3 + K2", dose:"3000 IE", when:"Morgens", why:"Knochen und Immunsystem für Wintersport — Mangel im Winter häufig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest Oktober und März."}},
+    ],
+  },
+  // ─── TENNIS & PADEL ─────────────────────────────────────────────────────────
+  tennis:{
+    performance:[
+      {id:"krea_ten", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Schläge und Sprints — Kreatin verbessert Wiederholbarkeit.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Training", hinweis:"Besonders wertvoll bei Turnierblöcken mit mehreren Spielen täglich."}},
+      {id:"koff_ten", name:"Koffein 100–200mg", dose:"100–150mg", when:"45 min vor Spiel", why:"Reaktionszeit und Konzentration für lange Matches.", tags:["Pre-Match","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Spiel- und Intensivtage", pause:"Koffein-Pause an Ruhetagen", timing:"45 min vor Match", hinweis:"Kein Koffein nach 16 Uhr."}},
+    ],
+    endurance:[
+      {id:"elek_ten", name:"Elektrolyt-Tabs", dose:"1–2 Tabs / 0.5L", when:"Während langem Match", why:"Tennis-Matches können 3–5h dauern — Natrium- und Kaliumverlust erheblich.", tags:["Hydration","Match"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+       protocol:{dauer:"Bei Matches über 90 min", pause:"Keine", timing:"Alle 60 min trinken", hinweis:"Seitenwechsel nutzen für Hydration."}},
+    ],
+    recovery:[
+      {id:"koll_ten", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Training", why:"Ellbogen, Schulter und Handgelenk unter chronischem Stress — Prävention.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR Training", hinweis:"Tennisellbogen-Prävention: Kollagen + Exzentrische Übungen."}},
+      {id:"whey_ten", name:"Whey Protein Isolat", dose:"25g", when:"Nach Training / Match", why:"Muskelreparatur nach schlagintensivem Training.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:2,
+       protocol:{dauer:"Nach Trainings und Matches", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit Kohlenhydraten kombinieren."}},
+    ],
+    health:[
+      {id:"vd3_ten", name:"Vitamin D3 + K2", dose:"2000 IE", when:"Morgens", why:"Knochen, Muskulatur und Immunsystem — Basis für alle Sportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
+    ],
+  },
+  // ─── KAMPFSPORT ─────────────────────────────────────────────────────────────
+  kampfsport:{
+    performance:[
+      {id:"krea_ks", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Kraft und Kraft-Wiederholbarkeit — essentiell im Kampfsport.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Nach Training", hinweis:"Bei Gewichtsklassen: Kreatin kann 0.5–1kg Wassereinlagerung verursachen."}},
+      {id:"beta_ks", name:"Beta-Alanin", dose:"3.2–4.8g täglich", when:"Aufgeteilt auf 2–3 Dosen", why:"Puffert Laktat bei intensiven Sparring- und Konditionseinheiten.", tags:["Ausdauer","Puffer"], link:AFF.iherb("beta alanine"), shop:"iHerb", priority:1,
+       protocol:{dauer:"8–12 Wochen (Kur)", pause:"9 Wochen Pause", timing:"Täglich aufgeteilt", hinweis:"Kribbeln harmlos. Wirkt v.a. bei 1–4 min Belastungen."}},
+    ],
+    recovery:[
+      {id:"whey_ks", name:"Whey Protein Isolat", dose:"30–35g", when:"Direkt post-Training", why:"Hoher Muskelabbau durch Kontaktsport — Reparatur und Aufbau priorisieren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Bei 2× täglich Training: nach jeder Einheit Protein."}},
+      {id:"koll_ks", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Training", why:"Gelenke, Sehnen und Bänder unter extremer Belastung bei Würfen und Schlägen.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR Training", hinweis:"Typ I/II Kollagen für Bänder und Sehnen."}},
+    ],
+    endurance:[
+      {id:"elek_ks", name:"Elektrolyt-Tabs", dose:"1–2 Tabs / 0.5L", when:"Sparring und lange Einheiten", why:"Hohes Schweissvolumen bei Kampfsport-Training — Krämpfe vermeiden.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+       protocol:{dauer:"Bei Trainingstagen", pause:"Keine", timing:"Während Training", hinweis:"Besonders bei Sauna-Sessions zur Gewichtsreduktion: Elektrolyte danach."}},
+    ],
+    health:[
+      {id:"vd3_ks", name:"Vitamin D3 + K2", dose:"2000–3000 IE", when:"Morgens", why:"Knochen, Immunsystem, Hormonprofil — Basis für Kampfsportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
+    ],
+  },
+  // ─── MTB ENDURO / DOWNHILL ──────────────────────────────────────────────────
+  cycling_mtb:{
+    performance:[
+      {id:"krea_mtb", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"DH und Enduro: explosive Kraft, Bremsmanöver, Jumps — Kreatin direkt relevant.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Fahrtag", hinweis:"Besonders für DH: kurze explosive Läufe profitieren maximal von Kreatin."}},
+      {id:"koff_mtb", name:"Koffein 100–200mg", dose:"100–200mg", when:"45 min vor Fahrtag", why:"Fokus, Reaktionszeit und Risikoabschätzung auf technischem Terrain.", tags:["Pre-Ride","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Fahrtage", pause:"Ruhetage koffeinfrei", timing:"45 min vor erstem Run", hinweis:"Kein Koffein nach 16 Uhr."}},
+    ],
+    recovery:[
+      {id:"whey_mtb", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Fahrtag", why:"Explosiver Muskeleinsatz und Sturzrisiko — Reparatur und Aufbau priorisieren.", tags:["Post-Ride","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Nach Fahrtagen", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 40–60g Kohlenhydraten kombinieren."}},
+      {id:"koll_mtb", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Fahrtag", why:"Gelenke, Handgelenke und Schultern unter extremer technischer Belastung.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR dem Fahren", hinweis:"Bei Stürzen: Kollagendosis temporär auf 20g erhöhen."}},
+    ],
+    endurance:[
+      {id:"elek_mtb", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Lange Enduro-Tage", why:"Enduro: Uphills und Stages können 4–6h dauern — Hydration unterschätzt.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
+       protocol:{dauer:"Bei Enduro-Events", pause:"Keine", timing:"Alle 60–90 min", hinweis:"DH: kürzere Sessions, weniger Hydrationsbedarf als Enduro."}},
+    ],
+    health:[
+      {id:"vd3_mtb", name:"Vitamin D3 + K2", dose:"2000–3000 IE", when:"Morgens", why:"Knochen und Immunsystem — nach Stürzen und für Knochenstruktur wichtig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
+    ],
+  },
+}
+
 
 const GENERIC_SUPP = {
   performance:[
@@ -298,12 +489,37 @@ const HEALTH_ONLY_SUPP = [
    protocol:{dauer:"3–6 Monate, dann neu evaluieren", pause:"1–2 Wochen Pause alle 3 Monate", timing:"Morgens mit Frühstück (färbt Urin gelb — normal)", hinweis:"Bei pflanzlicher Ernährung: besonders B12 einzeln prüfen. B12 Bluttest nach 3 Monaten."}},
 ];
 
-function getSupplements(sportId, intensity, healthOnly) {
+function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
   if(healthOnly) return {basis:[], specific:HEALTH_ONLY_SUPP};
   const gm = {low:"health",medium:"endurance",high:"performance",competition:"performance"};
   const goalId = gm[intensity]||"health";
-  const key = sportId==="cycling"?"cycling":sportId==="running"?"running":sportId==="triathlon"?"running":(sportId==="fitness"||sportId==="hyrox"||sportId==="crossfit_d"||sportId==="kraft")?"fitness":sportId==="fussball"?"fussball":null;
-  const specific = key&&SPORT_SUPP[key]?(SPORT_SUPP[key][goalId]||[]):(GENERIC_SUPP[goalId]||[]);
+
+  // Try to find active sub-sport for this parent and get its suppKey
+  let suppKey = null;
+  if(subSel) {
+    const group = (typeof SPORT_GROUPS !== "undefined" ? SPORT_GROUPS : []).find(g=>g.id===sportId);
+    if(group?.subs) {
+      // First check children (deeper level)
+      let resolvedSub = null;
+      for(const sub of group.subs) {
+        if(sub.children?.length>0) {
+          const selectedChild = sub.children.find(ch=>childSel[sub.id+"_"+ch.id]);
+          if(selectedChild) { resolvedSub = {id:selectedChild.id}; break; }
+        } else if(subSel[sub.id]) { resolvedSub = sub; break; }
+      }
+      if(resolvedSub) {
+        const subProf = getSubProfile(resolvedSub.id);
+        if(subProf?.suppKey) suppKey = subProf.suppKey;
+      }
+    }
+  }
+
+  // Fallback to old mapping if no sub-sport suppKey found
+  if(!suppKey) {
+    suppKey = sportId==="cycling"?"cycling":sportId==="running"?"running":sportId==="triathlon"?"running":(sportId==="fitness"||sportId==="hyrox"||sportId==="crossfit_d"||sportId==="kraft")?"fitness":sportId==="fussball"?"fussball":null;
+  }
+
+  const specific = suppKey&&SPORT_SUPP[suppKey]?(SPORT_SUPP[suppKey][goalId]||[]):(GENERIC_SUPP[goalId]||[]);
   return {basis:BASIS, specific};
 }
 
@@ -391,12 +607,13 @@ function Intro({onNext, onDemo}) {
 
   const lines=[
     {text:"Die präziseste Gesundheits- & Leistungsanalyse für Vitamine, Supplemente und Sportnahrung.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Berechnet aus genausten MET-Werten. 100% Personalisiert. Wissenschaftlich belegt.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"Die meisten Sportler raten. TREYN+ berechnet — und erklärt dir als einzige Plattform jeden Wert, damit du weisst was du damit machst. Berechnet aus 50+ Sportdisziplinen · 22 persönlichen Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
-    {text:"Auf Basis deiner Daten berechnet TREYN+ deine Bedarfswerte und optimalen Supplemente & Sportnahrung. Kostenlos verfügbar in 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Auf Basis deiner Daten berechnet TREYN+ deine Bedarfswerte, optimalen Supplemente & Sportnahrung — präziser als jede andere Plattform.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Ab sofort verfügbar in aktuell 22 Ländern.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
 
   return (
@@ -412,7 +629,7 @@ function Intro({onNext, onDemo}) {
               <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
               <div style={{display:"flex",alignItems:"center",gap:12}}>
                 <button className="btn btn-neon" style={{fontSize:15,padding:"14px 28px"}} onClick={onNext}>Analyse starten →</button>
-                <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos verfügbar.</span>
+                <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos starten.</span>
               </div>
             </div>
           </>
@@ -517,16 +734,32 @@ function Demo({onNext, onDemo}) {
             <div style={{fontSize:9,background:C.neon,color:C.black,padding:"3px 6px",borderRadius:4,fontWeight:600,textAlign:"center"}}>6 Picks ↗</div>
           </div>
         </div>
-        <div className="fu4" style={{display:"flex",alignItems:"center",marginBottom:20}}>
+        <div className="fu4" style={{display:"flex",alignItems:"center",marginBottom:16}}>
           <div style={{height:1,flex:1,background:C.g200}}/>
           <div style={{fontSize:11,color:C.g400,padding:"0 12px"}}>3 Minuten · Magic Link Login</div>
           <div style={{height:1,flex:1,background:C.g200}}/>
         </div>
+
+        {/* Platform Stats */}
+        <div className="fu4" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:6,marginBottom:16}}>
+          {[
+            {val:"50+",  label:"Sport­dis­zip­linen"},
+            {val:"12",   label:"Daten­punkte pro User"},
+            {val:"16",   label:"Berechnungs­modelle"},
+            {val:"MET",  label:"2024 Standard"},
+          ].map((s,i)=>(
+            <div key={i} style={{textAlign:"center",padding:"10px 6px",borderRadius:10,background:"#F8F8F8",border:`1px solid ${C.g200}`}}>
+              <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.val}</div>
+              <div style={{fontSize:9,color:C.g600,lineHeight:1.4,marginTop:2}}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
         <div className="fu5">
-          <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",marginBottom:10}}>
+          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px",marginBottom:10}} onClick={onNext}>Analyse starten →</button>
+          <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
             Demo-Plattform ausprobieren →
           </button>
-          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px"}} onClick={onNext}>Analyse starten →</button>
           <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
         </div>
       </div>
@@ -552,7 +785,6 @@ function Progress({step,total}) {
 // ─── STEP 1: SPORT ────────────────────────────────────────────────────────────
 
 function StepSport({onNext}) {
-  const [healthOnly,setHealthOnly]=useState(false);
   const [sel,setSel]=useState({});
   const [subSel,setSubSel]=useState({});
   const [childSel,setChildSel]=useState({});
@@ -560,14 +792,44 @@ function StepSport({onNext}) {
   const [subExp,setSubExp]=useState(null);
 
   const toggleGroup=(id,hasSubs)=>{
-    if(healthOnly)return;
-    if(hasSubs){setExpanded(e=>e===id?null:id);setSel(s=>({...s,[id]:true}));}
-    else{setSel(s=>({...s,[id]:!s[id]}));setExpanded(null);}
+    if(hasSubs){
+      const isOn=!!sel[id];
+      if(isOn&&expanded===id){
+        setSel(s=>({...s,[id]:false}));
+        setExpanded(null);
+        const group=SPORT_GROUPS.find(g=>g.id===id);
+        if(group?.subs){
+          setSubSel(s=>{const n={...s};group.subs.forEach(sb=>{n[sb.id]=false;});return n;});
+          setChildSel(s=>{const n={...s};group.subs.forEach(sb=>{sb.children?.forEach(ch=>{delete n[sb.id+"_"+ch.id];});});return n;});
+        }
+      } else {
+        setExpanded(e=>e===id?null:id);
+        setSel(s=>({...s,[id]:true}));
+      }
+    } else {
+      setSel(s=>({...s,[id]:!s[id]}));
+      setExpanded(null);
+    }
   };
   const toggleSub=(e,groupId,sub)=>{
     e.stopPropagation();
-    if(sub.children){setSubExp(x=>x===sub.id?null:sub.id);setSubSel(s=>({...s,[sub.id]:true}));setSel(g=>({...g,[groupId]:true}));}
-    else{setSubSel(s=>({...s,[sub.id]:!s[sub.id]}));setSel(g=>({...g,[groupId]:true}));}
+    if(sub.children){
+      const isOn=subSel[sub.id]||sub.children.some(ch=>childSel[sub.id+"_"+ch.id]);
+      if(isOn){
+        // Deselect: clear sub + all its children
+        setSubSel(s=>({...s,[sub.id]:false}));
+        setChildSel(s=>{const n={...s};sub.children.forEach(ch=>{delete n[sub.id+"_"+ch.id];});return n;});
+        setSubExp(x=>x===sub.id?null:x);
+      } else {
+        // Select: open children picker
+        setSubExp(x=>x===sub.id?null:sub.id);
+        setSubSel(s=>({...s,[sub.id]:true}));
+        setSel(g=>({...g,[groupId]:true}));
+      }
+    } else {
+      setSubSel(s=>({...s,[sub.id]:!s[sub.id]}));
+      setSel(g=>({...g,[groupId]:true}));
+    }
   };
   const toggleChild=(e,subId,childId)=>{
     e.stopPropagation();
@@ -591,31 +853,30 @@ function StepSport({onNext}) {
     return !hasSub;
   });
 
-  const canNext=healthOnly||(totalCount>0&&missingDiscipline.length===0);
+  // Subs with children that are selected but missing a child selection
+  const missingChildren = selectedSports.flatMap(id=>{
+    const s=SPORT_GROUPS.find(g=>g.id===id);
+    if(!s?.subs) return [];
+    return s.subs.filter(sb=>
+      sb.children?.length>0 &&
+      subSel[sb.id] &&
+      !sb.children.some(ch=>childSel[sb.id+"_"+ch.id])
+    ).map(sb=>sb.label);
+  });
+
+  const canNext=totalCount>0&&missingDiscipline.length===0&&missingChildren.length===0;
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
       <div style={{width:"100%",maxWidth:520}}>
-        <Progress step={1} total={5}/>
+        <Progress step={1} total={6}/>
         <div className="su">
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Wähle deine Sportarten.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Mehrfach-Auswahl möglich — selektiere alle Sportarten die du regelmässig betreibst. Bei einigen Sportarten öffnen sich die diversen Disziplinen.</p>
 
           {/* Health-only option */}
-          <div onClick={()=>{setHealthOnly(h=>!h);if(!healthOnly){setSel({});setExpanded(null);}}}
-            style={{display:"flex",alignItems:"center",gap:14,padding:"14px 16px",border:`1.5px solid ${healthOnly?C.neon:C.g200}`,borderRadius:12,cursor:"pointer",background:healthOnly?C.neonDim:C.white,transition:"all .14s",marginBottom:16}}>
-            <div style={{width:32,height:32,borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:healthOnly?"rgba(0,0,0,.08)":C.g100}}>
-              <svg width={17} height={17} viewBox="0 0 24 24" fill="none" stroke={healthOnly?C.black:C.g600} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            </div>
-            <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:600,color:C.black}}>Ich treibe keinen Sport</div>
-              <div style={{fontSize:11,color:C.g600,marginTop:2}}>Ich möchte Supplements aus gesundheitlichen Gründen — ohne Sportbezug</div>
-            </div>
-            {healthOnly&&<div style={{width:18,height:18,background:C.black,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:C.neon,flexShrink:0}}>✓</div>}
-          </div>
-
           {/* Sport grid */}
-          {!healthOnly&&(
+          {(
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
               {SPORT_GROUPS.map(s=>{
                 const active=!!sel[s.id];
@@ -624,8 +885,8 @@ function StepSport({onNext}) {
                 const selSubs=hasSubs?s.subs.filter(sb=>subSel[sb.id]||sb.children?.some(ch=>childSel[sb.id+"_"+ch.id])):[];
                 return (
                   <div key={s.id} style={{gridColumn:isOpen?"1 / -1":"auto"}}>
-                    <div onClick={()=>toggleGroup(s.id,hasSubs)} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:isOpen?"13px 13px 0 0":13,cursor:"pointer",transition:"all .15s",border:`1.5px solid ${active?C.neon:C.g200}`,background:active?C.neon:C.white}}>
-                      <div style={{width:32,height:32,borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:active?"rgba(0,0,0,.08)":C.g100}}>
+                    <div onClick={()=>toggleGroup(s.id,hasSubs)} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:isOpen?"13px 13px 0 0":13,cursor:"pointer",transition:"all .15s",border:`1.5px solid ${active?C.neon:C.g200}`,background:active?C.neonDim:C.white}}>
+                      <div style={{width:32,height:32,borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:active?C.neon:C.g100}}>
                         <SportIcon icon={s.icon} active={active} size={17}/>
                       </div>
                       <div style={{flex:1,minWidth:0}}>
@@ -634,7 +895,7 @@ function StepSport({onNext}) {
                         {selSubs.length===0&&hasSubs&&<div style={{fontSize:10,color:active?"rgba(0,0,0,.45)":C.g400,marginTop:1}}>{isOpen?"Disziplin wählen →":"Disziplinen →"}</div>}
                       </div>
                       {hasSubs&&<span style={{fontSize:11,color:"rgba(0,0,0,.4)",transition:"transform .18s",display:"inline-block",transform:isOpen?"rotate(180deg)":"none"}}>▼</span>}
-                      {!hasSubs&&active&&<div style={{width:18,height:18,background:C.black,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:C.neon,flexShrink:0}}>✓</div>}
+                      {!hasSubs&&active&&<div style={{width:18,height:18,background:C.neon,border:`1.5px solid ${C.black}`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:C.black,flexShrink:0}}>✓</div>}
                     </div>
                     {isOpen&&hasSubs&&(
                       <div style={{padding:"10px 12px",background:C.g100,border:`1.5px solid ${C.neon}`,borderTop:"none",borderRadius:"0 0 13px 13px"}}>
@@ -643,10 +904,10 @@ function StepSport({onNext}) {
                             const on=!!subSel[sb.id]||(sb.children?.some(ch=>childSel[sb.id+"_"+ch.id]));
                             const isSubEx=subExp===sb.id;
                             return (
-                              <div key={sb.id} onClick={e=>toggleSub(e,s.id,sb)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"6px 14px",borderRadius:100,cursor:"pointer",fontSize:12,fontWeight:500,transition:"all .13s",background:on?C.black:C.white,color:on?C.neon:C.black,border:`1.5px solid ${on?C.black:C.g200}`}}>
+                              <div key={sb.id} onClick={e=>toggleSub(e,s.id,sb)} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"6px 14px",borderRadius:100,cursor:"pointer",fontSize:12,fontWeight:500,transition:"all .13s",background:on?C.neon:C.white,color:C.black,border:`1.5px solid ${on?C.neon:C.g200}`}}>
                                 {sb.label}
                                 {sb.children&&<span style={{fontSize:9,opacity:.55}}>{isSubEx?"▲":"▼"}</span>}
-                                {on&&!sb.children&&<span style={{fontSize:9,color:C.neon}}>✓</span>}
+                                {on&&!sb.children&&<span style={{fontSize:9,color:C.black}}>✓</span>}
                               </div>
                             );
                           })}
@@ -668,12 +929,14 @@ function StepSport({onNext}) {
             </div>
           )}
 
-          {!healthOnly&&totalCount>0&&(
-            <div style={{marginTop:10,padding:"10px 14px",background:missingDiscipline.length>0?"rgba(255,149,0,.08)":C.neonDim,borderRadius:11,border:`1px solid ${missingDiscipline.length>0?"rgba(255,149,0,.3)":C.neonBorder}`,display:"flex",alignItems:"center",gap:8}}>
-              <div style={{width:6,height:6,background:missingDiscipline.length>0?C.orange:C.neon,borderRadius:"50%",animation:"pulse 2s infinite",flexShrink:0}}/>
+          {totalCount>0&&(
+            <div style={{marginTop:10,padding:"10px 14px",background:missingDiscipline.length>0||missingChildren.length>0?"rgba(255,149,0,.08)":C.neonDim,borderRadius:11,border:`1px solid ${missingDiscipline.length>0||missingChildren.length>0?"rgba(255,149,0,.3)":C.neonBorder}`,display:"flex",alignItems:"center",gap:8}}>
+              <div style={{width:6,height:6,background:missingDiscipline.length>0||missingChildren.length>0?C.orange:C.neon,borderRadius:"50%",animation:"pulse 2s infinite",flexShrink:0}}/>
               <span style={{fontSize:13,color:C.g800}}>
                 {missingDiscipline.length>0
                   ? `${missingDiscipline.map(id=>SPORT_GROUPS.find(g=>g.id===id)?.label||id).join(", ")}: bitte noch eine Disziplin wählen`
+                  : missingChildren.length>0
+                  ? `${missingChildren.join(", ")}: bitte eine Unterkategorie wählen`
                   : `${totalCount} ${totalCount===1?"Sportart":"Sportarten"} gewählt`
                 }
               </span>
@@ -681,9 +944,9 @@ function StepSport({onNext}) {
           )}
 
           <div style={{display:"flex",justifyContent:"flex-end",marginTop:40}}>
-            <button className="btn btn-black" style={{opacity:canNext?1:.4}} disabled={!canNext}
-              onClick={()=>onNext({sel,subSel,childSel,primarySport,selectedSports,healthOnly})}>
-              {healthOnly?"Weiter →":canNext?`Weiter mit ${totalCount} ${totalCount===1?"Sportart":"Sportarten"} →`:totalCount===0?"Mindestens 1 wählen":"Disziplin auswählen"}
+            <button className="btn btn-neon" style={{opacity:canNext?1:.4}} disabled={!canNext}
+              onClick={()=>onNext({sel,subSel,childSel,primarySport,selectedSports,healthOnly:false})}>
+              {canNext?`Weiter mit ${totalCount} ${totalCount===1?"Sportart":"Sportarten"} →`:totalCount===0?"Mindestens 1 wählen":missingChildren.length>0?"Unterkategorie wählen":"Disziplin auswählen"}
             </button>
           </div>
         </div>
@@ -697,7 +960,7 @@ function StepSport({onNext}) {
 function StepTraining({sportData,onNext,onBack}) {
   const sports=sportData?.selectedSports||[];
   const init={};
-  sports.forEach(id=>{init[id]={days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:5,compTypes:[]};});
+  sports.forEach(id=>{init[id]={days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:5,compTypes:[],trainingTimes:[],sweatRate:"medium",goal:"performance"};});
   const [data,setData]=useState(init);
   const upd=(sportId,field,val)=>setData(d=>({...d,[sportId]:{...d[sportId],[field]:val}}));
   const toggleCompType=(sportId,type)=>{
@@ -716,7 +979,7 @@ function StepTraining({sportData,onNext,onBack}) {
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
       <div style={{width:"100%",maxWidth:520}}>
-        <Progress step={2} total={5}/>
+        <Progress step={2} total={6}/>
         <div className="su">
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Dein Training.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:32,lineHeight:1.65}}>Fülle für jede Sportart aus — so berechnet TREYN+ die optimalen Mengen.</p>
@@ -824,10 +1087,61 @@ function StepTraining({sportData,onNext,onBack}) {
               );
             })}
           </div>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:40}}>
-            <button className="btn-ghost" onClick={onBack}>← Zurück</button>
-            <button className="btn btn-black" onClick={()=>onNext(data)}>Weiter →</button>
+          {/* Trainingszeit */}
+          <div style={{marginTop:28,padding:"20px",borderRadius:14,border:`1px solid ${C.g200}`,background:"#FAFAFA"}}>
+            <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Wann trainierst du meistens?</div>
+            <div style={{fontSize:11,color:C.g400,marginBottom:12}}>Beeinflusst Supplement-Timing. Bis zu 2 Zeiten wählbar.</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+              {[{id:"morning",l:"Morgens (vor 10h)"},{id:"midday",l:"Mittags"},{id:"afternoon",l:"Nachmittags"},{id:"evening",l:"Abends (nach 18h)"}].map(t=>{
+                const currentTimes = Object.values(data)[0]?.trainingTimes||[];
+                const active = currentTimes.includes(t.id);
+                return (
+                  <button key={t.id}
+                    onClick={()=>setData(d=>{
+                      const nd={...d};
+                      Object.keys(nd).forEach(id=>{
+                        const times=nd[id].trainingTimes||[];
+                        let next;
+                        if(times.includes(t.id)) next=times.filter(x=>x!==t.id);
+                        else if(times.length>=2) next=[times[1],t.id]; // max 2: drop oldest
+                        else next=[...times,t.id];
+                        nd[id]={...nd[id],trainingTimes:next};
+                      });
+                      return nd;
+                    })}
+                    style={{padding:"7px 14px",borderRadius:20,border:`1.5px solid ${active?"#C8FF00":"#E0E0E0"}`,background:active?"#F5FFE0":"#fff",color:"#0A0A0A",fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                    {t.l}
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* Schweissrate */}
+          <div style={{marginTop:12,padding:"20px",borderRadius:14,border:`1px solid ${C.g200}`,background:"#FAFAFA"}}>
+            <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Wie stark schwitzt du beim Sport?</div>
+            <div style={{fontSize:11,color:C.g400,marginBottom:12}}>Bestimmt deinen Elektrolyt- und Flüssigkeitsbedarf.</div>
+            <div style={{display:"flex",gap:8}}>
+              {[{id:"low",l:"Wenig"},{id:"medium",l:"Normal"},{id:"high",l:"Stark"},{id:"very_high",l:"Sehr stark"}].map(s=>(
+                <button key={s.id}
+                  onClick={()=>setData(d=>{const nd={...d};Object.keys(nd).forEach(id=>{nd[id]={...nd[id],sweatRate:s.id}});return nd;})}
+                  style={{flex:1,padding:"8px 4px",borderRadius:10,border:`1.5px solid ${Object.values(data)[0]?.sweatRate===s.id?"#C8FF00":"#E0E0E0"}`,background:Object.values(data)[0]?.sweatRate===s.id?"#F5FFE0":"#fff",color:"#0A0A0A",fontSize:11,fontWeight:Object.values(data)[0]?.sweatRate===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",textAlign:"center"}}>
+                  {s.l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:24}}>
+            <button className="btn-ghost" onClick={onBack}>← Zurück</button>
+            <button className="btn btn-neon"
+              style={{opacity:(()=>{const d=Object.values(data)[0];return d?.trainingTimes?.length>0&&d?.sweatRate?1:.4})()}}
+              disabled={(()=>{const d=Object.values(data)[0];return !(d?.trainingTimes?.length>0&&d?.sweatRate);})()}
+              onClick={()=>{const d=Object.values(data)[0];if(d?.trainingTimes?.length>0&&d?.sweatRate)onNext(data);}}>
+              Weiter →
+            </button>
+          </div>
+          {(()=>{const d=Object.values(data)[0];const missing=[];if(!d?.trainingTimes?.length)missing.push("Trainingszeit");if(!d?.sweatRate)missing.push("Schweissrate");return missing.length>0?(<div style={{marginTop:8,textAlign:"right",fontSize:11,color:"#AAA"}}>Noch ausfüllen: {missing.join(", ")}</div>):null;})()}
         </div>
       </div>
     </div>
@@ -865,7 +1179,7 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
   const [platform,setPlatform]=useState(null);
   const [appleConnecting,setAppleConnecting]=useState(false);
   const [appleConnected,setAppleConnected]=useState(false);
-  const [form,setForm]=useState({firstname:"",lastname:"",email:"",country:"Schweiz",gender:"",birthyear:"",weight:"",height:""});
+  const [form,setForm]=useState({firstname:"",lastname:"",email:"",country:"Schweiz",gender:"",birthyear:"",weight:"",height:"",rhr:"",sleep:""});
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
 
   const handlePlatform=(id)=>{
@@ -873,163 +1187,80 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
     if(id==="apple"){
       setAppleConnecting(true);
       setTimeout(()=>{
-        // Simulate Apple Health data pull
-        setForm(f=>({...f,
-          firstname:"Kevin",
-          lastname:"Muster",
-          email:"kevin@beispiel.ch",
-          gender:"m",
-          birthyear:"1988",
-          height:"180",
-          weight:"76",
-          country:"Schweiz",
-        }));
-        setAppleConnecting(false);
-        setAppleConnected(true);
+        setForm(f=>({...f,firstname:"Kevin",lastname:"Muster",email:"kevin@beispiel.ch",gender:"m",birthyear:"1988",height:"180",weight:"76",country:"Schweiz"}));
+        setAppleConnecting(false); setAppleConnected(true);
       },1800);
-    } else {
-      setAppleConnected(false);
-    }
+    } else { setAppleConnected(false); }
   };
-
-  const isManual=platform==="manual";
-  const isAuto=platform&&platform!=="manual";
 
   const age=form.birthyear?new Date().getFullYear()-+form.birthyear:null;
   const bmr=calcBMR(form.gender,form.weight,form.height,age);
-
+  const valid=form.firstname&&form.lastname&&form.email.includes("@")&&form.email.includes(".")&&platform&&form.gender&&form.birthyear&&form.weight&&form.height;
   const inp=(val)=>({width:"100%",padding:"12px 14px",border:`1.5px solid ${val?C.neon:C.g200}`,borderRadius:11,fontSize:14,background:val?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif"});
   const sel={width:"100%",padding:"12px 14px",border:`1.5px solid ${C.g200}`,borderRadius:11,fontSize:14,background:C.white,color:C.black,fontFamily:"Inter,sans-serif",appearance:"none"};
-
-  const valid=form.firstname&&form.lastname&&form.email.includes("@")&&form.email.includes(".")&&platform;
 
   return (
     <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.white,padding:"40px 24px 60px"}}>
       <div style={{width:"100%",maxWidth:520}}>
-        <Progress step={3} total={5}/>
+        <Progress step={3} total={6}/>
         <div className="su">
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Deine Daten.</h2>
-          <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Gib deine Personalien & Daten ein. Mit deiner E-Mail speichern wir dein Profil, du kannst es jederzeit per Link aufrufen, ohne Passwort.</p>
-
-          {/* Plattformen 3-spaltig kompakt */}
+          <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Körperdaten & Kontakt. Im nächsten Schritt folgen Ziel & Lebensstil.</p>
           <div style={{marginBottom:24}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Welche Plattform nutzt du?</div>
-            <div style={{fontSize:12,color:C.g400,marginBottom:10,lineHeight:1.5}}>Wenn du eine Plattform verbindest, beziehen wir Gewicht, Grösse, HRV und weitere Körperdaten automatisch — du musst nichts manuell eingeben.</div>
+            <div style={{fontSize:12,color:C.g400,marginBottom:10,lineHeight:1.5}}>Verbinde eine Plattform um Körperdaten automatisch zu importieren.</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:7}}>
               {PLATFORMS.map(p=>(
                 <div key={p.id} onClick={()=>handlePlatform(p.id)}
                   style={{padding:"11px 10px",borderRadius:11,cursor:"pointer",transition:"all .14s",border:`1.5px solid ${platform===p.id?C.neon:C.g200}`,background:platform===p.id?C.neonDim:C.white,textAlign:"center",position:"relative"}}>
                   <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:3}}>{p.label}</div>
                   <div style={{fontSize:10,color:C.g400,lineHeight:1.3}}>{p.desc}</div>
-                  {p.id==="apple"&&appleConnecting&&(
-                    <div style={{position:"absolute",inset:0,background:"rgba(255,255,255,.9)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:4}}>
-                      <div style={{width:16,height:16,border:`2px solid ${C.neon}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/>
-                      <div style={{fontSize:9,color:C.g600}}>Verbinden...</div>
-                    </div>
-                  )}
-                  {p.id==="apple"&&appleConnected&&!appleConnecting&&(
-                    <div style={{marginTop:5,fontSize:9,color:"#27AE60",fontWeight:600}}>✓ Daten importiert</div>
-                  )}
+                  {p.id==="apple"&&appleConnecting&&(<div style={{position:"absolute",inset:0,background:"rgba(255,255,255,.9)",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:4}}><div style={{width:16,height:16,border:`2px solid ${C.neon}`,borderTopColor:"transparent",borderRadius:"50%",animation:"spin 0.8s linear infinite"}}/><div style={{fontSize:9,color:C.g600}}>Verbinden...</div></div>)}
+                  {p.id==="apple"&&appleConnected&&!appleConnecting&&(<div style={{marginTop:5,fontSize:9,color:"#27AE60",fontWeight:600}}>✓ Daten importiert</div>)}
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Name */}
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
-            <div>
-              <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Vorname *</div>
-              <input type="text" value={form.firstname} onChange={e=>set("firstname",e.target.value)} placeholder="Max" style={inp(form.firstname)}/>
-            </div>
-            <div>
-              <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Nachname *</div>
-              <input type="text" value={form.lastname} onChange={e=>set("lastname",e.target.value)} placeholder="Muster" style={inp(form.lastname)}/>
-            </div>
+            <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Vorname *</div><input type="text" value={form.firstname} onChange={e=>set("firstname",e.target.value)} placeholder="Max" style={inp(form.firstname)}/></div>
+            <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Nachname *</div><input type="text" value={form.lastname} onChange={e=>set("lastname",e.target.value)} placeholder="Muster" style={inp(form.lastname)}/></div>
           </div>
-
-          {/* Herkunft direkt nach Name */}
           <div style={{marginBottom:10}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Herkunft</div>
-            <select value={form.country} onChange={e=>set("country",e.target.value)} style={sel}>
-              {COUNTRIES.map(c=><option key={c.v} value={c.v}>{c.flag} {c.v}</option>)}
-            </select>
+            <select value={form.country} onChange={e=>set("country",e.target.value)} style={sel}>{COUNTRIES.map(c=><option key={c.v} value={c.v}>{c.flag} {c.v}</option>)}</select>
           </div>
-
-          {/* Körperdaten */}
-          {(isManual||platform)&&(
-            <>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
-                <div>
-                  <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geschlecht</div>
-                  <select value={form.gender} onChange={e=>set("gender",e.target.value)} style={sel}>
-                    <option value="">— wählen</option>
-                    <option value="m">Männlich</option>
-                    <option value="f">Weiblich</option>
-                  </select>
-                </div>
-                <div>
-                  <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geburtsjahr</div>
-                  <input type="number" value={form.birthyear} onChange={e=>set("birthyear",e.target.value)} placeholder="Eingeben" min="1940" max={new Date().getFullYear()-16} style={{...inp(form.birthyear),width:"100%"}}/>
-                </div>
-                <div>
-                  <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Grösse (cm)</div>
-                  <input type="number" value={form.height} onChange={e=>set("height",e.target.value)} placeholder="Eingeben" style={{...inp(form.height),width:"100%"}}/>
-                </div>
+          {platform&&(<>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
+              <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geschlecht *</div><select value={form.gender} onChange={e=>set("gender",e.target.value)} style={sel}><option value="">— wählen</option><option value="m">Männlich</option><option value="f">Weiblich</option></select></div>
+              <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geburtsjahr *</div><input type="number" value={form.birthyear} onChange={e=>set("birthyear",e.target.value)} placeholder="1990" min="1940" max={new Date().getFullYear()-16} style={{...inp(form.birthyear),width:"100%"}}/></div>
+              <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Grösse (cm) *</div><input type="number" value={form.height} onChange={e=>set("height",e.target.value)} placeholder="180" style={{...inp(form.height),width:"100%"}}/></div>
+            </div>
+            <div style={{marginBottom:10}}><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Gewicht (kg) *</div><input type="number" value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="75" style={{...inp(form.weight),width:"100%"}}/></div>
+            <div style={{marginBottom:10,padding:"12px 14px",background:C.g100,borderRadius:11,border:`1px solid ${C.g200}`}}>
+              <div style={{fontSize:11,color:C.g400,marginBottom:10}}>Optional — für genauere VO₂max & Erholungs-Berechnungen</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Ruhepuls (bpm)</div><input type="number" value={form.rhr||""} onChange={e=>set("rhr",e.target.value)} placeholder="52" min="30" max="100" style={{...inp(form.rhr),width:"100%"}}/></div>
+                <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Schlaf (h/Nacht)</div><input type="number" value={form.sleep||""} onChange={e=>set("sleep",e.target.value)} placeholder="7.5" min="4" max="12" step="0.5" style={{...inp(form.sleep),width:"100%"}}/></div>
               </div>
-              <div style={{marginBottom:10}}>
-                <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Gewicht (kg)</div>
-                <input type="number" value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="Eingeben" style={{...inp(form.weight),width:"100%"}}/>
-              </div>
-
-              {/* Optional performance fields */}
-              <div style={{marginBottom:10,padding:"12px 14px",background:C.g100,borderRadius:11,border:`1px solid ${C.g200}`}}>
-                <div style={{fontSize:11,color:C.g400,marginBottom:10}}>Optional — für genauere VO₂max & Erholungs-Berechnungen</div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-                  <div>
-                    <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Ruhepuls (bpm)</div>
-                    <input type="number" value={form.rhr||""} onChange={e=>set("rhr",e.target.value)} placeholder="z.B. 52" min="30" max="100" style={{...inp(form.rhr),width:"100%"}}/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Schlaf (Stunden/Nacht)</div>
-                    <input type="number" value={form.sleep||""} onChange={e=>set("sleep",e.target.value)} placeholder="z.B. 7.5" min="4" max="12" step="0.5" style={{...inp(form.sleep),width:"100%"}}/>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Live kcal preview */}
+            </div>
+          </>)}
           {bmr&&(
             <div style={{marginTop:4,marginBottom:10,padding:"16px 18px",background:C.neon,borderRadius:13,animation:"fadeUp .4s ease forwards"}}>
               <div className="mono" style={{color:"rgba(0,0,0,.5)",marginBottom:10}}>Erste Schätzung · wird nach Analyse präzisiert</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-                <div>
-                  <div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Grundumsatz (Ruhe)</div>
-                  <div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr.toLocaleString("de-CH")}</div>
-                  <div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div>
-                </div>
-                <div>
-                  <div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div>
-                  <div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{Math.round(bmr*1.65).toLocaleString("de-CH")}</div>
-                  <div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div>
-                </div>
+                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Grundumsatz (Ruhe)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr.toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
+                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{Math.round(bmr*1.65).toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
               </div>
-              <div style={{marginTop:10,fontSize:11,color:"rgba(0,0,0,.55)",lineHeight:1.5}}>Genaue Werte — nach Sportart, Trainingstag und Ruhephase — werden nach der Analyse angezeigt.</div>
             </div>
           )}
-
-          {/* E-Mail am Schluss */}
-          <div style={{marginBottom:4}}>
+          <div style={{marginBottom:24}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>E-Mail *</div>
             <input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="deine@email.ch" style={inp(form.email.includes("@")&&form.email.includes("."))}/>
-            <div style={{fontSize:11,color:C.g400,marginTop:5}}>Wir speichern dein Profil unter dieser Adresse — du kannst es jederzeit per Link abrufen, kein Passwort nötig.</div>
+            <div style={{fontSize:11,color:C.g400,marginTop:5}}>Kein Passwort nötig — wir senden dir bei Bedarf einen Link.</div>
           </div>
-
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:32}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8}}>
             <button className="btn-ghost" onClick={onBack}>← Zurück</button>
-            <button className="btn btn-black" style={{opacity:valid?1:.4}} disabled={!valid} onClick={()=>valid&&onNext({...form,platform})}>
-              Weiter →
-            </button>
+            <button className="btn btn-neon" style={{opacity:valid?1:.4}} disabled={!valid} onClick={()=>valid&&onNext({...form,platform})}>Weiter →</button>
           </div>
         </div>
       </div>
@@ -1037,7 +1268,283 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
   );
 }
 
+// ─── STEP 4: LEBENSSTIL ───────────────────────────────────────────────────────
+
+function StepLebensstil({onNext, onBack}) {
+  const [form,setForm]=useState({goal:"",injuries:[],stressLevel:null,dietQuality:null,altitude:null,recoveryStatus:null,currentSupps:[],medications:[]});
+  const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const toggleArr=(k,v)=>setForm(f=>{
+    const curr=(f[k]||[]).filter(x=>x!=="none");
+    if(v==="none") return {...f,[k]:["none"]};
+    return {...f,[k]:curr.includes(v)?curr.filter(x=>x!==v):[...curr,v]};
+  });
+
+  const valid=form.goal&&form.stressLevel&&form.dietQuality&&form.altitude&&form.recoveryStatus&&form.currentSupps.length>0&&form.medications.length>0;
+
+  // Shared styles
+  const card={background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:"18px 18px"};
+  const Q=({label,sub})=>(<div style={{marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:C.black,letterSpacing:"-.01em"}}>{label}</div>{sub&&<div style={{fontSize:11,color:C.g400,marginTop:2,lineHeight:1.4}}>{sub}</div>}</div>);
+  const ddStyle=(active)=>({width:"100%",padding:"10px 12px",border:`1.5px solid ${active?"#C8FF00":C.g200}`,borderRadius:10,fontSize:13,fontFamily:"Inter,sans-serif",background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,appearance:"none",cursor:"pointer"});
+
+  // Compact tile button — used for 2×N grids
+  const Tile=({id,label,desc,active,onClick,multi=false})=>(
+    <button onClick={onClick} style={{
+      padding:"11px 13px",borderRadius:11,
+      border:`1.5px solid ${active?"#C8FF00":C.g200}`,
+      background:active?"#F5FFE0":C.white,
+      cursor:"pointer",fontFamily:"Inter,sans-serif",
+      textAlign:"left",transition:"all .13s",
+      display:"flex",flexDirection:"column",
+      position:"relative",
+    }}>
+      {multi&&active&&<div style={{position:"absolute",top:8,right:9,width:14,height:14,borderRadius:"50%",background:"#C8FF00",display:"flex",alignItems:"center",justifyContent:"center"}}>
+        <svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      </div>}
+      <div style={{fontSize:12,fontWeight:600,color:active?C.black:C.black,lineHeight:1.3,paddingRight:multi&&active?18:0}}>{label}</div>
+      {desc&&<div style={{fontSize:10,color:active?"#555":C.g400,marginTop:3,lineHeight:1.4}}>{desc}</div>}
+    </button>
+  );
+
+  // Pill chip — for multi-select tags
+  const Chip=({label,active,onClick})=>(
+    <button onClick={onClick} style={{
+      padding:"6px 13px",borderRadius:100,
+      border:`1.5px solid ${active?"#C8FF00":C.g200}`,
+      background:active?"#F5FFE0":C.white,
+      color:active?"#0A0A0A":C.g600,
+      fontSize:12,fontWeight:active?600:400,
+      cursor:"pointer",fontFamily:"Inter,sans-serif",
+      transition:"all .13s",whiteSpace:"nowrap",
+    }}>{label}</button>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",display:"flex",alignItems:"flex-start",justifyContent:"center",background:C.off,padding:"40px 24px 80px"}}>
+      <div style={{width:"100%",maxWidth:520}}>
+        <Progress step={4} total={6}/>
+        <div className="su">
+          <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2}}>Dein Lebensstil.</h2>
+          <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Damit wir deine Empfehlungen wirklich präzise auf dich zuschneiden können.</p>
+
+          {/* ROW 1: Ziel (full width — 6 options in 2×3 grid) */}
+          <div style={{...card,marginBottom:10}}>
+            <Q label="Primäres Ziel"/>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+              {[
+                {id:"performance", l:"Leistung steigern",     d:"Schneller, stärker, weiter"},
+                {id:"muscle",      l:"Muskelaufbau",           d:"Muskeln aufbauen & definieren"},
+                {id:"endurance",   l:"Ausdauer verbessern",    d:"Mehr Volumen, längere Einheiten"},
+                {id:"weightloss",  l:"Gewicht reduzieren",     d:"Fett verlieren, lean bleiben"},
+                {id:"health",      l:"Gesundheit & Longevity", d:"Vitalität, Prävention"},
+                {id:"recovery",    l:"Regeneration",           d:"Erholung & Prävention"},
+              ].map(o=><Tile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.goal===o.id} onClick={()=>set("goal",o.id)}/>)}
+            </div>
+          </div>
+
+          {/* ROW 2: Erholungsstatus (full width — 4 options in 2×2 grid) */}
+          <div style={{...card,marginBottom:10}}>
+            <Q label="Aktueller Erholungsstatus" sub="Beeinflusst Recovery-Priorität und Magnesiumbedarf."/>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:7}}>
+              {[
+                {id:"excellent", l:"Top-Form",              d:"Gut erholt, leistungsbereit"},
+                {id:"good",      l:"Normal",                d:"Kein Defizit, solide Basis"},
+                {id:"tired",     l:"Akkumulierte Müdigkeit",d:"Harte Woche, leicht überlastet"},
+                {id:"recovery",  l:"Verletzung / Pause",   d:"Komme von Verletzung oder Pause"},
+              ].map(o=><Tile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.recoveryStatus===o.id} onClick={()=>set("recoveryStatus",o.id)}/>)}
+            </div>
+          </div>
+
+          {/* ROW 3: Stress + Ernährung side by side */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+            <div style={{...card}}>
+              <Q label="Stresslevel" sub="Wie belastet bist du im Alltag ausserhalb des Sports?"/>
+              <select value={form.stressLevel||""} onChange={e=>set("stressLevel",+e.target.value||null)} style={ddStyle(form.stressLevel)}>
+                <option value="">— wählen</option>
+                <option value="1">Sehr niedrig</option>
+                <option value="2">Niedrig</option>
+                <option value="3">Mittel</option>
+                <option value="4">Hoch</option>
+                <option value="5">Sehr hoch</option>
+              </select>
+            </div>
+            <div style={{...card}}>
+              <Q label="Ernährung" sub="Wie ausgewogen isst du im Alltag?"/>
+              <select value={form.dietQuality||""} onChange={e=>set("dietQuality",e.target.value||null)} style={ddStyle(form.dietQuality)}>
+                <option value="">— wählen</option>
+                <option value="excellent">Sehr ausgewogen</option>
+                <option value="good">Gut</option>
+                <option value="average">Durchschnittlich</option>
+                <option value="poor">Verbesserungswürdig</option>
+              </select>
+            </div>
+          </div>
+
+          {/* ROW 4: Höhe + Verletzungen side by side */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+            <div style={{...card}}>
+              <Q label="Trainingshöhe" sub="Wo lebst und trainierst du meistens?"/>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {[{id:"low",l:"0–500m",d:"Flachland"},{id:"medium",l:"500–1500m",d:"Mittelland"},{id:"high",l:"1500–2500m",d:"Alpen"},{id:"alpine",l:"2500m+",d:"Hochgebirge"}].map(o=>(
+                  <button key={o.id} onClick={()=>set("altitude",o.id)}
+                    style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${form.altitude===o.id?"#C8FF00":C.g200}`,background:form.altitude===o.id?"#F5FFE0":C.white,color:form.altitude===o.id?"#0A0A0A":C.g600,fontSize:11,fontWeight:form.altitude===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <span style={{fontWeight:600}}>{o.l}</span>
+                    <span style={{fontSize:10,opacity:.7}}>{o.d}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{...card}}>
+              <Q label="Verletzungen?" sub="Aktuelle Beschwerden, mehrere möglich."/>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {[{id:"none",l:"Keine"},{id:"knee",l:"Knie"},{id:"back",l:"Rücken"},{id:"shoulder",l:"Schulter"},{id:"ankle",l:"Knöchel / Fuss"},{id:"muscle",l:"Muskel"},{id:"tendon",l:"Sehnen"}].map(o=>{
+                  const active=(form.injuries||[]).includes(o.id);
+                  return (
+                    <button key={o.id} onClick={()=>{if(o.id==="none"){set("injuries",active?[]:["none"]);return;}const curr=(form.injuries||[]).filter(x=>x!=="none");set("injuries",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
+                      style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
+                      {o.l}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* ROW 5: Supplements + Medikamente side by side */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+            <div style={{...card}}>
+              <Q label="Aktuelle Supplements?" sub="Verhindert Doppelempfehlungen, mehrere möglich."/>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {[{id:"none",l:"Keine"},{id:"kreatin",l:"Kreatin"},{id:"protein",l:"Protein / Whey"},{id:"vitd",l:"Vitamin D"},{id:"omega3",l:"Omega-3"},{id:"magnesium",l:"Magnesium"},{id:"koffein",l:"Koffein / Pre-WO"},{id:"eisen",l:"Eisen"},{id:"zink",l:"Zink"},{id:"ashwa",l:"Ashwagandha"},{id:"collagen",l:"Kollagen"},{id:"beta_ala",l:"Beta-Alanin"}].map(o=>{
+                  const active=(form.currentSupps||[]).includes(o.id);
+                  return (
+                    <button key={o.id} onClick={()=>{if(o.id==="none"){set("currentSupps",active?[]:["none"]);return;}const curr=(form.currentSupps||[]).filter(x=>x!=="none");set("currentSupps",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
+                      style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
+                      {o.l}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <div style={{...card}}>
+              <Q label="Medikamente?" sub="Für Warnhinweise bei Supplements, mehrere möglich."/>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"}].map(o=>{
+                  const active=(form.medications||[]).includes(o.id);
+                  return (
+                    <button key={o.id} onClick={()=>{if(o.id==="none"){set("medications",active?[]:["none"]);return;}const curr=(form.medications||[]).filter(x=>x!=="none");set("medications",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
+                      style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
+                      {o.l}
+                    </button>
+                  );
+                })}
+                {(form.medications||[]).some(m=>m!=="none")&&(form.medications||[]).length>0&&(
+                  <div style={{marginTop:4,padding:"8px 10px",background:"#FFF8E1",borderRadius:8,border:"1px solid #FFE082"}}>
+                    <div style={{fontSize:10,color:"#856404",lineHeight:1.5}}>⚠ Warnhinweise erscheinen direkt beim Supplement.</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:16}}>
+            <button className="btn-ghost" onClick={onBack}>← Zurück</button>
+            <button className="btn btn-neon" style={{opacity:valid?1:.4}} disabled={!valid} onClick={()=>valid&&onNext(form)}>Weiter →</button>
+          </div>
+          {!valid&&(()=>{const m=[];if(!form.goal)m.push("Ziel");if(!form.recoveryStatus)m.push("Erholung");if(!form.stressLevel)m.push("Stress");if(!form.dietQuality)m.push("Ernährung");if(!form.altitude)m.push("Höhe");if(!form.currentSupps.length)m.push("Supplements");if(!form.medications.length)m.push("Medikamente");return m.length?<div style={{marginTop:10,fontSize:12,color:C.g400,textAlign:"right"}}>{m.join(" · ")}</div>:null;})()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── CALCULATIONS ─────────────────────────────────────────────────────────────
+
+// ─── SUB-SPORT PROFILES ───────────────────────────────────────────────────────
+// Differenzierte Werte pro Sub-Sportart. Felder:
+//   met: {low, medium, high, competition}  — überschreibt SPORT_MET
+//   protType: "endurance"|"strength"|"team"|"skill"  — überschreibt SPORT_TYPE_MAP
+//   suppKey: key in SPORT_SUPP  — überschreibt getSupplements Mapping
+//   nutritionKey: key in SPORT_NUTRITION  — überschreibt getSportNutrition
+//   sodiumPerL: number  — überschreibt SODIUM_PER_L
+//   ironRisk: bool  — überschreibt HIGH_IRON_RISK check
+const SUB_SPORT_PROFILE = {
+  // ─── CYCLING ────────────────────────────────────────────────────────────────
+  cycling_road:   {met:{low:4.5,medium:8.0,high:11.0,competition:14.5}, protType:"endurance", suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:950, ironRisk:true},
+  cycling_gravel: {met:{low:4.0,medium:7.5,high:10.5,competition:13.5}, protType:"endurance", suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:900, ironRisk:true},
+  cycling_mtb_xc: {met:{low:5.0,medium:8.5,high:12.0,competition:15.0}, protType:"strength",  suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:1000,ironRisk:true},
+  cycling_mtb_end:{met:{low:4.5,medium:7.5,high:11.0,competition:13.0}, protType:"strength",  suppKey:"cycling_mtb",  nutritionKey:"cycling",      sodiumPerL:900, ironRisk:false},
+  cycling_mtb_dh: {met:{low:3.5,medium:5.5,high:8.0, competition:10.0}, protType:"strength",  suppKey:"cycling_mtb",  nutritionKey:"cycling_dh",   sodiumPerL:750, ironRisk:false},
+  cycling_track:  {met:{low:4.0,medium:7.0,high:11.5,competition:15.0}, protType:"strength",  suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:900, ironRisk:true},
+  cycling_ebike:  {met:{low:2.5,medium:4.0,high:6.0, competition:8.0},  protType:"endurance", suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:700, ironRisk:false},
+  // ─── RUNNING ────────────────────────────────────────────────────────────────
+  run_road:       {met:{low:5.5,medium:9.0,high:12.5,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
+  // Road Running — distanzspezifisch
+  run_road_5k:    {met:{low:5.5,medium:10.0,high:14.0,competition:17.0}, protType:"strength",  suppKey:"running",      nutritionKey:"run_short",    sodiumPerL:800, ironRisk:false},
+  run_road_10k:   {met:{low:5.5,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_short",    sodiumPerL:850, ironRisk:true},
+  run_road_hm:    {met:{low:5.0,medium:9.0, high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"run_hm",       sodiumPerL:900, ironRisk:true},
+  run_road_m:     {met:{low:4.5,medium:8.5, high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_marathon",  sodiumPerL:950, ironRisk:true},
+  run_road_ultra: {met:{low:4.0,medium:7.5, high:10.5,competition:13.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_ultra",    sodiumPerL:1100,ironRisk:true},
+  // Trail Running
+  run_trail:      {met:{low:5.0,medium:8.5,high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"running",      sodiumPerL:950, ironRisk:true},
+  run_trail_short:{met:{low:5.0,medium:8.5, high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_hm",       sodiumPerL:950, ironRisk:true},
+  run_trail_ultra:{met:{low:4.0,medium:7.5, high:10.0,competition:12.5}, protType:"endurance", suppKey:"running",      nutritionKey:"run_ultra",    sodiumPerL:1100,ironRisk:true},
+  run_track:      {met:{low:5.0,medium:9.5,high:14.0,competition:17.0}, protType:"strength",  suppKey:"running",      nutritionKey:"running",      sodiumPerL:850, ironRisk:true},
+  // Triathlon — distanzspezifisch
+  tri_sprint:     {met:{low:6.0,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_sprint",   sodiumPerL:850, ironRisk:true},
+  tri_olympic:    {met:{low:6.0,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_olympic",  sodiumPerL:900, ironRisk:true},
+  tri_half:       {met:{low:5.5,medium:9.0, high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_half",     sodiumPerL:950, ironRisk:true},
+  tri_full:       {met:{low:5.0,medium:8.5, high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_full",     sodiumPerL:1000,ironRisk:true},
+  tri_ultra:      {met:{low:4.5,medium:8.0, high:11.0,competition:13.5}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_ultra",    sodiumPerL:1100,ironRisk:true},
+  // Schwimmen — distanzspezifisch
+  swim_sprint:    {met:{low:5.0,medium:7.5, high:10.0,competition:12.5}, protType:"strength",  suppKey:"running",      nutritionKey:"swim_sprint",  sodiumPerL:600, ironRisk:false},
+  swim_mid:       {met:{low:5.0,medium:8.0, high:11.0,competition:13.5}, protType:"endurance", suppKey:"running",      nutritionKey:"swim_mid",     sodiumPerL:650, ironRisk:true},
+  swim_open:      {met:{low:5.0,medium:8.5, high:11.5,competition:14.0}, protType:"endurance", suppKey:"running",      nutritionKey:"swim_open",    sodiumPerL:750, ironRisk:true},
+  // ─── FITNESS ────────────────────────────────────────────────────────────────
+  hyrox:          {met:{low:5.0,medium:8.0,high:11.0,competition:13.5}, protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness",      sodiumPerL:1000,ironRisk:false},
+  krafttraining:  {met:{low:3.5,medium:5.5,high:7.5, competition:9.5},  protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:800, ironRisk:false},
+  weightlifting:  {met:{low:3.5,medium:5.0,high:7.0, competition:9.0},  protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:800, ironRisk:false},
+  powerlifting:   {met:{low:3.0,medium:4.5,high:6.5, competition:8.5},  protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:750, ironRisk:false},
+  crossfit:       {met:{low:5.0,medium:8.0,high:11.5,competition:14.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness",      sodiumPerL:1000,ironRisk:false},
+  // ─── SKI ────────────────────────────────────────────────────────────────────
+  ski_alpin:      {met:{low:4.5,medium:7.0,high:9.5, competition:12.0}, protType:"strength",  suppKey:"ski",          nutritionKey:"ski",          sodiumPerL:700, ironRisk:false},
+  ski_freeride:   {met:{low:4.0,medium:6.5,high:9.0, competition:11.0}, protType:"strength",  suppKey:"ski",          nutritionKey:"ski",          sodiumPerL:650, ironRisk:false},
+  ski_touring:    {met:{low:6.0,medium:9.0,high:12.0,competition:14.0}, protType:"endurance", suppKey:"ski_touring",  nutritionKey:"ski_touring",  sodiumPerL:900, ironRisk:true},
+  snowboard:      {met:{low:3.5,medium:6.0,high:8.5, competition:11.0}, protType:"strength",  suppKey:"ski",          nutritionKey:"ski",          sodiumPerL:650, ironRisk:false},
+  // ─── LANGLAUF distanzspezifisch ─────────────────────────────────────────────
+  langlauf_klassisch:         {met:{low:6.5,medium:10.5,high:14.0,competition:17.5},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf",       sodiumPerL:900, ironRisk:true},
+  langlauf_klassisch_kurz:    {met:{low:7.0,medium:11.5,high:15.0,competition:18.0},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_kurz",  sodiumPerL:850, ironRisk:true},
+  langlauf_klassisch_mittel:  {met:{low:6.5,medium:10.5,high:14.0,competition:17.0},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_mittel",sodiumPerL:900, ironRisk:true},
+  langlauf_klassisch_lang:    {met:{low:6.0,medium:9.5, high:13.0,competition:16.0},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_lang",  sodiumPerL:1000,ironRisk:true},
+  langlauf_skating:           {met:{low:7.0,medium:11.0,high:14.5,competition:18.0},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf",       sodiumPerL:950, ironRisk:true},
+  langlauf_skating_kurz:      {met:{low:7.5,medium:12.0,high:15.5,competition:18.5},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_kurz",  sodiumPerL:900, ironRisk:true},
+  langlauf_skating_mittel:    {met:{low:7.0,medium:11.0,high:14.5,competition:17.5},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_mittel",sodiumPerL:950, ironRisk:true},
+  langlauf_skating_lang:      {met:{low:6.5,medium:10.0,high:13.5,competition:16.5},protType:"endurance",suppKey:"langlauf",nutritionKey:"langlauf_lang",  sodiumPerL:1050,ironRisk:true},
+  biathlon:          {met:{low:6.0,medium:9.5, high:13.0,competition:16.0},protType:"endurance",suppKey:"langlauf",   nutritionKey:"langlauf",     sodiumPerL:850, ironRisk:true},
+  // ─── TENNIS / PADEL ─────────────────────────────────────────────────────────
+  tennis:         {met:{low:4.0,medium:6.5,high:8.5, competition:10.5}, protType:"skill",     suppKey:"tennis",       nutritionKey:"tennis",       sodiumPerL:800, ironRisk:false},
+  padel:          {met:{low:3.5,medium:6.0,high:8.0, competition:10.0}, protType:"skill",     suppKey:"tennis",       nutritionKey:"tennis",       sodiumPerL:750, ironRisk:false},
+  // ─── LEICHTATHLETIK ─────────────────────────────────────────────────────────
+  la_sprint:      {met:{low:5.0,medium:9.0,high:13.0,competition:16.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
+  la_mittel:      {met:{low:5.5,medium:9.5,high:13.0,competition:16.0}, protType:"strength",  suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
+  la_lang:        {met:{low:5.5,medium:9.0,high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
+  la_wurf:        {met:{low:3.0,medium:5.0,high:7.0, competition:9.0},  protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:700, ironRisk:false},
+  la_sprung:      {met:{low:4.0,medium:6.5,high:9.0, competition:11.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:750, ironRisk:false},
+  la_mehr:        {met:{low:5.0,medium:8.0,high:11.0,competition:13.5}, protType:"strength",  suppKey:"fitness",      nutritionKey:"running",      sodiumPerL:850, ironRisk:false},
+  // ─── KAMPFSPORT ─────────────────────────────────────────────────────────────
+  boxing:         {met:{low:5.0,medium:8.5,high:12.0,competition:14.0}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:1000,ironRisk:false},
+  mma:            {met:{low:5.5,medium:9.0,high:12.5,competition:14.5}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:1050,ironRisk:false},
+  wrestling:      {met:{low:5.0,medium:8.5,high:12.0,competition:14.0}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:1000,ironRisk:false},
+  judo:           {met:{low:4.5,medium:8.0,high:11.5,competition:13.5}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:950, ironRisk:false},
+  karate:         {met:{low:4.5,medium:7.5,high:11.0,competition:13.0}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:900, ironRisk:false},
+  bjj:            {met:{low:4.5,medium:8.0,high:11.5,competition:13.5}, protType:"strength",  suppKey:"kampfsport",   nutritionKey:"kampfsport",   sodiumPerL:950, ironRisk:false},
+  // ─── HANDBALL / VOLLEYBALL ──────────────────────────────────────────────────
+  handball:       {met:{low:5.0,medium:7.5,high:10.0,competition:12.0}, protType:"team",      suppKey:"fussball",     nutritionKey:"team_sport",   sodiumPerL:900, ironRisk:false},
+  volleyball:     {met:{low:4.0,medium:6.5,high:9.0, competition:11.0}, protType:"team",      suppKey:"fussball",     nutritionKey:"team_sport",   sodiumPerL:800, ironRisk:false},
+  beachvolley:    {met:{low:5.0,medium:7.5,high:10.0,competition:12.0}, protType:"team",      suppKey:"fussball",     nutritionKey:"team_sport",   sodiumPerL:950, ironRisk:false},
+};
+
+// Helper: gibt Sub-Profil zurück wenn vorhanden, sonst null
+function getSubProfile(sportId) { return SUB_SPORT_PROFILE[sportId]||null; }
 
 const SPORT_MET = {
   cycling:          {low:4.0, medium:7.5, high:10.5, competition:14.0},
@@ -1067,6 +1574,28 @@ const PROTEIN_NEED = {
   team:     {low:1.4, medium:1.6, high:1.8, competition:2.0},
   skill:    {low:1.2, medium:1.4, high:1.5, competition:1.6},
 };
+const SPORT_CONTEXT = {
+  cycling_ebike: {
+    note: "E-Bike reduziert den Energieaufwand um ca. 60% gegenüber Rennrad — trotzdem echter Kalorienverbrauch, Schweiss und Elektrolytbedarf.",
+    protein_note: "Auch E-Bike-Fahrer brauchen Protein für Muskelerhalt und Regeneration.",
+    carb_note: "Geringerer Kohlenhydratbedarf als konventionelles Radfahren — aber Elektrolyte bleiben wichtig.",
+  },
+  cycling_mtb_xc: {
+    note: "MTB XC kombiniert Ausdauer und explosive Kraft — einer der energieintensivsten Radsport-Disziplinen.",
+    carb_note: "Lange XC-Rennen brauchen kontinuierliche Kohlenhydratzufuhr wie beim Strassenrad.",
+  },
+  cycling_mtb_end: {
+    note: "Enduro verbindet technische Abfahrten mit kraftintensiven Uphills — asymmetrische Belastung mit hohem Regenerationsbedarf.",
+    protein_note: "Mehr Protein als XC — explosive Muskelbeanspruchung erhöht den Reparaturbedarf.",
+    recovery_note: "Gelenk- und Sehnenbelastung durch technisches Terrain: Kollagen + Omega-3 besonders wertvoll.",
+  },
+  cycling_mtb_dh: {
+    note: "Downhill ist anaerob und explosiv — kurze, maximale Anstrengungen mit hohem Muskelstress.",
+    protein_note: "Kraftsport-ähnlicher Proteinbedarf — kurze Runs, hohe neuromuskuläre Belastung.",
+    carb_note: "Weniger Ausdauer-Carbs, mehr Kreatin und schnelle Energiequellen für explosive Wiederholungsläufe.",
+  },
+};
+
 const SPORT_TYPE_MAP = {
   cycling:"endurance", running:"endurance", triathlon:"endurance", schwimmen:"endurance", langlauf:"endurance",
   fitness:"strength",
@@ -1094,59 +1623,221 @@ function calcPro(profilData, trainingData, sportData) {
   const gender=profilData?.gender||"m", w=+profilData?.weight||75, h=+profilData?.height||175;
   const age=profilData?.birthyear?new Date().getFullYear()-+profilData.birthyear:30;
   const isFemale=gender==="f";
+  const goal=profilData?.goal||"performance";
+  const stressLevel=+profilData?.stressLevel||3; // 1-5
+  const dietQuality=profilData?.dietQuality||"good"; // excellent/good/average/poor
+  const altitude=profilData?.altitude||"low"; // low/medium/high/alpine
+  const injuries=profilData?.injuries||[];
+  const recoveryStatus=profilData?.recoveryStatus||"good"; // excellent/good/tired/recovery
+  const currentSupps=profilData?.currentSupps||[]; // already taking
+  const medications=profilData?.medications||[]; // medication categories
+  const monthlyBudget=profilData?.monthlyBudget||"medium"; // low/medium/high/max
   const bmr=Math.round(calcBMRfn(gender,w,h,age));
   if(healthOnly) return {bmr,withTraining:Math.round(bmr*1.2),trainingExtra:Math.round(bmr*0.2),
     restDay:bmr,trainingDay:Math.round(bmr*1.2),proteinMin:Math.round(w*1.2),proteinMax:Math.round(w*1.4),
     carbsG:Math.round(w*3),natriumMg:0,magnesiumMg:300,sweatLitresPerSession:0,ironRisk:isFemale,isFemale,w,
     waterMl:Math.round(w*35),fatBurnMin:Math.round((220-age)*0.60),fatBurnMax:Math.round((220-age)*0.70)};
+
   let totalKcal=0, totalSweat=0, totalNa=0, totalMg=0, maxProt=0, maxCarb=0, ironRisk=isFemale, totalDays=0;
+  let primaryTrainingTime="mixed";
+
+  // Derive the most specific sport ID to use for calculations
+  // If user selected a sub-sport (e.g. cycling_road), use that profile; otherwise use parent
+  function resolveSubId(parentId, sportDataRef) {
+    const subSel = sportDataRef?.subSel || {};
+    const childSel = sportDataRef?.childSel || {};
+    const group = (typeof SPORT_GROUPS !== "undefined" ? SPORT_GROUPS : []).find(g=>g.id===parentId);
+    if(group?.subs) {
+      for(const sub of group.subs) {
+        // If this sub has children, check if any child is selected → use child ID
+        if(sub.children?.length>0) {
+          const selectedChild = sub.children.find(ch=>childSel[sub.id+"_"+ch.id]);
+          if(selectedChild) return selectedChild.id;
+        }
+        // Otherwise check if sub itself is selected
+        if(subSel[sub.id] && !sub.children?.length) return sub.id;
+      }
+    }
+    return parentId;
+  }
+
   Object.entries(trainingData||{}).forEach(([id,d])=>{
     const intens=d.intensity||"medium", days=d.days||3, durH=(d.duration||60)/60;
-    const met=(SPORT_MET[id]||SPORT_MET.fussball)[intens];
-    const sweat=SWEAT_RATE[intens], naPerL=SODIUM_PER_L[id]||900;
+
+    // Resolve to sub-sport if available
+    const resolvedId = resolveSubId(id, sportData);
+    const sub = getSubProfile(resolvedId);
+
+    // MET: sub-profile > parent SPORT_MET > fallback
+    const metTable = sub?.met || SPORT_MET[id] || SPORT_MET.fussball;
+    const met = metTable[intens];
+
+    // Sweat rate multiplier
+    const sweatRateKey=d.sweatRate||"medium";
+    const sweatMult={low:0.6,medium:1.0,high:1.4,very_high:1.8}[sweatRateKey]||1.0;
+    const sweat=(SWEAT_RATE[intens]||0.8)*sweatMult;
+
+    // Sodium: sub-profile > SODIUM_PER_L > fallback
+    const naPerL = sub?.sodiumPerL ?? (SODIUM_PER_L[id]||900);
+
     const kcalS=met*w*durH, sweatS=sweat*durH, naS=sweatS*naPerL, mgS=sweatS*36;
     const compX=d.hasCompetition?(d.compCount||0)*kcalS*0.3/365:0;
     totalKcal+=(kcalS*days)/7+compX; totalSweat+=(sweatS*days)/7;
     totalNa+=(naS*days)/7; totalMg+=(mgS*days)/7; totalDays+=days;
-    const st=SPORT_TYPE_MAP[id]||"endurance";
+    if(d.trainingTimes?.length) {
+      // Priority order: pick earliest session for pre-workout timing
+      const ORDER = ["morning","midday","afternoon","evening"];
+      const sorted = [...d.trainingTimes].sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));
+      primaryTrainingTime = sorted[0]; // earliest
+    } else if(d.trainingTime) primaryTrainingTime=d.trainingTime; // legacy fallback
+
+    // Protein type: sub-profile > SPORT_TYPE_MAP > endurance
+    const st = sub?.protType || SPORT_TYPE_MAP[id] || "endurance";
     const pf=(PROTEIN_NEED[st]||PROTEIN_NEED.endurance)[intens]; if(pf>maxProt)maxProt=pf;
     const cf=CARB_NEED[intens]; if(cf>maxCarb)maxCarb=cf;
-    if(HIGH_IRON_RISK.includes(id)&&(intens==="high"||intens==="competition"))ironRisk=true;
+
+    // Iron risk: sub-profile flag or HIGH_IRON_RISK list
+    if((sub?.ironRisk || HIGH_IRON_RISK.includes(id))&&(intens==="high"||intens==="competition"))ironRisk=true;
   });
+
+  // Goal-based adjustments to macros
+  const goalAdj={
+    performance: {protMult:1.0, carbMult:1.0, kcalMult:1.0},
+    muscle:      {protMult:1.2, carbMult:1.1, kcalMult:1.1},  // more protein + slight surplus
+    endurance:   {protMult:0.9, carbMult:1.2, kcalMult:1.05}, // more carbs
+    weightloss:  {protMult:1.1, carbMult:0.85,kcalMult:0.9},  // deficit, preserve muscle
+    health:      {protMult:0.9, carbMult:1.0, kcalMult:1.0},
+    recovery:    {protMult:1.1, carbMult:1.0, kcalMult:1.0},  // more protein for repair
+  }[goal]||{protMult:1.0,carbMult:1.0,kcalMult:1.0};
+
   const daysPerWeek=Math.min(totalDays,7);
-  const trainingDayKcal=Math.round(bmr+(totalKcal*7/Math.max(daysPerWeek,1)));
+  const trainingDayKcal=Math.round((bmr+totalKcal)*goalAdj.kcalMult);
   const sleep = +profilData?.sleep || 7.5;
-  const sleepDeficit = sleep < 7 ? (7 - sleep) : 0; // hours below optimal
+  const sleepDeficit = sleep < 7 ? (7 - sleep) : 0;
   const waterMl = Math.round(w * 35 + (totalSweat * 1000 * 7) / 7);
   const maxHR = Math.round(220 - age);
   const fatBurnMin = Math.round(maxHR * 0.60);
   const fatBurnMax = Math.round(maxHR * 0.70);
-  // VO2max estimation — Uth-Sørensen formula adjusted for training volume
+
+  // Training time → supplement timing recommendations
+  const timingRecs={
+    morning:  {preWorkout:"6:00–7:00",postWorkout:"8:00–9:00",creatine:"Morgens nüchtern",note:"Nüchterntraining: niedrige Carbs vor, sofort Protein danach"},
+    midday:   {preWorkout:"11:00–12:00",postWorkout:"13:00–14:00",creatine:"Mit Mittagessen",note:"Ideales Fenster: Körper ist aufgewärmt, Cortisol niedrig"},
+    afternoon:{preWorkout:"15:00–16:00",postWorkout:"17:00–18:00",creatine:"Nachmittags",note:"Peak-Performance-Zeit: optimale Kraft & Koordination"},
+    evening:  {preWorkout:"18:00–19:00",postWorkout:"20:00–21:00",creatine:"Mit Abendessen",note:"Kein Koffein nach 16h — beeinträchtigt Schlafqualität"},
+  }[primaryTrainingTime]||{preWorkout:"Variabel",postWorkout:"Variabel",creatine:"Täglich gleiche Zeit",note:"Kreatin immer zur selben Zeit einnehmen"};
+
   const VO2MAX_SPORTS = ["cycling","running","swimming","triathlon","langlauf","rudern","velo"];
   const hasEndurance = Object.keys(trainingData||{}).some(id => VO2MAX_SPORTS.some(s => id.includes(s)));
   let vo2max = null;
   if(hasEndurance) {
-    const hrRest = +profilData?.rhr || (isFemale ? 62 : 58); // use real RHR if available
-    const base = 15 * (maxHR / hrRest); // Uth formula
+    const hrRest = +profilData?.rhr || (isFemale ? 62 : 58);
+    const base = 15 * (maxHR / hrRest);
     const genderAdj = isFemale ? -4 : 0;
     const ageAdj = age > 40 ? -(age-40)*0.5 : 0;
     const trainingAdj = Math.min(daysPerWeek * 0.8, 6);
-    const intensAdj = maxProt > 1.6 ? 3 : 0; // high intensity proxy
+    const intensAdj = maxProt > 1.6 ? 3 : 0;
     vo2max = Math.round(Math.max(25, Math.min(85, base + genderAdj + ageAdj + trainingAdj + intensAdj)));
   }
   const vo2maxLabel = vo2max ? (vo2max < 35?"Unterdurchschnittlich":vo2max < 45?"Durchschnittlich":vo2max < 55?"Gut":vo2max < 65?"Sehr gut":"Exzellent") : null;
+
+  // Stress → cortisol impact on recovery + magnesium need
+  const stressMgBonus = (stressLevel-3)*30; // high stress = +60mg Mg, low = -60mg
+  const stressAshwaNeeded = stressLevel >= 4;
+  const stressRecoveryNote = stressLevel >= 4 ? "Hoher Stress erhöht Cortisol — Ashwagandha, Magnesium und Schlaf sind kritisch für Regeneration." : null;
+
+  // Diet quality → micronutrient risk
+  const vitDRisk = dietQuality==="poor"||dietQuality==="average";
+  const b12Risk = (dietQuality==="poor")||(profilData?.diet||[]).includes("vegan");
+  const ironRiskDiet = dietQuality==="poor"&&isFemale;
+
+  // Altitude → O2 adaptation, iron needs, hydration
+  const altitudeMult={low:1.0, medium:1.05, high:1.12, alpine:1.20}[altitude]||1.0;
+  const altitudeIronNeeded = altitude==="high"||altitude==="alpine";
+  const altitudeHydrationBonus = {low:0, medium:100, high:250, alpine:400}[altitude]||0;
+  const altitudeNote = altitude==="high"||altitude==="alpine" ? "Auf dieser Höhe ist dein Eisenstoffwechsel und Hydrationsbedarf erhöht." : null;
+
+  // Injury → specific supplement recs
+  const needsCollagen = injuries.some(i=>["knee","ankle","tendon","shoulder"].includes(i));
+  const needsOmega3Extra = injuries.some(i=>["back","muscle","shoulder"].includes(i));
+
+  // Recovery status → Magnesium + protein multiplier + ashwagandha priority
+  const recoveryMgBonus = {excellent:0, good:0, tired:60, recovery:100}[recoveryStatus]||0;
+  const recoveryProtBoost = {excellent:0, good:0, tired:0.1, recovery:0.15}[recoveryStatus]||0;
+  const recoveryAshwaNeeded = recoveryStatus==="tired"||recoveryStatus==="recovery";
+  const recoveryNote = recoveryStatus==="tired"
+    ? "Akkumulierte Müdigkeit: Magnesium, Ashwagandha und mehr Schlaf haben aktuell höchste Priorität."
+    : recoveryStatus==="recovery"
+    ? "Verletzungs-/Pausenphase: Kollagen, Omega-3 und Protein sind jetzt wichtiger als Performance-Supplements."
+    : null;
+
+  // Current supplements → suppress duplicate recommendations
+  const alreadyHas = (id) => currentSupps.includes(id)||currentSupps.includes("none")===false&&false;
+  const suppressKreatin = currentSupps.includes("kreatin");
+  const suppressProtein  = currentSupps.includes("protein");
+  const suppressVitD     = currentSupps.includes("vitd");
+  const suppressOmega3   = currentSupps.includes("omega3");
+  const suppressMag      = currentSupps.includes("magnesium");
+  const suppressEisen    = currentSupps.includes("eisen");
+  const suppressZink     = currentSupps.includes("zink");
+  const suppressAshwa    = currentSupps.includes("ashwa");
+  const suppressCollagen = currentSupps.includes("collagen");
+  const suppressBetaAla  = currentSupps.includes("beta_ala");
+  const suppressKoffein  = currentSupps.includes("koffein");
+
+  // Medication → contraindication flags per supplement
+  const hasBlutverd     = medications.includes("blutverd");
+  const hasSchilddruese = medications.includes("schilddruese");
+  const hasBlutdruck    = medications.includes("blutdruck");
+
+  // Medication contraindications map: suppId → warning text
+  const MEDI_WARNINGS = {
+    omega3:    hasBlutverd  ? "⚠ Blutverdünner: Omega-3 kann die Blutungszeit verlängern — Dosis mit Arzt absprechen." : null,
+    ashwa:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
+    ash_cy:    hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
+    ash_g:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
+    koff_fit:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
+    koff_run:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
+    koff_g:    hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
+    vitd3:     null,
+    krea_cy:   null,
+    krea_g:    null,
+  };
+
+  // Budget → priority threshold
+  const budgetPriorityMax = {low:1, medium:2, high:3, max:99}[monthlyBudget]||2;
+
   return {
-    bmr, withTraining:Math.round(bmr+totalKcal), trainingExtra:Math.round(totalKcal),
-    restDay:bmr, trainingDay:trainingDayKcal,
+    bmr, withTraining:Math.round(trainingDayKcal*altitudeMult), trainingExtra:Math.round(totalKcal*goalAdj.kcalMult),
+    restDay:Math.round(bmr*goalAdj.kcalMult), trainingDay:Math.round(trainingDayKcal*altitudeMult),
     sweatLitresPerSession:+totalSweat.toFixed(1), natriumMg:Math.round(totalNa),
-    magnesiumMg:Math.round(200+totalMg+(sleepDeficit*20)), proteinMin:Math.round(w*maxProt),
-    proteinMax:Math.round(w*(maxProt+0.3)), carbsG:Math.round(w*maxCarb),
-    waterMl, fatBurnMin, fatBurnMax, vo2max, vo2maxLabel, sleep,
-    ironRisk, isFemale, w,
+    magnesiumMg:Math.round(200+totalMg+(sleepDeficit*20)+stressMgBonus+recoveryMgBonus),
+    protein:Math.round(w*(maxProt+recoveryProtBoost)*goalAdj.protMult),
+    proteinMin:Math.round(w*(maxProt+recoveryProtBoost)*goalAdj.protMult),
+    proteinMax:Math.round(w*(maxProt+recoveryProtBoost+0.3)*goalAdj.protMult),
+    carbsG:Math.round(w*maxCarb*goalAdj.carbMult),
+    carbsPerHour:Math.round(maxCarb*10),
+    waterMl:Math.round(waterMl+altitudeHydrationBonus),
+    fatBurnMin, fatBurnMax, vo2max, vo2maxLabel, sleep,
+    ironRisk:ironRisk||altitudeIronNeeded||ironRiskDiet,
+    isFemale, w, goal, primaryTrainingTime, timingRecs,
+    // Existing insight flags
+    stressAshwaNeeded, stressRecoveryNote, vitDRisk, b12Risk,
+    altitudeIronNeeded, altitudeNote, needsCollagen, needsOmega3Extra,
+    stressLevel, dietQuality, altitude, injuries,
+    // New insight flags
+    recoveryStatus, recoveryNote, recoveryAshwaNeeded, recoveryProtBoost,
+    currentSupps, medications, monthlyBudget, budgetPriorityMax,
+    suppressKreatin, suppressProtein, suppressVitD, suppressOmega3,
+    suppressMag, suppressEisen, suppressZink, suppressAshwa,
+    suppressCollagen, suppressBetaAla, suppressKoffein,
+    hasBlutverd, hasSchilddruese, hasBlutdruck,
+    MEDI_WARNINGS,
   };
 }
 
-function calcKcal(profilData, trainingData, healthOnly) {
+
+function calcKcal(profilData, trainingData, sportData) {
   return calcPro(profilData, trainingData, sportData);
 }
 
@@ -1178,12 +1869,263 @@ const SPORT_NUTRITION = {
       {id:"sn_mau_160",name:"Maurten Drink Mix 160",dose:"40g / 500ml",when:"Mittellange Läufe (60–90 min)",why:"Optional für Läufe wenn du Kohlenhydrate trinken statt essen willst.",link:AFF.maurten("drink-mix-160"),shop:"Maurten"},
     ],
   },
+  // Strassenlauf — distanzspezifisch
+  run_short:{
+    primary:[
+      {id:"sn_koff_5k",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Rennen",why:"5–10km ist hochintensiv und anaerob — Koffein für Reaktion und Pace-Halten kritischer als Carbs.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_5k",name:"Elektrolyt-Tabs",dose:"1 Tab vor Start",when:"Vor Rennen",why:"Kurze Distanz: Hydration vor dem Start wichtiger als während.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  run_hm:{
+    primary:[
+      {id:"sn_gel_hm",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Ab km 8, alle 45 min",why:"Halbmarathon: 1–2 Gels reichen — Timing und Magenverträglichkeit trainieren.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_hm",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Vor Start und während",why:"90 min Lauf: Natrium- und Kaliumverlust beachten, v.a. bei Hitze.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  run_marathon:{
+    primary:[
+      {id:"sn_gel_m",name:"Maurten Gel 100",dose:"1 Gel alle 30–35 min",when:"Ab km 10",why:"Marathon: 60–90g Carbs/h nötig — regelmässiges Fueling ab früh, nicht erst wenn Hunger kommt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_320_m",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Alternierend mit Gels",why:"Flüssige Carbs kombinieren mit Gels für maximale Aufnahme ohne GI-Stress.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45–60 min",why:"3–4h Lauf: erheblicher Natriumverlust — Krampfprävention essentiell.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_m",name:"Maurten Gel 100 CAF 100",dose:"1 Gel bei km 30–35",when:"Letzte 10km",why:"Koffein-Gel für die kritische Schlussphase — bekämpft den berühmten Einbruch bei km 32.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+    ],
+  },
+  run_ultra:{
+    primary:[
+      {id:"sn_gel_ul",name:"Maurten Gel 100",dose:"1 Gel alle 45–60 min",when:"Kontinuierlich ab Start",why:"Ultra: niedrigere Intensität erlaubt weniger Carbs — aber Konstanz ist alles.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_real_ul",name:"Echtes Essen (Banane, Reis, Kartoffeln)",dose:"Alle 2–3h",when:"An Verpflegungsstationen",why:"Ab 4h+ versagt der Körper bei reinen Gels — feste, salzige Nahrung ist Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+    ],
+    secondary:[
+      {id:"sn_elek_ul",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Alle 45 min",why:"Ultra: Natriummangel (Hyponatriämie) ist ein reales Risiko — mehr als nur Wasser trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_kof_ul",name:"Koffein-Gel (100mg)",dose:"1 Gel nachts oder bei km 60+",when:"Bei Müdigkeit / Nachtabschnitt",why:"Strategisch einsetzen, nicht früh — maximale Wirkung für die dunkelsten Stunden.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+    ],
+  },
+  // Triathlon — distanzspezifisch
+  tri_sprint:{
+    primary:[
+      {id:"sn_koff_tri_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint-Tri (ca. 60 min): kein Fueling nötig — Koffein für Intensität ausreichend.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_tri_s",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Vor Start",why:"Hydration vorbereiten, keine Gels nötig bei dieser Distanz.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  tri_olympic:{
+    primary:[
+      {id:"sn_gel_tri_o",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Auf der Radstrecke",why:"Olympic (ca. 2h): 1–2 Gels auf dem Rad, nichts auf der Laufstrecke.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_tri_o",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Rad und Lauf",why:"Natrium für Leistungserhalt über alle drei Disziplinen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  tri_half:{
+    primary:[
+      {id:"sn_gel_tri_h",name:"Maurten Gel 100",dose:"1 Gel alle 40 min",when:"Rad ab km 20",why:"70.3 (ca. 4–5h): 60g Carbs/h anstreben — Magen-Training kritisch im Aufbau.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_160_tri_h",name:"Maurten Drink Mix 160",dose:"40g / 500ml",when:"Auf dem Rad",why:"Flüssige Carbs reduzieren GI-Risiko auf dem Rad gegenüber Gels.",link:AFF.maurten("drink-mix-160"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_tri_h",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Konstant",why:"4–5h Belastung: Natrium-, Kalium- und Magnesiumverlust erheblich.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  tri_full:{
+    primary:[
+      {id:"sn_320_tri_f",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Auf dem Rad, alle 45 min",why:"Ironman (8–17h): 80–90g Carbs/h auf dem Rad ist der Schlüssel — mit Hydrogel magenfreundlich.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_gel_tri_f",name:"Maurten Gel 100",dose:"1 Gel alle 35–40 min",when:"Auf dem Lauf",why:"Marathon-Teil: weiter mit Gels — festes Essen nur wenn Magen es verlangt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_tri_f",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Konstant alle 45 min",why:"10h+: Elektrolythaushalt ist Hauptursache für DNF — niemals vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_tri_f",name:"Maurten Gel 100 CAF 100",dose:"1–2 Gels",when:"Ab km 25 auf dem Lauf",why:"Koffein für die kritische Schlussphase des Ironman-Laufs.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+    ],
+  },
+  tri_ultra:{
+    primary:[
+      {id:"sn_320_tri_u",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Konstant auf dem Rad",why:"Ultra-Tri (T100, Deca): Magentraining ist trainierbare Fähigkeit — konsequentes Fueling von Stunde 1.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_real_tri_u",name:"Echtes Essen",dose:"Alle 2–3h",when:"An Verpflegung",why:"Ab 10h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+    ],
+    secondary:[
+      {id:"sn_elek_tri_u",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Alle 30–45 min",why:"Extreme Distanz: Hyponatriämie-Risiko hoch — konsequent salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Schwimmen — distanzspezifisch
+  swim_sprint:{
+    primary:[
+      {id:"sn_koff_sw_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint/Kurzbahn: hochintensiv, kurz — Koffein für Reaktion und Startpower.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_sw_s",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Vor dem Training",why:"Schwimmen täuscht über Flüssigkeitsverlust — Schweiss wird weggespült.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  swim_mid:{
+    primary:[
+      {id:"sn_gel_sw_m",name:"Maurten Gel 100",dose:"1 Gel vor Start",when:"30 min vor längeren Einheiten",why:"Mitteldistanz: Energieversorgung vor dem Start, im Wasser kein Fueling möglich.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_sw_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Nach Einheit",why:"Schwimmen: Flüssigkeitsverlust wird unterschätzt — Rehydration nach der Einheit.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  swim_open:{
+    primary:[
+      {id:"sn_gel_sw_o",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Vor Start, ggf. Pause bei langer Distanz",why:"Open Water / Freiwasser: Fueling nur vor und bei Pausen möglich — Energiereserven vorladen.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_sw_o",name:"Elektrolyt-Tabs",dose:"1–2 Tabs",when:"Vor und nach",why:"Freiwasser: Kälte und Dauer erhöhen Elektrolytverlust — gute Vorbereitung entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // MTB Downhill — wenig Ausdauer, mehr Fokus & explosive Energie
+  cycling_dh:{
+    primary:[
+      {id:"sn_koff_dh",name:"Koffein-Gel (100mg)",dose:"1 Gel 45 min vor erstem Run",when:"Wettkampf / Training",why:"Fokus und Reaktionszeit auf technischem Terrain — kein langer Kohlenhydratbedarf bei kurzen Runs.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_dh",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Zwischen Runs",why:"Auch kurze Renntage haben Schweissverlust — Krampfprävention.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Fitness Strength-focused (Powerlifting, Weightlifting, Sprung, Wurf)
+  fitness_str:{
+    primary:[
+      {id:"sn_krea_sn",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Kraftsport-Basisnahrung — verbessert Maximalkraft und Wiederholungen nachweislich.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_str",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Bei intensivem Training",why:"Auch Krafttraining erzeugt Schweiss — Hydration nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Fitness (Hyrox, CrossFit)
+  fitness:{
+    primary:[
+      {id:"sn_krea_fit",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Hyrox und CrossFit: explosive Kraft und Wiederholbarkeit — Kreatin ist Basis.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+      {id:"sn_koff_fit",name:"Koffein 100–200mg",dose:"100–200mg",when:"30–45 min vor Training",why:"Maximale Leistung bei hochintensiven WODs und Hyrox-Stationen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_fit",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Während Training",why:"Crossfit und Hyrox erzeugen hohe Schweissraten — Hydration entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Leichtathletik Sprint
+  la_sprint:{
+    primary:[
+      {id:"sn_koff_sp",name:"Koffein 100–200mg",dose:"100–200mg",when:"45 min vor Start",why:"Reaktionszeit und neuromuskuläre Aktivierung für explosive Kurzbelastungen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_sp",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Nach Einheit",why:"Aufwärmprogramme und Sprints erzeugen mehr Schweiss als wahrgenommen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Ski (Alpin, Freeride, Snowboard)
+  ski:{
+    primary:[
+      {id:"sn_riegel_ski",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Am Berg zwischen Läufen",why:"Kompakt, gefriert nicht wie Gels — ideal für kalte Umgebungen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+    ],
+    secondary:[
+      {id:"sn_elek_ski",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Mittagspause / zwischendurch",why:"Kälte täuscht über Flüssigkeitsverlust — trotzdem regelmässig trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Skitouren
+  ski_touring:{
+    primary:[
+      {id:"sn_mau_gel_st2",name:"Maurten Gel 100",dose:"1 Gel alle 45–60 min",when:"Aufstieg",why:"Magenfreundlich auch bei Kälte — keine Einfrierproblematik bei Körperwärme.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_riegel_st",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Gipfelpause / Abstieg",why:"Solide Energie für lange Touren — Sättigung wichtiger als bei kurzen Rennen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+    ],
+    secondary:[
+      {id:"sn_elek_st2",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 60 min",why:"Hoher Schweiss- und Energieverbrauch bei langen Aufstiegen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Langlauf & Biathlon
+  langlauf:{
+    primary:[
+      {id:"sn_mau_gel_xl2",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",when:"Einheiten über 60 min",why:"Höchster MET aller Sportarten — kontinuierliche Kohlenhydratzufuhr kritisch.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_mau_320_xl2",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Lange Einheiten über 2h",why:"Maximale Kohlenhydratdichte für 2–4h Ausdauerbelastungen.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_xl2",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45–60 min",why:"Hoher Natriumverlust auch bei Kälte — Krampfprävention und Leistungserhalt.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Langlauf Kurzdistanz (bis 15km)
+  langlauf_kurz:{
+    primary:[
+      {id:"sn_koff_xl_k",name:"Koffein-Gel 100mg",dose:"1 Gel 45 min vor Start",when:"Wettkampf / Intensivtraining",why:"Kurzdistanz Langlauf ist hochintensiv — Koffein für maximale Pace und Reaktion.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_xl_k",name:"Elektrolyt-Tabs",dose:"1 Tab vor Start",when:"Vor Rennen",why:"Kurze Distanz: Hydration vor dem Start entscheidend, kein Fueling unterwegs nötig.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Langlauf Mitteldistanz (15–50km, z.B. Engadin)
+  langlauf_mittel:{
+    primary:[
+      {id:"sn_gel_xl_m",name:"Maurten Gel 100",dose:"1 Gel alle 40–45 min",when:"Ab km 10",why:"Mitteldistanz (1.5–3h): 2–4 Gels je nach Tempo — früh starten, nicht erst bei Hunger.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+    ],
+    secondary:[
+      {id:"sn_elek_xl_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45 min",why:"Natrium und Kalium für Leistungserhalt — Kälte täuscht über Schweissverlust.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_320_xl_m",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"An Verpflegungsstationen",why:"Flüssige Carbs ergänzen Gels — an Stationen trinken wenn vorhanden.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+    ],
+  },
+  // Langlauf Langdistanz (50km+, z.B. Vasaloppet, Birkebeiner)
+  langlauf_lang:{
+    primary:[
+      {id:"sn_gel_xl_l",name:"Maurten Gel 100",dose:"1 Gel alle 35–40 min",when:"Kontinuierlich ab Start",why:"50km+ Langlauf: höchster Energieumsatz aller Ausdauersportarten — konsequentes Fueling von km 1.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_real_xl_l",name:"Echtes Essen (Banane, Riegel, Suppe)",dose:"Alle 1.5–2h",when:"An Verpflegungsstationen",why:"Ab 3h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig — feste Nahrung Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+    ],
+    secondary:[
+      {id:"sn_elek_xl_l",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Alle 30–40 min",why:"Langdistanz: Natriummangel (Hyponatriämie) ist reales Risiko — regelmässig salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_xl_l",name:"Koffein-Gel 100mg",dose:"1–2 Gels strategisch",when:"Ab km 40, bei Einbruch",why:"Koffein gezielt einsetzen für die kritische Schlussphase — nicht zu früh verbrauchen.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+    ],
+  },
+  // Tennis & Padel
+  tennis:{
+    primary:[
+      {id:"sn_banana_ten",name:"Banane / schnelle Carbs",dose:"1 Stück pro Satzpause",when:"Seitenwechsel / Spielpausen",why:"ATP-Standard: Bananen für schnelle Energie bei langen Matches.",link:AFF.iherb("dextrose"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_ten2",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Während Match",why:"Tennis-Matches bis 5h — Natriumverlust erheblich auf Hartplatz.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Team Sports (Handball, Volleyball)
+  team_sport:{
+    primary:[
+      {id:"sn_krea_team",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training / Spiel",why:"Sprintwiederholungen und explosive Bewegungen — Kreatin direkt relevant.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_team",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Während Spiel / Training",why:"Hochintensive Teamspiele mit hohem Schweissvolumen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
+  // Kampfsport
+  kampfsport:{
+    primary:[
+      {id:"sn_krea_ks2",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Explosive Schläge und Würfe — Kreatin verbessert Kraft-Wiederholbarkeit.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+    ],
+    secondary:[
+      {id:"sn_elek_ks2",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Sparring und lange Einheiten",why:"Hohes Schweissvolumen bei Kampfsport — Elektrolyte nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+    ],
+  },
 };
 const genericSportNutrition={
   primary:[{id:"sn_gen",name:"Energie-Gel (Maurten / MNSTRY)",dose:"1 Gel alle 30–45 min",when:"Einheiten über 60 min",why:"Schnell verfügbare Kohlenhydrate für Training und Wettkampf.",link:AFF.maurten("gel-100"),shop:"Maurten"}],
   secondary:[{id:"sn_elek_g",name:"Elektrolyt-Tabletten",dose:"1 Tab / 500ml",when:"Bei starkem Schwitzen",why:"Natriumverlust ausgleichen.",link:AFF.iherb("electrolyte"),shop:"iHerb"}],
 };
-function getSportNutrition(id){return SPORT_NUTRITION[id]||(id==="triathlon"?SPORT_NUTRITION.cycling:genericSportNutrition);}
+function getSportNutrition(id, subSel, childSel={}) {
+  // Try to find active sub-sport nutritionKey - check children first
+  if(subSel) {
+    const group = (typeof SPORT_GROUPS !== "undefined" ? SPORT_GROUPS : []).find(g=>g.id===id);
+    if(group?.subs) {
+      let resolvedId = null;
+      for(const sub of group.subs) {
+        if(sub.children?.length>0) {
+          const selectedChild = sub.children.find(ch=>childSel[sub.id+"_"+ch.id]);
+          if(selectedChild) { resolvedId = selectedChild.id; break; }
+        } else if(subSel[sub.id]) { resolvedId = sub.id; break; }
+      }
+      if(resolvedId) {
+        const subProf = getSubProfile(resolvedId);
+        if(subProf?.nutritionKey && SPORT_NUTRITION[subProf.nutritionKey]) {
+          return SPORT_NUTRITION[subProf.nutritionKey];
+        }
+      }
+    }
+  }
+  return SPORT_NUTRITION[id]||(id==="triathlon"?SPORT_NUTRITION.cycling:genericSportNutrition);
+}
 
 function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
   const {gender,weight,days,intensity,hasComp,compCount}=profile;
@@ -1191,8 +2133,52 @@ function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
   const isHighLoad=days>=5||intensity==="high"||intensity==="competition";
   const isCompetitor=hasComp&&compCount>5, isPro=!!proData;
   const ironRisk=proData?.ironRisk||false, highMg=(proData?.magnesiumMg||0)>350;
+
+  // New: suppress, medication, budget, recovery from proData
+  const suppress = {
+    kreatin:  proData?.suppressKreatin||false,
+    protein:  proData?.suppressProtein||false,
+    vitd:     proData?.suppressVitD||false,
+    omega3:   proData?.suppressOmega3||false,
+    magnesium:proData?.suppressMag||false,
+    eisen:    proData?.suppressEisen||false,
+    zink:     proData?.suppressZink||false,
+    ashwa:    proData?.suppressAshwa||false,
+    collagen: proData?.suppressCollagen||false,
+    beta_ala: proData?.suppressBetaAla||false,
+    koffein:  proData?.suppressKoffein||false,
+  };
+  const MEDI_WARNINGS = proData?.MEDI_WARNINGS||{};
+  const budgetPriorityMax = proData?.budgetPriorityMax||99;
+  const recoveryAshwaNeeded = proData?.recoveryAshwaNeeded||false;
+  const recoveryStatus = proData?.recoveryStatus||"good";
+
+  // Suppress helper — returns true if this supplement should be hidden/deprioritised
+  function isSuppressed(s) {
+    if(suppress.kreatin && (s.id.includes("krea")||s.id.includes("kreatin"))) return true;
+    if(suppress.protein  && (s.id.includes("whey")||s.id.includes("protein"))) return true;
+    if(suppress.vitd     && (s.id.includes("vd3")||s.id.includes("vitd"))) return true;
+    if(suppress.omega3   && (s.id.includes("omega"))) return true;
+    if(suppress.magnesium&& (s.id.includes("mag")||s.id.includes("magnesium"))) return true;
+    if(suppress.eisen    && (s.id.includes("eisen")||s.id.includes("iron"))) return true;
+    if(suppress.zink     && (s.id.includes("zink"))) return true;
+    if(suppress.ashwa    && (s.id.includes("ash")||s.id.includes("ashwa"))) return true;
+    if(suppress.collagen && (s.id.includes("koll")||s.id.includes("collagen"))) return true;
+    if(suppress.beta_ala && (s.id.includes("beta"))) return true;
+    if(suppress.koffein  && (s.id.includes("koff")||s.id.includes("mau_caf"))) return true;
+    return false;
+  }
+
   const primSupps=[], secSupps=[];
   [...basisSupps,...sportSupps].forEach(s=>{
+    // Skip if user already takes this supplement
+    if(isSuppressed(s)) {
+      // Still show but marked as "bereits vorhanden"
+      const mediWarn = MEDI_WARNINGS[s.id]||null;
+      secSupps.push({...s,personalWhy:s.why,alreadyTaking:true,mediWarning:mediWarn});
+      return;
+    }
+
     let personalWhy=s.why, boost=false;
     if(s.id==="vitd3"||s.id.startsWith("vd3_")){
       personalWhy=`70% der CH-Bevölkerung ist Vitamin D-mangelhaft.${isHighLoad?" Bei deiner Trainingsbelastung steigt der Bedarf durch Knochenumbau und Immunstress.":""}${isPro?` Empfohlene Dosis: ${isHighLoad?"3000–4000":"2000"} IE/Tag.`:""}`;
@@ -1210,16 +2196,29 @@ function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
       personalWhy=s.why+(isPro?` Bei ${weight}kg und ${proData?.proteinMin||Math.round(weight*1.4)}g Proteinbedarf täglich: 30–35g pro Portion.`:` Bei ${weight}kg empfehlen sich 30–35g pro Portion.`);
       boost=true;
     }
-    if((s.id==="kreatin_cy"||s.id==="kreatin_fit"||s.id==="krea_g")&&isCompetitor){
+    if((s.id==="kreatin_cy"||s.id==="kreatin_fit"||s.id==="krea_g"||s.id.startsWith("krea_"))&&isCompetitor){
       personalWhy=s.why+` Mit ${compCount} Wettkämpfen/Jahr ist Kreatin für die Regeneration zwischen Starts besonders wertvoll.`;
       boost=true;
     }
-    if((s.id==="ashwa_cy"||s.id==="ash_g")&&isHighLoad){
-      personalWhy=s.why+` Sinnvoll bei ${days}× Training/Woche zur Cortisolregulation.`;
+    if((s.id==="ashwa_cy"||s.id==="ash_g"||s.id.startsWith("ash_"))&&(isHighLoad||recoveryAshwaNeeded)){
+      personalWhy=s.why+(recoveryAshwaNeeded?" Aktuell besonders wichtig: dein Erholungsstatus zeigt erhöhten Cortisolbedarf.":" Sinnvoll bei "+days+"× Training/Woche zur Cortisolregulation.");
+      boost=recoveryAshwaNeeded?true:boost; // force boost if recovery needs it
+    }
+    // Recovery phase: boost collagen + omega3
+    if((recoveryStatus==="recovery")&&(s.id.includes("koll")||s.id.includes("omega"))){
+      personalWhy=s.why+" Verletzungs-/Pausenphase: Kollagen und Omega-3 haben jetzt höchste Priorität.";
       boost=true;
     }
-    if(s.priority===1||(boost&&s.priority<=2))primSupps.push({...s,personalWhy});
-    else secSupps.push({...s,personalWhy});
+
+    // Medication warning
+    const mediWarning = MEDI_WARNINGS[s.id]||null;
+
+    // Budget filter: push to sec if priority > budget threshold
+    const effPriority = s.priority||3;
+    const withinBudget = effPriority <= budgetPriorityMax;
+
+    if((s.priority===1||(boost&&s.priority<=2))&&withinBudget) primSupps.push({...s,personalWhy,mediWarning});
+    else secSupps.push({...s,personalWhy,mediWarning,outOfBudget:!withinBudget});
   });
   return {primSupps,secSupps};
 }
@@ -1324,20 +2323,35 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[]}) {
     }catch{}
   };
   const hasAllergen=allergenWarnings.length>0;
+  const hasMediWarn=!!s.mediWarning;
   const sc={"Maurten":{bg:C.black,text:C.neon},"MNSTRY":{bg:"#0D0D1A",text:C.neon},"iHerb":{bg:"#2D7C2B",text:"#fff"},"Myprotein":{bg:"#CC0000",text:"#fff"},"Sponser":{bg:"#003087",text:"#fff"}}[s.shop]||{bg:C.black,text:C.white};
   const p=s.protocol;
   const hasCycle=p?.pause&&!p.pause.toLowerCase().includes("keine");
   const hasConflict=interactions.some(i=>i.type==="conflict");
   const hasSynergy=interactions.some(i=>i.type==="synergy");
   return (
-    <div style={{border:`1px solid ${hasAllergen?"rgba(255,59,48,.35)":isPrimary?C.g400:C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:hasAllergen?"rgba(255,59,48,.02)":C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0}}>
+    <div style={{border:`1px solid ${hasMediWarn?"rgba(255,149,0,.5)":hasAllergen?"rgba(255,59,48,.35)":s.alreadyTaking?"rgba(52,199,89,.35)":isPrimary?C.g400:C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:hasMediWarn?"rgba(255,149,0,.03)":hasAllergen?"rgba(255,59,48,.02)":s.alreadyTaking?"rgba(52,199,89,.03)":C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0}}>
+
+      {/* Medication warning banner */}
+      {hasMediWarn&&(
+        <div style={{marginBottom:10,padding:"8px 12px",background:"rgba(255,149,0,.1)",borderRadius:8,border:"1px solid rgba(255,149,0,.3)"}}>
+          <div style={{fontSize:11,color:"#8A5700",lineHeight:1.5,fontWeight:500}}>{s.mediWarning}</div>
+        </div>
+      )}
+
+      {/* Already taking badge */}
+      {s.alreadyTaking&&(
+        <div style={{marginBottom:8,display:"inline-flex",alignItems:"center",gap:5,padding:"4px 10px",background:"rgba(52,199,89,.12)",borderRadius:6,border:"1px solid rgba(52,199,89,.3)"}}>
+          <span style={{fontSize:10,color:"#1A7A35",fontWeight:600,fontFamily:"JetBrains Mono,monospace"}}>✓ BEREITS IN DEINEM STACK</span>
+        </div>
+      )}
 
       {/* Header: Name + Toggle Switch */}
       <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10,marginBottom:10}}>
         <div style={{flex:1}}>
           <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap",marginBottom:4}}>
-            {isPrimary&&<span className="chip hi" style={{fontSize:9}}>ZWINGEND</span>}
-            {!isPrimary&&<span className="chip" style={{fontSize:9}}>OPTIONAL</span>}
+            {isPrimary&&!s.alreadyTaking&&<span className="chip hi" style={{fontSize:9}}>ZWINGEND</span>}
+            {!isPrimary&&!s.alreadyTaking&&<span className="chip" style={{fontSize:9}}>OPTIONAL</span>}
             {hasCycle&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,149,0,.12)",color:C.orange,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>KUR</span>}
             {hasConflict&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(255,59,48,.1)",color:C.red,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>⚠ INTERAKTION</span>}
             {hasSynergy&&<span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"rgba(52,199,89,.1)",color:C.green,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>✓ SYNERGIE</span>}
@@ -1814,9 +2828,9 @@ function StepWillkommen({onNext}) {
         <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
           {[
-            {icon:"🆓", title:"Kostenlos starten", desc:"Kerndaten sofort sichtbar — Energiebedarf, Protein, wichtigste Supplements. Kein Kreditkarte, kein Abo."},
-            {icon:"🔒", title:"PRO — CHF 6.90 / 6 Monate", desc:"Elektrolyte, VO₂max, Kohlenhydrate pro Stunde, alle Dosierungen und Tagesplan. Jederzeit in deinem Profil aktivierbar."},
-            {icon:"🎯", title:"100% auf dich berechnet", desc:"MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf dein Gewicht, Sport und Intensität."},
+            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo."},
+            {icon:"🔒", title:"PRO — CHF 12.90 / 6 Monate (CHF 2.15/Mt.)", desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar."},
+            {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf dein Gewicht, Sport und Intensität."},
           ].map((item,i)=>(
             <div key={i} style={{display:"flex",gap:14,padding:"14px 16px",borderRadius:12,border:"1px solid #EBEBEB",background:"#fff"}}>
               <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{item.icon}</span>
@@ -1828,7 +2842,7 @@ function StepWillkommen({onNext}) {
           ))}
         </div>
         <button onClick={onNext} style={{width:"100%",background:"#C8FF00",color:"#000",border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-          Analyse starten →
+          Deine kostenlose Analyse entdecken →
         </button>
         <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Dauert wenige Sekunden.</div>
       </div>
@@ -1844,9 +2858,9 @@ function StepPraeferenzen({onNext, onBack}) {
   const [recoveryForm,setRecoveryForm]=useState([]);
 
   const toggleMulti=(arr,setArr,val)=>{
-    if(val==="egal"){ setArr(prev=>prev.includes("egal")?[]:["egal"]); return; }
+    if(val==="egal"||val==="keine"){ setArr(prev=>prev.includes(val)?[]:([val])); return; }
     setArr(prev=>{
-      const without=prev.filter(x=>x!=="egal");
+      const without=prev.filter(x=>x!=="egal"&&x!=="keine");
       return without.includes(val)?without.filter(x=>x!==val):[...without,val];
     });
   };
@@ -1881,7 +2895,7 @@ function StepPraeferenzen({onNext, onBack}) {
           ))}
         </Section>
 
-        <Section title="Energie während Training">
+        <Section title="Wie nimmst du Energie während dem Training zu dir?">
           {[{id:"gel",l:"Gels"},{id:"riegel",l:"Riegel"},{id:"drink",l:"Drink Mix"},{id:"egal",l:"Egal"}].map(o=>(
             <Chip key={o.id} label={o.l} active={energieForm.includes(o.id)} onClick={()=>toggleMulti(energieForm,setEnergieForm,o.id)}/>
           ))}
@@ -1894,21 +2908,30 @@ function StepPraeferenzen({onNext, onBack}) {
         </Section>
 
         <Section title="Recovery — wie erholst du dich am liebsten?">
-          {[{id:"massage",l:"Massage / Foam Roll"},{id:"kalt",l:"Kältebad / Eisbad"},{id:"stretching",l:"Stretching"},{id:"schlaf",l:"Schlaf"},{id:"sauna",l:"Sauna"},{id:"kompression",l:"Kompressionsbekleidung"},{id:"egal",l:"Egal"}].map(o=>(
+          {[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionsbekleidung"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere nicht pro-aktiv"}].map(o=>(
             <Chip key={o.id} label={o.l} active={recoveryForm.includes(o.id)} onClick={()=>toggleMulti(recoveryForm,setRecoveryForm,o.id)}/>
           ))}
         </Section>
 
-        <div style={{display:"flex",gap:10,marginTop:8}}>
-          <button onClick={onBack} style={{padding:"12px 20px",borderRadius:12,border:"1px solid #E8E8E8",background:"transparent",color:"#666",fontSize:14,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-            ← Zurück
-          </button>
-          <button onClick={()=>onNext({suppForm:suppForm||"beides",energieForm:energieForm.length?energieForm:["egal"],proteinForm:proteinForm.length?proteinForm:["egal"],recoveryForm:recoveryForm.length?recoveryForm:["egal"]})}
-            style={{flex:1,background:"#C8FF00",color:"#000",border:"none",borderRadius:12,padding:"12px",fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-            Weiter →
-          </button>
-        </div>
-        <div style={{textAlign:"center",marginTop:8,fontSize:11,color:"#AAA"}}>Alle Felder optional — du kannst auch überspringen.</div>
+        {(()=>{
+          const allDone = suppForm && energieForm.length>0 && proteinForm.length>0 && recoveryForm.length>0;
+          return (
+            <>
+              <div style={{display:"flex",gap:10,marginTop:8}}>
+                <button onClick={onBack} style={{padding:"12px 20px",borderRadius:12,border:"1px solid #E8E8E8",background:"transparent",color:"#666",fontSize:14,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                  ← Zurück
+                </button>
+                <button
+                  disabled={!allDone}
+                  onClick={()=>onNext({suppForm,energieForm,proteinForm,recoveryForm})}
+                  style={{flex:1,background:allDone?"#C8FF00":"#F0F0F0",color:allDone?"#000":"#AAA",border:"none",borderRadius:12,padding:"12px",fontSize:14,fontWeight:600,cursor:allDone?"pointer":"default",fontFamily:"Inter,sans-serif",transition:"all .14s"}}>
+                  Weiter →
+                </button>
+              </div>
+              {!allDone&&<div style={{textAlign:"center",marginTop:8,fontSize:11,color:"#AAA"}}>Bitte alle Felder ausfüllen.</div>}
+            </>
+          );
+        })()}
       </div>
     </div>
   );
@@ -2167,7 +3190,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.2" strokeLinecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 <span style={{fontSize:12,fontWeight:500,color:C.black}}>Nur mit PRO · ~92% Genauigkeit</span>
               </div>
-              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 6.90 / 6 Mt.</span>
+              <span style={{fontSize:11,color:"rgba(0,0,0,.4)",fontWeight:400,whiteSpace:"nowrap",marginLeft:12}}>CHF 12.90 / 6 Mt.</span>
             </div>
             <div style={{padding:"14px 16px",background:"#FAFFF0"}}>
               <div style={{marginBottom:8,fontSize:10,color:"#999",letterSpacing:".02em"}}>Zusätzlich zu Basic:</div>
@@ -2177,14 +3200,19 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
                 ))}
               </div>
               <button onClick={scrollToCards} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
-                PRO — CHF 6.90 ↓
+                PRO — CHF 12.90 ↓
               </button>
               <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
-                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 9.90 ↓</span>
+                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 0.00 ↓</span>
               </div>
-              <div style={{marginTop:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:8,border:"1px solid #F0F0F0",display:"flex",gap:10,alignItems:"flex-start"}}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,marginTop:1}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <div style={{fontSize:11,color:"#888",lineHeight:1.6}}><strong style={{color:"#333",fontWeight:600}}>Einmalige Zahlung für 6 Monate.</strong> Danach selbst entscheiden ob du verlängerst. Kein Passwort — per E-Mail-Link zu deinem Profil.</div>
+              <div style={{marginTop:10,padding:"12px 14px",background:"#F5FFE0",borderRadius:10,border:"1px solid #C8FF00"}}>
+                <div style={{fontSize:12,color:"#0A0A0A",lineHeight:1.7,fontWeight:400}}>
+                  Dein Körper, dein Sport, dein Bedarf — <strong>exakt berechnet</strong>. Die meisten Sportler geben blind CHF 50–100/Monat für Supplements aus, ohne zu wissen was sie wirklich brauchen. <strong>CHF 2.15 im Monat</strong>, um das zu ändern, ist kein Investment — das ist das Günstigste, was du für deine Performance tun kannst.
+                </div>
+                <div style={{marginTop:8,fontSize:11,color:"#555",display:"flex",alignItems:"center",gap:5}}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Einmalig CHF 12.90 für 6 Monate — danach selbst entscheiden. Kein Passwort, kein Abo.
+                </div>
               </div>
             </div>
           </div>
@@ -2281,7 +3309,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>BASIC</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"#EFEFEF",color:"#888",fontWeight:500,marginTop:3}}>~75% genau</span>
             </div>
-            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 9.90 <span style={{color:"#BBB"}}>/ 6 Monate · CHF 1.65/Mt.</span></div>
+            <div style={{fontSize:11,color:"#999",fontWeight:400}}>CHF 12.90 <span style={{color:"#BBB"}}>/ 6 Monate · CHF 2.15/Mt.</span></div>
           </div>
           <div style={{padding:"14px 16px",flex:1}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Schätzung</div>
@@ -2299,7 +3327,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
               style={{width:"100%",background:"#EBEBEB",color:"#555",border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Basic — CHF 9.90 <span style={{fontSize:10,opacity:.6}}>· CHF 1.65/Mt.</span> →
+              Basic — Kostenlos →
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#AAA",marginTop:5}}>6 Monate Zugang · jederzeit erneuerbar</div>
           </div>
@@ -2312,7 +3340,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               <div style={{fontSize:22,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1}}>PRO</div>
               <span style={{fontSize:10,padding:"3px 8px",borderRadius:20,background:"rgba(0,0,0,.12)",color:C.black,fontWeight:600,marginTop:3}}>~92% genau</span>
             </div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.45)",fontWeight:400}}>CHF 6.90 <span style={{opacity:.7}}>/ 6 Monate · CHF 1.15/Mt.</span></div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.45)",fontWeight:400}}>CHF 12.90 <span style={{opacity:.7}}>/ 6 Monate · CHF 2.15/Mt.</span></div>
           </div>
           <div style={{padding:"14px 16px",flex:1,background:C.white}}>
             <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kcal Exaktberechnung</div>
@@ -2332,7 +3360,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
           <div style={{padding:"10px 13px 14px",background:C.white}}>
             <button onClick={openPro} disabled={loadPro}
               style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:9,padding:"12px",fontSize:13,fontWeight:800,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",marginBottom:6}}>
-              {loadPro?"...":"Pro — CHF 6.90 "}{!loadPro&&<span style={{fontSize:10,opacity:.7}}>· CHF 1.15/Mt.</span>}{!loadPro&&" →"}
+              {loadPro?"...":"Pro — CHF 12.90 "}{!loadPro&&<span style={{fontSize:10,opacity:.7}}>· CHF 2.15/Mt.</span>}{!loadPro&&" →"}
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#888",marginTop:2}}>6 Monate Zugang · jederzeit erneuerbar</div>
           </div>
@@ -2458,7 +3486,7 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
           <div style={{fontSize:11,color:"#888",marginBottom:12,lineHeight:1.5}}>Nur mit PRO verfügbar</div>
           <button onClick={onUpgrade}
             style={{background:"#C8FF00",color:"#000",border:"none",borderRadius:8,padding:"8px 16px",fontSize:11,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",width:"100%"}}>
-            Upgrade CHF 6.90 →
+            Upgrade CHF 12.90 →
           </button>
         </div>
       </div>
@@ -2472,14 +3500,40 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
   const sports=sportData?.selectedSports||[];
+
+  // Präferenzen aus praeferenzenData ableiten
+  const {energieForm:_eF=[],suppForm:_sF=null}=praeferenzenData||{};
+  const energieFormArr=Array.isArray(_eF)?_eF:(_eF?[_eF]:[]);
+  const wantsGel=energieFormArr.includes("gel");
+  const wantsDrink=energieFormArr.includes("drink");
+  const wantsRiegel=energieFormArr.includes("riegel");
+  const wantsKapsel=_sF==="kapsel"||_sF==="beides";
+  const wantsPulver=_sF==="pulver"||_sF==="beides";
+
+  // Why explanation per format
+  const getEnergyReason=(form)=>{
+    if(form==="gel"&&!wantsGel) return "Gels sind bei dir deaktiviert — du bevorzugst Riegel oder Drinks.";
+    if(form==="gel") return "Ideal für dich: kompakt, sofort verfügbar, kein Kauen nötig.";
+    if(form==="drink"&&!wantsDrink) return "Drink Mix ausgeblendet — du bevorzugst kompaktere Optionen.";
+    if(form==="drink") return "Perfekt: kombiniert Kohlenhydrate und Hydration in einem.";
+    if(form==="riegel"&&!wantsRiegel) return "Riegel ausgeblendet — du bevorzugst Gels oder Drinks.";
+    if(form==="riegel") return "Gut für längere Einheiten — mehr Sättigung, solider Energieschub.";
+    return "";
+  };
+
+  const getSuppReason=(form)=>{
+    if(form==="kapsel"&&!wantsKapsel) return "Kapseln ausgeblendet — du bevorzugst Pulver.";
+    if(form==="pulver"&&!wantsPulver) return "Pulver ausgeblendet — du bevorzugst Kapseln.";
+    return "";
+  };
   const sportLabel=SPORT_GROUPS.find(s=>s.id===primarySport)?.label||(healthOnly?"Gesundheit":"Sport");
   const primaryTraining=trainingData?.[primarySport]||{intensity:"medium"};
-  const {basis,specific}=getSupplements(primarySport,primaryTraining.intensity,healthOnly);
+  const {basis,specific}=getSupplements(primarySport,primaryTraining.intensity,healthOnly,sportData?.subSel,sportData?.childSel||{});
   const profile=buildProfile(sportData,trainingData,profilData);
   const proData=isPro?calcPro(profilData,trainingData,sportData):null;
   const kcal=proData||calcPro(profilData,trainingData,sportData);
   const {primSupps,secSupps}=getPersonalizedSupps(profile,[...specific,...basis],[],proData);
-  const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport);
+  const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport,sportData?.subSel,sportData?.childSel||{});
   const fname=profilData?.firstname||"";
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
   const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
@@ -2523,6 +3577,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   const NutritionTab=()=>{
     const [rubrik,setRubrik]=useState("energie");
+    const [showAll,setShowAll]=useState(false);
     const [formPref,setFormPref]=useState(null); // gel/riegel/drink
     const [dietPref,setDietPref]=useState(null); // standard/vegan
     const [timingPref,setTimingPref]=useState(null); // vor/waehrend/nach
@@ -2574,12 +3629,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     const getItems=()=>{
       let items = rubrik==="energie"?ENERGIE_PRODUKTE:rubrik==="protein"?PROTEIN_PRODUKTE:RECOVERY_PRODUKTE;
-      // Apply user onboarding preference as default filter (can be overridden)
-      if(!formPref && praeferenzenData) {
-        if(rubrik==="energie" && praeferenzenData.energieForm && praeferenzenData.energieForm!=="egal")
-          items=items.filter(p=>p.form===praeferenzenData.energieForm||!p.form);
-        if(rubrik==="protein" && praeferenzenData.proteinForm && praeferenzenData.proteinForm!=="egal")
-          items=items.filter(p=>p.form===praeferenzenData.proteinForm||!p.form);
+      // Filter by onboarding preference — only show what user likes (unless showAll)
+      if(!formPref && !showAll) {
+        if(rubrik==="energie" && !prefEnergy.includes("egal"))
+          items=items.filter(p=>!p.form||prefEnergy.includes(p.form));
+        if(rubrik==="protein" && !prefProtein.includes("egal"))
+          items=items.filter(p=>!p.form||prefProtein.includes(p.form));
+        if(rubrik==="recovery" && !prefRecovery.includes("egal")&&!prefRecovery.includes("keine"))
+          items=items.filter(p=>!p.form||prefRecovery.some(r=>p.form?.includes(r)));
       }
       if(formPref) items=items.filter(p=>p.form===formPref);
       if(dietPref) items=items.filter(p=>!p.diet||p.diet===dietPref);
@@ -2587,6 +3644,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       if(items.length===0) items = rubrik==="energie"?ENERGIE_PRODUKTE:rubrik==="protein"?PROTEIN_PRODUKTE:RECOVERY_PRODUKTE;
       return items;
     };
+    // Show active preference filter as info
+    const activePrefFilter = rubrik==="energie"&&!prefEnergy.includes("egal")?`Gefiltert nach: ${prefEnergy.join(", ")}`
+      :rubrik==="protein"&&!prefProtein.includes("egal")?`Gefiltert nach: ${prefProtein.join(", ")}`
+      :null;
 
     const items=getItems();
 
@@ -2635,7 +3696,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Sportnahrung</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:14}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:8}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
+        {activePrefFilter&&(
+          <div style={{marginBottom:12,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000"}}>
+            ✓ {activePrefFilter} — basierend auf deiner Präferenz
+          </div>
+        )}
 
 
 
@@ -2661,7 +3727,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {/* 3 Rubriken */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6,marginBottom:16}}>
           {RUBRIKEN.map(r=>(
-            <button key={r.id} onClick={()=>{setRubrik(r.id);setFormPref(null);setTimingPref(null);}}
+            <button key={r.id} onClick={()=>{setRubrik(r.id);setFormPref(null);setTimingPref(null);setShowAll(false);}}
               style={{padding:"10px 8px",borderRadius:10,border:`1.5px solid ${rubrik===r.id?C.black:"#EBEBEB"}`,background:rubrik===r.id?C.black:"#fff",cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .14s"}}>
               <div style={{fontSize:16,marginBottom:3}}>{r.icon}</div>
               <div style={{fontSize:12,fontWeight:700,color:rubrik===r.id?"#fff":C.black}}>{r.label}</div>
@@ -2685,6 +3751,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           )}
         </div>
 
+        {/* Präferenz Toggle */}
+        {activePrefFilter&&(
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12,padding:"8px 12px",borderRadius:9,background:showAll?"#F5F5F5":C.neonDim,border:`1px solid ${showAll?"#E0E0E0":C.neon}`,transition:"all .2s"}}>
+            <span style={{fontSize:11,color:showAll?"#888":"#4A7000",fontWeight:500}}>
+              {showAll?"Alle Produkte anzeigen":`Nur deine Präferenz: ${prefEnergy.includes("egal")?prefProtein.join(", "):prefEnergy.join(", ")}`}
+            </span>
+            <div onClick={()=>setShowAll(s=>!s)}
+              style={{width:36,height:20,borderRadius:10,background:showAll?"#CCC":C.black,cursor:"pointer",position:"relative",transition:"background .2s",flexShrink:0}}>
+              <div style={{position:"absolute",top:2,left:showAll?2:18,width:16,height:16,borderRadius:"50%",background:showAll?"#fff":C.neon,transition:"left .2s",boxShadow:"0 1px 3px rgba(0,0,0,.2)"}}/>
+            </div>
+          </div>
+        )}
+
         {/* Produkte */}
         {items.length===0?(
           <div style={{padding:"24px",textAlign:"center",background:"#FAFAFA",borderRadius:12,border:"1px solid #EBEBEB"}}>
@@ -2703,6 +3782,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                     <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>{p.dose}</div>
                     <div style={{fontSize:11,color:"#888",marginBottom:4}}>{p.when}</div>
                     <div style={{fontSize:11,color:"#555",lineHeight:1.5}}>{p.why}</div>
+                    {p.form&&getEnergyReason&&getEnergyReason(p.form)&&(
+                      <div style={{marginTop:5,fontSize:10,color:"#4A7000",fontStyle:"italic"}}>{getEnergyReason(p.form)}</div>
+                    )}
                   </div>
                   <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",paddingTop:10,borderTop:"1px solid #F5F5F5",marginBottom:8}}>
                     <span style={{fontSize:11,fontWeight:500,color:"#333"}}>{p.price}</span>
@@ -2813,70 +3895,129 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const age = new Date().getFullYear()-(+profilData?.birthyear||1990);
     const localSports = sportData?.selectedSports||sports||[];
     const isEndurance = localSports.some(s=>["cycling_road","cycling_gravel","cycling_mtb","run_road","run_trail","triathlon","swimming","langlauf"].includes(s));
-
     const SPORT_NAMES = {cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",run_road:"Strassenlauf",run_trail:"Traillauf",triathlon:"Triathlon",swimming:"Schwimmen",football:"Fussball",icehockey:"Eishockey",ski_alpine:"Ski Alpin",tennis:"Tennis",basketball:"Basketball",hyrox:"Hyrox"};
     const sportNames = localSports.map(s=>SPORT_NAMES[s]||s).join(", ");
+    const GOAL_LABEL = {performance:"Leistung steigern",muscle:"Muskelaufbau",endurance:"Ausdauer verbessern",weightloss:"Gewicht reduzieren",health:"Gesundheit & Longevity",recovery:"Regeneration"}[calc.goal]||"";
+    const ALTITUDE_LABEL = {low:"Flachland (0–500m)",medium:"Mittelland (500–1500m)",high:"Voralpen (1500–2500m)",alpine:"Hochgebirge (2500m+)"}[calc.altitude]||"";
+    const TIME_LABEL = {morning:"Morgentraining",midday:"Mittagstraining",afternoon:"Nachmittagstraining",evening:"Abendtraining"}[calc.primaryTrainingTime]||"Training";
+    const STRESS_LABEL = {1:"sehr niedrig",2:"niedrig",3:"mittel",4:"hoch",5:"sehr hoch"}[calc.stressLevel]||"mittel";
+    const DIET_LABEL = {excellent:"sehr ausgewogen",good:"gut",average:"durchschnittlich",poor:"verbesserungswürdig"}[calc.dietQuality]||"gut";
 
-    const KEY_INSIGHTS = [
+    // Build personalized insights — fully context-aware
+    const INSIGHTS = [
       {
         icon:"🔥",
-        title:"Täglicher Energiebedarf",
+        title:"Dein täglicher Energiebedarf",
         value:`${calc.withTraining?.toLocaleString("de-CH")||"—"} kcal`,
-        desc:`An Trainingstagen. Grundumsatz: ${calc.bmr?.toLocaleString("de-CH")||"—"} kcal.`,
-        important:true,
+        color:"#C8FF00",
+        explain: (()=>{
+          const sportCtxNotes = localSports.map(id=>SPORT_CONTEXT[id]?.note).filter(Boolean);
+          let base = `Basierend auf ${sportNames}, ${weight}kg Körpergewicht und MET-2024 Werten. Dein Grundumsatz beträgt ${calc.bmr?.toLocaleString("de-CH")} kcal — alles darüber hinaus verbrennst du durch Training.`;
+          if(localSports.includes("cycling_ebike")) base += " E-Bike reduziert den Verbrauch um ~60% vs. Rennrad — trotzdem echter Kalorienverbrauch und Elektrolytbedarf.";
+          if(calc.altitude==="high"||calc.altitude==="alpine") base += " Auf "+ALTITUDE_LABEL+" erhöht sich dein Verbrauch um bis zu 20% — dein Körper arbeitet härter um O₂ aufzunehmen.";
+          return base;
+        })(),
       },
       {
         icon:"💪",
-        title:"Proteinbedarf täglich",
-        value:`${calc.protein||"—"}g`,
-        desc:`${Math.round(weight*1.6)}–${Math.round(weight*2.0)}g für optimalen Muskelaufbau & Regeneration.`,
-        important:true,
+        title:"Dein Proteinbedarf",
+        value:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g/Tag`,
+        color:"#C8FF00",
+        explain: `Für dein Ziel "${GOAL_LABEL}" brauchst du ${calc.proteinMin}–${calc.proteinMax}g Protein täglich.${calc.goal==="muscle"?" Muskelaufbau braucht mehr Protein als der Standard — verteile es auf 4–5 Mahlzeiten.":calc.goal==="weightloss"?" Hohe Proteinzufuhr beim Abnehmen schützt deine Muskelmasse — kritisch für Athleten.":""} Direkt nach dem Training: ${calc.timingRecs?.postWorkout||"so schnell wie möglich"}.`,
       },
       {
         icon:"⚡",
-        title:isEndurance?"Kohlenhydrate im Training":"Energie für Training",
-        value:isEndurance?`${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g/Std.`:`${calc.carbs||200}g/Tag`,
-        desc:isEndurance?"Während intensiver Einheiten. Kritisch für Leistung & Ausdauer.":"Ausreichend Kohlenhydrate für Explosivität und Konzentration.",
-        important:true,
+        title: isEndurance?"Kohlenhydrate im Training":"Energie für dein Training",
+        value: isEndurance?`${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g/Std.`:`${calc.carbsG||"—"}g/Tag`,
+        color:"#C8FF00",
+        explain: isEndurance
+          ?`Bei ${TIME_LABEL} brauchst du ${calc.carbsPerHour||45}–${(calc.carbsPerHour||45)+15}g Kohlenhydrate pro Stunde. Dein Körper kann maximal ~90g/Std. aufnehmen — trainiere deinen Darm frühzeitig. Leere Tanks kosten beim ${sportNames} direkt Minuten.`
+          :`${sportNames} ist hochintensiv: ohne ausreichend Carbs bricht Reaktionszeit, Explosivität und Konzentration zuerst ein. Verteile ${calc.carbsG}g auf den Tag — Schwerpunkt vor und nach dem Training.`,
+      },
+      {
+        icon:"💧",
+        title:"Hydration & Elektrolyte",
+        value:`${(calc.waterMl/1000).toFixed(1)}L/Tag`,
+        color:"#4A7000",
+        explain: `Du verlierst ca. ${calc.sweatLitresPerSession}L Schweiss pro Trainingseinheit${calc.sweatLitresPerSession>1.5?" — du schwitz stark, das ist mehr als der Durchschnitt":""}. Dein Natriumbedarf: ${calc.natriumMg?.toLocaleString("de-CH")}mg, Magnesium: ${calc.magnesiumMg}mg täglich.`+(calc.altitude==="high"||calc.altitude==="alpine"?" Auf "+ALTITUDE_LABEL+": trockene Höhenluft erhöht deinen Flüssigkeitsverlust zusätzlich — trinke mehr als du denkst.":""),
       },
       {
         icon:"🌙",
-        title:"Recovery Priorität",
-        value:"Magnesium + Schlaf",
-        desc:"Regeneration ist kein Bonus — sie entscheidet ob du morgen wieder auf Niveau trainieren kannst.",
-        important:false,
+        title:"Recovery & Regeneration",
+        value:calc.sleep<7?"Schlafdefizit":"Timing optimiert",
+        color:calc.sleep<7?"#856404":"#4A7000",
+        explain: `Du schläfst ${calc.sleep}h pro Nacht.${calc.sleep<7?" Warnung: unter 7h Schlaf erhöht Cortisol, hemmt Muskelproteinsynthese und verlängert Regenerationszeit. Das ist dein wichtigster Hebel.":calc.sleep>=8?" Ausgezeichnet — 8h+ Schlaf maximiert Wachstumshormon-Ausschüttung und Muskelreparatur.":""} Bei ${TIME_LABEL}: ${calc.timingRecs?.note||"Recovery ist Training — behandle sie so"}.`,
       },
     ];
 
+    // Personalized warnings with full explanations
     const WARNINGS = [];
-    if(calc.withTraining > 3000) WARNINGS.push("Dein Energiebedarf ist hoch — stelle sicher dass du ausreichend und regelmässig isst.");
-    if(weight > 90) WARNINGS.push(`Bei ${weight}kg ist Proteinqualität besonders wichtig — mindestens ${Math.round(weight*1.6)}g täglich.`);
-    if(isEndurance) WARNINGS.push("Endauersport: Kohlenhydrate während dem Training sind nicht optional — leere Tanks kosten Minuten.");
+    if(calc.stressLevel>=4) WARNINGS.push({
+      icon:"🧠",
+      text:`Dein Stresslevel ist ${STRESS_LABEL}. Hoher Stress erhöht Cortisol — das hemmt Regeneration, baut Muskeln ab und reduziert Schlafqualität. Ashwagandha (KSM-66) und erhöhtes Magnesium (${calc.magnesiumMg}mg/Tag) sind für dich besonders wichtig.`
+    });
+    if(calc.vitDRisk) WARNINGS.push({
+      icon:"☀️",
+      text:`Bei ${DIET_LABEL}er Ernährung ist Vitamin D-Mangel häufig — 56% aller Sportler sind unterversorgt. Supplementiere 2000–4000 IE täglich, besonders in den Wintermonaten.`
+    });
+    if(calc.needsCollagen) WARNINGS.push({
+      icon:"🦴",
+      text:`Bei deinen Beschwerden (${(calc.injuries||[]).filter(x=>x!=="none").join(", ")}) ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam für Sehnen- und Gelenkschutz. 10–15g, 30–60 Min. vor der Einheit.`
+    });
+    if(calc.needsOmega3Extra) WARNINGS.push({
+      icon:"🐟",
+      text:`Omega-3 (EPA/DHA, 2–3g/Tag) reduziert systemische Entzündungen — bei Muskel- und Rückenproblemen direkt messbar. Priorisiere Fisch 2×/Woche oder hochwertiges Supplement.`
+    });
+    if(calc.altitudeIronNeeded) WARNINGS.push({
+      icon:"🏔️",
+      text:`Auf ${ALTITUDE_LABEL} produziert dein Körper mehr rote Blutkörperchen — dein Eisenbedarf steigt. Regelmässige Kontrolle und eisenreiche Ernährung (rotes Fleisch, Hülsenfrüchte) oder Supplementierung sind wichtig.`
+    });
+    if(calc.b12Risk) WARNINGS.push({
+      icon:"🌱",
+      text:`Bei veganer Ernährung ist Vitamin B12 nicht aus der Nahrung aufnehmbar. Supplementierung ist zwingend (500–1000µg/Tag Methylcobalamin) — ein Mangel führt zu Erschöpfung, Nervenschäden und Leistungseinbruch.`
+    });
+    // Sport-specific warnings
+    if(localSports.includes("cycling_ebike")) WARNINGS.push({
+      icon:"⚡",
+      text:`E-Bike: Dein Kalorienverbrauch ist ~60% tiefer als beim konventionellen Radfahren (MET ${(4.0).toFixed(1)} vs. ${(9.0).toFixed(1)}). Elektrolyte, Protein und Regeneration bleiben aber gleich wichtig — der Motor hilft den Beinen, nicht dem Rest des Körpers.`
+    });
+    if(localSports.includes("cycling_mtb_dh")) WARNINGS.push({
+      icon:"🏔️",
+      text:"Downhill: Anaerobe, explosive Belastung mit hohem Muskel- und Gelenkstress. Kreatin, Kollagen und schnelle Proteinzufuhr direkt nach den Runs sind besonders wichtig."
+    });
+    if(localSports.includes("cycling_mtb_end")) WARNINGS.push({
+      icon:"🔄",
+      text:"Enduro: Asymmetrische Belastung (Uphills + technische Abfahrten) erhöht den Regenerationsbedarf. Omega-3 und Kollagen für Sehnen und Gelenke — besonders nach intensiven Enduro-Tagen."
+    });
+    if(calc.ironRisk&&calc.isFemale) WARNINGS.push({
+      icon:"🩸",
+      text:`Sportlerinnen haben ein erhöhtes Eisenrisiko durch Menstruationsverlust und Sport-Hämolyse. Ferritin regelmässig testen — Zielwert für Athletinnen: >50 µg/L.`
+    });
 
     return (
       <div>
         {/* Header */}
         <div style={{marginBottom:20}}>
           <h2 style={{fontSize:20,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.03em"}}>
-            {firstname?`Hallo ${firstname} — hier ist deine Analyse.`:"Deine Analyse."}
+            {firstname?`Hallo ${firstname} — deine persönliche Analyse.`:"Deine persönliche Analyse."}
           </h2>
-          <p style={{fontSize:13,color:C.g600,lineHeight:1.6}}>
-            Basierend auf {sportNames} · {age} Jahre · {weight}kg. Die wichtigsten Erkenntnisse auf einen Blick.
+          <p style={{fontSize:12,color:C.g600,lineHeight:1.6}}>
+            {sportNames} · {age} Jahre · {weight}kg · Ziel: {GOAL_LABEL}{ALTITUDE_LABEL?` · ${ALTITUDE_LABEL}`:""}
           </p>
         </div>
 
         {/* Key Insights */}
         <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:20}}>
-          {KEY_INSIGHTS.map((ins,i)=>(
-            <div key={i} style={{borderRadius:12,border:`1.5px solid ${ins.important?C.neon:C.g200}`,background:ins.important?C.neonDim:"#fff",padding:"14px 16px",display:"flex",gap:12,alignItems:"flex-start"}}>
-              <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{ins.icon}</span>
-              <div style={{flex:1}}>
-                <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8,marginBottom:3}}>
-                  <div style={{fontSize:12,fontWeight:600,color:C.black}}>{ins.title}</div>
-                  <div style={{fontSize:14,fontWeight:700,color:ins.important?"#2D4A00":C.black,flexShrink:0}}>{ins.value}</div>
+          {INSIGHTS.map((ins,i)=>(
+            <div key={i} style={{borderRadius:12,border:`1.5px solid ${ins.color==="#C8FF00"?C.neon:C.g200}`,background:ins.color==="#C8FF00"?C.neonDim:"#fff",padding:"14px 16px"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+                <div style={{display:"flex",alignItems:"center",gap:7}}>
+                  <span style={{fontSize:18}}>{ins.icon}</span>
+                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{ins.title}</span>
                 </div>
-                <div style={{fontSize:11,color:ins.important?"#4A7000":C.g600,lineHeight:1.5}}>{ins.desc}</div>
+                <span style={{fontSize:14,fontWeight:700,color:ins.color==="#C8FF00"?"#2D4A00":C.black,flexShrink:0,marginLeft:8}}>{ins.value}</span>
               </div>
+              <div style={{fontSize:11,color:ins.color==="#C8FF00"?"#4A7000":C.g600,lineHeight:1.6}}>{ins.explain}</div>
             </div>
           ))}
         </div>
@@ -2884,25 +4025,32 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {/* Warnings */}
         {WARNINGS.length>0&&(
           <div style={{marginBottom:20}}>
-            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>BESONDERS BEACHTEN</div>
+            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>WICHTIGE HINWEISE FÜR DICH</div>
             <div style={{display:"flex",flexDirection:"column",gap:6}}>
               {WARNINGS.map((w,i)=>(
-                <div key={i} style={{padding:"10px 14px",borderRadius:10,background:"#FFF8E8",border:"1px solid #FFE082",fontSize:11,color:"#856404",lineHeight:1.6,display:"flex",gap:8}}>
-                  <span style={{flexShrink:0}}>⚠️</span>{w}
+                <div key={i} style={{padding:"11px 14px",borderRadius:10,background:"#FFFBF0",border:"1px solid #FFE082",display:"flex",gap:10,alignItems:"flex-start"}}>
+                  <span style={{fontSize:16,flexShrink:0}}>{w.icon}</span>
+                  <div style={{fontSize:11,color:"#5D4037",lineHeight:1.65}}>{w.text}</div>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {/* PRO Teaser — blurred sections */}
+        {/* PRO Teaser */}
         {!isPro&&(
           <div style={{marginBottom:20}}>
-            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>NUR MIT PRO VERFÜGBAR</div>
-            <div style={{display:"flex",flexDirection:"column",gap:6}}>
-              {["Elektrolyte & Schweissverlust (präzise berechnet)","VO₂max & Leistungszonen","Kohlenhydrate pro Stunde (MET-basiert)","Alle Supplement-Dosierungen","Personalisierter Tagesplan"].map((item,i)=>(
-                <div key={i} style={{padding:"10px 14px",borderRadius:10,background:"#FAFAFA",border:"1px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-                  <span style={{fontSize:11,color:"#AAA",filter:"blur(3px)",userSelect:"none",flex:1}}>{item}</span>
+            <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>NUR MIT PRO — VOLLSTÄNDIGE ANALYSE</div>
+            <div style={{display:"flex",flexDirection:"column",gap:5}}>
+              {[
+                "Elektrolyte & Schweissverlust — präzise auf dein Gewicht und Sportart",
+                "VO₂max & Leistungszonen — dein Ausdauer-Fingerabdruck",
+                "Kohlenhydrate pro Stunde — MET-basiert, intervall-genau",
+                "Alle Supplement-Dosierungen — inkl. Timing-Plan",
+                "Personalisierter Tagesplan — Pre/Post-Workout bis Schlafen",
+              ].map((item,i)=>(
+                <div key={i} style={{padding:"9px 14px",borderRadius:9,background:"#FAFAFA",border:"1px solid #EBEBEB",display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
+                  <span style={{fontSize:11,color:"#CCC",filter:"blur(3px)",userSelect:"none",flex:1}}>{item}</span>
                   <span style={{fontSize:9,padding:"2px 7px",borderRadius:4,background:"#F0F0F0",color:"#AAA",fontFamily:"JetBrains Mono,monospace",flexShrink:0}}>🔒 PRO</span>
                 </div>
               ))}
@@ -2911,37 +4059,33 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         )}
 
         {/* CTA */}
-        <div style={{borderRadius:14,border:`1px solid ${C.g200}`,padding:"18px 20px",background:"#fff"}}>
+        <div style={{borderRadius:14,border:`1px solid ${C.g200}`,padding:"16px 20px",background:"#fff"}}>
           {isPro?(
-            <div>
-              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:8}}>Bereit — alle Daten verfügbar.</div>
-              <button onClick={()=>setTab("verbrauch")}
-                style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            <>
+              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:8}}>Alle Daten verfügbar — legen wir los.</div>
+              <button onClick={()=>setTab("verbrauch")} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"12px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
                 Zu Deine Daten →
               </button>
-            </div>
+            </>
           ):(
-            <div>
-              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Auf PRO upgraden</div>
-              <div style={{fontSize:11,color:C.g600,marginBottom:12,lineHeight:1.5}}>Präzise Berechnungen, alle Dosierungen, Elektrolyte, VO₂max und vollständiger Tagesplan. CHF 6.90 / 6 Monate — einmalige Zahlung.</div>
+            <>
+              <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>Bereit für die vollständige Analyse?</div>
+              <div style={{fontSize:11,color:C.g600,marginBottom:12,lineHeight:1.5}}>CHF 12.90 / 6 Monate — einmalig. Kündigung jederzeit möglich.</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-                <button onClick={()=>setTab("verbrauch")}
-                  style={{background:"#F5F5F5",color:"#555",border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                  Kostenlos weiter →
+                <button onClick={()=>setTab("verbrauch")} style={{background:"#F5F5F5",color:"#555",border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                  Kostenlos weiter
                 </button>
-                <button onClick={onUpgrade}
-                  style={{background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-                  PRO — CHF 6.90 →
+                <button onClick={onUpgrade} style={{background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"11px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                  PRO — CHF 12.90 →
                 </button>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
     );
   };
 
-  // ── VERBRAUCH TAB ──────────────────────────────────────────────────────────
   const VerbrauchTab=()=>{
     const [localTraining,setLocalTraining]=useState(()=>JSON.parse(JSON.stringify(trainingData||{})));
     React.useEffect(()=>{ if(trainingData&&Object.keys(trainingData).length>0) setLocalTraining(JSON.parse(JSON.stringify(trainingData))); },[JSON.stringify(trainingData)]);
@@ -3217,6 +4361,26 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>
         </div>
 
+        {/* ── SUPPLEMENT TIMING ── */}
+        {timingRecs?.note&&(
+          <div style={{marginBottom:20,padding:"14px 16px",borderRadius:12,background:C.neonDim,border:`1px solid ${C.neon}`}}>
+            <div style={{fontSize:10,color:"#4A7000",fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>SUPPLEMENT-TIMING FÜR DICH · {({morning:"MORGENTRAINING",midday:"MITTAGSTRAINING",afternoon:"NACHMITTAGSTRAINING",evening:"ABENDTRAINING"})[calc?.primaryTrainingTime]||"DEIN TRAINING"}</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:8}}>
+              {[
+                {l:"Pre-Workout",v:timingRecs.preWorkout},
+                {l:"Post-Workout",v:timingRecs.postWorkout},
+                {l:"Kreatin",v:timingRecs.creatine},
+              ].map(({l,v},i)=>v&&(
+                <div key={i} style={{background:"rgba(0,0,0,.04)",borderRadius:8,padding:"8px 10px",textAlign:"center"}}>
+                  <div style={{fontSize:11,fontWeight:600,color:C.black,marginBottom:2}}>{v}</div>
+                  <div style={{fontSize:10,color:"#4A7000"}}>{l}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{fontSize:11,color:"#2D4A00",lineHeight:1.5}}>{timingRecs.note}</div>
+          </div>
+        )}
+
         {/* ── WOCHENSUMMARY ── */}
         <div style={{padding:"14px 16px",background:"#FAFAFA",borderRadius:11,border:"1px solid #EBEBEB",display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12,marginBottom:24,textAlign:"center"}}>
           {[
@@ -3238,7 +4402,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
               <div style={{fontSize:13,fontWeight:500,color:"#0A0A0A",marginBottom:2}}>Präzisere Werte mit PRO</div>
               <div style={{fontSize:11,color:"#888",lineHeight:1.5}}>Natrium, Magnesium, Schweiss, Wasser, VO₂max, exakter Protein- & Kohlenhydratbedarf.</div>
             </div>
-            <button onClick={onUpgrade} style={{background:"#0A0A0A",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>PRO · CHF 6.90 / Mt.</button>
+            <button onClick={onUpgrade} style={{background:"#0A0A0A",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>PRO · CHF 12.90 / 6 Mt.</button>
           </div>
         )}
       </div>
@@ -3618,6 +4782,17 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           ))}
         </div>
       </div>
+
+      {/* Copyright */}
+      <div style={{marginTop:10,padding:"14px 16px",background:C.black,borderRadius:12}}>
+        <div style={{fontSize:11,fontWeight:600,color:C.neon,marginBottom:6,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>© {new Date().getFullYear()} TREYN+ · WBCS GmbH</div>
+        <div style={{fontSize:11,color:"rgba(255,255,255,.6)",lineHeight:1.7}}>
+          Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung — auch auszugsweise oder durch KI-gestützte Tools — ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
+        </div>
+        <div style={{marginTop:10,paddingTop:10,borderTop:"1px solid rgba(255,255,255,.1)",fontSize:10,color:"rgba(255,255,255,.35)"}}>
+          Verstösse melden: info@treyn.ch
+        </div>
+      </div>
     </div>
   );
 
@@ -3625,6 +4800,32 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
   const ProfilTab=()=>{
     const [orders]=useState(()=>{ try{ return parseInt(localStorage.getItem("treyn_orders")||"0"); }catch{ return 0; } });
     const [showPersonal,setShowPersonal]=useState(false);
+    const [editMode,setEditMode]=useState(false);
+    const [editForm,setEditForm]=useState({
+      weight: profilData?.weight||"",
+      height: profilData?.height||"",
+      sleep:  profilData?.sleep||"",
+      rhr:    profilData?.rhr||"",
+      stressLevel:    profilData?.stressLevel||3,
+      dietQuality:    profilData?.dietQuality||"good",
+      altitude:       profilData?.altitude||"low",
+      recoveryStatus: profilData?.recoveryStatus||"good",
+      currentSupps:   profilData?.currentSupps||[],
+      medications:    profilData?.medications||[],
+      monthlyBudget:  profilData?.monthlyBudget||"medium",
+      goal:           profilData?.goal||"performance",
+    });
+    const setEF=(k,v)=>setEditForm(f=>({...f,[k]:v}));
+    const toggleEFArr=(k,v)=>setEditForm(f=>{
+      const curr=(f[k]||[]).filter(x=>x!=="none");
+      if(v==="none") return {...f,[k]:["none"]};
+      return {...f,[k]:curr.includes(v)?curr.filter(x=>x!==v):[...curr,v]};
+    });
+    const saveEdit=()=>{
+      // Merge edits back into profilData (mutate ref - parent would need callback for persistence)
+      Object.assign(profilData,editForm);
+      setEditMode(false);
+    };
 
     const TIERS=[
       {min:0,  max:9,   id:"none",     label:null,       badge:"◈", color:C.g400},
@@ -3680,30 +4881,190 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           ))}
         </div>
 
-        {/* Persönliche Daten — ausklappbar */}
-        <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:12}}>
+        {/* Profil bearbeiten */}
+        <div style={{border:`1px solid ${editMode?C.neon:C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:12}}>
           <button onClick={()=>setShowPersonal(p=>!p)}
-            style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",background:C.g100,border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-            <span style={{fontSize:11,fontWeight:600,color:C.black}}>Persönliche Daten</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round">
-              <path d={showPersonal?"M18 15l-6-6-6 6":"M6 9l6 6 6-6"}/>
-            </svg>
+            style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 16px",background:editMode?C.neonDim:C.g100,border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            <span style={{fontSize:11,fontWeight:600,color:C.black}}>Profil & Angaben</span>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              {!editMode&&<button onClick={e=>{e.stopPropagation();setEditMode(true);setShowPersonal(true);}}
+                style={{fontSize:10,padding:"3px 10px",borderRadius:6,background:C.black,color:C.white,border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:500}}>Bearbeiten</button>}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round">
+                <path d={showPersonal?"M18 15l-6-6-6 6":"M6 9l6 6 6-6"}/>
+              </svg>
+            </div>
           </button>
           {showPersonal&&(
-            <div>
+            <div style={{padding:"14px 16px"}}>
+              {/* Static read-only: name, email, country, gender */}
               {[
                 {l:"Name",v:`${profilData?.firstname||""} ${profilData?.lastname||""}`.trim()||"—"},
                 {l:"E-Mail",v:profilData?.email||"—"},
                 {l:"Herkunft",v:profilData?.country||"—"},
                 {l:"Geschlecht",v:{m:"Männlich",f:"Weiblich"}[profilData?.gender]||"—"},
-                {l:"Grösse",v:profilData?.height?`${profilData.height} cm`:"—"},
-                {l:"Gewicht",v:profilData?.weight?`${profilData.weight} kg`:"—"},
-              ].map((r,i,arr)=>(
-                <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"9px 16px",borderBottom:i<arr.length-1?`1px solid ${C.g100}`:"none"}}>
+              ].map((r,i)=>(
+                <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.g100}`}}>
                   <span style={{fontSize:12,color:C.g600}}>{r.l}</span>
                   <span style={{fontSize:12,fontWeight:500,color:C.black}}>{r.v}</span>
                 </div>
               ))}
+
+              {/* Editable fields */}
+              {!editMode?(
+                // Read-only view of editable fields
+                <div style={{marginTop:8}}>
+                  {[
+                    {l:"Gewicht",v:profilData?.weight?`${profilData.weight} kg`:"—"},
+                    {l:"Grösse",v:profilData?.height?`${profilData.height} cm`:"—"},
+                    {l:"Schlaf",v:profilData?.sleep?`${profilData.sleep}h/Nacht`:"—"},
+                    {l:"Ruhepuls",v:profilData?.rhr?`${profilData.rhr} bpm`:"—"},
+                    {l:"Ziel",v:{performance:"Leistung",muscle:"Muskelaufbau",endurance:"Ausdauer",weightloss:"Gewicht",health:"Gesundheit",recovery:"Regeneration"}[profilData?.goal]||"—"},
+                    {l:"Stresslevel",v:{1:"Sehr niedrig",2:"Niedrig",3:"Mittel",4:"Hoch",5:"Sehr hoch"}[profilData?.stressLevel]||"—"},
+                    {l:"Ernährung",v:{excellent:"Sehr ausgewogen",good:"Gut",average:"Durchschnittlich",poor:"Verbesserungswürdig"}[profilData?.dietQuality]||"—"},
+                    {l:"Höhe",v:{low:"0–500m",medium:"500–1500m",high:"1500–2500m",alpine:"2500m+"}[profilData?.altitude]||"—"},
+                    {l:"Erholungsstatus",v:{excellent:"Top-Form",good:"Normal",tired:"Müde / überlastet",recovery:"Verletzung / Pause"}[profilData?.recoveryStatus]||"—"},
+                    {l:"Budget / Monat",v:{low:"< CHF 30",medium:"CHF 30–80",high:"CHF 80–150",max:"CHF 150+"}[profilData?.monthlyBudget]||"—"},
+                    {l:"Aktuelle Supplements",v:(profilData?.currentSupps||[]).includes("none")||!(profilData?.currentSupps||[]).length?"Keine":(profilData?.currentSupps||[]).join(", ")},
+                    {l:"Medikamente",v:(profilData?.medications||[]).includes("none")||!(profilData?.medications||[]).length?"Keine":(profilData?.medications||[]).map(m=>({blutverd:"Blutverdünner",schilddruese:"Schilddrüse",blutdruck:"Blutdruck"}[m]||m)).join(", ")},
+                  ].map((r,i,arr)=>(
+                    <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:i<arr.length-1?`1px solid ${C.g100}`:"none"}}>
+                      <span style={{fontSize:12,color:C.g600}}>{r.l}</span>
+                      <span style={{fontSize:12,fontWeight:500,color:C.black,textAlign:"right",maxWidth:"60%"}}>{r.v}</span>
+                    </div>
+                  ))}
+                </div>
+              ):(
+                // Edit mode
+                <div style={{marginTop:12}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+                    {[{k:"weight",l:"Gewicht (kg)",ph:"100"},{k:"height",l:"Grösse (cm)",ph:"185"},{k:"sleep",l:"Schlaf (h)",ph:"7.5"},{k:"rhr",l:"Ruhepuls (bpm)",ph:"52"}].map(f=>(
+                      <div key={f.k}>
+                        <div style={{fontSize:11,color:C.g600,marginBottom:4}}>{f.l}</div>
+                        <input type="number" value={editForm[f.k]} onChange={e=>setEF(f.k,e.target.value)} placeholder={f.ph}
+                          style={{width:"100%",padding:"9px 11px",border:`1.5px solid ${editForm[f.k]?C.neon:C.g200}`,borderRadius:9,fontSize:13,fontFamily:"Inter,sans-serif",background:editForm[f.k]?C.neonDim:C.white}}/>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Ziel */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Primäres Ziel</div>
+                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                      {[{id:"performance",l:"Leistung"},{id:"muscle",l:"Muskel"},{id:"endurance",l:"Ausdauer"},{id:"weightloss",l:"Gewicht"},{id:"health",l:"Gesundheit"},{id:"recovery",l:"Regeneration"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("goal",o.id)}
+                          style={{padding:"5px 12px",borderRadius:20,border:`1.5px solid ${editForm.goal===o.id?C.neon:C.g200}`,background:editForm.goal===o.id?C.neonDim:C.white,fontSize:11,fontWeight:editForm.goal===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Stresslevel */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Stresslevel</div>
+                    <div style={{display:"flex",gap:6}}>
+                      {[{id:1,l:"Sehr niedrig"},{id:2,l:"Niedrig"},{id:3,l:"Mittel"},{id:4,l:"Hoch"},{id:5,l:"Sehr hoch"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("stressLevel",o.id)}
+                          style={{flex:1,padding:"6px 2px",borderRadius:8,border:`1.5px solid ${editForm.stressLevel===o.id?C.neon:C.g200}`,background:editForm.stressLevel===o.id?C.neonDim:C.white,fontSize:9,fontWeight:editForm.stressLevel===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Ernährungsqualität */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Ernährung</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                      {[{id:"excellent",l:"Sehr ausgewogen"},{id:"good",l:"Gut"},{id:"average",l:"Durchschnittlich"},{id:"poor",l:"Verbesserungswürdig"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("dietQuality",o.id)}
+                          style={{padding:"7px 10px",borderRadius:8,border:`1.5px solid ${editForm.dietQuality===o.id?C.neon:C.g200}`,background:editForm.dietQuality===o.id?C.neonDim:C.white,fontSize:11,fontWeight:editForm.dietQuality===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Erholungsstatus */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Erholungsstatus</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
+                      {[{id:"excellent",l:"Top-Form"},{id:"good",l:"Normal"},{id:"tired",l:"Müde / überlastet"},{id:"recovery",l:"Verletzung / Pause"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("recoveryStatus",o.id)}
+                          style={{padding:"7px 10px",borderRadius:8,border:`1.5px solid ${editForm.recoveryStatus===o.id?C.neon:C.g200}`,background:editForm.recoveryStatus===o.id?C.neonDim:C.white,fontSize:11,fontWeight:editForm.recoveryStatus===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Höhe */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Trainings-Höhe</div>
+                    <div style={{display:"flex",gap:6}}>
+                      {[{id:"low",l:"0–500m"},{id:"medium",l:"500–1500m"},{id:"high",l:"1500–2500m"},{id:"alpine",l:"2500m+"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("altitude",o.id)}
+                          style={{flex:1,padding:"6px 2px",borderRadius:8,border:`1.5px solid ${editForm.altitude===o.id?C.neon:C.g200}`,background:editForm.altitude===o.id?C.neonDim:C.white,fontSize:10,fontWeight:editForm.altitude===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Budget */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Monatliches Budget</div>
+                    <div style={{display:"flex",gap:6}}>
+                      {[{id:"low",l:"< CHF 30"},{id:"medium",l:"CHF 30–80"},{id:"high",l:"CHF 80–150"},{id:"max",l:"CHF 150+"}].map(o=>(
+                        <button key={o.id} onClick={()=>setEF("monthlyBudget",o.id)}
+                          style={{flex:1,padding:"6px 2px",borderRadius:8,border:`1.5px solid ${editForm.monthlyBudget===o.id?C.neon:C.g200}`,background:editForm.monthlyBudget===o.id?C.neonDim:C.white,fontSize:10,fontWeight:editForm.monthlyBudget===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
+                          {o.l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Aktuelle Supplements */}
+                  <div style={{marginBottom:10}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Aktuelle Supplements</div>
+                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                      {["none","kreatin","protein","vitd","omega3","magnesium","koffein","eisen","zink","ashwa","collagen","beta_ala"].map(id=>{
+                        const labels={none:"Keine",kreatin:"Kreatin",protein:"Protein/Whey",vitd:"Vit. D",omega3:"Omega-3",magnesium:"Magnesium",koffein:"Koffein",eisen:"Eisen",zink:"Zink",ashwa:"Ashwagandha",collagen:"Kollagen",beta_ala:"Beta-Alanin"};
+                        const on=(editForm.currentSupps||[]).includes(id);
+                        return <button key={id} onClick={()=>toggleEFArr("currentSupps",id)}
+                          style={{padding:"4px 10px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+                          {labels[id]}
+                        </button>;
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Medikamente */}
+                  <div style={{marginBottom:14}}>
+                    <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Medikamente</div>
+                    <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                      {[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"}].map(o=>{
+                        const on=(editForm.medications||[]).includes(o.id);
+                        return <button key={o.id} onClick={()=>toggleEFArr("medications",o.id)}
+                          style={{padding:"4px 10px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+                          {o.l}
+                        </button>;
+                      })}
+                    </div>
+                  </div>
+
+                  <div style={{display:"flex",gap:8}}>
+                    <button onClick={()=>setEditMode(false)}
+                      style={{flex:1,padding:"10px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.g600}}>
+                      Abbrechen
+                    </button>
+                    <button onClick={saveEdit}
+                      style={{flex:2,padding:"10px",borderRadius:9,border:"none",background:C.black,color:C.neon,fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                      Speichern & neu berechnen
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -3722,14 +5083,14 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:isPro?0:12}}>
             <div>
               <div style={{fontSize:14,fontWeight:700,color:C.black,marginBottom:2}}>{isPro?"TREYN+ PRO":"TREYN+ Basic"}</div>
-              <div style={{fontSize:11,color:C.g600}}>{isPro?"6 Monate · Aktiv":"Pauschalberechnungen · CHF 9.90 / 6 Mt."}</div>
+              <div style={{fontSize:11,color:C.g600}}>{isPro?"6 Monate · Aktiv":"Pauschalberechnungen · Kostenlos"}</div>
             </div>
             <span style={{fontSize:10,padding:"3px 8px",borderRadius:6,background:isPro?C.black:"#F0F0F0",color:isPro?C.neon:"#888",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{isPro?"PRO":"BASIC"}</span>
           </div>
           {!isPro&&(
             <button onClick={onUpgrade}
               style={{width:"100%",background:C.black,color:C.neon,border:"none",borderRadius:9,padding:"10px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Upgrade auf PRO — CHF 6.90 / 6 Monate
+              Upgrade auf PRO — CHF 12.90 / 6 Monate
             </button>
           )}
         </div>
@@ -3882,9 +5243,9 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <div>
               <h2 style={{fontSize:18,fontWeight:700,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Supplements</h2>
               <p style={{fontSize:13,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-              {praeferenzenData?.suppForm&&praeferenzenData.suppForm!=="beides"&&(
+              {prefSupp!=="beides"&&(
                 <div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}>
-                  <span>✓</span> Gefiltert nach deiner Präferenz: <strong>{praeferenzenData.suppForm==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong>
+                  <span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.
                 </div>
               )}
 
@@ -4125,7 +5486,7 @@ function App() {
   const [allergenData,setAllergenData]=useState(null);
   const [praeferenzenData,setPraeferenzenData]=useState(null);
   const [tier,setTier]=useState("basic");
-  const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setTier("basic");setPhase("intro");};
+  const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
 
   React.useEffect(()=>{
     const params=new URLSearchParams(window.location.search);
@@ -4154,11 +5515,10 @@ function App() {
     }
     try{ sessionStorage.setItem("treyn_pre_payment",JSON.stringify({sd,td,pd,ad})); }catch{}
     const base=window.location.origin+window.location.pathname;
-    window.location.href=`${STRIPE_LINK}?success_url=${encodeURIComponent(base+"?pro=success")}`;
+    window.location.href=STRIPE_LINK;
   };
 
   const [isDemoMode,setIsDemoMode]=useState(false);
-  const devSkip=()=>{ setProfilData({firstname:"Kevin",lastname:"Oberholzer",email:"kevin@test.ch",gender:"m",birthyear:"1988",height:"192",weight:"100",country:"Schweiz",platform:"wahoo",rhr:"48",sleep:"7"}); setPhase("preview"); };
   const startDemo=()=>{
     setIsDemoMode(true);
     setSportData({primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{road:true,gravel:true,run_road:true},childSel:{},healthOnly:false});
@@ -4179,13 +5539,13 @@ function App() {
   return (
     <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
       <style>{css}</style>
-      {phase==="intro"&&<button onClick={devSkip} style={{position:"fixed",bottom:20,right:20,zIndex:9999,background:C.black,color:C.neon,border:"none",borderRadius:8,padding:"8px 14px",fontSize:11,fontFamily:"JetBrains Mono,monospace",cursor:"pointer",opacity:.8}}>⚡ Zur Analyse</button>}
       {phase==="intro"      && <Intro           onNext={()=>setPhase("demo")} onDemo={startDemo}/>}
       {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
-      {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase(v.healthOnly?"profil":"training");}}/>}
+      {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase("training");}}/>}
       {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>setPhase("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
-      {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>setPhase(sportData?.healthOnly?"sport":"training")} onNext={v=>{setProfilData(v);setPhase("allergien");}}/>}
-      {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("profil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
+      {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>setPhase("training")} onNext={v=>{setProfilData(v);setPhase("lebensstil");}}/>}
+      {phase==="lebensstil" && <StepLebensstil  onBack={()=>setPhase("profil")} onNext={v=>{setProfilData(p=>({...p,...v}));setPhase("allergien");}}/>}
+      {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("lebensstil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
       {phase==="praeferenzen" && <StepPraeferenzen onBack={()=>setPhase("allergien")} onNext={v=>{setPraeferenzenData(v);setPhase("willkommen");}}/>}
       {phase==="willkommen" && <StepWillkommen onNext={()=>setPhase("analysing")}/>}
       {phase==="preview"    && <AnalysePreview  sportData={sportData} trainingData={trainingData} profilData={profilData}
