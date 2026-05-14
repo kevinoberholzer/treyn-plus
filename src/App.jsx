@@ -4626,6 +4626,36 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             {secSupps.length>2&&<button onClick={()=>setShowAllSec(x=>!x)} style={{width:"100%",padding:"9px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,color:C.g600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:4}}>{showAllSec?`Weniger anzeigen`:`+ ${secSupps.length-2} weitere anzeigen`}</button>}
           </div>
         )}
+
+        {/* Burgerstein — Schweizer Referenz */}
+        <div style={{marginBottom:8}}>
+          <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>BURGERSTEIN · SWISS QUALITY</div>
+          <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"10px 14px",marginBottom:10,fontSize:11,color:C.g600,lineHeight:1.6}}>
+            Official Supplier von Swiss Ski, Swiss Triathlon & Swiss Tennis. Entwickelt von Sportärzten — seit 50 Jahren. Erhältlich via nu3.ch und Zur Rose.
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {[
+              {name:"Burgerstein Sport",dose:"1 Tablette täglich",when:"Zum Frühstück",why:"Das Basisprodukt für Sportler — Antioxidantien, Vitamine, Mineralien. Entwickelt mit Sportärzten.",price:"CHF 29.90",link:"https://www.nu3.ch/products/burgerstein-sport",shop:"nu3.ch"},
+              {name:"Burgerstein Magnesium",dose:"300–400mg abends",when:"Vor dem Schlafen",why:"Hochdosiertes Magnesium in optimaler Form — Muskelkrampfprävention und Regeneration.",price:"CHF 24.90",link:"https://www.nu3.ch/products/burgerstein-magnesium-vital",shop:"nu3.ch"},
+              {name:"Burgerstein Omega-3",dose:"2–3g täglich",when:"Zum Essen",why:"Hochreines Fischöl — entzündungshemmend, herzschützend, HRV-verbessernd.",price:"CHF 34.90",link:"https://www.zur-rose.ch/de/burgerstein-omega-3",shop:"Zur Rose"},
+              {name:"Burgerstein Vitamin D3",dose:"2000–4000 IE täglich",when:"Zum Frühstück",why:"Vitamin D3 in optimaler Dosierung — 70% aller Schweizer mangelhaft versorgt.",price:"CHF 19.90",link:"https://www.nu3.ch/products/burgerstein-vitamin-d3",shop:"nu3.ch"},
+              {name:"Burgerstein Zink",dose:"15mg täglich",when:"Zum Essen",why:"Organisches Zink für Immunsystem, Hormonhaushalt & Wundheilung — oft defizitär bei Ausdauersport.",price:"CHF 22.90",link:"https://www.zur-rose.ch/de/burgerstein-zink",shop:"Zur Rose"},
+            ].map((p,i)=>(
+              <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:11,padding:"12px 14px",display:"flex",flexDirection:"column",gap:6}}>
+                <div style={{fontSize:13,fontWeight:700,color:C.black,lineHeight:1.3}}>{p.name}</div>
+                <div style={{fontSize:10,color:C.g500,fontFamily:"JetBrains Mono,monospace"}}>{p.dose}</div>
+                <div style={{fontSize:11,color:C.g700,lineHeight:1.5,borderLeft:`3px solid ${C.neon}`,paddingLeft:8,background:"#FAFAFA",borderRadius:"0 6px 6px 0",padding:"6px 8px"}}>{p.why}</div>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginTop:2}}>
+                  <span style={{fontSize:11,fontWeight:600,color:C.black}}>{p.price}</span>
+                  <a href={p.link} target="_blank" rel="noopener noreferrer"
+                    style={{padding:"6px 12px",borderRadius:8,background:C.neon,color:C.black,fontSize:10,fontWeight:700,textDecoration:"none"}}>
+                    {p.shop} ↗
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   };
@@ -4685,24 +4715,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ],
       },
       {
-        name:"WHOOP 4.0",
-        badge:"Recovery · HRV · Sleep",
-        affiliate:false,
-        category:"Recovery Tracker",
-        why:"Kein Display, kein Ablenkung — nur Daten. WHOOP misst HRV, Schlafqualität und Strain rund um die Uhr. Die beste Lösung für Recovery-Tracking ohne Uhr.",
-        metrics:["HRV","Schlaf","Strain Score","Respiratory Rate","SPO₂"],
-        price:"ab CHF 239 + Abo",
-        shops:[
-          {name:"WHOOP",link:"https://www.whoop.com/de-de/"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/whoop-4",affiliate:true},
-        ],
-      },
-      {
         name:"Oura Ring 4",
         badge:"Ring · Schlaf · HRV · MARKTFÜHRER",
         affiliate:true,
         category:"Sleep & Recovery",
-        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen. Abo CHF 5.99/Mt. für volle Features.",
+        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen.",
         metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
         price:"ab CHF 349 + Abo",
         shops:[
@@ -4715,7 +4732,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Ring · 15 Tage Akku · Kein Abo · TOP PICK",
         affiliate:true,
         category:"Sleep & Recovery",
-        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig. Neu auf dem Markt (2026) mit eigenem Prozessor und Machine Learning direkt auf dem Ring.",
+        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
         metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
         price:"ab CHF 399",
         shops:[
@@ -4724,50 +4741,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ],
       },
       {
-        name:"RingConn Gen 2",
-        badge:"Ring · 10–12 Tage Akku · Kein Abo",
-        affiliate:false,
-        category:"Sleep & Recovery",
-        why:"Die günstigste Alternative ohne Abo. 10–12 Tage Akku, Schlafapnoe-Erkennung, leichtester Smart Ring auf dem Markt. Gutes Preis-Leistungs-Verhältnis für Einsteiger.",
-        metrics:["HRV","Schlaf","SpO₂","Schritt-Tracking","Schlafapnoe"],
-        price:"ab CHF 299",
-        shops:[
-          {name:"RingConn",link:"https://ringconn.com/products/ringconn-gen-2"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/ringconn-gen-2",affiliate:true},
-        ],
-      },
-      {
-        name:"Samsung Galaxy Ring",
-        badge:"Ring · Samsung-Ökosystem · Kein Abo",
-        affiliate:false,
-        category:"Sleep & Recovery",
-        why:"Ideal für Samsung-Nutzer. Nahtlose Integration mit Galaxy Watch und Samsung Health — alle Daten auf einer Plattform. Kein Abo für Basisfunktionen.",
-        metrics:["HRV","Schlaf","Energiepunkte","Menstruationszyklus","SpO₂"],
-        price:"ab CHF 399",
-        shops:[
-          {name:"Samsung",link:"https://www.samsung.com/ch/smartphones/galaxy-ring/"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/samsung-galaxy-ring",affiliate:true},
-        ],
-      },
-      {
-        name:"Apple Watch Ultra 2",
-        badge:"Apple · GPS · LTE",
-        affiliate:false,
-        category:"Smartwatch",
-        why:"Für Apple-Nutzer die alles integriert wollen. Apple Health verbindet direkt mit TREYN+ — Körperdaten fliessen automatisch in deine Analysen.",
-        metrics:["VO₂max","HRV","Schlaf","Crasherkennung","Temperatur"],
-        price:"ab CHF 899",
-        shops:[
-          {name:"Apple CH",link:"https://www.apple.com/ch-de/shop/buy-watch/apple-watch-ultra"},
-          {name:"Galaxus",link:"https://www.galaxus.ch/de/s1/product/apple-watch-ultra-2",affiliate:true},
-        ],
-      },
-      {
         name:"Fitbit Charge 6",
-        badge:"Günstig · Alltag · Google",
+        badge:"Einstieg · Alltag · Google",
         affiliate:true,
         category:"Fitness Tracker",
-        why:"Der beste Einstiegs-Tracker. EKG, SpO₂ und Google Maps integriert. Für Sportler die kein Budget für eine Premiumuhr haben aber trotzdem gute Daten wollen.",
+        why:"Der beste Einstiegs-Tracker. EKG, SpO₂ und Google Maps integriert — gute Daten ohne Premium-Budget.",
         metrics:["Herzfrequenz","Schlaf","SpO₂","EKG","Stress"],
         price:"ab CHF 149",
         shops:[
@@ -4777,101 +4755,52 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       },
     ];
 
-    // Supplements via nu3/Zur Rose
-    const BURGERSTEIN=[
-      {name:"Burgerstein Sport",desc:"Das Basisprodukt für Breiten- und Leistungssportler — entwickelt mit Sportärzten. Antioxidantien, Vitamine, Mineralien.",price:"CHF 29.90",link:"https://www.nu3.ch/products/burgerstein-sport",shop:"nu3.ch",affiliate:true},
-      {name:"Burgerstein Magnesium",desc:"Hochdosiertes Magnesium in optimaler Form — für Muskelkrampfprävention und Regeneration.",price:"CHF 24.90",link:"https://www.nu3.ch/products/burgerstein-magnesium-vital",shop:"nu3.ch",affiliate:true},
-      {name:"Burgerstein Omega-3",desc:"Hochreines Fischöl mit Friend of the Sea Zertifikat — entzündungshemmend und herzkardioprotektiv.",price:"CHF 34.90",link:"https://www.zur-rose.ch/de/burgerstein-omega-3",shop:"Zur Rose",affiliate:true},
-      {name:"Burgerstein Vitamin D3",desc:"Vitamin D3 in optimaler Dosierung — 70% aller Schweizer sind mangelhaft, Sportler besonders gefährdet.",price:"CHF 19.90",link:"https://www.nu3.ch/products/burgerstein-vitamin-d3",shop:"nu3.ch",affiliate:true},
-      {name:"Burgerstein Zink",desc:"Organisches Zink für Immunsystem, Hormonhaushalt und Wundheilung — bei Ausdauersportlern oft defizitär.",price:"CHF 22.90",link:"https://www.zur-rose.ch/de/burgerstein-zink",shop:"Zur Rose",affiliate:true},
-    ];
-
-    const [section,setSection]=useState("wearables");
-
     return (
       <div>
-        {/* Section toggle */}
-        <div style={{display:"flex",gap:6,marginBottom:20}}>
-          {[{id:"wearables",l:"Wearables"},{id:"burgerstein",l:"Burgerstein"}].map(s=>(
-            <button key={s.id} onClick={()=>setSection(s.id)}
-              style={{padding:"6px 16px",borderRadius:100,border:`1.5px solid ${section===s.id?C.black:C.g200}`,background:section===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:section===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
-              {s.l}
-            </button>
-          ))}
+        {/* Why you need it */}
+        <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
+          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
+            TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%.
+          </div>
+          <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
+            {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
+              <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
+            ))}
+          </div>
         </div>
 
-        {section==="wearables"&&(
-          <div>
-            {/* Why you need it */}
-            <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
-              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>{"Warum ein Wearable deine TREYN+ Analyse verbessert"}</div>
-              <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
-                TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%. Konkret: ein Garmin oder Polar liefert deinen echten VO₂max-Wert, echte HRV-Trends und präzise Erholungszeiten — alles direkt in deine Berechnungen.
+        {/* Product cards */}
+        {WEARABLES.map((w,i)=>(
+          <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:10,position:"relative"}}>
+            {w.affiliate&&w.shops.some(s=>s.affiliate)&&(
+              <div style={{position:"absolute",top:10,right:10,fontSize:8,padding:"2px 6px",borderRadius:4,background:C.neon,color:C.black,fontWeight:700,fontFamily:"JetBrains Mono,monospace"}}>AFFILIATE</div>
+            )}
+            <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:10}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:C.g400,letterSpacing:".06em",marginBottom:3}}>{w.badge}</div>
+                <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.02em",marginBottom:4}}>{w.name}</div>
+                <div style={{fontSize:12,color:C.g700,lineHeight:1.6}}>{w.why}</div>
               </div>
-              <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
-                {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
-                  <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
-                ))}
+              <div style={{fontSize:13,fontWeight:600,color:C.black,flexShrink:0,textAlign:"right"}}>
+                {w.price}
               </div>
             </div>
-
-            {/* Product cards */}
-            {WEARABLES.map((w,i)=>(
-              <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:10,position:"relative"}}>
-                {w.affiliate&&w.shops.some(s=>s.affiliate)&&(
-                  <div style={{position:"absolute",top:12,right:12,fontSize:8,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>TOP PICK</div>
-                )}
-                <div style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:8}}>
-                  <div>
-                    <div style={{fontSize:13,fontWeight:600,color:C.black,paddingRight:w.affiliate?60:0}}>{w.name}</div>
-                    <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginTop:2}}>{w.badge}</div>
-                  </div>
-                </div>
-                <div style={{fontSize:11,color:C.g600,lineHeight:1.65,marginBottom:10}}>{w.why}</div>
-                <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
-                  {w.metrics.map(m=><span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.g100,color:C.g600}}>{m}</span>)}
-                </div>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
-                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{w.price}</span>
-                  <span style={{fontSize:10,color:C.g400}}>{w.category}</span>
-                </div>
-                <div style={{display:"flex",gap:6}}>
-                  {w.shops.map((s,j)=>(
-                    <a key={j} href={s.link} target="_blank" rel="noopener noreferrer"
-                      style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:s.affiliate?C.neon:C.g100,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:600,textDecoration:"none"}}>
-                      {s.name} →
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {section==="burgerstein"&&(
-          <div>
-            <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"12px 16px",marginBottom:16}}>
-              <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4}}>Burgerstein — die Schweizer Referenz</div>
-              <div style={{fontSize:11,color:C.g600,lineHeight:1.65}}>Official Supplier von Swiss Ski, Swiss Triathlon und Swiss Tennis. Entwickelt von Sportärzten für Sportler — seit 50 Jahren. Erhältlich via nu3.ch und Zur Rose mit schneller CH-Lieferung.</div>
+            <div style={{display:"flex",gap:4,flexWrap:"wrap",marginBottom:10}}>
+              {(w.metrics||[]).map(m=>(
+                <span key={m} style={{fontSize:9,padding:"2px 7px",borderRadius:100,background:"#F5F5F5",color:"#555",fontFamily:"JetBrains Mono,monospace"}}>{m}</span>
+              ))}
             </div>
-            {BURGERSTEIN.map((p,i)=>(
-              <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"13px 16px",marginBottom:8}}>
-                <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:4}}>{p.name}</div>
-                <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:10}}>{p.desc}</div>
-                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-                  <span style={{fontSize:12,fontWeight:600,color:C.black}}>{p.price}</span>
-                  <a href={p.link} target="_blank" rel="noopener noreferrer"
-                    style={{display:"inline-flex",alignItems:"center",gap:4,background:C.neon,color:C.black,padding:"7px 14px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>
-                    {p.shop} →
-                  </a>
-                </div>
-              </div>
-            ))}
-            <div style={{marginTop:8,padding:"10px 14px",background:C.g100,borderRadius:10,fontSize:11,color:C.g400,lineHeight:1.6}}>
-              Burgerstein verkauft ausschliesslich über Apotheken und autorisierte Partner — nu3.ch und Zur Rose sind offizielle Händler mit Schweizer Qualitätsgarantie.
+            <div style={{display:"flex",gap:6}}>
+              {w.shops.map((sh,j)=>(
+                <a key={j} href={sh.link} target="_blank" rel="noopener noreferrer"
+                  style={{flex:1,textAlign:"center",padding:"8px 6px",borderRadius:8,background:sh.affiliate?C.neon:"#F5F5F5",color:sh.affiliate?C.black:"#555",fontSize:11,fontWeight:sh.affiliate?700:400,textDecoration:"none"}}>
+                  {sh.name} ↗
+                </a>
+              ))}
             </div>
           </div>
-        )}
+        ))}
       </div>
     );
   };
@@ -5066,10 +4995,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   // ── TAGESPLAN TAB ──────────────────────────────────────────────────────────
   const TagesplanTab=()=>{
     const isMobile=useWindowWidth()<=768;
+    const allSports=(sports||[]);
+    const [activeSport,setActiveSport]=useState(primarySport||allSports[0]);
+    const [isRestDay,setIsRestDay]=useState(false);
+    // Use selected sport's training data for calc
+    const activeTD=isRestDay?trainingData:{...(trainingData||{}), _primary:activeSport};
+    const activeSD=isRestDay?sportData:{...(sportData||{}), primarySport:activeSport};
     const calc=calcPro(profilData,trainingData,sportData);
     const t=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
     const w=+profilData?.weight||75;
-    const isEndurance=[...(sports||[])].some(s=>["cycling","running","triathlon","swimming","langlauf"].some(x=>s.includes(x)));
+    const activeDuration=(trainingData||{})[activeSport]?.duration||60;
+    const activeIntensity=(trainingData||{})[activeSport]?.intensity||"medium";
+    const isEndurance=["cycling","running","triathlon","swimming","langlauf"].some(x=>activeSport?.includes(x));
+    const sportLabel=SPORT_GROUPS.find(s=>s.id===activeSport)?.label||activeSport||"Sport";
     const TIME={morning:"Morgen",midday:"Mittag",afternoon:"Nachmittag",evening:"Abend"}[calc?.primaryTrainingTime]||"Training";
 
     const PLAN=[
@@ -5130,12 +5068,104 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     return (
       <div>
+        {/* Sport + Ruhetag Switcher */}
         <div style={{marginBottom:16}}>
-          <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:4}}>DEIN TAGESPLAN · {TIME.toUpperCase()}TRAINING</div>
-          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>Personalisiert auf {w}kg, {calc?.primaryTrainingTime==="morning"?"Morgen":calc?.primaryTrainingTime==="evening"?"Abend":"Mittel"}training und deine aktiven Supplements.</div>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+            {allSports.map(s=>{
+              const label=SPORT_GROUPS.find(g=>g.id===s)?.label||s;
+              const active=activeSport===s&&!isRestDay;
+              return (
+                <button key={s} onClick={()=>{setActiveSport(s);setIsRestDay(false);}}
+                  style={{padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                  {label}
+                </button>
+              );
+            })}
+            <button onClick={()=>setIsRestDay(true)}
+              style={{padding:"6px 14px",borderRadius:100,border:`1.5px solid ${isRestDay?C.black:C.g200}`,background:isRestDay?"#F0F0F0":C.white,color:C.black,fontSize:12,fontWeight:isRestDay?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+              😴 Ruhetag
+            </button>
+          </div>
+          <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:4}}>
+            {isRestDay?"RUHETAG · REGENERATION & ERNÄHRUNG":`TAGESPLAN · ${sportLabel.toUpperCase()} · ${activeIntensity==="high"||activeIntensity==="competition"?"INTENSIV":activeIntensity==="low"?"LEICHT":"MITTEL"} · ${activeDuration}min`}
+          </div>
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?"Weniger Kalorien, mehr Regeneration — kein Training heute.":` Personalisiert auf ${w}kg, ${TIME}training.`}</div>
         </div>
 
-        {/* Timeline */}
+        {/* Ruhetag Plan */}
+        {isRestDay&&(
+          <div style={{marginBottom:16}}>
+            {[
+              {time:"06:00–08:00",phase:"Aufwachen & Frühstück",icon:"🌅",items:[
+                {label:"Wasser",detail:"500ml direkt — Rehydration",icon:"💧"},
+                {label:"Protein-Frühstück",detail:`${Math.round((calc?.proteinMin||140)*0.25)}g Protein — Eier, Quark, Skyr`,icon:"🥚"},
+                ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:"2000 IE mit Fett",icon:"☀️"}]:[]),
+              ]},
+              {time:"12:00–13:00",phase:"Mittag — leichter",icon:"🥗",items:[
+                {label:"Leichtere Mahlzeit",detail:`${Math.round((calc?.restDay||1800)*0.35)} kcal — weniger Carbs als Trainingstag`,icon:"🥗"},
+                {label:"Kreatin",detail:"5g täglich — auch an Ruhetagen",icon:"💊"},
+                {label:"Omega-3",detail:"2–3g EPA/DHA",icon:"🐟"},
+              ]},
+              {time:"15:00–17:00",phase:"Aktive Erholung",icon:"🚶",items:[
+                {label:"Spaziergang 20–30 min",detail:"Fördert Durchblutung und Regeneration ohne Belastung",icon:"🚶"},
+                {label:"Dehnen / Mobility",detail:"10–15 min — Schwerpunkt auf beanspruchte Muskelgruppen",icon:"🧘"},
+              ]},
+              {time:"18:00–19:00",phase:"Abendessen",icon:"🍽️",items:[
+                {label:"Hauptmahlzeit",detail:`${Math.round((calc?.restDay||1800)*0.35)} kcal, proteinreich`,icon:"🍽️"},
+                {label:"Magnesium",detail:`${calc?.magnesiumMg||350}mg — Ruhetag ideal für Supplementierung`,icon:"🌙"},
+                ...(calc?.stressAshwaNeeded?[{label:"Ashwagandha",detail:"600mg — Cortisol abbauen",icon:"🌿"}]:[]),
+              ]},
+              {time:"22:00",phase:"Schlaf — Priorität",icon:"😴",items:[
+                {label:"Mindestens 8–9h anstreben",detail:"Regeneration findet im Schlaf statt — Ruhetag = optimale Recovery-Chance",icon:"😴"},
+                {label:"Casein optional",detail:"30g vor dem Schlafen — langsame Proteinfreisetzung über Nacht",icon:"🥛"},
+              ]},
+            ].map((block,i,arr)=>(
+              <div key={i} style={{display:"flex",gap:12,marginBottom:14}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:44,flexShrink:0}}>
+                  <div style={{width:10,height:10,borderRadius:"50%",background:C.g200,flexShrink:0,marginTop:4}}/>
+                  {i<arr.length-1&&<div style={{width:1,flex:1,background:C.g100,margin:"4px 0"}}/>}
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                    <div style={{fontSize:11,fontWeight:700,color:C.black}}>{block.phase}</div>
+                    <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace"}}>{block.time}</div>
+                  </div>
+                  <div style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"10px 12px",display:"flex",flexDirection:"column",gap:8}}>
+                    {block.items.map((item,j)=>(
+                      <div key={j} style={{display:"flex",alignItems:"flex-start",gap:8}}>
+                        <span style={{fontSize:14,flexShrink:0,marginTop:1}}>{item.icon}</span>
+                        <div>
+                          <div style={{fontSize:12,fontWeight:600,color:C.black}}>{item.label}</div>
+                          <div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:1}}>{item.detail}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {/* Ruhetag Kalorienziel */}
+            <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"12px 16px",marginTop:4}}>
+              <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>RUHETAG ZIELE</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,textAlign:"center"}}>
+                {[
+                  {l:"Kalorien",v:`${calc?.restDay?.toLocaleString("de-CH")||"—"} kcal`,s:"~${Math.round(((calc?.restDay||1800)-(calc?.bmr||1800))/10)*10} unter Trainingstag"},
+                  {l:"Protein",v:`${Math.round((calc?.proteinMin||140)*0.85)}–${Math.round((calc?.proteinMax||180)*0.85)}g`,s:"leicht reduziert"},
+                  {l:"Wasser",v:`${Math.round((calc?.waterMl||2500)*0.6/100)/10}L`,s:"ohne Schweissverlust"},
+                ].map(({l,v,s},i)=>(
+                  <div key={i}>
+                    <div style={{fontSize:10,color:C.g400,marginBottom:2}}>{l}</div>
+                    <div style={{fontSize:14,fontWeight:600,color:C.black}}>{v}</div>
+                    <div style={{fontSize:9,color:C.g300}}>{s}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Trainingstag Timeline */}
+        {!isRestDay&&(
         <div style={{position:"relative"}}>
           {PLAN.map((block,i)=>(
             <div key={i} style={{display:"flex",gap:12,marginBottom:16}}>
@@ -5165,9 +5195,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             </div>
           ))}
         </div>
+        )}
 
-        {/* Daily summary */}
-        <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginTop:8}}>
+        {/* Daily summary - only on training day */}
+        {!isRestDay&&<div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginTop:8}}>
           <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>TAGESZIELE</div>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:8}}>
             {[
@@ -5182,7 +5213,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               </div>
             ))}
           </div>
-        </div>
+        </div>}
       </div>
     );
   };
