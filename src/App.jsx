@@ -5272,6 +5272,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const raceCarbs=calc?.carbsPerHour||60;
     const w=+profilData?.weight||75;
     const na=calc?.natriumMg||1200;
+    const meds=profilData?.medications||[];
+    const hasBlutdruck=meds.includes("blutdruck");
+    const hasBlutverd=meds.includes("blutverd");
 
     if(!hasComp) return (
       <div style={{padding:"20px 0",textAlign:"center"}}>
