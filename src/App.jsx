@@ -240,9 +240,6 @@ const AFF = {
   bodylab24:   (slug,country="Schweiz") => CH_COUNTRIES.includes(country)
     ? `https://www.bodylab24.ch/shop/${slug}`
     : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
-  galaxus:     (q,country="Schweiz") => CH_COUNTRIES.includes(country)
-    ? `https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(q)}&tagIds=1394`
-    : `https://www.amazon.de/s?k=${encodeURIComponent(q)}`,
   zur_rose:    (slug,country="Schweiz") => CH_COUNTRIES.includes(country)
     ? `https://www.zurrose-shop.ch/de/${slug}`
     : `https://iherb.com/search?kw=${encodeURIComponent(slug)}&rcode=DEIN_CODE`,
@@ -3340,7 +3337,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         const isDAch=["Schweiz","Deutschland","Österreich"].includes(country);
         const shopId=active.shop||s.shop;
         const shopLink=active.link||s.link;
-        const chOnly=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+        const chOnly=["Bodylab24","Sponser","Zur Rose","nu3.ch"];
         const dachOnly=["ESN","More Nutrition","nu3"];
         const needsSwap=(chOnly.includes(shopId)&&!isCH)||(dachOnly.includes(shopId)&&!isDAch);
         const finalLink=needsSwap?AFF.iherb(s.name):shopLink;
@@ -3352,12 +3349,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
               style={{display:"inline-flex",alignItems:"center",gap:4,background:finalSc.bg,color:finalSc.text,padding:"7px 12px",borderRadius:8,fontSize:11,fontWeight:600,textDecoration:"none"}}>
               {finalShop} ↗
             </a>
-            {isCH&&!["iHerb","Maurten","MNSTRY","Myprotein","Sponser","ESN","More Nutrition"].includes(finalShop)&&(
-              <a href={`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${encodeURIComponent(s.name)}`} target="_blank" rel="noopener noreferrer"
-                style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
-                Galaxus ↗
-              </a>
-            )}
+
             {!isCH&&!["iHerb","Maurten","MNSTRY","Myprotein"].includes(finalShop)&&(
               <a href={AFF.iherb(s.name)} target="_blank" rel="noopener noreferrer"
                 style={{display:"inline-flex",alignItems:"center",gap:4,background:"#F5F5F5",color:"#555",padding:"5px 8px",borderRadius:7,fontSize:9,fontWeight:500,textDecoration:"none"}}>
@@ -4477,7 +4469,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const isDAch=["Schweiz","Deutschland","Österreich"].includes(userCountry);
   // Shop availability label
   const shopAvail=(shopId)=>{
-    const CH_ONLY=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+    const CH_ONLY=["Bodylab24","Sponser","Zur Rose","nu3.ch"];
     const DACH_ONLY=["ESN","More Nutrition","nu3"];
     if(CH_ONLY.includes(shopId)&&!isCH) return "iHerb";
     if(DACH_ONLY.includes(shopId)&&!isDAch) return "iHerb";
@@ -4589,7 +4581,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const isDAch=["Schweiz","Deutschland","Österreich"].includes(country);
     // Get best shop link based on user country
     const getLink=(s)=>{
-      const chOnlyShops=["Bodylab24","Sponser","Galaxus","Zur Rose","nu3.ch"];
+      const chOnlyShops=["Bodylab24","Sponser","Zur Rose","nu3.ch"];
       const dachOnlyShops=["ESN","More Nutrition","nu3"];
       if(chOnlyShops.includes(s.shop)&&!isCH) return {link:s.budget?.link||AFF.iherb(s.name),shop:"iHerb"};
       if(dachOnlyShops.includes(s.shop)&&!isDAch) return {link:s.budget?.link||AFF.iherb(s.name),shop:"iHerb"};
@@ -4756,9 +4748,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {/* Product cards */}
         {WEARABLES.map((w,i)=>(
           <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:10,position:"relative"}}>
-            {w.affiliate&&w.shops.some(s=>s.affiliate)&&(
-              <div style={{position:"absolute",top:10,right:10,fontSize:8,padding:"2px 6px",borderRadius:4,background:C.neon,color:C.black,fontWeight:700,fontFamily:"JetBrains Mono,monospace"}}>AFFILIATE</div>
-            )}
+
             <div style={{display:"flex",alignItems:"flex-start",gap:12,marginBottom:10}}>
               <div style={{flex:1}}>
                 <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:C.g400,letterSpacing:".06em",marginBottom:3}}>{w.badge}</div>
@@ -4830,8 +4820,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         why:"Natürlich isotonisch mit Kalium, Magnesium und Natrium. Idealer Ersatz für Sportgetränke — ohne Zucker-Overhead.",
         science:"Ähnliche Elektrolyt-Zusammensetzung wie menschliches Blutplasma. Studien zeigen gleiche Rehydrations-Wirkung wie kommerzielle Sportdrinks.",
         tags:["Natürlich","Kalium"],
-        link:"https://www.galaxus.ch/de/s1/product/vita-coco-kokoswasser",
-        shop:"Galaxus",
+        link:AFF.iherb("vita coco coconut water"),
+        shop:"iHerb",
         img:null,
       },
     ];
@@ -6299,7 +6289,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         "Blackroll":"https://www.blackroll.com/ch-de/collections/all",
         "Compex":"https://www.compex.com/ch-de/collections/all",
       };
-      return urls[shop]||`https://www.galaxus.ch/de/s1/producttype/sport-ernaehrung-16?q=${q}`;
+      return urls[shop]||`https://www.iherb.com/search?kw=${q}`;
     };
 
     if(cartItems.length===0) return (
