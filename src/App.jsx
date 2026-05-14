@@ -5486,7 +5486,19 @@ function App() {
   const [allergenData,setAllergenData]=useState(null);
   const [praeferenzenData,setPraeferenzenData]=useState(null);
   const [tier,setTier]=useState("basic");
+  const [devMode]=useState(()=>new URLSearchParams(window.location.search).get("dev")==="1");
   const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
+
+  // Dev shortcut — only active when ?dev=1 in URL
+  const DEV_SPORT={primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{cycling_road:true,run_road:true},childSel:{"run_road_run_road_m":true},healthOnly:false};
+  const DEV_TRAINING={cycling:{days:5,intensity:"high",duration:90,hasCompetition:true,compCount:8,compTypes:["Rennen"],trainingTimes:["morning"],sweatRate:"high"},running:{days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:3,compTypes:[],trainingTimes:["morning"],sweatRate:"medium"}};
+  const DEV_PROFIL={firstname:"Kevin",lastname:"Oberholzer",email:"kevin@test.ch",gender:"m",birthyear:"1988",height:"192",weight:"100",country:"Schweiz",platform:"wahoo",rhr:"48",sleep:"7",goal:"performance",stressLevel:3,dietQuality:"good",altitude:"low",recoveryStatus:"good",currentSupps:["kreatin"],medications:["none"],monthlyBudget:"high",injuries:[]};
+  const DEV_ALLERGEN={allergens:[],noAllergens:true,diet:["none"]};
+  const DEV_PRAEF={suppForm:"pulver",energieForm:["gel","drink"],proteinForm:["whey"],recoveryForm:["magnesium"]};
+  const devJump=(target,t="basic")=>{
+    setSportData(DEV_SPORT);setTrainingData(DEV_TRAINING);setProfilData(DEV_PROFIL);
+    setAllergenData(DEV_ALLERGEN);setPraeferenzenData(DEV_PRAEF);setTier(t);setPhase(target);
+  };
 
   React.useEffect(()=>{
     const params=new URLSearchParams(window.location.search);
@@ -5539,6 +5551,26 @@ function App() {
   return (
     <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
       <style>{css}</style>
+      {devMode&&(
+        <div style={{position:"fixed",bottom:20,right:20,zIndex:9999,display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}>
+          <div style={{fontSize:9,color:"#999",fontFamily:"JetBrains Mono,monospace",textAlign:"right",marginBottom:2}}>DEV MODE</div>
+          {[
+            {l:"→ Sport",       t:"sport"},
+            {l:"→ Training",    t:"training"},
+            {l:"→ Profil",      t:"profil"},
+            {l:"→ Lebensstil",  t:"lebensstil"},
+            {l:"→ Allergien",   t:"allergien"},
+            {l:"→ Präferenzen", t:"praeferenzen"},
+            {l:"→ Results BASIC",t:"results",tier:"basic"},
+            {l:"→ Results PRO",  t:"results",tier:"pro"},
+          ].map(({l,t,tier:tr})=>(
+            <button key={l} onClick={()=>devJump(t,tr||"basic")}
+              style={{background:"#0A0A0A",color:"#C8FF00",border:"none",borderRadius:7,padding:"5px 12px",fontSize:11,fontFamily:"JetBrains Mono,monospace",cursor:"pointer",whiteSpace:"nowrap"}}>
+              {l}
+            </button>
+          ))}
+        </div>
+      )}
       {phase==="intro"      && <Intro           onNext={()=>setPhase("demo")} onDemo={startDemo}/>}
       {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase("training");}}/>}
