@@ -2700,7 +2700,7 @@ function calcPro(profilData, trainingData, sportData) {
   const budgetPriorityMax = {low:1, medium:2, high:3, max:99}[monthlyBudget]||2;
 
   return {
-    bmr, withTraining:Math.round(trainingDayKcal*altitudeMult), trainingExtra:Math.round(totalKcal*goalAdj.kcalMult),
+    bmr, totalDays:Math.min(totalDays,7), withTraining:Math.round(trainingDayKcal*altitudeMult), trainingExtra:Math.round(totalKcal*goalAdj.kcalMult),
     restDay:Math.round(bmr*goalAdj.kcalMult), trainingDay:Math.round(trainingDayKcal*altitudeMult),
     sweatLitresPerSession:+totalSweat.toFixed(1), natriumMg:Math.round(totalNa),
     magnesiumMg:Math.round(200+totalMg+(sleepDeficit*20)+stressMgBonus+recoveryMgBonus),
@@ -2737,7 +2737,7 @@ function buildProfile(sportData, trainingData, profilData) {
   const healthOnly=sportData?.healthOnly, primarySport=sportData?.primarySport;
   const td=trainingData?.[primarySport]||{};
   return {healthOnly, primarySport, weight:+profilData?.weight||75, gender:profilData?.gender||"m",
-    days:td.days||3, intensity:td.intensity||"medium", duration:td.duration||60,
+    days:Object.values(trainingData||{}).reduce((s,x)=>s+(x?.days||0),0)||td.days||3, intensity:td.intensity||"medium", duration:td.duration||60,
     hasComp:td.hasCompetition||false, compCount:td.compCount||0};
 }
 
@@ -4474,7 +4474,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport,sportData?.subSel,sportData?.childSel||{});
   const fname=profilData?.firstname||"";
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
-  const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
+  const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)||primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
 
   const NAV_BASIC=[
     {id:"summary",      label:"Summary",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>},
@@ -5615,13 +5615,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const GOAL_LABEL={performance:"Leistung steigern",muscle:"Muskelaufbau",endurance:"Ausdauer verbessern",weightloss:"Gewicht reduzieren",health:"Gesundheit & Longevity",recovery:"Regeneration"}[calc.goal]||"";
     const TIME_LABEL={morning:"Morgentraining",midday:"Mittagstraining",afternoon:"Nachmittagstraining",evening:"Abendtraining"}[calc.primaryTrainingTime]||"Training";
     const STRESS_LABEL={1:"sehr niedrig",2:"niedrig",3:"mittel",4:"hoch",5:"sehr hoch"}[calc.stressLevel]||"mittel";
-    const primaryDays=trainingData?.[primarySport]?.days||3;
+    // Total training days across all sports
+    const primaryDays=Object.values(trainingData||{}).reduce((sum,td)=>sum+(td?.days||0),0)||trainingData?.[primarySport]?.days||3;
     const isEndurance=localSports.some(s=>["cycling_road","cycling_gravel","cycling_mtb_xc","run_road","run_road_m","run_road_hm","run_road_ultra","run_trail","run_trail_ultra","triathlon","tri_full","tri_half","swimming","swim_open","langlauf_klassisch","langlauf_skating"].includes(s));
 
     // Personalized hero text
     const heroLines=(()=>{
       const lines=[];
-      if(primaryDays>=5) lines.push(`Du trainierst in den <strong>oberen 10%</strong> — ${primaryDays} intensive Einheiten pro Woche auf ${localSports.length>1?"zwei der anspruchsvollsten Disziplinen":"einer der anspruchsvollsten Disziplinen"}.`);
+      if(primaryDays>=5) lines.push(`Du trainierst in den <strong>oberen 10%</strong> — ${primaryDays}× pro Woche auf ${localSports.length>1?"mehreren Disziplinen":"einer der anspruchsvollsten Disziplinen"}.`);
       else if(primaryDays>=3) lines.push(`Du trainierst regelmässig — <strong>${primaryDays}× pro Woche</strong>, strukturiert und mit klarem Ziel.`);
       else lines.push(`Du trainierst ${primaryDays}× pro Woche — solide Basis mit Potenzial nach oben.`);
       if(calc.withTraining>3000) lines.push(`Dein Energiebedarf liegt <strong>weit über dem Durchschnitt</strong>. Die meisten Athleten in deiner Situation ernähren sich falsch — nicht weil sie es nicht wollen, sondern weil niemand ihnen die richtigen Zahlen gibt. <strong>Das ändern wir.</strong>`);
