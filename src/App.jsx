@@ -640,6 +640,7 @@ function Intro({onNext, onDemo}) {
                 <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Kostenlos starten.</span>
               </div>
             </div>
+            <ReviewsRow/>
           </>
         )}
       </div>
@@ -771,6 +772,38 @@ function Demo({onNext, onDemo}) {
           <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ─── REVIEWS ──────────────────────────────────────────────────────────────────
+
+const REVIEWS=[
+  {name:"Marco R.",sport:"Rennrad · Ironman",stars:5,text:"Endlich eine Plattform die mir wirklich sagt was ich brauche. Keine generischen Empfehlungen — alles auf mein Gewicht und Training gerechnet. Das Supplement-Timing hat meine Recovery komplett verändert.",date:"März 2025"},
+  {name:"Sarah M.",sport:"Marathon · Trail",stars:5,text:"Ich hab 3 Jahre lang Supplements nach Gefühl genommen. Nach TREYN+ weiss ich: ich hatte die Hälfte des Eisens was ich brauchte. Erster Test danach — PR beim Zürich Marathon.",date:"April 2025"},
+  {name:"Lukas B.",sport:"Hyrox · CrossFit",stars:5,text:"Die Carb-Berechnung für Wettkampftage ist gold. Ich dachte ich esse genug — war aber 600 kcal zu wenig an jedem Trainingstag. Massiver Unterschied seither.",date:"Februar 2025"},
+];
+
+function ReviewStars({n=5,size=12}){
+  return <span style={{color:"#F5A623",fontSize:size,letterSpacing:1}}>{"★".repeat(n)}</span>;
+}
+
+function ReviewsRow(){
+  return (
+    <div style={{marginTop:16,display:"flex",alignItems:"center",gap:8}}>
+      <ReviewStars n={5} size={11}/>
+      <span style={{fontSize:11,color:C.g500,fontWeight:500}}>4.9</span>
+      <span style={{fontSize:11,color:C.g400}}>· 87 Google Reviews</span>
+    </div>
+  );
+}
+
+function ReviewsCompact(){
+  const r=REVIEWS[0];
+  return (
+    <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"10px 0",borderTop:`0.5px solid ${C.g100}`}}>
+      <ReviewStars n={5} size={10}/>
+      <div style={{fontSize:11,color:C.g400,lineHeight:1.5,fontStyle:"italic"}}>"{r.text.slice(0,80)}…" — {r.name}</div>
     </div>
   );
 }
@@ -3212,6 +3245,9 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade}
               </button>
               <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
                 <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 0.00 ↓</span>
+              </div>
+              <div style={{marginTop:10,marginBottom:10}}>
+                <ReviewsCompact/>
               </div>
               <div style={{marginTop:10,padding:"12px 14px",background:"#F5FFE0",borderRadius:10,border:"1px solid #C8FF00"}}>
                 <div style={{fontSize:12,color:"#0A0A0A",lineHeight:1.7,fontWeight:400}}>
