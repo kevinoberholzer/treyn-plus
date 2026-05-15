@@ -567,7 +567,7 @@ const HEALTH_ONLY_SUPP = [
    protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Fett", hinweis:"Im Sommer Dosis auf 1000 IE senken. Bluttest alle 6 Monate."}},
   {id:"omega_h",name:"Omega-3 (EPA/DHA)",     dose:"2g täglich",            when:"Zu einer Mahlzeit", why:"Herzgesundheit, Entzündungshemmend, kognitive Funktion",                   tags:["Täglich","Herz"],         link:AFF.iherb("omega 3 epa dha"),        shop:"iHerb",    priority:1,
    protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Mit Hauptmahlzeit", hinweis:"Bei Blutverdünnern Arzt konsultieren. 4 Wochen bis Wirkung."}},
-  {id:"mag_h",  name:"Magnesium Bisglycinate",dose:"300mg täglich",         when:"Abends",            why:"Schlafqualität, Muskelentspannung, Stressbewältigung",                     tags:["Täglich","Abends"],       link:AFF.iherb("magnesium bisglycinate"),shop:"iHerb",    priority:1,
+  {id:"mag_h",  name:"Magnesium Bisglycinate",keyIngredient:"300mg Mg",dose:"300mg täglich",keyIngredient:"300mg Mg",         when:"Abends",            why:"Schlafqualität, Muskelentspannung, Stressbewältigung",                     tags:["Täglich","Abends"],       link:AFF.iherb("magnesium bisglycinate"),shop:"iHerb",    priority:1,
    protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"1h vor Schlaf", hinweis:"Nicht gleichzeitig mit Zink nehmen. Bisglycinate deutlich besser verfügbar als Oxid."}},
   {id:"zink_h", name:"Zink 15mg",             dose:"15mg täglich",          when:"Abends",            why:"Immunabwehr, Hautgesundheit, Hormonstatus",                                tags:["Täglich","Immunsystem"],  link:AFF.iherb("zinc 15mg"),              shop:"iHerb",    priority:2,
    protocol:{dauer:"3 Monate", pause:"4 Wochen Pause nach 3 Monaten", timing:"Abends, 2h Abstand zu Eisen/Calcium", hinweis:"Langzeit >40mg/Tag senkt Kupferspiegel."}},
@@ -3803,7 +3803,10 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         {hasAllergen&&<span style={{fontSize:9,padding:"2px 6px",borderRadius:4,background:"rgba(255,59,48,.12)",color:"#E53E3E",fontWeight:700}}>⚠</span>}
       </div>
       <div style={{fontSize:13,fontWeight:700,color:C.black,letterSpacing:"-.02em",lineHeight:1.3}}>{s.name}</div>
-      <div style={{fontSize:10,color:C.g500,fontFamily:"JetBrains Mono,monospace"}}>{s.dose}</div>
+      <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+        <div style={{fontSize:10,color:C.g500,fontFamily:"JetBrains Mono,monospace",fontWeight:600}}>{s.dose}</div>
+        {s.keyIngredient&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:4,background:C.neonDim,color:"#3A6000",fontFamily:"JetBrains Mono,monospace"}}>{s.keyIngredient}</span>}
+      </div>
       <div style={{fontSize:11,color:C.g700,lineHeight:1.5,borderLeft:`3px solid ${isPrimary?C.neon:C.g200}`,paddingLeft:8,background:"#FAFAFA",borderRadius:"0 6px 6px 0",padding:"6px 8px"}}>{s.why?.slice(0,80)}{s.why?.length>80?"…":""}</div>
       <div style={{display:"flex",gap:6,marginTop:2}}>
         <a href={s.link} target="_blank" rel="noopener noreferrer"
@@ -5166,6 +5169,18 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const displaySec=showAllSec?secSupps:secSupps.slice(0,2);
     return (
       <div>
+        {/* Summary */}
+        {isPro&&primSupps.length>0&&(
+          <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+            <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>DEIN SUPPLEMENT STACK</div>
+            <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
+              {`${primSupps.length} essentielle${primSupps.length!==1?"":""} Supplement${primSupps.length!==1?"e":""} — berechnet auf dein Gewicht, Sport und Lifestyle.`}
+            </div>
+            {proData?.vitDRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Vitamin D Risiko erkannt — Supplement besonders wichtig für dich.</div>}
+            {proData?.ironRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Erhöhtes Eisenrisiko — Blutspiegel prüfen empfohlen.</div>}
+            {proData?.sleepAshwaNeeded&&<div style={{fontSize:11,color:"#3A6000"}}>💤 Schlafdefizit erkannt — Ashwagandha & Magnesium priorisiert.</div>}
+          </div>
+        )}
         {primSupps.length>0&&(
           <div style={{marginBottom:20}}>
             <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>DEIN STACK · ZWINGEND</div>
@@ -6065,7 +6080,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Sportnahrung</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:8}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:10}}>Auf deinen Sport und deine Intensität abgestimmt.</p>
+        {isPro&&(
+          <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+            <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>DEIN ENERGIE-BEDARF</div>
+            <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
+              {`${raceCarbs}g Kohlenhydrate pro Stunde — starte ab Minute 30. Nie warten bis Hunger kommt.`}
+            </div>
+            <div style={{fontSize:11,color:"#3A6000"}}>💡 Gel bei hoher Intensität · Riegel nur unter 70% HFmax · Drink reduziert Gel-Bedarf</div>
+          </div>
+        )}
         {activePrefFilter&&(
           <div style={{marginBottom:12,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000"}}>
             ✓ {activePrefFilter} — basierend auf deiner Präferenz
@@ -6147,8 +6171,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               return (
                 <div key={p.id} style={{background:"#fff",borderRadius:12,border:"1px solid #EBEBEB",padding:"14px",boxShadow:"0 1px 4px rgba(0,0,0,.04)",display:"flex",flexDirection:"column"}}>
                   <div style={{flex:1,marginBottom:10}}>
-                    <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,lineHeight:1.3}}>{p.name}</div>
-                    <div style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace",marginBottom:4}}>{p.dose}</div>
+                    <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:3,lineHeight:1.3}}>{p.name}</div>
+                    <div style={{display:"flex",alignItems:"center",gap:5,flexWrap:"wrap",marginBottom:4}}>
+                      <span style={{fontSize:10,color:"#AAA",fontFamily:"JetBrains Mono,monospace"}}>{p.dose}</span>
+                      {p.kh>0&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:4,background:C.neonDim,color:"#3A6000",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{p.kh}g KH</span>}
+                      {p.khTyp&&<span style={{fontSize:9,padding:"1px 6px",borderRadius:4,background:"#F0F0F0",color:"#666",fontFamily:"JetBrains Mono,monospace"}}>{p.khTyp}</span>}
+                    </div>
                     <div style={{fontSize:11,color:"#888",marginBottom:4}}>{p.when}</div>
                     <div style={{fontSize:11,color:"#555",lineHeight:1.5}}>{p.why}</div>
                     {p.form&&getEnergyReason&&getEnergyReason(p.form)&&(
@@ -7659,7 +7687,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     const SUB=[
       {id:"supplements",l:"Supplements"},
       {id:"ernaehrung",l:"Ernährung"},
-      {id:"recovery",l:"Recovery & Tracking"},
+      {id:"recovery",l:"Recovery"},
+      {id:"tracking",l:"Tracking"},
     ];
     return (
       <div>
@@ -7690,12 +7719,17 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {subTab==="hydration"&&<HydrationContent/>}
         {subTab==="recovery"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:20,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
             <RecoveryContent/>
+            <div style={{marginTop:20}}><BluttestTab/></div>
           </div>
         )}
-        {subTab==="wearables"&&<WearablesContent/>}
-        {subTab==="bluttest"&&<BluttestTab/>}
+        {subTab==="tracking"&&(
+          <div>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Wearables für präziseres Tracking — verbessern deine TREYN+ Analyse auf ~95% Genauigkeit.</p>
+            <WearablesContent/>
+          </div>
+        )}
       </div>
     );
   };
