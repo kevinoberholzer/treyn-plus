@@ -710,24 +710,26 @@ function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
         </div>
 
         {/* Key Point 3 — Plan */}
-        <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:12,padding:"14px 18px",marginBottom:28}}>
-          <div style={{fontSize:11,fontWeight:700,color:C.black,marginBottom:10}}>Du erhältst einen vollständigen, übersichtlichen Plan.</div>
-          <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:10}}>
+        <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:28}}>
+          <div style={{fontSize:isMobile?10:11,fontWeight:700,color:C.black,marginBottom:10,letterSpacing:"-.01em"}}>Du erhältst einen vollständigen, übersichtlichen Plan.</div>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr",gap:isMobile?6:5,marginBottom:10}}>
             {[
-              {icon:"📊",title:"Alle Zahlen",desc:"Kalorien, Protein, Elektrolyte, VO₂max + 17 weitere Werte"},
-              {icon:"💊",title:"Supplemente",desc:"Mit Dosis, Timing und Begründung"},
-              {icon:"⚡",title:"Sportnahrung",desc:"Gel, Riegel oder Drink — auf deine KH berechnet"},
+              {icon:"📊",title:"Alle Zahlen",desc:"Kalorien, Protein, Elektrolyte, VO₂max + 17 weitere"},
+              {icon:"💊",title:"Supplemente",desc:"Dosis, Timing & Begründung"},
+              {icon:"⚡",title:"Sportnahrung",desc:"Gel, Riegel oder Drink"},
               {icon:"📅",title:"Tagesplan",desc:"Trainings- & Ruhetage"},
-              {icon:"🏁",title:"Wettkampf",desc:"Carb-Loading, Race-Morning, Während & After-Race"},
+              {icon:"🏁",title:"Wettkampf",desc:"Race-Day Strategie"},
             ].map((item,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"baseline",gap:8}}>
-                <span style={{fontSize:13,flexShrink:0}}>{item.icon}</span>
-                <span style={{fontSize:12,color:C.black,fontWeight:600,flexShrink:0}}>{item.title}</span>
-                <span style={{fontSize:11,color:C.g500}}>— {item.desc}</span>
+              <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:C.g100,borderRadius:8,padding:"7px 10px"}}>
+                <span style={{fontSize:isMobile?14:13,flexShrink:0}}>{item.icon}</span>
+                <div>
+                  <div style={{fontSize:11,color:C.black,fontWeight:600,lineHeight:1.2}}>{item.title}</div>
+                  <div style={{fontSize:10,color:C.g500,lineHeight:1.3}}>{item.desc}</div>
+                </div>
               </div>
             ))}
           </div>
-          <div style={{fontSize:11,color:C.g400,borderTop:`1px solid ${C.g200}`,paddingTop:8}}>
+          <div style={{fontSize:10,color:C.g400,borderTop:`1px solid ${C.g200}`,paddingTop:8}}>
             100% auf dich — kein generischer Plan, keine Schätzung.
           </div>
         </div>
@@ -1149,7 +1151,7 @@ const TRANSLATIONS={
     summary_rest_day:"Ruhetag",
     summary_training_day:"Trainingstag",
     summary_unlocked:"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?",
-    summary_unlock_desc:"6 gesperrte Datenkarten, alle Supplement-Dosierungen, Sportnahrung mit exakten Intervallen und deine persönliche Race-Day-Strategie — 100% auf dein Gewicht, deine Sportart und deine Intensität berechnet.",
+    summary_unlock_desc:"22+ Werte, 198 Supplement-Optionen, Tagesplan, Race-Day Strategie — vollständig berechnet auf deinen Körper, dein Training und deinen Lifestyle.",
     summary_one_time:"Einmalig · Jederzeit erneuerbar",
     summary_no_cc:"Kein Passwort · Kein Abo · Jederzeit erneuerbar",
     intensity_low:"Leicht",
@@ -6336,7 +6338,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             {label:"WASSER",val:`${(calc.waterMl/1000).toFixed(1)}L`,unit:"täglich",hi:false},
             {label:"GRUNDUMSATZ",val:calc.bmr?.toLocaleString("de-CH")||"—",unit:"kcal Ruhe",hi:false},
           ].map(m=>(
-            <div key={m.label} style={{background:m.hi?C.neon:C.white,border:`0.5px solid ${m.hi?C.neon:C.g200}`,borderRadius:12,padding:14}}>
+            <div key={m.label} style={{background:m.hi?C.neonDim:C.white,border:`1px solid ${m.hi?C.neonBorder:C.g200}`,borderRadius:12,padding:14}}>
               <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.45)":C.g400,marginBottom:4}}>{m.label}</div>
               <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{m.val}</div>
               <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.4)":C.g400,marginTop:2}}>{m.unit}</div>
@@ -6430,13 +6432,36 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {/* CTA acid */}
         <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
           <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
-          <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:8}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
-          <div style={{fontSize:11,color:"rgba(0,0,0,.55)",lineHeight:1.7,marginBottom:14}}>6 gesperrte Datenkarten, alle Supplement-Dosierungen, Sportnahrung mit exakten Intervallen und deine persönliche Race-Day-Strategie — 100% auf dein Gewicht, deine Sportart und deine Intensität berechnet.</div>
-          <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:16}}>
-            {["Elektrolyte, VO₂max & Kohlenhydrate/h","Supplement-Dosierungen & Tagesplan","Sportnahrung mit exakten Timing-Intervallen","Race-Day Strategie für deine Wettkämpfe","Kein Abo — einmalig, jederzeit erneuerbar"].map((f,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:8}}>
-                <div style={{width:16,height:16,borderRadius:"50%",background:"rgba(0,0,0,.1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,color:C.black,fontWeight:700,flexShrink:0}}>✓</div>
-                <div style={{fontSize:12,color:"rgba(0,0,0,.7)"}}>{f}</div>
+          <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:6}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
+          <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*4*6} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
+
+          {/* Stats row */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
+            {[
+              {n:"22+",l:"Werte freigeschaltet"},
+              {n:"198",l:"Supplement-Optionen"},
+              {n:"50+",l:"Sportdisziplinen"},
+            ].map((s,i)=>(
+              <div key={i} style={{background:"rgba(0,0,0,.08)",borderRadius:8,padding:"8px 6px",textAlign:"center"}}>
+                <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.n}</div>
+                <div style={{fontSize:8,color:"rgba(0,0,0,.5)",lineHeight:1.3,marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:16}}>
+            {[
+              "Elektrolyte, VO₂max, Natrium-Verlust & Kohlenhydrate/h",
+              "Alle 22 Körper- & Lifestyle-Werte vollständig sichtbar",
+              "Supplement-Dosierungen mit Timing, Protokoll & Begründung",
+              "Sportnahrung mit exakten Intervallen — berechnet auf dein Gewicht",
+              "Persönlicher Tagesplan für Trainings- & Ruhetage",
+              "Race-Day Strategie — Carb-Loading bis After-Race Recovery",
+              "Kein Abo — einmalig CHF 2.15/Monat, jederzeit erneuerbar",
+            ].map((f,i)=>(
+              <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8}}>
+                <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.black,fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
+                <div style={{fontSize:11,color:"rgba(0,0,0,.7)",lineHeight:1.5}}>{f}</div>
               </div>
             ))}
           </div>
