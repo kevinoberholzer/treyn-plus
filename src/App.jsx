@@ -8096,6 +8096,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {id:"ernaehrung",l:"Ernährung"},
       {id:"recovery",l:"Recovery"},
       {id:"tracking",l:"Tracking"},
+      {id:"bluttest",l:"Bluttest"},
     ];
     return (
       <div>
@@ -8128,13 +8129,24 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <div>
             <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
             <RecoveryContent/>
-            <div style={{marginTop:20}}><BluttestTab/></div>
           </div>
         )}
         {subTab==="tracking"&&(
           <div>
             <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Wearables für präziseres Tracking — verbessern deine TREYN+ Analyse auf ~95% Genauigkeit.</p>
             <WearablesContent/>
+          </div>
+        )}
+        {subTab==="bluttest"&&(
+          <div>
+            <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+              <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>WARUM EIN BLUTTEST?</div>
+              <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
+                TREYN+ rechnet mit Schätzwerten — das gibt ~85% Genauigkeit. Echte Laborwerte erhöhen die Präzision auf ~95%. Kostet einmalig ~CHF 80–120.
+              </div>
+              <div style={{fontSize:11,color:"#3A6000"}}>💡 Besonders wichtig für: Vitamin D, Ferritin (Eisen), Magnesium, Omega-3 Index.</div>
+            </div>
+            <BluttestTab/>
           </div>
         )}
       </div>
