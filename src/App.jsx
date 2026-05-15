@@ -1009,7 +1009,7 @@ const TRANSLATIONS={
     // DEMO
     demo_title:"So funktioniert TREYN+",
     demo_basic_title:"Basicdaten — sofort sichtbar",
-    demo_basic_desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo.",
+    demo_basic_desc:"Energieverbrauch & Bedarf, Protein und Wasser. Keine Kreditkarte nötig.",
     demo_pro_title:"PRO — alles freigeschaltet",
     demo_pro_desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
     demo_cta:"Kostenlose Analyse entdecken →",
@@ -2736,7 +2736,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
           {/* ZYKLUS — nur bei Frauen */}
           {gender==="f"&&(
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Zyklusphase"} sub={"Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark"}/>
+            <Q label={"Aktuelle Zyklusphase"} sub={"Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark — kann jederzeit im Profil angepasst werden"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"follikel",  l:"Follikelphase",     d:"Tag 1–14 — nach Periode, mehr Energie"},
@@ -4332,9 +4332,9 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
         <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
           {[
-            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"Energieverbrauch, Energiebedarf, Protein und Wasser. Keine Kreditkarte nötig, kein aktives Abo."},
+            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"Energieverbrauch & Bedarf, Protein und Wasser. Keine Kreditkarte nötig."},
             {icon:"🔒", title:"PRO — CHF 12.90 / 6 Monate", desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan."},
-            {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf dein Gewicht, Sport und Intensität."},
+            {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
           ].map((item,i)=>(
             <div key={i} style={{display:"flex",gap:14,padding:"14px 16px",borderRadius:12,border:"1px solid #EBEBEB",background:"#fff"}}>
               <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{item.icon}</span>
@@ -4413,7 +4413,7 @@ function StepPraeferenzen({onNext, onBack}) {
         </Section>
 
         <Section title="Recovery — wie erholst du dich am liebsten?">
-          {[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionsbekleidung"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere nicht pro-aktiv"}].map(o=>(
+          {[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionswear"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere zu wenig"}].map(o=>(
             <Chip key={o.id} label={o.l} active={recoveryForm.includes(o.id)} onClick={()=>toggleMulti(recoveryForm,setRecoveryForm,o.id)}/>
           ))}
         </Section>
