@@ -667,7 +667,7 @@ function TypeWriter({lines, onDone, speed=20, onCountryClick, lang="de"}) {
 // ─── INTRO ────────────────────────────────────────────────────────────────────
 
 // ─── WHY TREYN ─────────────────────────────────────────────────────────────
-function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
+function WhyTREYN({onNext}) {
   const isMobile=useWindowWidth()<=768;
   React.useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[]);
 
@@ -678,7 +678,6 @@ function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
         {/* Header */}
         <div style={{marginBottom:isMobile?24:40,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <Logo size="lg"/>
-          <button onClick={switchLang} style={{fontSize:10,color:C.black,background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:7,padding:"3px 10px",cursor:"pointer",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{lang==="de"?"EN":"DE"}</button>
         </div>
 
         {/* Title */}
@@ -712,7 +711,7 @@ function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
         {/* Key Point 3 — Plan */}
         <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:28}}>
           <div style={{fontSize:isMobile?10:11,fontWeight:700,color:C.black,marginBottom:10,letterSpacing:"-.01em"}}>Du erhältst einen vollständigen, übersichtlichen Plan.</div>
-          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr",gap:isMobile?6:5,marginBottom:10}}>
+          <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:10}}>
             {[
               {icon:"📊",title:"Alle Zahlen",desc:"Kalorien, Protein, Elektrolyte, VO₂max + 17 weitere"},
               {icon:"💊",title:"Supplemente",desc:"Dosis, Timing & Begründung"},
@@ -720,12 +719,11 @@ function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
               {icon:"📅",title:"Tagesplan",desc:"Trainings- & Ruhetage"},
               {icon:"🏁",title:"Wettkampf",desc:"Race-Day Strategie"},
             ].map((item,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:C.g100,borderRadius:8,padding:"7px 10px"}}>
-                <span style={{fontSize:isMobile?14:13,flexShrink:0}}>{item.icon}</span>
-                <div>
-                  <div style={{fontSize:11,color:C.black,fontWeight:600,lineHeight:1.2}}>{item.title}</div>
-                  <div style={{fontSize:10,color:C.g500,lineHeight:1.3}}>{item.desc}</div>
-                </div>
+              <div key={i} style={{display:"flex",alignItems:"center",gap:8,background:C.g100,borderRadius:8,padding:"6px 10px"}}>
+                <span style={{fontSize:13,flexShrink:0}}>{item.icon}</span>
+                <span style={{fontSize:11,color:C.black,lineHeight:1.5}}>
+                  <span style={{fontWeight:700}}>{item.title}:</span> {item.desc}
+                </span>
               </div>
             ))}
           </div>
@@ -752,7 +750,7 @@ function WhyTREYN({onNext, lang="de", switchLang=()=>{}}) {
 }
 
 
-function Intro({onNext, onDemo, lang="de", switchLang=()=>{}}) {
+function Intro({onNext, onDemo}) {
   const [logoVisible,setLogoVisible]=useState(false);
   const [typing,setTyping]=useState(false);
   const [btnVisible,setBtnVisible]=useState(false);
@@ -787,7 +785,6 @@ function Intro({onNext, onDemo, lang="de", switchLang=()=>{}}) {
           <div style={{display:"flex",alignItems:"center",gap:10}}>
             <Logo size="lg"/>
             <span style={{fontSize:9,fontWeight:700,letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",background:"#F0F0EE",color:"#888",padding:"3px 8px",borderRadius:5,textTransform:"uppercase"}}>Beta</span>
-            <button onClick={switchLang} style={{marginLeft:"auto",fontSize:10,color:C.black,background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:7,padding:"3px 10px",cursor:"pointer",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{lang==="de"?"EN":"DE"}</button>
           </div>
         </div>
         {typing&&<TypeWriter lines={lines} speed={13} onDone={()=>setBtnVisible(true)} onCountryClick={()=>setShowCountries(true)}/>}
@@ -1011,7 +1008,7 @@ const TRANSLATIONS={
     // DEMO
     demo_title:"So funktioniert TREYN+",
     demo_basic_title:"Basicdaten — sofort sichtbar",
-    demo_basic_desc:"Energieverbrauch & Bedarf, Protein und Wasser. Keine Kreditkarte nötig.",
+    demo_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten/Jahr — sofort sichtbar. Keine Kreditkarte.",
     demo_pro_title:"PRO — alles freigeschaltet",
     demo_pro_desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
     demo_cta:"Kostenlose Analyse entdecken →",
@@ -1342,7 +1339,7 @@ const TRANSLATIONS={
     step_welcome_title:"Bereit.",
     step_welcome_sub:"Deine Analyse wird jetzt berechnet.",
     step_welcome_basic:"Basicdaten sofort sichtbar",
-    step_welcome_basic_desc:"Energieverbrauch, Protein, Wasser — sofort und kostenlos.",
+    step_welcome_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten — kostenlos.",
     step_welcome_pro:"PRO freischalten",
     step_welcome_pro_desc:"Alle Empfehlungen, Dosierungen & Tagesplan.",
     step_welcome_cta:"Analyse ansehen →",
@@ -1374,7 +1371,7 @@ const TRANSLATIONS={
     // DEMO
     demo_title:"How TREYN+ works",
     demo_basic_title:"Basic data — instantly visible",
-    demo_basic_desc:"Energy expenditure, protein and hydration needs. No credit card, no subscription.",
+    demo_basic_desc:"Energy expenditure & basal metabolic rate — instantly. No credit card.",
     demo_pro_title:"PRO — everything unlocked",
     demo_pro_desc:"All data, all recommendations — incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan. Unlock anytime.",
     demo_cta:"Discover your free analysis →",
@@ -1722,7 +1719,7 @@ const TRANSLATIONS={
     step_welcome_title:"Ready.",
     step_welcome_sub:"Your analysis is being calculated.",
     step_welcome_basic:"Basic data instantly visible",
-    step_welcome_basic_desc:"Energy expenditure, protein, water — instant and free.",
+    step_welcome_basic_desc:"Energy expenditure & basal rate — instant and free.",
     step_welcome_pro:"Unlock PRO",
     step_welcome_pro_desc:"All recommendations, dosages & daily plan.",
     step_welcome_cta:"View analysis →",
@@ -1748,7 +1745,7 @@ const TRANSLATIONS={
       intro_close:"Close",
       demo_title:"How TREYN+ Works",
       demo_basic_title:"Basic Data — instantly visible",
-      demo_basic_desc:"Energy consumption, energy needs, protein and water. No credit card, no active subscription.",
+      demo_basic_desc:"Energy consumption & basal metabolic rate. No credit card, no subscription.",
       demo_pro_title:"PRO — everything unlocked",
       demo_pro_desc:"All data, all recommendations — incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan.",
       demo_cta:"Discover Free Analysis →",
@@ -4334,7 +4331,7 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
         <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
           {[
-            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"Energieverbrauch & Bedarf, Protein und Wasser. Keine Kreditkarte nötig."},
+            {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"4 Werte sofort: Energieverbrauch, Grundumsatz, Wasser & Trainingseinheiten/Jahr."},
             {icon:"🔒", title:"PRO — CHF 12.90 / 6 Monate", desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan."},
             {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
           ].map((item,i)=>(
@@ -4652,44 +4649,64 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
           <span style={{fontSize:11,color:"#AAA",fontWeight:400,letterSpacing:".01em"}}>~75% genau</span>
         </div>
         <div style={{padding:"20px"}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:12}}>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2,letterSpacing:".02em"}}>Grundumsatz</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{basic.bmr.toLocaleString("de-CH")}</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>kcal / Tag</div>
+          {/* BASIC: 3 visible cards */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            {[
+              {label:"Grundumsatz",val:basic.bmr.toLocaleString("de-CH"),unit:"kcal / Tag"},
+              {label:"Mit Training",val:basic.withTraining.toLocaleString("de-CH"),unit:"kcal / Tag"},
+            ].map((c,i)=>(
+              <div key={i} style={{padding:"10px 12px",background:C.white,borderRadius:10,border:`1px solid ${C.g200}`}}>
+                <div style={{fontSize:9,color:C.g400,marginBottom:3,letterSpacing:".04em",fontFamily:"JetBrains Mono,monospace"}}>{c.label.toUpperCase()}</div>
+                <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{c.val}</div>
+                <div style={{fontSize:9,color:C.g400,marginTop:3}}>{c.unit}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+            <div style={{padding:"10px 12px",background:C.white,borderRadius:10,border:`1px solid ${C.g200}`}}>
+              <div style={{fontSize:9,color:C.g400,marginBottom:3,letterSpacing:".04em",fontFamily:"JetBrains Mono,monospace"}}>WASSER / TAG</div>
+              <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>~{Math.round((profilData?.weight||75)*35/100)/10}L</div>
+              <div style={{fontSize:9,color:C.g400,marginTop:3}}>Schätzwert · exakt mit PRO</div>
             </div>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2,letterSpacing:".02em"}}>Mit Training</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em"}}>{basic.withTraining.toLocaleString("de-CH")}</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>kcal / Tag</div>
+            <div style={{padding:"10px 12px",background:C.white,borderRadius:10,border:`1px solid ${C.g200}`}}>
+              <div style={{fontSize:9,color:C.g400,marginBottom:3,letterSpacing:".04em",fontFamily:"JetBrains Mono,monospace"}}>TRAININGSEINHEITEN</div>
+              <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*52}</div>
+              <div style={{fontSize:9,color:C.g400,marginTop:3}}>pro Jahr</div>
             </div>
           </div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Protein / Tag</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{Math.round((profilData?.weight||75)*1.4)}–{Math.round((profilData?.weight||75)*1.8)}g</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Sichtbar nach Auswahl</div>
-            </div>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Kohlenhydrate / Tag</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{Math.round(basic.withTraining*0.45/4)}–{Math.round(basic.withTraining*0.55/4)}g</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Sichtbar nach Auswahl</div>
-            </div>
-          </div>
-          <div style={{fontSize:11,color:"#AAA",fontStyle:"italic",marginBottom:16}}>±25% Fehler — pauschale Berechnung ohne sport-spezifische MET-Werte.</div>
 
-          {/* PRO-only preview cards — blurred */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Wasserverbrauch / Tag</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{pro?.waterMl?Math.round(pro.waterMl/100)/10:2.8}L</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Nur mit PRO</div>
+          {/* PRO: 8 blurred cards */}
+          <div style={{position:"relative",marginBottom:8}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,filter:"blur(4px)",pointerEvents:"none",userSelect:"none",opacity:.7}}>
+              {[
+                {label:"Protein / Tag",val:`${Math.round((profilData?.weight||75)*1.8)}–${Math.round((profilData?.weight||75)*2.2)}g`,unit:"exakt via MET"},
+                {label:"Kohlenhydrate",val:`${Math.round(basic.withTraining*0.5/4)}g`,unit:"/ Tag"},
+                {label:"Wasser Trainingstag",val:`${pro?.waterMl?Math.round(pro.waterMl/100)/10:3.2}L`,unit:"inkl. Schweiss"},
+                {label:"Wasser Ruhetag",val:`${pro?.waterMl?Math.round(pro.waterMl*0.6/100)/10:1.9}L`,unit:"Grundbedarf"},
+                {label:"Natrium-Verlust",val:`${pro?.natriumMg||1400}mg`,unit:"/ Training"},
+                {label:"Magnesium",val:`${pro?.magnesiumMg||380}mg`,unit:"täglich"},
+                {label:"Fettverbrennungszone",val:`${pro?.fatBurnMin||108}–${pro?.fatBurnMax||126}`,unit:"bpm"},
+                {label:"VO₂max (Schätzwert)",val:`${pro?.vo2max||52}`,unit:"ml/kg/min"},
+              ].map((c,i)=>(
+                <div key={i} style={{padding:"10px 12px",background:C.white,borderRadius:10,border:`1px solid ${C.g200}`}}>
+                  <div style={{fontSize:9,color:C.g400,marginBottom:3,letterSpacing:".04em",fontFamily:"JetBrains Mono,monospace"}}>{c.label.toUpperCase()}</div>
+                  <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{c.val}</div>
+                  <div style={{fontSize:9,color:C.g400,marginTop:3}}>{c.unit}</div>
+                </div>
+              ))}
             </div>
-            <div style={{padding:"8px 12px",background:"#FFFFFF",borderRadius:10,border:"1px solid #EBEBEB",boxShadow:"0 1px 3px rgba(0,0,0,.04)"}}>
-              <div style={{fontSize:10,color:"#888",marginBottom:2}}>Fettverbrennung</div>
-              <div style={{fontSize:18,fontWeight:400,color:C.black,letterSpacing:"-.02em",filter:"blur(5px)",userSelect:"none"}}>{pro?.fatBurnMin||110}–{pro?.fatBurnMax||128} bpm</div>
-              <div style={{fontSize:10,color:"#999",marginTop:1}}>Nur mit PRO</div>
+            {/* Overlay */}
+            <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(255,255,255,.5)",backdropFilter:"blur(1px)",borderRadius:10}}>
+              <div style={{background:C.neon,borderRadius:10,padding:"10px 18px",textAlign:"center",boxShadow:"0 4px 16px rgba(0,0,0,.12)"}}>
+                <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"rgba(0,0,0,.5)",letterSpacing:".08em",marginBottom:3}}>🔒 PRO ONLY</div>
+                <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>8 weitere Werte gesperrt</div>
+                <div style={{fontSize:10,color:"rgba(0,0,0,.55)"}}>Protein, KH, Wasser, Natrium, Mg, VO₂max + mehr</div>
+              </div>
             </div>
+          </div>
+
+          <div style={{fontSize:10,color:C.g400,fontStyle:"italic",marginBottom:14,textAlign:"center"}}>
+            ±25% Fehler Basic · PRO: ~92% Genauigkeit via MET-2024
           </div>
 
           {/* PRO locked */}
@@ -5006,7 +5023,7 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", children}) {
   );
 }
 
-function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade,switchLang,lang="de"}) {
+function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
   const [tab,setTab]=useState("summary");
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[tab]);
   const isMobile=useWindowWidth()<=768;
@@ -5080,11 +5097,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     {id:"zahlen",       label:lang==="en"?"Your Numbers":"Deine Zahlen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>},
     {id:"tagesplan",    label:lang==="en"?"Daily Plan":"Tagesplan",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>},
     {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
-    {id:"protokolle",   label:"Protokolle",      icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>},
-    {id:"wettkampf",    label:"Wettkampf",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>},
+    ...(Object.values(trainingData||{}).some(d=>d.hasCompetition)?[{id:"wettkampf",label:"Wettkampf",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>}]:[]),
     {id:"einkauf",      label:lang==="en"?"Shop":"Einkauf",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
-    {id:"aichat",       label:"AI Chat",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>},
-    {id:"profil",       label:"Profil",          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
   ];
   const NAV=isPro?NAV_PRO:NAV_BASIC;
   const AICHAT_NAV={id:"aichat",label:"TREYN AI Chat",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>};
@@ -6338,7 +6352,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             {label:"WASSER",val:`${(calc.waterMl/1000).toFixed(1)}L`,unit:"täglich",hi:false},
             {label:"GRUNDUMSATZ",val:calc.bmr?.toLocaleString("de-CH")||"—",unit:"kcal Ruhe",hi:false},
           ].map(m=>(
-            <div key={m.label} style={{background:m.hi?C.neonDim:C.white,border:`1px solid ${m.hi?C.neonBorder:C.g200}`,borderRadius:12,padding:14}}>
+            <div key={m.label} style={{background:m.hi?C.neon:C.white,border:`0.5px solid ${m.hi?C.neon:C.g200}`,borderRadius:12,padding:14}}>
               <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.45)":C.g400,marginBottom:4}}>{m.label}</div>
               <div style={{fontSize:20,fontWeight:700,color:C.black,letterSpacing:"-.03em",lineHeight:1}}>{m.val}</div>
               <div style={{fontSize:10,color:m.hi?"rgba(0,0,0,.4)":C.g400,marginTop:2}}>{m.unit}</div>
@@ -6430,10 +6444,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ))}
 
         {/* CTA acid */}
-        <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:16,padding:20,marginTop:8}}>
-          <div style={{fontSize:10,fontWeight:700,color:"#4A7000",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
+        <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
+          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
           <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:6}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
-          <div style={{fontSize:11,color:"#555",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*4*6} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
+          <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*4*6} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
 
           {/* Stats row */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
@@ -6442,9 +6456,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               {n:"198",l:"Supplement-Optionen"},
               {n:"50+",l:"Sportdisziplinen"},
             ].map((s,i)=>(
-              <div key={i} style={{background:"rgba(0,0,0,.06)",borderRadius:8,padding:"8px 6px",textAlign:"center"}}>
+              <div key={i} style={{background:"rgba(0,0,0,.08)",borderRadius:8,padding:"8px 6px",textAlign:"center"}}>
                 <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.n}</div>
-                <div style={{fontSize:8,color:"rgba(0,0,0,.45)",lineHeight:1.3,marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>{s.l}</div>
+                <div style={{fontSize:8,color:"rgba(0,0,0,.5)",lineHeight:1.3,marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>{s.l}</div>
               </div>
             ))}
           </div>
@@ -6460,14 +6474,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               "Kein Abo — einmalig CHF 2.15/Monat, jederzeit erneuerbar",
             ].map((f,i)=>(
               <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8}}>
-                <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#2D5000",fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
-                <div style={{fontSize:11,color:"#333",lineHeight:1.5}}>{f}</div>
+                <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.black,fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
+                <div style={{fontSize:11,color:"rgba(0,0,0,.7)",lineHeight:1.5}}>{f}</div>
               </div>
             ))}
           </div>
           <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:14}}>
             <div style={{fontSize:28,fontWeight:700,color:C.black,letterSpacing:"-.04em"}}>{PRICE_STR}</div>
-            <div style={{fontSize:11,color:"#666"}}>/ 6 Monate · CHF 2.15/Mt.</div>
+            <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>/ 6 Monate · CHF 2.15/Mt.</div>
           </div>
           <button onClick={onUpgrade} style={{width:"100%",padding:15,borderRadius:11,border:"none",background:C.black,color:C.neon,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:"-.01em",marginBottom:8}}>
             Jetzt PRO freischalten →
@@ -6812,12 +6826,12 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         </div>
 
         {!isPro&&(
-          <div style={{padding:"14px 16px",background:"#FAFAFA",borderRadius:12,border:"1px solid #EBEBEB",display:"flex",alignItems:"center",gap:14}}>
+          <div style={{padding:"14px 16px",background:C.neon,borderRadius:12,display:"flex",alignItems:"center",gap:14}}>
             <div style={{flex:1}}>
-              <div style={{fontSize:13,fontWeight:500,color:"#0A0A0A",marginBottom:2}}>Präzisere Werte mit PRO</div>
-              <div style={{fontSize:11,color:"#888",lineHeight:1.5}}>Natrium, Magnesium, Schweiss, Wasser, VO₂max, exakter Protein- & Kohlenhydratbedarf.</div>
+              <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>Präzisere Werte mit PRO</div>
+              <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.5}}>Natrium, Magnesium, Schweiss, Wasser, VO₂max, exakter Protein- & KH-Bedarf.</div>
             </div>
-            <button onClick={onUpgrade} style={{background:"#0A0A0A",color:"#fff",border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>PRO · CHF 12.90 / 6 Mt.</button>
+            <button onClick={onUpgrade} style={{background:C.black,color:C.neon,border:"none",borderRadius:9,padding:"9px 14px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,whiteSpace:"nowrap"}}>PRO → CHF 12.90</button>
           </div>
         )}
       </div>
@@ -7644,12 +7658,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     const prefSupp=praeferenzenData?.suppForm||"beides";
     const SUB=[
       {id:"supplements",l:"Supplements"},
-      {id:"nahrung",l:"Sportnahrung"},
-      {id:"mahlzeiten",l:"Mahlzeiten"},
-      {id:"hydration",l:"Hydration"},
-      {id:"recovery",l:"Recovery Gear"},
-      {id:"wearables",l:"Wearables"},
-      {id:"bluttest",l:"Bluttest"},
+      {id:"ernaehrung",l:"Ernährung"},
+      {id:"recovery",l:"Recovery & Tracking"},
     ];
     return (
       <div>
@@ -7699,7 +7709,6 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {fname&&!isMobile&&<span style={{fontSize:13,color:C.g600}}>{"Hallo"}, {fname}</span>}
           {isPro&&<span style={{fontSize:10,padding:"3px 8px",borderRadius:5,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>}
 <button onClick={onReset} style={{fontSize:11,color:C.g400,background:"none",border:`0.5px solid ${C.g200}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↩ {"Neu"}</button>
-          <button onClick={switchLang} style={{fontSize:10,color:C.black,background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:7,padding:"4px 10px",cursor:"pointer",fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>{lang==="de"?"EN":"DE"}</button>
         </div>
       </div>
 
@@ -7708,9 +7717,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{padding:"16px 16px 90px"}}>
           {tab==="summary"&&<SummaryTab/>}
           {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Deine Zahlen"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil."}</p><VerbrauchTab/></div>)}
-          {tab==="tagesplan"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein personalisierter Tagesplan mit Supplement-Timing.</p><TagesplanTab/></div>)}
+          {tab==="tagesplan"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan & Protokolle</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Tagesplan, Ernährung & Supplement-Timing.</p><TagesplanTab/><div style={{marginTop:24,paddingTop:20,borderTop:`1px solid ${C.g200}`}}><div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:12}}>SUPPLEMENT PROTOKOLLE</div><ProtokollTab/></div></div>)}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
-          {tab==="protokolle"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Protokolle"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"Einnahme-Protokolle für deine Supplements — Dauer, Pausen und wichtige Hinweise."}</p><ProtokollTab/></div>)}
           {tab==="wettkampf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Wettkampf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität."}</p><WettkampfTab/></div>)}
           {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p><CartTab/></div>)}
           {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"TREYN AI Chat"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{"Stelle Fragen zu deinen Daten, Supplements und Ernährung."}</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
@@ -7727,6 +7735,15 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
               {NAV.map(item=><NavItem key={item.id} item={item}/>)}
               <div style={{flex:1}}/>
               <div style={{paddingTop:8,borderTop:`1px solid ${C.g200}`,marginTop:8,display:"flex",flexDirection:"column",gap:2}}>
+                {isPro&&<button onClick={()=>{setTab("aichat");window.scrollTo({top:0,behavior:"instant"});}} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="aichat"?C.neon:"transparent",color:tab==="aichat"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                  AI Chat
+                  <span style={{marginLeft:"auto",fontSize:8,padding:"1px 5px",borderRadius:3,background:"#000",color:C.neon,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>
+                </button>}
+                <button onClick={()=>{setTab("profil");window.scrollTo({top:0,behavior:"instant"});}} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="profil"?C.neon:"transparent",color:tab==="profil"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Profil
+                </button>
                 <button onClick={()=>setTab("kontakt")} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="kontakt"?C.neon:"transparent",color:tab==="kontakt"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                   Kontakt & Impressum
@@ -7746,22 +7763,19 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <VerbrauchTab/>
           </div>)}
 
-          {/* ── TAGESPLAN ────────────────────────────────────────────────── */}
+          {/* ── TAGESPLAN + PROTOKOLLE ──────────────────────────────────── */}
           {tab==="tagesplan"&&(<div>
-            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein personalisierter Supplement- und Ernährungsplan für heute.</p>
+            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan & Protokolle</h2>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein Tagesplan + Einnahme-Timing für deine Supplements.</p>
             <TagesplanTab/>
+            <div style={{marginTop:28,paddingTop:24,borderTop:`1px solid ${C.g200}`}}>
+              <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:16}}>SUPPLEMENT PROTOKOLLE</div>
+              <ProtokollTab/>
+            </div>
           </div>)}
 
           {/* ── EMPFEHLUNGEN ─────────────────────────────────────────────── */}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
-
-          {/* ── PROTOKOLLE ───────────────────────────────────────────────── */}
-          {tab==="protokolle"&&(<div>
-            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Protokolle</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Einnahme-Protokolle für deine Supplements — Dauer, Pausen und wichtige Hinweise.</p>
-            <ProtokollTab/>
-          </div>)}
 
           {/* ── WETTKAMPF ────────────────────────────────────────────────── */}
           {tab==="wettkampf"&&(<div>
@@ -7859,12 +7873,7 @@ class ErrorBoundary extends React.Component {
 
 function App() {
   const [phase,setPhase]=useState("intro");
-  const [lang,setLang]=useState(()=>_getLang());
-  const switchLang=()=>{
-    const next=lang==="de"?"en":"de";
-    setLang(next);
-    setGlobalLang(next);
-  };
+  
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[phase]);
   const [sportData,setSportData]=useState(null);
   const [trainingData,setTrainingData]=useState(null);
@@ -7973,8 +7982,8 @@ function App() {
           ))}
         </div>
       )}
-      {phase==="intro"      && <Intro           onNext={()=>setPhase("why")} onDemo={startDemo} switchLang={switchLang} lang={lang}/>}
-      {phase==="why"        && <WhyTREYN         onNext={()=>setPhase("demo")} switchLang={switchLang} lang={lang}/>}
+      {phase==="intro"      && <Intro           onNext={()=>setPhase("why")} onDemo={startDemo}/>}
+      {phase==="why"        && <WhyTREYN         onNext={()=>setPhase("demo")}/>}
       {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase("training");}}/>}
       {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>setPhase("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
@@ -7997,7 +8006,7 @@ function App() {
           <button onClick={()=>{setIsDemoMode(false);setPhase("intro");}} style={{fontSize:12,color:C.neon,background:"none",border:`1px solid ${C.neon}`,borderRadius:8,padding:"5px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:500}}>Eigene Analyse starten →</button>
         </div>
       )}
-      {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={reset} switchLang={switchLang} lang={lang}
+      {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilData} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={reset}
         onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData)}/>}
     </div>
   );
