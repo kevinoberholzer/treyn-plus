@@ -5101,6 +5101,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     {id:"tagesplan",    label:"Tagesplan",       icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>},
     {id:"empfehlungen", label:"Empfehlungen",    icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>},
     {id:"einkauf",      label:"Einkauf",         icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>},
+    {id:"profil",       label:"Profil",          icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>},
   ];
   const NAV=isPro?NAV_PRO:NAV_BASIC;
   const AICHAT_NAV={id:"aichat",label:"TREYN AI Chat",icon:<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>};
@@ -7694,11 +7695,15 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       if(v==="none") return {...f,[k]:["none"]};
       return {...f,[k]:curr.includes(v)?curr.filter(x=>x!==v):[...curr,v]};
     });
+    const [savedData,setSavedData]=useState(null);
     const saveEdit=()=>{
-      // Merge edits back into profilData (mutate ref - parent would need callback for persistence)
+      // Update local state for display (proper fix needs parent callback)
       Object.assign(profilData,editForm);
+      setSavedData({...editForm});
       setEditMode(false);
     };
+    // Use saved or prop data for display
+    const displayProfil={...profilData,...(savedData||{})};
 
     const TIERS=[
       {min:0,  max:9,   id:"none",     label:null,       badge:"◈", color:C.g400},
@@ -8175,10 +8180,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                   AI Chat
                   <span style={{marginLeft:"auto",fontSize:8,padding:"1px 5px",borderRadius:3,background:"#000",color:C.neon,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>PRO</span>
                 </button>}
-                <button onClick={()=>{setTab("profil");window.scrollTo({top:0,behavior:"instant"});}} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="profil"?C.neon:"transparent",color:tab==="profil"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  Profil
-                </button>
+
                 <button onClick={()=>setTab("kontakt")} style={{display:"flex",alignItems:"center",gap:10,width:"100%",padding:"10px 14px",borderRadius:10,border:"none",cursor:"pointer",background:tab==="kontakt"?C.neon:"transparent",color:tab==="kontakt"?C.black:C.g500,fontFamily:"Inter,sans-serif",fontSize:12,fontWeight:400,transition:"all .14s",textAlign:"left"}}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                   Kontakt & Impressum
