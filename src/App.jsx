@@ -5235,406 +5235,67 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   // ── WEARABLES DATA (shared between WearablesContent + CartTab) ──────────────
   const WEARABLES=[
-      {
-        name:"Ultrahuman Ring PRO",
-        badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
-        affiliate:true,
-        category:"Sleep & Recovery",
-        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
-        metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
-        price:"ab CHF 399",
-        shops:[
-          {name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true},
-        ],
-      },
-    ];
-
-
-    return (
-      <div>
-        {/* Why you need it */}
-        <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"14px 16px",marginBottom:20}}>
-          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:6}}>Warum ein Wearable deine TREYN+ Analyse verbessert</div>
-          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.7}}>
-            TREYN+ berechnet mit MET-Werten und deinen Angaben — das gibt ~85% Genauigkeit. Mit echten Wearable-Daten (HRV, VO₂max, Schlafphasen, Schweissrate) steigt die Präzision auf ~95%.
-          </div>
-          <div style={{display:"flex",gap:8,marginTop:10,flexWrap:"wrap"}}>
-            {["VO₂max (real)","HRV-Trend","Schlafqualität","Schweissrate","Training Load"].map(m=>(
-              <span key={m} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,fontWeight:600}}>{m}</span>
-            ))}
-          </div>
-        </div>
-
-        {/* Product cards */}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-        {WEARABLES.map((w,i)=>(
-          <div key={i} style={{background:C.white,border:`1px solid ${i===0?C.neon:C.g200}`,borderRadius:14,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-            {/* Header */}
-            <div style={{background:i===0?C.neonDim:C.g100,borderBottom:`0.5px solid ${i===0?C.neonBorder:C.g200}`,padding:"8px 14px"}}>
-              <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:i===0?"#4A7000":C.g400,letterSpacing:".06em",fontWeight:i===0?700:400}}>{w.badge}</div>
-            </div>
-            <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column",gap:8}}>
-
-              <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-                <div style={{fontSize:14,fontWeight:700,color:C.black,letterSpacing:"-.02em",lineHeight:1.2}}>{w.name}</div>
-                <div style={{fontSize:12,fontWeight:600,color:C.black,flexShrink:0}}>{w.price}</div>
-              </div>
-              <div style={{fontSize:11,color:C.g600,lineHeight:1.6}}>{w.why}</div>
-              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
-                {(w.metrics||[]).map(m=>(
-                  <span key={m} style={{fontSize:9,padding:"2px 7px",borderRadius:100,background:"#F5F5F5",color:"#555",fontFamily:"JetBrains Mono,monospace"}}>{m}</span>
-                ))}
-              </div>
-            <div style={{display:"flex",gap:6}}>
-              {w.shops.map((sh,j)=>(
-                <a key={j} href={sh.link} target="_blank" rel="noopener noreferrer"
-                  style={{flex:1,textAlign:"center",padding:"8px 6px",borderRadius:8,background:C.neonDim,color:C.black,border:`1px solid ${C.neonBorder}`,fontSize:11,fontWeight:sh.affiliate?700:400,textDecoration:"none"}}>
-                  {sh.name} ↗
-                </a>
-              ))}
-              <button onClick={()=>{
-                try{
-                const id=`wear_${w.name.replace(/\s/g,"_")}`;
-                const list=JSON.parse(localStorage.getItem("treyn_owned")||"[]");
-                const next=list.includes(id)?list.filter(x=>x!==id):[...list,id];
-                  localStorage.setItem("treyn_owned",JSON.stringify(next));
-                  // Force re-render
-                  setCartTick(t=>t+1);
-                }catch{}
-              }} style={{padding:"8px 10px",borderRadius:8,border:`1px solid ${(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"rgba(52,199,89,.4)":C.g200;}catch{return C.g200;}})()}`,background:(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"rgba(52,199,89,.08)":"transparent";}catch{return "transparent";}})(),fontSize:10,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0,color:(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"#1A7A35":C.g500;}catch{return C.g500;}})()}}>
-                {(()=>{try{const id=`wear_${w.name.replace(/\s/g,"_")}`;return JSON.parse(localStorage.getItem("treyn_owned")||"[]").includes(id)?"✓":"＋";}catch{return "＋";}})()}
-              </button>
-            </div>
-          </div>
-        </div>
-        ))}
-        </div>
-      </div>
-    );
-  };
-
-  const HydrationContent=()=>{
-  const DURING=[
-      {
-        name:"MORE Nutrition Sirup",
-        badge:"Ohne Zucker · CH-Bestseller",
-        affiliate:true,
-        why:"Der einfachste Weg mehr zu trinken — über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
-        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40–60%. Kein Zucker = kein Insulin-Spike.",
-        tags:["Täglich","Ohne Zucker"],
-        link:AFF.more_sirup(),
-        shop:"MORE Nutrition",
-        img:"https://www.more-nutrition.de/cdn/shop/products/MORE_Sirup_Mango-Maracuja_500ml.jpg",
-      },      {
-        name:"Garmin Forerunner 965",
-        badge:"GPS · HRV · VO₂max · TOP PICK",
-        affiliate:true,
-        category:"Multisport",
-        why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand — alles was TREYN+ für präzisere Berechnungen nutzen kann.",
-        metrics:["VO₂max","HRV","Schlaf","Training Load","Erholungsstatus"],
-        price:"ab CHF 599",
-        shops:[
-          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/735158",affiliate:true},
-        ],
-      },
-      {
-        name:"Garmin Fenix 8",
-        badge:"Premium · Outdoor · Multisport",
-        affiliate:true,
-        category:"Premium GPS",
-        why:"Für den Athleten der alles will. Solarladung, Topo-Karten, Tauchen — und alle Gesundheitsmetriken die TREYN+ für optimale Berechnungen braucht.",
-        metrics:["VO₂max","HRV","Schlaf","Altitude Training","Körperbatterie"],
-        price:"ab CHF 899",
-        shops:[
-          {name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/994307",affiliate:true},
-        ],
-      },
-      {
-        name:"Polar Vantage V3",
-        badge:"Polar · Ausdauer · HRV",
-        affiliate:true,
-        category:"Ausdauer",
-        why:"Polars Flaggschiff für Ausdauersportler. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk — einzigartig präzise für Regenerationsberechnungen.",
-        metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
-        price:"ab CHF 499",
-        shops:[
-          {name:"Polar CH",link:"https://www.polar.com/de/vantage/v3",affiliate:true},
-        ],
-      },
-      {
-        name:"Polar Pacer Pro",
-        badge:"Laufen · Leicht · Präzise",
-        affiliate:true,
-        category:"Running",
-        why:"Leichtest mögliche GPS-Uhr für Läufer mit allen wichtigen Metriken. Nur 45g — man vergisst sie beim Training.",
-        metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
-        price:"ab CHF 299",
-        shops:[
-          {name:"Polar CH",link:"https://www.polar.com/de/pacer-pro",affiliate:true},
-        ],
-      },
-      {
-        name:"Oura Ring 4",
-        badge:"Ring · Schlaf · HRV · MARKTFÜHRER",
-        affiliate:true,
-        category:"Sleep & Recovery",
-        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen.",
-        metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
-        price:"ab CHF 349 + Abo",
-        shops:[
-          {name:"Oura",link:"https://ouraring.com/de"},
-          {name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/oura-ring",affiliate:true},
-        ],
-      },
-
-      {
-        name:"LMNT Elektrolyt-Packets",
-        badge:"1000mg Natrium · Kein Zucker",
-        affiliate:true,
-        why:"Extrem hochdosiert — 3× mehr Natrium als normale Elektrolyte. Ideal für Intensiv-Sportler und Keto-Athleten.",
-        science:"Natrium ist der stärkste Hydrations-Trigger. Mehr Natrium = mehr Trinkbereitschaft = bessere Hydration.",
-        tags:["Elektrolyte","High Sodium"],
-        link:AFF.lmnt(),
-        shop:"LMNT",
-        img:"https://drinklmnt.com/cdn/shop/files/LMNT-Sparkling_Citrus_Salt_12-Pack.png",
-      },
-      {
-        name:"Sponser Elektrolyt-Tabs",
-        badge:"Bewährt · Schweizer Qualität",
-        affiliate:false,
-        why:"Kompaktes Format — einfach in die Trinkflasche, überall dabei. Schweizer Qualitätsstandard.",
-        science:"Elektrolyt-Balance verbessert Flüssigkeitstransport in die Zellen. Ohne Elektrolyte bleibt Wasser im Darm.",
-        tags:["Elektrolyte","Kompakt"],
-        link:AFF.sponser("elektrolyt tabletten"),
-        shop:"Sponser",
-        img:null,
-      },
-      {
-        name:"Kokoswasser",
-        badge:"Natürlich · Isotonisch",
-        affiliate:false,
-        why:"Natürlich isotonisch mit Kalium, Magnesium und Natrium. Idealer Ersatz für Sportgetränke — ohne Zucker-Overhead.",
-        science:"Ähnliche Elektrolyt-Zusammensetzung wie menschliches Blutplasma. Studien zeigen gleiche Rehydrations-Wirkung wie kommerzielle Sportdrinks.",
-        tags:["Natürlich","Kalium"],
-        link:AFF.iherb("vita coco coconut water"),
-        shop:"iHerb",
-        img:null,
-      },
-    ];
-  const AFTER=[
-      {
-        name:"Erdinger Alkoholfrei",
-        badge:"Isotonisch · Polyphenole · Bestseller",
-        affiliate:false,
-        why:"Das bekannteste Recovery-Getränk der Sportwelt. Schmeckt nach Bier, enthält aber alles was dein Körper nach dem Training braucht.",
-        science:"FC Bayern München Studie: Sportler die Erdinger AF tranken hatten 3× weniger Infekte in der Saison. Isotonisch, B-Vitamine, Polyphenole, 0% Alkohol.",
-        tags:["Recovery","Isotonisch","Polyphenole"],
-        link:AFF.erdinger(),
-        shop:"Erdinger",
-        img:"https://www.erdinger.de/typo3temp/assets/_processed_/1/6/csm_ERDINGER_Weissbier_alkoholfrei_Flasche_2020_RGB_300dpi_3db53a2b78.jpg",
-        highlight:true,
-      },
-      {
-        name:"Athletic Brewing Co.",
-        badge:"Craft Bier · 0% Alkohol",
-        affiliate:true,
-        why:"Das beste alkoholfreie Bier das je gemacht wurde — für alle die nach einem harten Training das Bier-Feeling wollen ohne Alkohol.",
-        science:"0% Alkohol eliminiert den wichtigsten Recovery-Killer. Alkohol hemmt Proteinsynthese, Testosteron und Schlafqualität — Athletic Brewing gibt dir das Ritual ohne die Kosten.",
-        tags:["0% Alkohol","Craft","Recovery"],
-        link:AFF.athletic(),
-        shop:"Athletic Brewing",
-        img:null,
-      },
-      {
-        name:"Schokoladenmilch",
-        badge:"Klassiker der Sportwissenschaft",
-        affiliate:false,
-        why:"Klingt banal — ist aber ernsthaft eines der meistgetesteten Recovery-Getränke der Sportwissenschaft. Günstig, zugänglich, effektiv.",
-        science:"Ideales 1:4 Protein-zu-Carb-Verhältnis für Muskelreparatur und Glykogen-Wiederauffüllung. Studien zeigen: gleich effektiv wie kommerzielle Recovery-Drinks.",
-        tags:["Protein","Carbs","Günstig"],
-        link:"https://www.migros.ch",
-        shop:"Migros / Coop",
-        img:null,
-      },
-      {
-        name:"Kefir",
-        badge:"Probiotika · Protein · Unterschätzt",
-        affiliate:false,
-        why:"Für Sportler die ihren Darm ernst nehmen. Kefir enthält mehr Probiotika als Joghurt und liefert gleichzeitig Protein und Elektrolyte.",
-        science:"Intensive Trainingsbelastung erhöht Darmpermeabilität ('Leaky Gut'). Probiotika reduzieren Inflammation und verbessern Nährstoffaufnahme — direkt relevant für Recovery.",
-        tags:["Probiotika","Darm","Protein"],
-        link:"https://www.migros.ch",
-        shop:"Migros / Coop",
-        img:null,
-      },
-    ];
-
-  const ProductCard=({p})=>(
-      <div style={{background:C.white,border:`1px solid ${p.highlight?C.neon:C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:8,position:"relative"}}>
-        {p.affiliate&&(
-          <div style={{position:"absolute",top:12,right:12,fontSize:8,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>TOP PICK</div>
-        )}
-        {p.highlight&&(
-          <div style={{marginBottom:8,display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",background:C.neon,borderRadius:100}}>
-            <span style={{fontSize:10,fontWeight:700,color:C.black}}>⭐ WISSENSCHAFTLICH BELEGT</span>
-          </div>
-        )}
-        <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,paddingRight:p.affiliate?60:0}}>{p.name}</div>
-        <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{p.badge}</div>
-        <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:8}}>{p.why}</div>
-        <div style={{padding:"8px 12px",background:C.g100,borderRadius:8,marginBottom:10}}>
-          <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:3}}>{"WISSENSCHAFT"}</div>
-          <div style={{fontSize:11,color:C.g600,lineHeight:1.5}}>{p.science}</div>
-        </div>
-        <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
-          {(p.tags||[]).map(t=><span key={t} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.g100,color:C.g600}}>{t}</span>)}
-        </div>
-        <a href={p.link} target="_blank" rel="noopener noreferrer"
-          style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:p.affiliate?C.neon:C.g100,color:C.black,padding:"9px 14px",borderRadius:9,fontSize:11,fontWeight:600,textDecoration:"none"}}>
-          <span>{p.shop} →</span>
-        </a>
-      </div>
-    );
-
-    return (
-      <div>
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10}}>{"HYDRATION WÄHREND DEM TAG"}</div>
-        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>{"Wasser ist öde? Diese Produkte machen Trinken zum Erlebnis."}</div>
-        {DURING.map((p,i)=><ProductCard key={i} p={p}/>)}
-
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:10,marginTop:20}}>{"NACH DEM TRAINING"}</div>
-        <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>{"Recovery-Drinks die wirklich funktionieren."}</div>
-        {AFTER.map((p,i)=><ProductCard key={i} p={p}/>)}
-
-
-      </div>
-    );
-  };
-
-  const FertiggerichteContent=()=>(
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-      {[
-        {name:"Löwenanteil",badge:"Bio · High Protein · TOP PICK",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30–42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
-        {name:"HelloFresh",badge:"Meal Kit · Flexible Lieferung",desc:"Wochentliche Meal Kits mit ausgewogenen Mahlzeiten — einfach zu kochen, sportlergerecht.",products:[{l:"Kalorien",v:"500–800 kcal"},{l:"Protein",v:"25–40g"},{l:"Preis",v:"ab CHF 8.90"}],link:"https://www.hellofresh.ch",img:"https://img.hellofresh.com/hellofresh_s3/image/5f7c6b2f3e36d0000c4e4b1a.jpg"},
-      ].map((b,i)=>(
-        <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-          <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-            <img src={b.img} alt={b.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
-          </div>
-          <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
-            <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{b.name}</div>
-            <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:6}}>{b.badge}</div>
-            <div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginBottom:10,flex:1}}>{b.desc}</div>
-            <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:10}}>
-              {b.products.map(p=><div key={p.l} style={{display:"flex",justifyContent:"space-between",background:C.g100,borderRadius:7,padding:"4px 8px"}}><span style={{fontSize:10,color:C.g600}}>{p.l}</span><span style={{fontSize:10,fontWeight:600,color:C.black}}>{p.v}</span></div>)}
-            </div>
-            <a href={b.link} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>Entdecken ↗</a>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const RecoveryContent=()=>(
-    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-      {[
-        {name:"Therabody",badge:"Massage Guns · Boots",desc:"Weltmarktführer in Perkussionstherapie. Genutzt von Profiteams in NBA, NFL und Tour de France.",products:[{n:"Theragun PRO Plus",p:"CHF 599"},{n:"Theragun Mini",p:"CHF 199"},{n:"JetBoots PRO",p:"CHF 1'149"}],link:"https://www.therabody.com/de-ch",img:"https://cdn.shopify.com/s/files/1/0624/4657/products/TBY-PRO5-BLK_1.png"},
-        {name:"Hyperice",badge:"Kompression · Massage",desc:"Gold Standard für Kompressionsboots — Ironman, NBA und Tour de France. Hypervolt als günstige Alternative.",products:[{n:"Hypervolt 2",p:"CHF 229"},{n:"Normatec 3 Legs",p:"CHF 899"},{n:"Normatec Elite",p:"CHF 1'099"}],link:"https://hyperice.com/",img:"https://hyperice.com/cdn/shop/products/Normatec3Leg_Lifestyle_ProductPage_1.jpg"},
-        {name:"Blackroll",badge:"Faszienrollen · Selbstmassage",desc:"Schweizer Marktführer für Faszientherapie. Einsteigerfreundlich — ideal für tägliche Selbstmassage.",products:[{n:"Standard Rolle",p:"CHF 35"},{n:"Massage Gun",p:"CHF 149"},{n:"Ball",p:"CHF 15"}],link:"https://www.blackroll.com/ch-de",img:"https://www.blackroll.com/cdn/shop/products/blackroll-standard-rolle-schwarz_1.jpg"},
-        {name:"Compex",badge:"EMS Muskelstimulation",desc:"Pionier in Elektrostimulation — genutzt von Physios und Profiathleten. Aktive Recovery und Muskelaufbau.",products:[{n:"Edge 3.0",p:"CHF 199"},{n:"Performance 3.0",p:"CHF 249"},{n:"Sport Elite 3.0",p:"CHF 349"}],link:"https://www.compex.com/ch-de",img:"https://www.compex.com/medias/sys_master/root/h2e/hef/8796266717214/compex-sp-8-0-wireless.jpg"},
-      ].map((b,i)=>(
-        <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
-          <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
-            <img src={b.img} alt={b.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display="none";}}/>
-          </div>
-          <div style={{padding:"12px 14px",flex:1,display:"flex",flexDirection:"column"}}>
-            <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:2}}>{b.name}</div>
-            <div style={{fontSize:9,color:C.g400,fontFamily:"JetBrains Mono,monospace",marginBottom:6}}>{b.badge}</div>
-            <div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginBottom:10,flex:1}}>{b.desc}</div>
-            <div style={{display:"flex",flexDirection:"column",gap:4,marginBottom:10}}>
-              {b.products.map(p=><div key={p.n} style={{display:"flex",justifyContent:"space-between",background:C.g100,borderRadius:7,padding:"4px 8px"}}><span style={{fontSize:10,color:C.g600}}>{p.n}</span><span style={{fontSize:10,fontWeight:600,color:C.black}}>{p.p}</span></div>)}
-            </div>
-            <a href={b.link} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",gap:4,background:C.neon,color:C.black,padding:"8px",borderRadius:8,fontSize:10,fontWeight:700,textDecoration:"none"}}>Entdecken ↗</a>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  // ── TAGESPLAN TAB ──────────────────────────────────────────────────────────
-  const TagesplanTab=()=>{
-  const isMobile=useWindowWidth()<=768;
-  const allSports=(sports||[]);
-  const [activeSport,setActiveSport]=useState(primarySport||allSports[0]);
-  const [isRestDay,setIsRestDay]=useState(false);
-    // Use selected sport's training data for calc
-  const activeTD=isRestDay?trainingData:{...(trainingData||{}), _primary:activeSport};
-  const activeSD=isRestDay?sportData:{...(sportData||{}), primarySport:activeSport};
-  const calc=calcPro(profilData,trainingData,sportData);
-  const t=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
-  const w=+profilData?.weight||75;
-  const activeDuration=(trainingData||{})[activeSport]?.duration||60;
-  const activeIntensity=(trainingData||{})[activeSport]?.intensity||"medium";
-  const isEndurance=["cycling","running","triathlon","swimming","langlauf"].some(x=>activeSport?.includes(x));
-  const sportLabel=SPORT_GROUPS.find(s=>s.id===activeSport)?.label||activeSport||"Sport";
-  const TIME={morning:"Morgen",midday:"Mittag",afternoon:"Nachmittag",evening:"Abend"}[calc?.primaryTrainingTime]||"Training";
-
-  const PLAN=[
-      {
-        time:"06:00–07:00",phase:"Aufwachen",
-        items:[
-          {label:"Wasser",detail:"500ml direkt nach dem Aufstehen — Rehydration nach 7–8h Schlaf",icon:"💧"},
-          ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:`${calc?.altitude==="alpine"?"4000":"2000–3000"} IE mit erstem Essen — fettlöslich, braucht Mahlzeit`,icon:"☀️"}]:[]),
-          ...(calc?.suppressMag?[]:[{label:"Omega-3",detail:"2–3g EPA/DHA zu einer Mahlzeit",icon:"🐟"}]),
-        ]
-      },
-      {
-        time:t.preWorkout,phase:`Pre-Workout (${TIME})`,
-        items:[
-          {label:"Mahlzeit / Snack",detail:`${Math.round(calc?.carbsG*0.25)||60}g Kohlenhydrate, 1.5–2h vor Training`,icon:"🍌"},
-          ...(!calc?.suppressKoffein?[{label:"Koffein 100–200mg",detail:"45 min vor Training — Leistung +3–5%",icon:"☕"}]:[]),
-          {label:"Wasser",detail:"400–600ml in der Stunde vor dem Training",icon:"💧"},
-        ]
-      },
-      {
-        time:"Training",phase:"Training",
-        items:[
-          {label:"Wasser + Elektrolyte",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h bei intensivem Training`,icon:"⚡"},
-          ...(isEndurance&&(trainingData?.[primarySport]?.duration||60)>60?[{label:"Kohlenhydrate",detail:`${calc?.carbsPerHour||45}g/h ab Minute 45 — Gels oder Drink Mix`,icon:"🔋"}]:[]),
-        ]
-      },
-      {
-        time:t.postWorkout,phase:"Post-Workout",
-        items:[
-          {label:"Protein",detail:`${Math.round((calc?.proteinMin||140)*0.25)}–${Math.round((calc?.proteinMax||180)*0.25)}g innerhalb 30 min — anaboles Fenster`,icon:"💪"},
-          {label:"Kohlenhydrate",detail:"30–50g für Glykogen-Wiederauffüllung",icon:"🍚"},
-          ...(calc?.needsCollagen?[{label:"Kollagen + Vit C",detail:"10–15g vor Training (nicht danach!) — Sehnen & Gelenke",icon:"🦴"}]:[]),
-        ]
-      },
-      {
-        time:"12:00–13:00",phase:"Mittag",
-        items:[
-          {label:"Hauptmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.35)} kcal, ${Math.round((calc?.proteinMin||140)*0.3)}g Protein`,icon:"🥗"},
-          ...(!calc?.suppressKreatin?[{label:"Kreatin",detail:t.creatine+" · 5g täglich — mit Kohlenhydraten",icon:"💊"}]:[]),
-        ]
-      },
-      {
-        time:"18:00–19:00",phase:"Abend",
-        items:[
-          {label:"Abendmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.30)} kcal, proteinreich`,icon:"🍽️"},
-          {label:"Magnesium Bisglycinate",detail:`${calc?.magnesiumMg||350}mg — 1h vor Schlaf für beste Schlafwirkung`,icon:"🌙"},
-          ...(calc?.stressAshwaNeeded||calc?.recoveryAshwaNeeded?[{label:"Ashwagandha KSM-66",detail:"600mg abends — Cortisol senken, Schlaf verbessern",icon:"🌿"}]:[]),
-        ]
-      },
-      {
-        time:"22:00",phase:"Vor dem Schlafen",
-        items:[
-          {label:"Ziel: 7–9h Schlaf",detail:"Unter 7h = Cortisol hoch, Muskelabbau, schlechtere Regeneration",icon:"😴"},
-          ...(calc?.sleep<7?[{label:"⚠ Schlafdefizit erkannt",detail:`Aktuell ${calc?.sleep}h — das ist dein wichtigster Performance-Hebel`,icon:"⚠️"}]:[]),
-        ]
-      },
-    ];
-
+    {
+      name:"Ultrahuman Ring PRO",
+      badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
+      affiliate:true,
+      category:"Sleep & Recovery",
+      why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
+      metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
+      price:"ab CHF 399",
+      shops:[{name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true}],
+    },
+    {
+      name:"Garmin Forerunner 965",
+      badge:"GPS · HRV · VO₂max · TOP PICK",
+      affiliate:true,
+      category:"Multisport",
+      why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand.",
+      metrics:["VO₂max","HRV","Schlaf","Training Load","Erholungsstatus"],
+      price:"ab CHF 599",
+      shops:[{name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/735158",affiliate:true}],
+    },
+    {
+      name:"Garmin Fenix 8",
+      badge:"Premium · Outdoor · Multisport",
+      affiliate:true,
+      category:"Premium GPS",
+      why:"Für den Athleten der alles will. Solarladung, Topo-Karten und alle Gesundheitsmetriken.",
+      metrics:["VO₂max","HRV","Schlaf","Altitude Training","Körperbatterie"],
+      price:"ab CHF 899",
+      shops:[{name:"Garmin CH",link:"https://www.garmin.com/de-CH/p/994307",affiliate:true}],
+    },
+    {
+      name:"Polar Vantage V3",
+      badge:"Polar · Ausdauer · HRV",
+      affiliate:true,
+      category:"Ausdauer",
+      why:"Polars Flaggschiff. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk — einzigartig präzise.",
+      metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
+      price:"ab CHF 499",
+      shops:[{name:"Polar CH",link:"https://www.polar.com/de/vantage/v3",affiliate:true}],
+    },
+    {
+      name:"Polar Pacer Pro",
+      badge:"Laufen · Leicht · Präzise",
+      affiliate:true,
+      category:"Running",
+      why:"Leichtest mögliche GPS-Uhr für Läufer. Nur 45g — man vergisst sie beim Training.",
+      metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
+      price:"ab CHF 299",
+      shops:[{name:"Polar CH",link:"https://www.polar.com/de/pacer-pro",affiliate:true}],
+    },
+    {
+      name:"Oura Ring 4",
+      badge:"Ring · Schlaf · HRV · MARKTFÜHRER",
+      affiliate:true,
+      category:"Sleep & Recovery",
+      why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität.",
+      metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
+      price:"ab CHF 349 + Abo",
+      shops:[{name:"Oura",link:"https://ouraring.com/de"},{name:"Zur Rose",link:"https://www.zurrose-shop.ch/de/oura-ring",affiliate:true}],
+    },
+  ];
 
   const WearablesContent=()=>{
     const [cartTick,setCartTick]=useState(0);
