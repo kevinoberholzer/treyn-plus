@@ -6430,10 +6430,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ))}
 
         {/* CTA acid */}
-        <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
-          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
+        <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:16,padding:20,marginTop:8}}>
+          <div style={{fontSize:10,fontWeight:700,color:"#4A7000",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
           <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:6}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
-          <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*4*6} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
+          <div style={{fontSize:11,color:"#555",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)*4*6} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
 
           {/* Stats row */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
@@ -6442,9 +6442,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               {n:"198",l:"Supplement-Optionen"},
               {n:"50+",l:"Sportdisziplinen"},
             ].map((s,i)=>(
-              <div key={i} style={{background:"rgba(0,0,0,.08)",borderRadius:8,padding:"8px 6px",textAlign:"center"}}>
+              <div key={i} style={{background:"rgba(0,0,0,.06)",borderRadius:8,padding:"8px 6px",textAlign:"center"}}>
                 <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.02em"}}>{s.n}</div>
-                <div style={{fontSize:8,color:"rgba(0,0,0,.5)",lineHeight:1.3,marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>{s.l}</div>
+                <div style={{fontSize:8,color:"rgba(0,0,0,.45)",lineHeight:1.3,marginTop:1,fontFamily:"JetBrains Mono,monospace"}}>{s.l}</div>
               </div>
             ))}
           </div>
@@ -6460,14 +6460,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               "Kein Abo — einmalig CHF 2.15/Monat, jederzeit erneuerbar",
             ].map((f,i)=>(
               <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8}}>
-                <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.black,fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
-                <div style={{fontSize:11,color:"rgba(0,0,0,.7)",lineHeight:1.5}}>{f}</div>
+                <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.1)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:"#2D5000",fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
+                <div style={{fontSize:11,color:"#333",lineHeight:1.5}}>{f}</div>
               </div>
             ))}
           </div>
           <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:14}}>
             <div style={{fontSize:28,fontWeight:700,color:C.black,letterSpacing:"-.04em"}}>{PRICE_STR}</div>
-            <div style={{fontSize:11,color:"rgba(0,0,0,.45)"}}>/ 6 Monate · CHF 2.15/Mt.</div>
+            <div style={{fontSize:11,color:"#666"}}>/ 6 Monate · CHF 2.15/Mt.</div>
           </div>
           <button onClick={onUpgrade} style={{width:"100%",padding:15,borderRadius:11,border:"none",background:C.black,color:C.neon,fontSize:14,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:"-.01em",marginBottom:8}}>
             Jetzt PRO freischalten →
