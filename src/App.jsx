@@ -5627,6 +5627,43 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   );
 
   // ── TAGESPLAN TAB ──────────────────────────────────────────────────────────
+
+  // ── TAGESPLAN WRAPPER (inline nav for Tagesplan / Protokolle / Wettkampf) ──
+  const TagesplanWrapper=({trainingData})=>{
+    const [activeSection,setActiveSection]=useState("plan");
+    const hasComp=Object.values(trainingData||{}).some(d=>d.hasCompetition);
+    const sections=[
+      {id:"plan",      l:"Tagesplan"},
+      {id:"protokoll", l:"Protokolle"},
+      ...(hasComp?[{id:"wettkampf", l:"Wettkampf"}]:[]),
+    ];
+    return (
+      <div>
+        <div style={{marginBottom:20}}>
+          <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</h2>
+          <p style={{fontSize:13,color:C.g600,marginBottom:14,lineHeight:1.6}}>Tagesplan, Supplement-Timing{hasComp?" & Race-Day Strategie":""}</p>
+          {/* Inline section nav */}
+          <div style={{display:"flex",gap:6,borderBottom:`1px solid ${C.g200}`,paddingBottom:0}}>
+            {sections.map(s=>(
+              <button key={s.id} onClick={()=>{setActiveSection(s.id);window.scrollTo({top:0,behavior:"instant"});}}
+                style={{padding:"8px 16px",border:"none",borderBottom:`2px solid ${activeSection===s.id?C.black:"transparent"}`,background:"transparent",color:activeSection===s.id?C.black:C.g400,fontSize:13,fontWeight:activeSection===s.id?700:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",marginBottom:-1}}>
+                {s.l}
+              </button>
+            ))}
+          </div>
+        </div>
+        {activeSection==="plan"&&<TagesplanTab/>}
+        {activeSection==="protokoll"&&<ProtokollTab/>}
+        {activeSection==="wettkampf"&&hasComp&&(
+          <div>
+            <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
+            <WettkampfTab/>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const TagesplanTab=()=>{
     const isMobile=useWindowWidth()<=768;
     const allSports=(sports||[]);
@@ -7831,7 +7868,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{padding:"16px 16px 90px"}}>
           {tab==="summary"&&<SummaryTab/>}
           {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Deine Zahlen"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil."}</p><VerbrauchTab/></div>)}
-          {tab==="tagesplan"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan & Protokolle</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Tagesplan, Ernährung & Supplement-Timing.</p><TagesplanTab/><div style={{marginTop:24,paddingTop:20,borderTop:`1px solid ${C.g200}`}}><div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:12}}>SUPPLEMENT PROTOKOLLE</div><ProtokollTab/></div>{Object.values(trainingData||{}).some(d=>d.hasCompetition)&&(<div style={{marginTop:24,paddingTop:20,borderTop:`1px solid ${C.g200}`}}><div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>WETTKAMPF STRATEGIE</div><WettkampfTab/></div>)}</div>)}
+          {tab==="tagesplan"&&<TagesplanWrapper trainingData={trainingData}/>}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
           {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p><CartTab/></div>)}
           {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"TREYN AI Chat"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{"Stelle Fragen zu deinen Daten, Supplements und Ernährung."}</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
@@ -7874,22 +7911,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>)}
 
           {/* ── TAGESPLAN + PROTOKOLLE ──────────────────────────────────── */}
-          {tab==="tagesplan"&&(<div>
-            <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan & Protokolle</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Dein Tagesplan + Einnahme-Timing für deine Supplements.</p>
-            <TagesplanTab/>
-            <div style={{marginTop:28,paddingTop:24,borderTop:`1px solid ${C.g200}`}}>
-              <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:16}}>SUPPLEMENT PROTOKOLLE</div>
-              <ProtokollTab/>
-            </div>
-            {Object.values(trainingData||{}).some(d=>d.hasCompetition)&&(
-              <div style={{marginTop:28,paddingTop:24,borderTop:`1px solid ${C.g200}`}}>
-                <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:4}}>WETTKAMPF STRATEGIE</div>
-                <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
-                <WettkampfTab/>
-              </div>
-            )}
-          </div>)}
+          {tab==="tagesplan"&&<TagesplanWrapper trainingData={trainingData}/>}
 
           {/* ── EMPFEHLUNGEN ─────────────────────────────────────────────── */}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
