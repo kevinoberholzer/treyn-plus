@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const C = {
   black:"#0A0A0A", white:"#FFFFFF", off:"#F7F7F5",
@@ -614,6 +614,17 @@ function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
 // Schreibweise: keine Gedankenstriche, nur Bindestriche (auch in KI-Antworten)
 const noDash=t=>typeof t==="string"?t.replace(/[ \u00a0][\u2014\u2013][ \u00a0]/g," - ").replace(/[\u2014\u2013]/g,"-"):t;
 
+// Browser-Verlauf: jede Seite und jeder Reiter ist ein Eintrag, damit Zurück (Browser/Handy) zum letzten Screen führt
+const NAVH={stack:[],idx:-1,gen:Date.now()}; // gen: Einträge aus früheren Sitzungen (Neuladen, «Neu») haben keine Daten mehr
+const navPush=(phase,tab)=>{
+  NAVH.stack=NAVH.stack.slice(0,NAVH.idx+1); NAVH.stack.push(phase); NAVH.idx=NAVH.stack.length-1;
+  try{ window.history.pushState({treyn:1,phase,tab,idx:NAVH.idx,gen:NAVH.gen},""); }catch{}
+};
+const navReplace=(phase,tab)=>{
+  if(NAVH.idx<0){NAVH.stack=[phase];NAVH.idx=0;} else NAVH.stack[NAVH.idx]=phase;
+  try{ window.history.replaceState({treyn:1,phase,tab,idx:NAVH.idx,gen:NAVH.gen},""); }catch{}
+};
+
 function Logo({size="md"}) {
   // Wortmarke TREYN + Acid-Feld mit schwarzem Plus (kein schwarzes Icon mehr)
   const s=size==="lg"?{f:22,p:21,r:6}:size==="sm"?{f:13,p:13,r:4}:{f:17,p:17,r:5};
@@ -856,7 +867,6 @@ function Demo({onNext, onDemo, lang="de"}) {
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:C.white,padding:"40px 24px"}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:40}}><Logo size="lg"/></div>
-        <div className="fu2"><span className="mono">So funktioniert es</span></div>
         <h2 className="fu2" style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
         <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>5 Minuten Eingabe. Lebenslanges Profil - automatisch aktualisiert. Aus einer riesigen Datenbank & Shops empfehlen wir die für dich besten Produkte.</p>
         <div className="fu3" style={{display:"grid",gridTemplateColumns:isMobile?"repeat(5,minmax(64px,1fr))":"repeat(5,1fr)",gap:6,marginBottom:20,overflowX:isMobile?"auto":"visible",paddingBottom:isMobile?6:0}}>
@@ -936,11 +946,7 @@ function Demo({onNext, onDemo, lang="de"}) {
         </div>
 
         <div className="fu5">
-          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px",marginBottom:10}} onClick={onNext}>Kostenlose Analyse starten →</button>
-          <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-            Demo-Plattform ausprobieren →
-          </button>
-          <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort - Login per E-Mail-Link</div>
+          <button className="btn btn-neon" style={{width:"100%",fontSize:15,padding:"14px"}} onClick={onNext}>Kostenlose Analyse starten →</button>
         </div>
       </div>
     </div>
@@ -4345,7 +4351,6 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
     <div style={{minHeight:"100vh",background:C.white,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:40,fontFamily:"Inter,sans-serif"}}>
       <div style={{width:"100%",maxWidth:480}}>
         <div style={{marginBottom:48}}><Logo size="lg"/></div>
-        <div style={{fontSize:11,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>FAST BEREIT</div>
         <h2 style={{fontSize:24,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>So funktioniert TREYN+</h2>
         <p style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.7}}>Deine Analyse ist in Kürze bereit. Hier ist was dich erwartet:</p>
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
@@ -4408,7 +4413,6 @@ function StepPraeferenzen({onNext, onBack}) {
         <div style={{display:"flex",gap:4,marginBottom:32}}>
           {[1,2,3,4,5].map(i=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=4?"#C8FF00":"#E8E8E8"}}/>)}
         </div>
-        <div style={{fontSize:11,color:"#999",fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>SCHRITT 4 VON 5</div>
         <h2 style={{fontSize:24,fontWeight:600,color:"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>Deine Präferenzen</h2>
         <p style={{fontSize:13,color:"#666",marginBottom:28,lineHeight:1.5}}>So stimmen wir alles noch gezielter auf dich ab. Mehrfachauswahl möglich.</p>
 
@@ -4526,7 +4530,6 @@ function StepAllergien({onNext, onBack}) {
           {[1,2,3,4,5].map(i=><div key={i} style={{flex:1,height:3,borderRadius:2,background:i<=3?"#C8FF00":"#E8E8E8"}}/>)}
         </div>
 
-        <div style={{fontSize:11,color:"#999",fontFamily:"JetBrains Mono,monospace",letterSpacing:".08em",marginBottom:6}}>SCHRITT 3 VON 5</div>
         <h2 style={{fontSize:24,fontWeight:600,color:"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>Allergien & Ernährung</h2>
         <p style={{fontSize:13,color:"#666",marginBottom:28,lineHeight:1.5}}>So filtern wir Supplements und Sportnahrung korrekt für dich.</p>
 
@@ -4654,7 +4657,6 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
       <div className="fu" style={{marginBottom:32}}><Logo/></div>
 
       <div className="fu2" style={{marginBottom:32}}>
-        <div style={{fontSize:11,color:C.g400,letterSpacing:".04em",textTransform:"uppercase",marginBottom:10}}>Deine Analyse{fname?` · ${fname}`:""}</div>
         <h2 style={{fontSize:26,fontWeight:600,color:C.black,lineHeight:1.2,marginBottom:12,letterSpacing:"-.02em"}}>
           Deine Analyse - Nutze PRO für die genausten Werte. Einmalige Zahlung.
         </h2>
@@ -5045,7 +5047,13 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 12.90", 
 }
 
 function Results({sportData,trainingData,profilData,allergenData,praeferenzenData,tier,onReset,onUpgrade}) {
-  const [tab,setTab]=useState("summary");
+  const [tab,setTabRaw]=useState(()=>{try{const st=window.history.state;return st?.treyn&&st.gen===NAVH.gen&&st.phase==="results"&&st.tab?st.tab:"summary";}catch{return "summary";}});
+  const setTab=t=>{ if(t===tab) return; setTabRaw(t); navPush("results",t); };
+  useEffect(()=>{
+    const onPop=e=>{ const st=e.state; if(st?.treyn&&st.gen===NAVH.gen&&st.phase==="results") setTabRaw(st.tab||"summary"); };
+    window.addEventListener("popstate",onPop);
+    return ()=>window.removeEventListener("popstate",onPop);
+  },[]);
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[tab]);
   const isMobile=useWindowWidth()<=768;
   const isPro=tier==="pro";
@@ -6619,7 +6627,6 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
         {/* CTA acid */}
         <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
-          <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
           <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:6}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
           <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${sessionsYear} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht - auf dich, nicht auf den Durchschnitt.`}</div>
 
@@ -8074,6 +8081,30 @@ class ErrorBoundary extends React.Component {
 
 function App() {
   const [phase,setPhase]=useState("intro");
+  const fromPop=useRef(false);
+  const phaseRef=useRef(phase);
+  useEffect(()=>{
+    phaseRef.current=phase;
+    if(fromPop.current){fromPop.current=false;return;}
+    if(NAVH.idx<0) return navReplace(phase);
+    const cur=NAVH.stack[NAVH.idx];
+    if(cur==="analysing") return navReplace(phase); // Analyse-Animation nicht als Zurück-Ziel
+    if(cur===phase) return;
+    navPush(phase);
+  },[phase]);
+  useEffect(()=>{
+    const onPop=e=>{
+      const st=e.state;
+      if(!st?.treyn||st.gen!==NAVH.gen){ if(phaseRef.current!=="intro"){fromPop.current=true;setPhase("intro");} NAVH.stack=[];NAVH.idx=-1;navReplace("intro"); return; }
+      NAVH.idx=st.idx;
+      const target=st.phase==="analysing"?"willkommen":st.phase;
+      if(target!==phaseRef.current){ fromPop.current=true; setPhase(target); }
+    };
+    window.addEventListener("popstate",onPop);
+    return ()=>window.removeEventListener("popstate",onPop);
+  },[]);
+  // «← Zurück»-Knöpfe: wenn der vorherige Verlaufseintrag diese Seite ist, echt zurückgehen (sonst neue Seite)
+  const goBack=p=>{ if(NAVH.idx>0&&NAVH.stack[NAVH.idx-1]===p) window.history.back(); else setPhase(p); };
   
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[phase]);
   const [sportData,setSportData]=useState(null);
@@ -8095,7 +8126,7 @@ function App() {
     vp.content="width=device-width,initial-scale=1,viewport-fit=cover";
   },[]);
 
-  const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
+  const reset=()=>{NAVH.gen=Date.now();setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
 
   // Dev shortcut - only active when ?dev=1 in URL
   const DEV_SPORT={primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{cycling_road:true,run_road:true},childSel:{"run_road_run_road_m":true},healthOnly:false};
@@ -8187,11 +8218,11 @@ function App() {
       {phase==="why"        && <WhyTREYN         onNext={()=>setPhase("demo")}/>}
       {phase==="demo"       && <Demo            onNext={()=>{setIsDemoMode(false);setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       onNext={v=>{setSportData(v);setPhase("training");}}/>}
-      {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>setPhase("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
-      {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>setPhase("training")} onNext={v=>{setProfilData(v);setSelectedCountry(v?.country||"Schweiz");setPhase("lebensstil");}}/>}
-      {phase==="lebensstil" && <StepLebensstil  gender={profilData?.gender||""} onBack={()=>setPhase("profil")} onNext={v=>{setProfilData(p=>({...p,...v}));setPhase("allergien");}}/>}
-      {phase==="allergien"  && <StepAllergien   onBack={()=>setPhase("lebensstil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
-      {phase==="praeferenzen" && <StepPraeferenzen onBack={()=>setPhase("allergien")} onNext={v=>{setPraeferenzenData(v);setPhase("willkommen");}}/>}
+      {phase==="training"   && <StepTraining    sportData={sportData} onBack={()=>goBack("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
+      {phase==="profil"     && <StepProfil      sportData={sportData} trainingData={trainingData} onBack={()=>goBack("training")} onNext={v=>{setProfilData(v);setSelectedCountry(v?.country||"Schweiz");setPhase("lebensstil");}}/>}
+      {phase==="lebensstil" && <StepLebensstil  gender={profilData?.gender||""} onBack={()=>goBack("profil")} onNext={v=>{setProfilData(p=>({...p,...v}));setPhase("allergien");}}/>}
+      {phase==="allergien"  && <StepAllergien   onBack={()=>goBack("lebensstil")} onNext={v=>{setAllergenData(v);setPhase("praeferenzen");}}/>}
+      {phase==="praeferenzen" && <StepPraeferenzen onBack={()=>goBack("allergien")} onNext={v=>{setPraeferenzenData(v);setPhase("willkommen");}}/>}
       {phase==="willkommen" && <StepWillkommen priceStr={PRICE_GLOBAL} onNext={()=>setPhase("analysing")}/>}
       {phase==="preview"    && <AnalysePreview  priceStr={PRICE_GLOBAL} sportData={sportData} trainingData={trainingData} profilData={profilData}
         onContinue={()=>{setTier("basic");setPhase("results");}}
