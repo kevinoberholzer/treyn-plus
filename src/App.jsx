@@ -612,13 +612,14 @@ function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
 // ─── LOGO ─────────────────────────────────────────────────────────────────────
 
 function Logo({size="md"}) {
-  const s=size==="lg"?{b:38,f:22,g:13}:size==="sm"?{b:22,f:13,g:8}:{b:30,f:17,g:10};
+  // Wortmarke TREYN + Acid-Feld mit schwarzem Plus (kein schwarzes Icon mehr)
+  const s=size==="lg"?{f:22,p:21,r:6}:size==="sm"?{f:13,p:13,r:4}:{f:17,p:17,r:5};
   return (
-    <div style={{display:"flex",alignItems:"center",gap:8}}>
-      <div style={{width:s.b,height:s.b,background:C.black,borderRadius:s.b*.28,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-        <div style={{width:s.g,height:s.g,background:C.neon,borderRadius:2,transform:"rotate(45deg)"}}/>
-      </div>
-      <span style={{fontSize:s.f,fontWeight:600,letterSpacing:"-.03em",fontFamily:"'Inter',sans-serif"}}>TREYN <span style={{color:C.neon}}>+</span></span>
+    <div style={{display:"flex",alignItems:"center",gap:Math.round(s.f*.24)}} role="img" aria-label="TREYN+">
+      <span style={{fontSize:s.f,fontWeight:600,letterSpacing:"-.03em",fontFamily:"'Inter',sans-serif",lineHeight:1}}>TREYN</span>
+      <span style={{width:s.p,height:s.p,background:C.neon,borderRadius:s.r,display:"inline-flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+        <svg width={Math.round(s.p*.62)} height={Math.round(s.p*.62)} viewBox="0 0 10 10" fill="none"><path d="M5 1.2v7.6M1.2 5h7.6" stroke={C.black} strokeWidth="1.9" strokeLinecap="round"/></svg>
+      </span>
     </div>
   );
 }
