@@ -918,7 +918,7 @@ function Demo({onNext, onDemo, lang="de"}) {
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:isMobile?28:40}}><Logo size="lg"/></div>
         <h2 className="fu2" style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
-        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>5 Minuten Eingabe. Deine Angaben bleiben lokal in deinem Browser gespeichert. Aus einer riesigen Datenbank & Shops empfehlen wir die für dich besten Produkte.</p>
+        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>Deine Angaben bleiben lokal in deinem Browser gespeichert. Aus einer riesigen Datenbank & Shops empfehlen wir die für dich besten Produkte.</p>
         <div className="fu3" style={{display:"grid",gridTemplateColumns:isMobile?"repeat(5,minmax(64px,1fr))":"repeat(5,minmax(0,1fr))",gap:6,marginBottom:20,overflowX:isMobile?"auto":"visible",paddingBottom:isMobile?6:0}}>
           {/* Step 1 */}
           <div style={{background:C.white,borderRadius:12,border:`0.5px solid ${C.g200}`,padding:"12px 10px"}}>
