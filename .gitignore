@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Konzept & Projektnotizen - nur lokal (Repo ist öffentlich)
+CLAUDE.md
