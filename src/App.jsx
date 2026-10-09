@@ -62,8 +62,8 @@ const SPORT_GROUPS = [
   ]},
   {id:"running",        label:"Running",             icon:"RUN",   subs:[
     {id:"run_road",       label:"Strassenlauf",        children:[
-      {id:"run_road_5k",    label:"5–10km"},
-      {id:"run_road_10k",   label:"10–20km"},
+      {id:"run_road_5k",    label:"5-10km"},
+      {id:"run_road_10k",   label:"10-20km"},
       {id:"run_road_hm",    label:"Halbmarathon"},
       {id:"run_road_m",     label:"Marathon"},
       {id:"run_road_ultra", label:"Ultra"},
@@ -103,12 +103,12 @@ const SPORT_GROUPS = [
   {id:"langlauf",       label:"Langlauf & Biathlon", icon:"XC",    subs:[
     {id:"langlauf_klassisch", label:"Langlauf Klassisch", children:[
       {id:"langlauf_klassisch_kurz",  label:"Kurz (bis 15km)"},
-      {id:"langlauf_klassisch_mittel",label:"Mittel (15–50km)"},
+      {id:"langlauf_klassisch_mittel",label:"Mittel (15-50km)"},
       {id:"langlauf_klassisch_lang",  label:"Lang (50km+)"},
     ]},
     {id:"langlauf_skating",   label:"Skating",             children:[
       {id:"langlauf_skating_kurz",  label:"Kurz (bis 15km)"},
-      {id:"langlauf_skating_mittel",label:"Mittel (15–50km)"},
+      {id:"langlauf_skating_mittel",label:"Mittel (15-50km)"},
       {id:"langlauf_skating_lang",  label:"Lang (50km+)"},
     ]},
     {id:"biathlon",           label:"Biathlon",            children:null},
@@ -118,7 +118,7 @@ const SPORT_GROUPS = [
     {id:"padel",          label:"Padel",               children:null},
   ]},
   {id:"leichtathletik", label:"Leichtathletik",      icon:"ATHLETICS", subs:[
-    {id:"la_sprint",      label:"Sprint (100m–400m)",  children:null},
+    {id:"la_sprint",      label:"Sprint (100m-400m)",  children:null},
     {id:"la_mittel",      label:"Mittelstrecke",       children:null},
     {id:"la_lang",        label:"Langstrecke (5km+)",  children:null},
     {id:"la_wurf",        label:"Wurf & Stoss",        children:null},
@@ -291,150 +291,150 @@ const AFF = {
 };
 
 const BASIS = [
-  {id:"vitd3",    name:"Vitamin D3 + K2",      dose:"2000–4000 IE täglich",when:"Morgens, mit Fett",    why:"Immunsystem, Knochen, Hormonstatus — 70% der CH-Bevölkerung mangelhaft",   tags:["Täglich","Basis"],      link:AFF.iherb("vitamin d3 k2"),            shop:"iHerb",priority:1,
-   protocol:{dauer:"Ganzjährig", pause:"Keine Pause nötig", timing:"Morgens mit einer fetthaltigen Mahlzeit (Vit D ist fettlöslich)", hinweis:"Im Sommer Dosis auf 1000 IE reduzieren bei regelmässiger Sonne. Bluttest (25-OH-Vit D) nach 3 Monaten empfohlen. Zielwert: 40–60 ng/ml."}},
-  {id:"omega3",barcode:"4260591610032",budget:{name:"Bodylab24 Omega-3",dose:"3 Kapseln täglich",when:"Zu einer Mahlzeit",why:"Günstige, solide Omega-3 Quelle — EPA/DHA Ratio etwas tiefer als Premium, aber deutlich günstiger.",price:"~CHF 0.20/Tag",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/omega-3-kapseln"},   name:"Omega-3 (EPA/DHA)",     dose:"2–3g täglich",        when:"Zu einer Mahlzeit",    why:"Entzündungshemmend, Herzgesundheit, HRV-Verbesserung",                    tags:["Täglich","Basis"],      link:AFF.iherb("omega 3 epa dha"),          shop:"iHerb",priority:1,
+  {id:"vitd3",    name:"Vitamin D3 + K2",      dose:"2000-4000 IE täglich",when:"Morgens, mit Fett",    why:"Immunsystem, Knochen, Hormonstatus - 70% der CH-Bevölkerung mangelhaft",   tags:["Täglich","Basis"],      link:AFF.iherb("vitamin d3 k2"),            shop:"iHerb",priority:1,
+   protocol:{dauer:"Ganzjährig", pause:"Keine Pause nötig", timing:"Morgens mit einer fetthaltigen Mahlzeit (Vit D ist fettlöslich)", hinweis:"Im Sommer Dosis auf 1000 IE reduzieren bei regelmässiger Sonne. Bluttest (25-OH-Vit D) nach 3 Monaten empfohlen. Zielwert: 40-60 ng/ml."}},
+  {id:"omega3",barcode:"4260591610032",budget:{name:"Bodylab24 Omega-3",dose:"3 Kapseln täglich",when:"Zu einer Mahlzeit",why:"Günstige, solide Omega-3 Quelle - EPA/DHA Ratio etwas tiefer als Premium, aber deutlich günstiger.",price:"~CHF 0.20/Tag",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/omega-3-kapseln"},   name:"Omega-3 (EPA/DHA)",     dose:"2-3g täglich",        when:"Zu einer Mahlzeit",    why:"Entzündungshemmend, Herzgesundheit, HRV-Verbesserung",                    tags:["Täglich","Basis"],      link:AFF.iherb("omega 3 epa dha"),          shop:"iHerb",priority:1,
    protocol:{dauer:"Ganzjährig", pause:"Keine Pause nötig", timing:"Zu einer Mahlzeit (reduziert Fischgeschmack und verbessert Absorption)", hinweis:"Mindestens 4 Wochen bis messbare Wirkung. Bei Blutverdünnern (ASS, Marcumar) Arzt konsultieren. Omega-3 Index Bluttest nach 3 Monaten empfohlen."}},
-  {id:"magnesium",barcode:"076280172171",budget:{name:"Bodylab24 Magnesium",dose:"300–400mg täglich",when:"Abends, 1h vor Schlaf",why:"Magnesiumoxid statt Bisglycinate — günstige Option, etwas schlechtere Bioverfügbarkeit.",price:"~CHF 0.08/Tag",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/magnesium"},name:"Magnesium Bisglycinate",dose:"300–400mg täglich",   when:"Abends, 1h vor Schlaf",why:"Schlafqualität, Muskelentspannung, Krampfprävention",                    tags:["Täglich","Abends"],     link:AFF.iherb("magnesium bisglycinate"),   shop:"iHerb",priority:1,
+  {id:"magnesium",barcode:"076280172171",budget:{name:"Bodylab24 Magnesium",dose:"300-400mg täglich",when:"Abends, 1h vor Schlaf",why:"Magnesiumoxid statt Bisglycinate - günstige Option, etwas schlechtere Bioverfügbarkeit.",price:"~CHF 0.08/Tag",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/magnesium"},name:"Magnesium Bisglycinate",dose:"300-400mg täglich",   when:"Abends, 1h vor Schlaf",why:"Schlafqualität, Muskelentspannung, Krampfprävention",                    tags:["Täglich","Abends"],     link:AFF.iherb("magnesium bisglycinate"),   shop:"iHerb",priority:1,
    protocol:{dauer:"Ganzjährig (erhöhter Bedarf bei Sportlern)", pause:"Keine Pause nötig", timing:"1 Stunde vor dem Schlafengehen für beste Schlafwirkung", hinweis:"Bisglycinate hat deutlich bessere Bioverfügbarkeit als Magnesiumoxid. Einschleichen mit 150mg/Tag in Woche 1, dann volldosieren. Nicht gleichzeitig mit Zink oder Eisen nehmen."}},
 ];
 
 const SPORT_SUPP = {
   cycling:{
     performance:[
-      {id:"mau_caf",  name:"Maurten Gel 100 CAF 100",dose:"1–2 Gels/h",             when:"Rennen / Intervalle",         why:"Koffein + Kohlenhydrate für maximale Leistung. Offizielle Tour de France Nahrung.", tags:["Race-Day","Koffein"],      link:AFF.maurten("gel-100-caf-100"),       shop:"Maurten",  priority:1,
-       protocol:{dauer:"Nur an Wettkampf-/Intervall-Tagen", pause:"Nicht täglich verwenden — Koffeintoleranz aufbauen vermeiden", timing:"45 min vor oder während hochintensiver Phase", hinweis:"Max. 1–2 pro Einheit. Koffein-Cutoff 6h vor Schlaf. An Ruhetagen kein Koffein für bessere Wirkung am Renntag."}},
-      {id:"beta_cy",budget:{name:"iHerb Now Foods Beta-Alanin",dose:"3.2g täglich",when:"Aufgeteilt auf 2 Dosen",why:"Reines Beta-Alanin Pulver — kein Unterschied zur Markenware beim Wirkstoff.",price:"~CHF 0.30/Tag",shop:"iHerb",link:"https://www.iherb.com/pr/now-sports-nutrition-beta-alanine-pure-powder"},  name:"Beta-Alanin",             dose:"3.2–6.4g täglich",       when:"Aufgeteilt auf 2–4 Dosen",   why:"Puffert Laktat, verzögert Ermüdung bei hochintensiven Intervallen",             tags:["Pre-Workout","Ausdauer"],  link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:2,
-       protocol:{dauer:"8–12 Wochen (Kur)", pause:"9 Wochen Pause nach 12-Wochen-Zyklus — dann neu starten", timing:"Dosis aufteilen: z.B. 3× 1.6g täglich, um Kribbeln (Parästhesie) zu minimieren", hinweis:"Wirkung tritt nach 3–4 Wochen spürbar ein, optimal nach 12 Wochen (maximale Carnosin-Sättigung). Kribbeln ist harmlos. Nicht mit Herzmedikamenten oder Potenzmitteln kombinieren."}},
-      {id:"eisen_cy", name:"Eisen (Ferrochel)",        dose:"25–50mg — nur nach Bluttest",when:"Morgens nüchtern + Vit C",   why:"Sauerstofftransport — kritisch für Radfahrer. Nur nach ärztlichem Bluttest!",   tags:["Basis","Bluttest"],       link:AFF.iherb("iron ferrochel"),          shop:"iHerb",    priority:2,
-       protocol:{dauer:"3–6 Monate (bis Ferritin normalisiert)", pause:"Nur bei nachgewiesenem Mangel nehmen — Überdosierung gefährlich", timing:"Morgens nüchtern + 50mg Vitamin C für optimale Absorption", hinweis:"ZWINGEND: Nur nach Bluttest nehmen (Ferritin < 30 ng/ml als Sportler). Nicht mit Magnesium, Calcium oder Kaffee nehmen (1h Abstand). Kontrollbluttest nach 3 Monaten."}},
+      {id:"mau_caf",  name:"Maurten Gel 100 CAF 100",dose:"1-2 Gels/h",             when:"Rennen / Intervalle",         why:"Koffein + Kohlenhydrate für maximale Leistung. Offizielle Tour de France Nahrung.", tags:["Race-Day","Koffein"],      link:AFF.maurten("gel-100-caf-100"),       shop:"Maurten",  priority:1,
+       protocol:{dauer:"Nur an Wettkampf-/Intervall-Tagen", pause:"Nicht täglich verwenden - Koffeintoleranz aufbauen vermeiden", timing:"45 min vor oder während hochintensiver Phase", hinweis:"Max. 1-2 pro Einheit. Koffein-Cutoff 6h vor Schlaf. An Ruhetagen kein Koffein für bessere Wirkung am Renntag."}},
+      {id:"beta_cy",budget:{name:"iHerb Now Foods Beta-Alanin",dose:"3.2g täglich",when:"Aufgeteilt auf 2 Dosen",why:"Reines Beta-Alanin Pulver - kein Unterschied zur Markenware beim Wirkstoff.",price:"~CHF 0.30/Tag",shop:"iHerb",link:"https://www.iherb.com/pr/now-sports-nutrition-beta-alanine-pure-powder"},  name:"Beta-Alanin",             dose:"3.2-6.4g täglich",       when:"Aufgeteilt auf 2-4 Dosen",   why:"Puffert Laktat, verzögert Ermüdung bei hochintensiven Intervallen",             tags:["Pre-Workout","Ausdauer"],  link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:2,
+       protocol:{dauer:"8-12 Wochen (Kur)", pause:"9 Wochen Pause nach 12-Wochen-Zyklus - dann neu starten", timing:"Dosis aufteilen: z.B. 3× 1.6g täglich, um Kribbeln (Parästhesie) zu minimieren", hinweis:"Wirkung tritt nach 3-4 Wochen spürbar ein, optimal nach 12 Wochen (maximale Carnosin-Sättigung). Kribbeln ist harmlos. Nicht mit Herzmedikamenten oder Potenzmitteln kombinieren."}},
+      {id:"eisen_cy", name:"Eisen (Ferrochel)",        dose:"25-50mg - nur nach Bluttest",when:"Morgens nüchtern + Vit C",   why:"Sauerstofftransport - kritisch für Radfahrer. Nur nach ärztlichem Bluttest!",   tags:["Basis","Bluttest"],       link:AFF.iherb("iron ferrochel"),          shop:"iHerb",    priority:2,
+       protocol:{dauer:"3-6 Monate (bis Ferritin normalisiert)", pause:"Nur bei nachgewiesenem Mangel nehmen - Überdosierung gefährlich", timing:"Morgens nüchtern + 50mg Vitamin C für optimale Absorption", hinweis:"ZWINGEND: Nur nach Bluttest nehmen (Ferritin < 30 ng/ml als Sportler). Nicht mit Magnesium, Calcium oder Kaffee nehmen (1h Abstand). Kontrollbluttest nach 3 Monaten."}},
     ],
     endurance:[
       {id:"mau_320",  name:"Maurten Drink Mix 320",   dose:"80g / 500ml",            when:"Ausfahrten über 2h",          why:"Hohe Kohlenhydratdichte ohne GI-Probleme dank Hydrogel-Technologie",            tags:["Training","Kohlenhydrate"],link:AFF.maurten("drink-mix-320"),         shop:"Maurten",  priority:1,
-       protocol:{dauer:"Bei langen Einheiten, kein Zyklus nötig", pause:"Keine", timing:"1 Flasche pro Stunde ab Minute 30. Erst trainieren, dann im Rennen anwenden.", hinweis:"GI-Training notwendig — Darm muss Kohlenhydratmengen lernen. Erst mit kleineren Mengen beginnen (160er), dann auf 320 steigern."}},
-      {id:"elek_cy",  name:"Sponser Elektrolyt-Tabs", dose:"1 Tab / 500ml", kh:0, khTyp:"Elektrolyte",          when:"Während Training, Sommer",    why:"Natrium, Kalium, Magnesium — Krampfprävention und Leistungserhalt",             tags:["Hydration","Sommer"],     link:AFF.sponser("elektrolyt tabletten"),  shop:"Sponser",  priority:2,
+       protocol:{dauer:"Bei langen Einheiten, kein Zyklus nötig", pause:"Keine", timing:"1 Flasche pro Stunde ab Minute 30. Erst trainieren, dann im Rennen anwenden.", hinweis:"GI-Training notwendig - Darm muss Kohlenhydratmengen lernen. Erst mit kleineren Mengen beginnen (160er), dann auf 320 steigern."}},
+      {id:"elek_cy",  name:"Sponser Elektrolyt-Tabs", dose:"1 Tab / 500ml", kh:0, khTyp:"Elektrolyte",          when:"Während Training, Sommer",    why:"Natrium, Kalium, Magnesium - Krampfprävention und Leistungserhalt",             tags:["Hydration","Sommer"],     link:AFF.sponser("elektrolyt tabletten"),  shop:"Sponser",  priority:2,
        protocol:{dauer:"Ganzjährig bei intensivem Training", pause:"Keine", timing:"Bei Einheiten über 60 min oder ab 20°C Aussentemperatur", hinweis:"Bei sehr salzigem Schweiss (weisse Ränder auf Trikot) Dosierung auf 2 Tabs erhöhen."}},
     ],
     recovery:[
-      {id:"whey_cy",budget:{name:"Bodylab24 Whey Protein",dose:"25–30g",when:"Innerhalb 30 min post-ride",why:"Konzentrat statt Isolat — etwas mehr Laktose, aber gute Qualität für deutlich weniger Geld.",price:"~CHF 1.20/Portion",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/whey-protein"},  name:"Whey Protein Isolat",     dose:"25–30g",                 when:"Innerhalb 30 min post-ride",  why:"Muskelreparatur und -aufbau. Schnellste Absorption aller Proteinquellen.",      tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
+      {id:"whey_cy",budget:{name:"Bodylab24 Whey Protein",dose:"25-30g",when:"Innerhalb 30 min post-ride",why:"Konzentrat statt Isolat - etwas mehr Laktose, aber gute Qualität für deutlich weniger Geld.",price:"~CHF 1.20/Portion",shop:"Bodylab24",link:"https://www.bodylab24.ch/shop/whey-protein"},  name:"Whey Protein Isolat",     dose:"25-30g",                 when:"Innerhalb 30 min post-ride",  why:"Muskelreparatur und -aufbau. Schnellste Absorption aller Proteinquellen.",      tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
        protocol:{dauer:"Ganzjährig, täglich nach Training", pause:"Keine", timing:"Innerhalb 30 Minuten nach der Einheit für optimales anaboles Fenster", hinweis:"Mit Kohlenhydraten kombinieren (Banana, Haferflocken) für bessere Aufnahme. Bei Laktoseintoleranz: Isolat statt Konzentrat wählen."}},
-      {id:"ash_cy",budget:{name:"Lee-Sport Bio Ashwagandha",dose:"600mg täglich",when:"Abends",why:"Ohne KSM-66 Patentierung — ähnliche Wirkung bei deutlich tieferem Preis. Gute Wahl für Einsteiger.",price:"~CHF 0.35/Tag",shop:"vitafy.ch",link:"https://www.vitafy.de/lee-sport-bio-ashwagandha"},   name:"Ashwagandha KSM-66",      dose:"600mg täglich",          when:"Abends",                      why:"Senkt Cortisol, verbessert Schlaftiefe und Regeneration — klinisch belegt",     tags:["Abends","Adaptogen"],     link:AFF.iherb("ashwagandha ksm-66"),      shop:"iHerb",    priority:2,
-       protocol:{dauer:"8–12 Wochen (Kur)", pause:"2–4 Wochen Pause nach 12 Wochen", timing:"Abends zur Schlafförderung, oder morgens zur Cortisol-Regulation — konsistent bleiben", hinweis:"Wirkung spürbar nach 4–8 Wochen. Nur KSM-66 oder Sensoril-Extrakt (5% Withanolide). Nicht bei Schilddrüsenerkrankungen ohne Arztabsprache. Nicht in der Schwangerschaft."}},
+      {id:"ash_cy",budget:{name:"Lee-Sport Bio Ashwagandha",dose:"600mg täglich",when:"Abends",why:"Ohne KSM-66 Patentierung - ähnliche Wirkung bei deutlich tieferem Preis. Gute Wahl für Einsteiger.",price:"~CHF 0.35/Tag",shop:"vitafy.ch",link:"https://www.vitafy.de/lee-sport-bio-ashwagandha"},   name:"Ashwagandha KSM-66",      dose:"600mg täglich",          when:"Abends",                      why:"Senkt Cortisol, verbessert Schlaftiefe und Regeneration - klinisch belegt",     tags:["Abends","Adaptogen"],     link:AFF.iherb("ashwagandha ksm-66"),      shop:"iHerb",    priority:2,
+       protocol:{dauer:"8-12 Wochen (Kur)", pause:"2-4 Wochen Pause nach 12 Wochen", timing:"Abends zur Schlafförderung, oder morgens zur Cortisol-Regulation - konsistent bleiben", hinweis:"Wirkung spürbar nach 4-8 Wochen. Nur KSM-66 oder Sensoril-Extrakt (5% Withanolide). Nicht bei Schilddrüsenerkrankungen ohne Arztabsprache. Nicht in der Schwangerschaft."}},
     ],
     health:[
-      {id:"zink_cy",  name:"Zink 15mg",               dose:"15mg täglich",           when:"Abends, nicht mit Eisen",     why:"Immunabwehr, Testosteron, Wundheilung — bei Ausdauersportlern oft defizitär",  tags:["Täglich","Immunsystem"],  link:AFF.iherb("zinc 15mg"),               shop:"iHerb",    priority:2,
-       protocol:{dauer:"3 Monate, dann Pause", pause:"4 Wochen Pause nach 3 Monaten — Kupfer-Haushalt überwachen", timing:"Abends, mindestens 2h Abstand zu Eisen und Calcium", hinweis:"Zink und Eisen konkurrieren — nie gleichzeitig nehmen. Bei >40mg/Tag sinkt Kupferspiegel. Bluttest nach 3 Monaten empfohlen."}},
-      {id:"krea_cy",budget:{name:"Bulk Kreatin Monohydrat",dose:"5g täglich",when:"Täglich, nach Training",why:"Kreatin Monohydrat ist Kreatin Monohydrat — kein Preisunterschied beim Wirkstoff, nur bei Verpackung.",price:"~CHF 0.15/Tag",shop:"Bulk Nutrients",link:"https://www.bulknutrients.com.au/products/creatine-monohydrate"},  name:"Kreatin Monohydrat",       dose:"5g täglich",             when:"Täglich, nach Training",      why:"Verbessert Sprintleistung und Regeneration — am besten erforschtes Supplement", tags:["Täglich","Kraft"],        link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:2,
-       protocol:{dauer:"Ganzjährig möglich (kein Zyklus nötig)", pause:"Keine Pause wissenschaftlich notwendig — optional 4 Wochen/Jahr pausieren", timing:"Täglich 5g, Zeitpunkt weniger kritisch — am besten nach Training mit Kohlenhydraten", hinweis:"Keine Ladephase nötig — 3–5g täglich füllt Speicher in 3–4 Wochen. Leichte Gewichtszunahme (0.5–1kg Wassereinlagerung) ist normal. 3–5L Wasser täglich trinken."}},
+      {id:"zink_cy",  name:"Zink 15mg",               dose:"15mg täglich",           when:"Abends, nicht mit Eisen",     why:"Immunabwehr, Testosteron, Wundheilung - bei Ausdauersportlern oft defizitär",  tags:["Täglich","Immunsystem"],  link:AFF.iherb("zinc 15mg"),               shop:"iHerb",    priority:2,
+       protocol:{dauer:"3 Monate, dann Pause", pause:"4 Wochen Pause nach 3 Monaten - Kupfer-Haushalt überwachen", timing:"Abends, mindestens 2h Abstand zu Eisen und Calcium", hinweis:"Zink und Eisen konkurrieren - nie gleichzeitig nehmen. Bei >40mg/Tag sinkt Kupferspiegel. Bluttest nach 3 Monaten empfohlen."}},
+      {id:"krea_cy",budget:{name:"Bulk Kreatin Monohydrat",dose:"5g täglich",when:"Täglich, nach Training",why:"Kreatin Monohydrat ist Kreatin Monohydrat - kein Preisunterschied beim Wirkstoff, nur bei Verpackung.",price:"~CHF 0.15/Tag",shop:"Bulk Nutrients",link:"https://www.bulknutrients.com.au/products/creatine-monohydrate"},  name:"Kreatin Monohydrat",       dose:"5g täglich",             when:"Täglich, nach Training",      why:"Verbessert Sprintleistung und Regeneration - am besten erforschtes Supplement", tags:["Täglich","Kraft"],        link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:2,
+       protocol:{dauer:"Ganzjährig möglich (kein Zyklus nötig)", pause:"Keine Pause wissenschaftlich notwendig - optional 4 Wochen/Jahr pausieren", timing:"Täglich 5g, Zeitpunkt weniger kritisch - am besten nach Training mit Kohlenhydraten", hinweis:"Keine Ladephase nötig - 3-5g täglich füllt Speicher in 3-4 Wochen. Leichte Gewichtszunahme (0.5-1kg Wassereinlagerung) ist normal. 3-5L Wasser täglich trinken."}},
     ],
   },
   running:{
     performance:[
-      {id:"koff_run", name:"Koffein 100–200mg",       dose:"100–200mg",              when:"30–45 min vor Wettkampf",     why:"Kognitive Leistung + Ausdauer — bestens erforschtes Performance-Supplement",   tags:["Pre-Race","Koffein"],     link:AFF.iherb("caffeine 100mg"),          shop:"iHerb",    priority:1,
-       protocol:{dauer:"Nur an Wettkampf- und Intervall-Tagen", pause:"Koffein-Pause 1 Woche vor Hauptrennen für maximale Wirkung", timing:"30–45 min vor dem Start oder der intensiven Phase", hinweis:"Koffein 6h vor Schlaf stoppen. Nüchterneinnahme kann GI-Probleme verursachen — mit kleinem Snack nehmen. Toleranz senken durch koffeinfreie Tage."}},
-      {id:"mn_gel",   name:"MNSTRY Intensity Gel",    dose:"1 Gel alle 30–45 min",   when:"Tempo- oder Wettkampf",        why:"Magenfreundlich, natürliche Zutaten — genutzt von Canyon//SRAM und EF-Team", tags:["Race-Day","Carbs"],       link:AFF.mnstry("intensity-gel"),          shop:"MNSTRY",   priority:1,
-       protocol:{dauer:"Nur bei Einheiten über 60 min", pause:"Keine", timing:"Erstes Gel nach 30–45 min, dann alle 30–45 min", hinweis:"GI-Training: Gels zuerst im Training testen, nie erstmals im Rennen. Mit Wasser einnehmen — niemals mit Sportgetränk (zu viel Zucker gleichzeitig)."}},
-      {id:"eisen_run",name:"Eisen (Ferrochel)",        dose:"Nach Bluttest",          when:"Morgens nüchtern",             why:"Läufer haben erhöhten Eisenbedarf durch Fussstoss-Hämolyse — testen lassen",  tags:["Basis","Bluttest"],       link:AFF.iherb("iron ferrochel"),          shop:"iHerb",    priority:1,
-       protocol:{dauer:"3–6 Monate bis Normalisierung", pause:"Nur mit nachgewiesenem Mangel — Überdosierung toxisch", timing:"Morgens nüchtern + Vitamin C, 1h vor dem Frühstück", hinweis:"Fussstoss-Hämolyse betrifft v.a. Langstreckenläufer. Ferritin-Zielwert für Sportler: 50–100 ng/ml. Kaffee, Calcium und Magnesium um 2h Abstand."}},
+      {id:"koff_run", name:"Koffein 100-200mg",       dose:"100-200mg",              when:"30-45 min vor Wettkampf",     why:"Kognitive Leistung + Ausdauer - bestens erforschtes Performance-Supplement",   tags:["Pre-Race","Koffein"],     link:AFF.iherb("caffeine 100mg"),          shop:"iHerb",    priority:1,
+       protocol:{dauer:"Nur an Wettkampf- und Intervall-Tagen", pause:"Koffein-Pause 1 Woche vor Hauptrennen für maximale Wirkung", timing:"30-45 min vor dem Start oder der intensiven Phase", hinweis:"Koffein 6h vor Schlaf stoppen. Nüchterneinnahme kann GI-Probleme verursachen - mit kleinem Snack nehmen. Toleranz senken durch koffeinfreie Tage."}},
+      {id:"mn_gel",   name:"MNSTRY Intensity Gel",    dose:"1 Gel alle 30-45 min",   when:"Tempo- oder Wettkampf",        why:"Magenfreundlich, natürliche Zutaten - genutzt von Canyon//SRAM und EF-Team", tags:["Race-Day","Carbs"],       link:AFF.mnstry("intensity-gel"),          shop:"MNSTRY",   priority:1,
+       protocol:{dauer:"Nur bei Einheiten über 60 min", pause:"Keine", timing:"Erstes Gel nach 30-45 min, dann alle 30-45 min", hinweis:"GI-Training: Gels zuerst im Training testen, nie erstmals im Rennen. Mit Wasser einnehmen - niemals mit Sportgetränk (zu viel Zucker gleichzeitig)."}},
+      {id:"eisen_run",name:"Eisen (Ferrochel)",        dose:"Nach Bluttest",          when:"Morgens nüchtern",             why:"Läufer haben erhöhten Eisenbedarf durch Fussstoss-Hämolyse - testen lassen",  tags:["Basis","Bluttest"],       link:AFF.iherb("iron ferrochel"),          shop:"iHerb",    priority:1,
+       protocol:{dauer:"3-6 Monate bis Normalisierung", pause:"Nur mit nachgewiesenem Mangel - Überdosierung toxisch", timing:"Morgens nüchtern + Vitamin C, 1h vor dem Frühstück", hinweis:"Fussstoss-Hämolyse betrifft v.a. Langstreckenläufer. Ferritin-Zielwert für Sportler: 50-100 ng/ml. Kaffee, Calcium und Magnesium um 2h Abstand."}},
     ],
     endurance:[
-      {id:"mau_160",  name:"Maurten Drink Mix 160",   dose:"40g / 500ml",            when:"Ab 60 min aufwärts",           why:"Ideal für Läufer — weniger dicht als 320, perfekt für Trainings und Rennen",  tags:["Training","Kohlenhydrate"],link:AFF.maurten("drink-mix-160"),         shop:"Maurten",  priority:1,
-       protocol:{dauer:"Bei Einheiten über 60 min, kein Zyklus", pause:"Keine", timing:"Ab Minute 30–45, alle 30 min", hinweis:"GI-Test im Training notwendig — Darm muss Kohlenhydrate bei Lauftempo lernen. Viele Läufer vertragen beim Laufen weniger als beim Radfahren."}},
-      {id:"rbeete",   name:"Rote Beete Nitrat",       dose:"400–600mg Nitrat",       when:"2–3h vor Training",            why:"Verbessert O2-Effizienz um 1–3% — besonders bei langen Einheiten relevant",   tags:["Pre-Training","Natürlich"],link:AFF.iherb("beet root nitrate"),       shop:"iHerb",    priority:2,
-       protocol:{dauer:"6–7 Tage kontinuierlich laden, dann täglich", pause:"Keine langfristige Pause nötig", timing:"2–3 Stunden vor Wettkampf/Training, Peakwirkung nach 2–3h", hinweis:"Gepresster Rote-Beete-Saft (ca. 500ml) oder konzentrierte Shots. Mund mit Mundwasser vermeiden — zerstört Nitratlumwandlung durch Mundbakterien. Rote Verfärbung von Urin und Stuhl ist harmlos."}},
+      {id:"mau_160",  name:"Maurten Drink Mix 160",   dose:"40g / 500ml",            when:"Ab 60 min aufwärts",           why:"Ideal für Läufer - weniger dicht als 320, perfekt für Trainings und Rennen",  tags:["Training","Kohlenhydrate"],link:AFF.maurten("drink-mix-160"),         shop:"Maurten",  priority:1,
+       protocol:{dauer:"Bei Einheiten über 60 min, kein Zyklus", pause:"Keine", timing:"Ab Minute 30-45, alle 30 min", hinweis:"GI-Test im Training notwendig - Darm muss Kohlenhydrate bei Lauftempo lernen. Viele Läufer vertragen beim Laufen weniger als beim Radfahren."}},
+      {id:"rbeete",   name:"Rote Beete Nitrat",       dose:"400-600mg Nitrat",       when:"2-3h vor Training",            why:"Verbessert O2-Effizienz um 1-3% - besonders bei langen Einheiten relevant",   tags:["Pre-Training","Natürlich"],link:AFF.iherb("beet root nitrate"),       shop:"iHerb",    priority:2,
+       protocol:{dauer:"6-7 Tage kontinuierlich laden, dann täglich", pause:"Keine langfristige Pause nötig", timing:"2-3 Stunden vor Wettkampf/Training, Peakwirkung nach 2-3h", hinweis:"Gepresster Rote-Beete-Saft (ca. 500ml) oder konzentrierte Shots. Mund mit Mundwasser vermeiden - zerstört Nitratlumwandlung durch Mundbakterien. Rote Verfärbung von Urin und Stuhl ist harmlos."}},
     ],
     recovery:[
-      {id:"koll_run", name:"Kollagen + Vitamin C",    dose:"10–15g + 50mg Vit C",    when:"30 min vor Training",          why:"Sehnen- und Gelenkschutz — besonders wichtig für Läufer",                     tags:["Gelenke","Prävention"],   link:AFF.iherb("collagen vitamin c"),      shop:"iHerb",    priority:1,
-       protocol:{dauer:"Ganzjährig bei intensivem Lauftraining", pause:"Keine", timing:"30 min VOR dem Training (nicht danach) — Kollagen braucht Vorlaufzeit zur Synthese", hinweis:"Vitamin C gleichzeitig nehmen (erhöht Kollagensynthese). Typ I/II Kollagen bevorzugen. Wirkung auf Sehnen nach 3–6 Monaten messbar."}},
+      {id:"koll_run", name:"Kollagen + Vitamin C",    dose:"10-15g + 50mg Vit C",    when:"30 min vor Training",          why:"Sehnen- und Gelenkschutz - besonders wichtig für Läufer",                     tags:["Gelenke","Prävention"],   link:AFF.iherb("collagen vitamin c"),      shop:"iHerb",    priority:1,
+       protocol:{dauer:"Ganzjährig bei intensivem Lauftraining", pause:"Keine", timing:"30 min VOR dem Training (nicht danach) - Kollagen braucht Vorlaufzeit zur Synthese", hinweis:"Vitamin C gleichzeitig nehmen (erhöht Kollagensynthese). Typ I/II Kollagen bevorzugen. Wirkung auf Sehnen nach 3-6 Monaten messbar."}},
       {id:"tart_run", name:"Tart Cherry Extrakt",     dose:"480mg täglich",          when:"Nach langen Einheiten",        why:"Signifikante DOMS-Reduktion in mehreren RCTs belegt",                          tags:["Post-Training","DOMS"],   link:AFF.iherb("tart cherry"),             shop:"iHerb",    priority:2,
-       protocol:{dauer:"Während harter Trainingsblöcke (2–7 Tage)", pause:"Keine Dauereinnahme nötig — situativ bei hartem Training", timing:"2× täglich (morgens + abends) in Phasen mit hoher Belastung", hinweis:"Besonders wirksam bei Wettkampfblöcken. Kann Schlaf verbessern (Melatonin-Gehalt). Fruchtsaft-Alternative: 300ml Kirschsaft 2× täglich."}},
+       protocol:{dauer:"Während harter Trainingsblöcke (2-7 Tage)", pause:"Keine Dauereinnahme nötig - situativ bei hartem Training", timing:"2× täglich (morgens + abends) in Phasen mit hoher Belastung", hinweis:"Besonders wirksam bei Wettkampfblöcken. Kann Schlaf verbessern (Melatonin-Gehalt). Fruchtsaft-Alternative: 300ml Kirschsaft 2× täglich."}},
     ],
     health:[
-      {id:"vd3_run",  name:"Vitamin D3 + K2",         dose:"2000–4000 IE",           when:"Morgens",                      why:"Stressbruchprävention und Muskelfunktion — Läufer besonders gefährdet",        tags:["Basis","Knochen"],        link:AFF.iherb("vitamin d3 k2"),           shop:"iHerb",    priority:1,
-       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Läufer haben erhöhtes Stressfraktur-Risiko — Vit D + Calcium-Versorgung kritisch. Bluttest alle 6 Monate."}},
+      {id:"vd3_run",  name:"Vitamin D3 + K2",         dose:"2000-4000 IE",           when:"Morgens",                      why:"Stressbruchprävention und Muskelfunktion - Läufer besonders gefährdet",        tags:["Basis","Knochen"],        link:AFF.iherb("vitamin d3 k2"),           shop:"iHerb",    priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Läufer haben erhöhtes Stressfraktur-Risiko - Vit D + Calcium-Versorgung kritisch. Bluttest alle 6 Monate."}},
     ],
   },
   fitness:{
     performance:[
-      {id:"krea_fit", name:"Kreatin Monohydrat",      dose:"5g täglich",             when:"Post-Training",                why:"HYROX & CrossFit brauchen Kraft UND Ausdauer — Kreatin verbessert beides",    tags:["Täglich","Kraft"],        link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:1,
-       protocol:{dauer:"Ganzjährig möglich", pause:"Keine Pause wissenschaftlich notwendig", timing:"Nach Training am effektivsten — Muskel ist aufnahmefähiger post-Workout", hinweis:"Keine Ladephase nötig. 5g täglich füllt Speicher in 3–4 Wochen. 0.5–1kg Gewichtszunahme durch Wassereinlagerung normal. 3–5L Wasser/Tag."}},
-      {id:"koff_fit", name:"Koffein 200mg",           dose:"200mg",                  when:"30–40 min vor WOD",            why:"Fokus, Ausdauer und Kraftleistung für 60–90 min maximale Belastungen",         tags:["Pre-WOD","Koffein"],      link:AFF.iherb("caffeine 200mg"),          shop:"iHerb",    priority:1,
-       protocol:{dauer:"Nur an Trainingstagen", pause:"1 Woche Koffein-Pause alle 6–8 Wochen empfohlen um Toleranz zu senken", timing:"30–40 min vor WOD, nüchtern oder leichter Snack", hinweis:"Kein Koffein nach 14 Uhr (schlechter Schlaf = schlechtere Recovery). Nüchterneinnahme kann Magenprobleme verursachen."}},
+      {id:"krea_fit", name:"Kreatin Monohydrat",      dose:"5g täglich",             when:"Post-Training",                why:"HYROX & CrossFit brauchen Kraft UND Ausdauer - Kreatin verbessert beides",    tags:["Täglich","Kraft"],        link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:1,
+       protocol:{dauer:"Ganzjährig möglich", pause:"Keine Pause wissenschaftlich notwendig", timing:"Nach Training am effektivsten - Muskel ist aufnahmefähiger post-Workout", hinweis:"Keine Ladephase nötig. 5g täglich füllt Speicher in 3-4 Wochen. 0.5-1kg Gewichtszunahme durch Wassereinlagerung normal. 3-5L Wasser/Tag."}},
+      {id:"koff_fit", name:"Koffein 200mg",           dose:"200mg",                  when:"30-40 min vor WOD",            why:"Fokus, Ausdauer und Kraftleistung für 60-90 min maximale Belastungen",         tags:["Pre-WOD","Koffein"],      link:AFF.iherb("caffeine 200mg"),          shop:"iHerb",    priority:1,
+       protocol:{dauer:"Nur an Trainingstagen", pause:"1 Woche Koffein-Pause alle 6-8 Wochen empfohlen um Toleranz zu senken", timing:"30-40 min vor WOD, nüchtern oder leichter Snack", hinweis:"Kein Koffein nach 14 Uhr (schlechter Schlaf = schlechtere Recovery). Nüchterneinnahme kann Magenprobleme verursachen."}},
     ],
     endurance:[
-      {id:"beta_fit", name:"Beta-Alanin",             dose:"3.2–4.8g täglich",       when:"Täglich, aufgeteilt",          why:"Puffert Laktat bei hochintensiven MetCon-Einheiten und HYROX-Stationen",      tags:["Täglich","MetCon"],       link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:1,
-       protocol:{dauer:"8–12 Wochen (Kur)", pause:"9 Wochen Pause nach 12-Wochen-Zyklus", timing:"Dosis aufteilen: 2–3× täglich je 1.6g — Kribbeln (Parästhesie) ist harmlos", hinweis:"Wirkt v.a. bei Belastungen von 1–4 Minuten — ideal für MetCons und HYROX-Stationen. Wirkung nach 3–4 Wochen spürbar, optimal nach 12 Wochen."}},
+      {id:"beta_fit", name:"Beta-Alanin",             dose:"3.2-4.8g täglich",       when:"Täglich, aufgeteilt",          why:"Puffert Laktat bei hochintensiven MetCon-Einheiten und HYROX-Stationen",      tags:["Täglich","MetCon"],       link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:1,
+       protocol:{dauer:"8-12 Wochen (Kur)", pause:"9 Wochen Pause nach 12-Wochen-Zyklus", timing:"Dosis aufteilen: 2-3× täglich je 1.6g - Kribbeln (Parästhesie) ist harmlos", hinweis:"Wirkt v.a. bei Belastungen von 1-4 Minuten - ideal für MetCons und HYROX-Stationen. Wirkung nach 3-4 Wochen spürbar, optimal nach 12 Wochen."}},
     ],
     recovery:[
-      {id:"whey_fit", name:"Whey Protein Isolat",     dose:"30–35g",                 when:"Direkt post-WOD",              why:"Starker Muskelabbau durch kombinierte Kraft+Ausdauer-Belastung reparieren",   tags:["Post-WOD","Protein"],     link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
-       protocol:{dauer:"Ganzjährig, nach jeder Einheit", pause:"Keine", timing:"Innerhalb 30 min post-WOD mit 30–50g Kohlenhydraten kombinieren", hinweis:"Bei 2× täglich Training: auch post-Einheit 2 supplementieren. Casein vor Schlaf optional für nächtliche Regeneration."}},
-      {id:"koll_fit", name:"Kollagen + Vitamin C",    dose:"10–15g",                 when:"Vor Training",                 why:"Sehnen und Gelenke schützen — bei CrossFit und HYROX stark belastet",         tags:["Gelenke","Prävention"],   link:AFF.iherb("collagen vitamin c"),      shop:"iHerb",    priority:2,
-       protocol:{dauer:"Ganzjährig bei intensivem Training", pause:"Keine", timing:"30 min VOR der Einheit — nicht danach", hinweis:"Typ I/II Kollagen. Vitamin C gleichzeitig essenziell für Synthese. Bei akuten Sehnenreizungen Dosis auf 20g erhöhen."}},
+      {id:"whey_fit", name:"Whey Protein Isolat",     dose:"30-35g",                 when:"Direkt post-WOD",              why:"Starker Muskelabbau durch kombinierte Kraft+Ausdauer-Belastung reparieren",   tags:["Post-WOD","Protein"],     link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
+       protocol:{dauer:"Ganzjährig, nach jeder Einheit", pause:"Keine", timing:"Innerhalb 30 min post-WOD mit 30-50g Kohlenhydraten kombinieren", hinweis:"Bei 2× täglich Training: auch post-Einheit 2 supplementieren. Casein vor Schlaf optional für nächtliche Regeneration."}},
+      {id:"koll_fit", name:"Kollagen + Vitamin C",    dose:"10-15g",                 when:"Vor Training",                 why:"Sehnen und Gelenke schützen - bei CrossFit und HYROX stark belastet",         tags:["Gelenke","Prävention"],   link:AFF.iherb("collagen vitamin c"),      shop:"iHerb",    priority:2,
+       protocol:{dauer:"Ganzjährig bei intensivem Training", pause:"Keine", timing:"30 min VOR der Einheit - nicht danach", hinweis:"Typ I/II Kollagen. Vitamin C gleichzeitig essenziell für Synthese. Bei akuten Sehnenreizungen Dosis auf 20g erhöhen."}},
     ],
     health:[
-      {id:"vd3_fit",  name:"Vitamin D3 + K2",         dose:"3000 IE",                when:"Morgens",                      why:"Knochen, Testosteron, Immunsystem — Basis für jeden Kraftsportler",           tags:["Basis","Täglich"],        link:AFF.iherb("vitamin d3 k2"),           shop:"iHerb",    priority:1,
+      {id:"vd3_fit",  name:"Vitamin D3 + K2",         dose:"3000 IE",                when:"Morgens",                      why:"Knochen, Testosteron, Immunsystem - Basis für jeden Kraftsportler",           tags:["Basis","Täglich"],        link:AFF.iherb("vitamin d3 k2"),           shop:"iHerb",    priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"K2 (MK-7 Form) sichert korrekte Kalziumeinlagerung in Knochen statt Arterien. Bluttest nach 3 Monaten."}},
     ],
   },
   fussball:{
     performance:[
-      {id:"krea_fb",  name:"Kreatin Monohydrat",      dose:"5g täglich",             when:"Post-Training",                why:"Verbessert Sprintleistung und Explosivität — direkt relevant für Fussball",   tags:["Täglich","Sprint"],       link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:1,
-       protocol:{dauer:"Ganzjährig oder in Saison-Blöcken", pause:"Optional 4 Wochen in der Saisonpause", timing:"Nach Training oder Spiel, mit Kohlenhydraten", hinweis:"Besonders wirksam für Sprintwiederholungen — exakt das Anforderungsprofil Fussball. 0.5–1kg Gewichtszunahme normal."}},
-      {id:"koff_fb",  name:"Koffein 100–200mg",       dose:"100–200mg",              when:"60 min vor Spiel",             why:"Reaktionszeit, Ausdauer und Konzentration im Spiel verbessern",                tags:["Pre-Game","Koffein"],     link:AFF.iherb("caffeine"),                shop:"iHerb",    priority:1,
+      {id:"krea_fb",  name:"Kreatin Monohydrat",      dose:"5g täglich",             when:"Post-Training",                why:"Verbessert Sprintleistung und Explosivität - direkt relevant für Fussball",   tags:["Täglich","Sprint"],       link:AFF.iherb("creatine monohydrate"),    shop:"iHerb",    priority:1,
+       protocol:{dauer:"Ganzjährig oder in Saison-Blöcken", pause:"Optional 4 Wochen in der Saisonpause", timing:"Nach Training oder Spiel, mit Kohlenhydraten", hinweis:"Besonders wirksam für Sprintwiederholungen - exakt das Anforderungsprofil Fussball. 0.5-1kg Gewichtszunahme normal."}},
+      {id:"koff_fb",  name:"Koffein 100-200mg",       dose:"100-200mg",              when:"60 min vor Spiel",             why:"Reaktionszeit, Ausdauer und Konzentration im Spiel verbessern",                tags:["Pre-Game","Koffein"],     link:AFF.iherb("caffeine"),                shop:"iHerb",    priority:1,
        protocol:{dauer:"Nur an Spieltagen und intensiven Trainingstagen", pause:"An Ruhetagen kein Koffein für bessere Wirkung", timing:"60 min vor Spielbeginn", hinweis:"Bei Abendspielen: kein Koffein nach 20 Uhr wegen Schlafqualität. Koffein-Cutoff 6h vor Schlaf."}},
     ],
     recovery:[
-      {id:"whey_fb",  name:"Whey Protein Isolat",     dose:"25–30g",                 when:"Direkt nach Spiel / Training", why:"Muskelschaden durch Zweikämpfe und Sprints reparieren",                       tags:["Post-Game","Protein"],    link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
-       protocol:{dauer:"Ganzjährig nach Spielen und intensiven Einheiten", pause:"Keine", timing:"Innerhalb 30–45 min post-Game", hinweis:"Mit schnellen Kohlenhydraten (60–80g) kombinieren für Glykogenauffüllung + Proteinaufnahme."}},
-      {id:"carb_fb",  name:"Schnelle Kohlenhydrate",  dose:"60–80g innerhalb 30 min",when:"Direkt nach Spiel",            why:"Glykogenspeicher auffüllen — wichtig bei mehreren Spielen pro Woche",         tags:["Post-Game","Carbs"],      link:AFF.iherb("dextrose"),                shop:"iHerb",    priority:1,
+      {id:"whey_fb",  name:"Whey Protein Isolat",     dose:"25-30g",                 when:"Direkt nach Spiel / Training", why:"Muskelschaden durch Zweikämpfe und Sprints reparieren",                       tags:["Post-Game","Protein"],    link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
+       protocol:{dauer:"Ganzjährig nach Spielen und intensiven Einheiten", pause:"Keine", timing:"Innerhalb 30-45 min post-Game", hinweis:"Mit schnellen Kohlenhydraten (60-80g) kombinieren für Glykogenauffüllung + Proteinaufnahme."}},
+      {id:"carb_fb",  name:"Schnelle Kohlenhydrate",  dose:"60-80g innerhalb 30 min",when:"Direkt nach Spiel",            why:"Glykogenspeicher auffüllen - wichtig bei mehreren Spielen pro Woche",         tags:["Post-Game","Carbs"],      link:AFF.iherb("dextrose"),                shop:"iHerb",    priority:1,
        protocol:{dauer:"Nach jedem Spiel und harten Training", pause:"Keine", timing:"Direkt im Anschluss ans Spiel (innerhalb 30 min)", hinweis:"Bei >2 Spielen/Woche: Glykogenauffüllung kritisch. Dextrose, Maltodextrin oder Bananen/Weissbrot als Alternative."}},
     ],
     endurance:[
-      {id:"beta_fb",  name:"Beta-Alanin",             dose:"3.2–4.8g täglich",       when:"Täglich",                      why:"Puffert Laktat in der Schlussphase des Spiels wenn Ermüdung einsetzt",        tags:["Ausdauer","Spätphase"],   link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:2,
-       protocol:{dauer:"8–12 Wochen (Kur), idealerweise Vorsaison", pause:"9 Wochen Pause nach 12 Wochen", timing:"Täglich aufgeteilt auf 2–3 Dosen à 1.6g", hinweis:"Wirkt v.a. in der Schlussphase des Spiels (70.–90. Minute) wenn Laktat steigt. Kribbeln ist harmlos und verschwindet bei aufgeteilter Dosis."}},
+      {id:"beta_fb",  name:"Beta-Alanin",             dose:"3.2-4.8g täglich",       when:"Täglich",                      why:"Puffert Laktat in der Schlussphase des Spiels wenn Ermüdung einsetzt",        tags:["Ausdauer","Spätphase"],   link:AFF.iherb("beta alanine"),            shop:"iHerb",    priority:2,
+       protocol:{dauer:"8-12 Wochen (Kur), idealerweise Vorsaison", pause:"9 Wochen Pause nach 12 Wochen", timing:"Täglich aufgeteilt auf 2-3 Dosen à 1.6g", hinweis:"Wirkt v.a. in der Schlussphase des Spiels (70.-90. Minute) wenn Laktat steigt. Kribbeln ist harmlos und verschwindet bei aufgeteilter Dosis."}},
     ],
     health:[
-      {id:"vd3_fb",   name:"Vitamin D3",              dose:"2000–4000 IE",           when:"Morgens",                      why:"Verletzungsprävention, Immunsystem, Muskelfunktion",                          tags:["Basis","Täglich"],        link:AFF.iherb("vitamin d3"),              shop:"iHerb",    priority:1,
-       protocol:{dauer:"Ganzjährig (Wintersaison besonders wichtig)", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Fussballer trainieren oft in Hallen (Winter) — Vit D-Mangel besonders verbreitet. Bluttest Oktober und März empfohlen."}},
+      {id:"vd3_fb",   name:"Vitamin D3",              dose:"2000-4000 IE",           when:"Morgens",                      why:"Verletzungsprävention, Immunsystem, Muskelfunktion",                          tags:["Basis","Täglich"],        link:AFF.iherb("vitamin d3"),              shop:"iHerb",    priority:1,
+       protocol:{dauer:"Ganzjährig (Wintersaison besonders wichtig)", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Fussballer trainieren oft in Hallen (Winter) - Vit D-Mangel besonders verbreitet. Bluttest Oktober und März empfohlen."}},
     ],
   },
   // ─── SKI (Alpin, Freeride, Freestyle, Snowboard) ────────────────────────────
   ski:{
     performance:[
-      {id:"krea_ski", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"Explosivität und Schnellkraft für kurze maximale Belastungen — perfekt für Alpin.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+      {id:"krea_ski", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"Explosivität und Schnellkraft für kurze maximale Belastungen - perfekt für Alpin.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
        protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Training oder Abends", hinweis:"Besonders wertvoll in Wettkampfblöcken und intensiven Trainingslagern."}},
-      {id:"koff_ski", name:"Koffein 100–200mg", dose:"100–200mg", when:"45 min vor erstem Lauf", why:"Reaktionszeit, Fokus und Kältestress-Pufferung — an Wettkampftagen kritisch.", tags:["Pre-Race","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+      {id:"koff_ski", name:"Koffein 100-200mg", dose:"100-200mg", when:"45 min vor erstem Lauf", why:"Reaktionszeit, Fokus und Kältestress-Pufferung - an Wettkampftagen kritisch.", tags:["Pre-Race","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
        protocol:{dauer:"Wettkampf- und Intensivtage", pause:"Koffein-Pause 1 Woche vor Hauptrennen", timing:"45 min vor Start", hinweis:"Kältewetter steigert Koffeinwirkung leicht. Kein Koffein nach 16 Uhr."}},
     ],
     recovery:[
-      {id:"whey_ski", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Fahrtag", why:"Intensive Muskelarbeit (Oberschenkel, Rumpf) — Reparatur nach dem Fahren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
-       protocol:{dauer:"Ganzjährig nach intensiven Tagen", pause:"Keine", timing:"Innerhalb 30 min nach letztem Lauf", hinweis:"Mit 50–60g Kohlenhydraten kombinieren."}},
-      {id:"koll_ski", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor erstem Lauf", why:"Knöchel, Knie und Sehnen unter extremer Belastung — Prävention kritisch.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+      {id:"whey_ski", name:"Whey Protein Isolat", dose:"25-30g", when:"Nach Fahrtag", why:"Intensive Muskelarbeit (Oberschenkel, Rumpf) - Reparatur nach dem Fahren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Ganzjährig nach intensiven Tagen", pause:"Keine", timing:"Innerhalb 30 min nach letztem Lauf", hinweis:"Mit 50-60g Kohlenhydraten kombinieren."}},
+      {id:"koll_ski", name:"Kollagen + Vitamin C", dose:"10-15g", when:"30 min vor erstem Lauf", why:"Knöchel, Knie und Sehnen unter extremer Belastung - Prävention kritisch.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
        protocol:{dauer:"Saisonbegleitend, täglich", pause:"Keine", timing:"30 min VOR dem Fahren", hinweis:"Typ II Kollagen für Gelenkknorpel bevorzugen."}},
     ],
     endurance:[
-      {id:"elek_ski", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Während Fahrtag", why:"Kältewetter täuscht über Flüssigkeitsverlust — Hydration trotzdem kritisch.", tags:["Hydration","Kälte"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
-       protocol:{dauer:"Ganzjährig bei intensivem Betrieb", pause:"Keine", timing:"Alle 60–90 min auf der Piste", hinweis:"Im Winter trinken viele zu wenig — Durstgefühl ist gedämpft bei Kälte."}},
+      {id:"elek_ski", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Während Fahrtag", why:"Kältewetter täuscht über Flüssigkeitsverlust - Hydration trotzdem kritisch.", tags:["Hydration","Kälte"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
+       protocol:{dauer:"Ganzjährig bei intensivem Betrieb", pause:"Keine", timing:"Alle 60-90 min auf der Piste", hinweis:"Im Winter trinken viele zu wenig - Durstgefühl ist gedämpft bei Kälte."}},
     ],
     health:[
-      {id:"vd3_ski", name:"Vitamin D3 + K2", dose:"3000–4000 IE", when:"Morgens", why:"Knochen, Muskelkraft, Immunsystem — Ski-Saison = wenig direkte Sonne.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+      {id:"vd3_ski", name:"Vitamin D3 + K2", dose:"3000-4000 IE", when:"Morgens", why:"Knochen, Muskelkraft, Immunsystem - Ski-Saison = wenig direkte Sonne.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig, Winter: höhere Dosis", pause:"Keine", timing:"Morgens mit fetthaltiger Mahlzeit", hinweis:"Bluttest Oktober und März empfohlen."}},
     ],
   },
   // ─── SKI TOURING / SPLITBOARD ───────────────────────────────────────────────
   ski_touring:{
     performance:[
-      {id:"mau_gel_st", name:"Maurten Gel 100", dose:"1 Gel alle 45–60 min", when:"Aufstieg über 90 min", why:"Ausdauerleistung für lange Aufstiege — magenfreundlich auch bei Kälte.", tags:["Aufstieg","Carbs"], link:AFF.maurten("gel-100"), shop:"Maurten", priority:1,
-       protocol:{dauer:"Bei Touren, kein Zyklus", pause:"Keine", timing:"Ab 30 min, alle 45–60 min", hinweis:"Bei Kälte Gels nahe am Körper tragen — verhindert Eingefrieren."}},
+      {id:"mau_gel_st", name:"Maurten Gel 100", dose:"1 Gel alle 45-60 min", when:"Aufstieg über 90 min", why:"Ausdauerleistung für lange Aufstiege - magenfreundlich auch bei Kälte.", tags:["Aufstieg","Carbs"], link:AFF.maurten("gel-100"), shop:"Maurten", priority:1,
+       protocol:{dauer:"Bei Touren, kein Zyklus", pause:"Keine", timing:"Ab 30 min, alle 45-60 min", hinweis:"Bei Kälte Gels nahe am Körper tragen - verhindert Eingefrieren."}},
     ],
     recovery:[
-      {id:"koll_st", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Tour", why:"Knie und Hüfte unter langen Abstiegen besonders belastet.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
-       protocol:{dauer:"Ganzjährig bei intensivem Tourenfahren", pause:"Keine", timing:"30 min VOR der Tour", hinweis:"Abstiege belasten Gelenke stärker als Aufstiege — nicht vergessen."}},
-      {id:"whey_st", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Tour", why:"Lange Ausdauerbelastung mit Kraft-Komponente — Muskelreparatur wichtig.", tags:["Post-Tour","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
-       protocol:{dauer:"Nach jeder langen Tour", pause:"Keine", timing:"Innerhalb 30–45 min", hinweis:"Mit Kohlenhydraten kombinieren für maximale Recovery."}},
+      {id:"koll_st", name:"Kollagen + Vitamin C", dose:"10-15g", when:"30 min vor Tour", why:"Knie und Hüfte unter langen Abstiegen besonders belastet.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig bei intensivem Tourenfahren", pause:"Keine", timing:"30 min VOR der Tour", hinweis:"Abstiege belasten Gelenke stärker als Aufstiege - nicht vergessen."}},
+      {id:"whey_st", name:"Whey Protein Isolat", dose:"25-30g", when:"Nach Tour", why:"Lange Ausdauerbelastung mit Kraft-Komponente - Muskelreparatur wichtig.", tags:["Post-Tour","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Nach jeder langen Tour", pause:"Keine", timing:"Innerhalb 30-45 min", hinweis:"Mit Kohlenhydraten kombinieren für maximale Recovery."}},
     ],
     endurance:[
-      {id:"elek_st", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Langer Ausdaueroutput bei Kälte — Elektrolyte trotz gedämpftem Durstgefühl.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+      {id:"elek_st", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Langer Ausdaueroutput bei Kälte - Elektrolyte trotz gedämpftem Durstgefühl.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
        protocol:{dauer:"Bei Touren", pause:"Keine", timing:"Regelmässig alle 60 min", hinweis:"Thermosflaschen verwenden um Einfrieren zu vermeiden."}},
     ],
     health:[
@@ -445,94 +445,94 @@ const SPORT_SUPP = {
   // ─── LANGLAUF & BIATHLON ────────────────────────────────────────────────────
   langlauf:{
     performance:[
-      {id:"mau_gel_xl", name:"Maurten Gel 100 CAF 100", dose:"1 Gel alle 30–40 min", when:"Rennen & Intervalle", why:"Koffein + Carbs für maximale Ausdauerleistung — einer der höchsten VO2max-Sportarten.", tags:["Race-Day","Koffein"], link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", priority:1,
-       protocol:{dauer:"Wettkampftage", pause:"Nicht täglich", timing:"30–40 min vor Start oder während", hinweis:"Langlauf hat einen der höchsten Energieumsätze aller Sportarten — Kohlenhydrate kritisch."}},
-      {id:"rbeete_xl", name:"Rote Beete Nitrat", dose:"400–600mg Nitrat", when:"2–3h vor Training", why:"O2-Effizienz verbessern — bei Langläufern besonders relevant durch Altitude-Einsatz.", tags:["Pre-Training","Natürlich"], link:AFF.iherb("beet root nitrate"), shop:"iHerb", priority:2,
-       protocol:{dauer:"6–7 Tage laden, dann täglich", pause:"Keine", timing:"2–3h vor Start", hinweis:"Kein Mundwasser vor Training — hemmt Nitratumwandlung durch Mundbakterien."}},
+      {id:"mau_gel_xl", name:"Maurten Gel 100 CAF 100", dose:"1 Gel alle 30-40 min", when:"Rennen & Intervalle", why:"Koffein + Carbs für maximale Ausdauerleistung - einer der höchsten VO2max-Sportarten.", tags:["Race-Day","Koffein"], link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", priority:1,
+       protocol:{dauer:"Wettkampftage", pause:"Nicht täglich", timing:"30-40 min vor Start oder während", hinweis:"Langlauf hat einen der höchsten Energieumsätze aller Sportarten - Kohlenhydrate kritisch."}},
+      {id:"rbeete_xl", name:"Rote Beete Nitrat", dose:"400-600mg Nitrat", when:"2-3h vor Training", why:"O2-Effizienz verbessern - bei Langläufern besonders relevant durch Altitude-Einsatz.", tags:["Pre-Training","Natürlich"], link:AFF.iherb("beet root nitrate"), shop:"iHerb", priority:2,
+       protocol:{dauer:"6-7 Tage laden, dann täglich", pause:"Keine", timing:"2-3h vor Start", hinweis:"Kein Mundwasser vor Training - hemmt Nitratumwandlung durch Mundbakterien."}},
     ],
     endurance:[
-      {id:"mau_320_xl", name:"Maurten Drink Mix 320", dose:"80g / 500ml", when:"Einheiten über 90 min", why:"Höchste Kohlenhydratdichte für Langlauf-typische 2–4h Ausdauereinheiten.", tags:["Training","Carbs"], link:AFF.maurten("drink-mix-320"), shop:"Maurten", priority:1,
+      {id:"mau_320_xl", name:"Maurten Drink Mix 320", dose:"80g / 500ml", when:"Einheiten über 90 min", why:"Höchste Kohlenhydratdichte für Langlauf-typische 2-4h Ausdauereinheiten.", tags:["Training","Carbs"], link:AFF.maurten("drink-mix-320"), shop:"Maurten", priority:1,
        protocol:{dauer:"Bei langen Einheiten", pause:"Keine", timing:"Ab 30 min, 1 Flasche pro Stunde", hinweis:"Bei Kälte: Thermosflasche, GI-Training im Sommer."}},
-      {id:"elek_xl", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Hoher Natriumverlust auch bei Kälte — Krampfprävention essentiell.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+      {id:"elek_xl", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Alle 60 min", why:"Hoher Natriumverlust auch bei Kälte - Krampfprävention essentiell.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Regelmässig alle 60 min", hinweis:"Langlauf hat hohe Schweissraten trotz Kälteempfinden."}},
     ],
     recovery:[
-      {id:"whey_xl", name:"Whey Protein Isolat", dose:"25–30g", when:"Direkt nach Einheit", why:"Ganzkörper-Ausdauerbelastung mit hohem Muskelabbau — schnelle Reparatur.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
-       protocol:{dauer:"Ganzjährig nach Einheiten", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 60–80g Kohlenhydraten kombinieren."}},
+      {id:"whey_xl", name:"Whey Protein Isolat", dose:"25-30g", when:"Direkt nach Einheit", why:"Ganzkörper-Ausdauerbelastung mit hohem Muskelabbau - schnelle Reparatur.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Ganzjährig nach Einheiten", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 60-80g Kohlenhydraten kombinieren."}},
     ],
     health:[
-      {id:"eisen_xl", name:"Eisen (Ferrochel)", dose:"25–50mg nach Bluttest", when:"Morgens nüchtern", why:"Langlauf = einer der höchsten Eisenbedarfe aller Sportarten durch hohes Volumen.", tags:["Bluttest","Basis"], link:AFF.iherb("iron ferrochel"), shop:"iHerb", priority:1,
-       protocol:{dauer:"3–6 Monate", pause:"Nur bei nachgewiesenem Mangel", timing:"Morgens nüchtern + Vit C", hinweis:"Bluttest zwingend: Ferritin-Zielwert Sportler >50 ng/ml."}},
-      {id:"vd3_xl", name:"Vitamin D3 + K2", dose:"3000 IE", when:"Morgens", why:"Knochen und Immunsystem für Wintersport — Mangel im Winter häufig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+      {id:"eisen_xl", name:"Eisen (Ferrochel)", dose:"25-50mg nach Bluttest", when:"Morgens nüchtern", why:"Langlauf = einer der höchsten Eisenbedarfe aller Sportarten durch hohes Volumen.", tags:["Bluttest","Basis"], link:AFF.iherb("iron ferrochel"), shop:"iHerb", priority:1,
+       protocol:{dauer:"3-6 Monate", pause:"Nur bei nachgewiesenem Mangel", timing:"Morgens nüchtern + Vit C", hinweis:"Bluttest zwingend: Ferritin-Zielwert Sportler >50 ng/ml."}},
+      {id:"vd3_xl", name:"Vitamin D3 + K2", dose:"3000 IE", when:"Morgens", why:"Knochen und Immunsystem für Wintersport - Mangel im Winter häufig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest Oktober und März."}},
     ],
   },
   // ─── TENNIS & PADEL ─────────────────────────────────────────────────────────
   tennis:{
     performance:[
-      {id:"krea_ten", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Schläge und Sprints — Kreatin verbessert Wiederholbarkeit.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+      {id:"krea_ten", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Schläge und Sprints - Kreatin verbessert Wiederholbarkeit.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
        protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Training", hinweis:"Besonders wertvoll bei Turnierblöcken mit mehreren Spielen täglich."}},
-      {id:"koff_ten", name:"Koffein 100–200mg", dose:"100–150mg", when:"45 min vor Spiel", why:"Reaktionszeit und Konzentration für lange Matches.", tags:["Pre-Match","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+      {id:"koff_ten", name:"Koffein 100-200mg", dose:"100-150mg", when:"45 min vor Spiel", why:"Reaktionszeit und Konzentration für lange Matches.", tags:["Pre-Match","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
        protocol:{dauer:"Spiel- und Intensivtage", pause:"Koffein-Pause an Ruhetagen", timing:"45 min vor Match", hinweis:"Kein Koffein nach 16 Uhr."}},
     ],
     endurance:[
-      {id:"elek_ten", name:"Elektrolyt-Tabs", dose:"1–2 Tabs / 0.5L", when:"Während langem Match", why:"Tennis-Matches können 3–5h dauern — Natrium- und Kaliumverlust erheblich.", tags:["Hydration","Match"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+      {id:"elek_ten", name:"Elektrolyt-Tabs", dose:"1-2 Tabs / 0.5L", when:"Während langem Match", why:"Tennis-Matches können 3-5h dauern - Natrium- und Kaliumverlust erheblich.", tags:["Hydration","Match"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
        protocol:{dauer:"Bei Matches über 90 min", pause:"Keine", timing:"Alle 60 min trinken", hinweis:"Seitenwechsel nutzen für Hydration."}},
     ],
     recovery:[
-      {id:"koll_ten", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Training", why:"Ellbogen, Schulter und Handgelenk unter chronischem Stress — Prävention.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+      {id:"koll_ten", name:"Kollagen + Vitamin C", dose:"10-15g", when:"30 min vor Training", why:"Ellbogen, Schulter und Handgelenk unter chronischem Stress - Prävention.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR Training", hinweis:"Tennisellbogen-Prävention: Kollagen + Exzentrische Übungen."}},
       {id:"whey_ten", name:"Whey Protein Isolat", dose:"25g", when:"Nach Training / Match", why:"Muskelreparatur nach schlagintensivem Training.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:2,
        protocol:{dauer:"Nach Trainings und Matches", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit Kohlenhydraten kombinieren."}},
     ],
     health:[
-      {id:"vd3_ten", name:"Vitamin D3 + K2", dose:"2000 IE", when:"Morgens", why:"Knochen, Muskulatur und Immunsystem — Basis für alle Sportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+      {id:"vd3_ten", name:"Vitamin D3 + K2", dose:"2000 IE", when:"Morgens", why:"Knochen, Muskulatur und Immunsystem - Basis für alle Sportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
     ],
   },
   // ─── KAMPFSPORT ─────────────────────────────────────────────────────────────
   kampfsport:{
     performance:[
-      {id:"krea_ks", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Kraft und Kraft-Wiederholbarkeit — essentiell im Kampfsport.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
-       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Nach Training", hinweis:"Bei Gewichtsklassen: Kreatin kann 0.5–1kg Wassereinlagerung verursachen."}},
-      {id:"beta_ks", name:"Beta-Alanin", dose:"3.2–4.8g täglich", when:"Aufgeteilt auf 2–3 Dosen", why:"Puffert Laktat bei intensiven Sparring- und Konditionseinheiten.", tags:["Ausdauer","Puffer"], link:AFF.iherb("beta alanine"), shop:"iHerb", priority:1,
-       protocol:{dauer:"8–12 Wochen (Kur)", pause:"9 Wochen Pause", timing:"Täglich aufgeteilt", hinweis:"Kribbeln harmlos. Wirkt v.a. bei 1–4 min Belastungen."}},
+      {id:"krea_ks", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training", why:"Explosive Kraft und Kraft-Wiederholbarkeit - essentiell im Kampfsport.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+       protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Nach Training", hinweis:"Bei Gewichtsklassen: Kreatin kann 0.5-1kg Wassereinlagerung verursachen."}},
+      {id:"beta_ks", name:"Beta-Alanin", dose:"3.2-4.8g täglich", when:"Aufgeteilt auf 2-3 Dosen", why:"Puffert Laktat bei intensiven Sparring- und Konditionseinheiten.", tags:["Ausdauer","Puffer"], link:AFF.iherb("beta alanine"), shop:"iHerb", priority:1,
+       protocol:{dauer:"8-12 Wochen (Kur)", pause:"9 Wochen Pause", timing:"Täglich aufgeteilt", hinweis:"Kribbeln harmlos. Wirkt v.a. bei 1-4 min Belastungen."}},
     ],
     recovery:[
-      {id:"whey_ks", name:"Whey Protein Isolat", dose:"30–35g", when:"Direkt post-Training", why:"Hoher Muskelabbau durch Kontaktsport — Reparatur und Aufbau priorisieren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+      {id:"whey_ks", name:"Whey Protein Isolat", dose:"30-35g", when:"Direkt post-Training", why:"Hoher Muskelabbau durch Kontaktsport - Reparatur und Aufbau priorisieren.", tags:["Post-Training","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Bei 2× täglich Training: nach jeder Einheit Protein."}},
-      {id:"koll_ks", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Training", why:"Gelenke, Sehnen und Bänder unter extremer Belastung bei Würfen und Schlägen.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+      {id:"koll_ks", name:"Kollagen + Vitamin C", dose:"10-15g", when:"30 min vor Training", why:"Gelenke, Sehnen und Bänder unter extremer Belastung bei Würfen und Schlägen.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR Training", hinweis:"Typ I/II Kollagen für Bänder und Sehnen."}},
     ],
     endurance:[
-      {id:"elek_ks", name:"Elektrolyt-Tabs", dose:"1–2 Tabs / 0.5L", when:"Sparring und lange Einheiten", why:"Hohes Schweissvolumen bei Kampfsport-Training — Krämpfe vermeiden.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
+      {id:"elek_ks", name:"Elektrolyt-Tabs", dose:"1-2 Tabs / 0.5L", when:"Sparring und lange Einheiten", why:"Hohes Schweissvolumen bei Kampfsport-Training - Krämpfe vermeiden.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:1,
        protocol:{dauer:"Bei Trainingstagen", pause:"Keine", timing:"Während Training", hinweis:"Besonders bei Sauna-Sessions zur Gewichtsreduktion: Elektrolyte danach."}},
     ],
     health:[
-      {id:"vd3_ks", name:"Vitamin D3 + K2", dose:"2000–3000 IE", when:"Morgens", why:"Knochen, Immunsystem, Hormonprofil — Basis für Kampfsportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+      {id:"vd3_ks", name:"Vitamin D3 + K2", dose:"2000-3000 IE", when:"Morgens", why:"Knochen, Immunsystem, Hormonprofil - Basis für Kampfsportler.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
     ],
   },
   // ─── MTB ENDURO / DOWNHILL ──────────────────────────────────────────────────
   cycling_mtb:{
     performance:[
-      {id:"krea_mtb", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"DH und Enduro: explosive Kraft, Bremsmanöver, Jumps — Kreatin direkt relevant.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
+      {id:"krea_mtb", name:"Kreatin Monohydrat", dose:"5g täglich", when:"Nach Training / Fahrtag", why:"DH und Enduro: explosive Kraft, Bremsmanöver, Jumps - Kreatin direkt relevant.", tags:["Täglich","Kraft"], link:AFF.iherb("creatine monohydrate"), shop:"iHerb", priority:1,
        protocol:{dauer:"Saisonbegleitend", pause:"Keine", timing:"Nach Fahrtag", hinweis:"Besonders für DH: kurze explosive Läufe profitieren maximal von Kreatin."}},
-      {id:"koff_mtb", name:"Koffein 100–200mg", dose:"100–200mg", when:"45 min vor Fahrtag", why:"Fokus, Reaktionszeit und Risikoabschätzung auf technischem Terrain.", tags:["Pre-Ride","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
+      {id:"koff_mtb", name:"Koffein 100-200mg", dose:"100-200mg", when:"45 min vor Fahrtag", why:"Fokus, Reaktionszeit und Risikoabschätzung auf technischem Terrain.", tags:["Pre-Ride","Koffein"], link:AFF.iherb("caffeine"), shop:"iHerb", priority:1,
        protocol:{dauer:"Fahrtage", pause:"Ruhetage koffeinfrei", timing:"45 min vor erstem Run", hinweis:"Kein Koffein nach 16 Uhr."}},
     ],
     recovery:[
-      {id:"whey_mtb", name:"Whey Protein Isolat", dose:"25–30g", when:"Nach Fahrtag", why:"Explosiver Muskeleinsatz und Sturzrisiko — Reparatur und Aufbau priorisieren.", tags:["Post-Ride","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
-       protocol:{dauer:"Nach Fahrtagen", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 40–60g Kohlenhydraten kombinieren."}},
-      {id:"koll_mtb", name:"Kollagen + Vitamin C", dose:"10–15g", when:"30 min vor Fahrtag", why:"Gelenke, Handgelenke und Schultern unter extremer technischer Belastung.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
+      {id:"whey_mtb", name:"Whey Protein Isolat", dose:"25-30g", when:"Nach Fahrtag", why:"Explosiver Muskeleinsatz und Sturzrisiko - Reparatur und Aufbau priorisieren.", tags:["Post-Ride","Protein"], link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", priority:1,
+       protocol:{dauer:"Nach Fahrtagen", pause:"Keine", timing:"Innerhalb 30 min", hinweis:"Mit 40-60g Kohlenhydraten kombinieren."}},
+      {id:"koll_mtb", name:"Kollagen + Vitamin C", dose:"10-15g", when:"30 min vor Fahrtag", why:"Gelenke, Handgelenke und Schultern unter extremer technischer Belastung.", tags:["Gelenke","Prävention"], link:AFF.iherb("collagen vitamin c"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"30 min VOR dem Fahren", hinweis:"Bei Stürzen: Kollagendosis temporär auf 20g erhöhen."}},
     ],
     endurance:[
-      {id:"elek_mtb", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Lange Enduro-Tage", why:"Enduro: Uphills und Stages können 4–6h dauern — Hydration unterschätzt.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
-       protocol:{dauer:"Bei Enduro-Events", pause:"Keine", timing:"Alle 60–90 min", hinweis:"DH: kürzere Sessions, weniger Hydrationsbedarf als Enduro."}},
+      {id:"elek_mtb", name:"Elektrolyt-Tabs", dose:"1 Tab / 0.5L", when:"Lange Enduro-Tage", why:"Enduro: Uphills und Stages können 4-6h dauern - Hydration unterschätzt.", tags:["Hydration"], link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", priority:2,
+       protocol:{dauer:"Bei Enduro-Events", pause:"Keine", timing:"Alle 60-90 min", hinweis:"DH: kürzere Sessions, weniger Hydrationsbedarf als Enduro."}},
     ],
     health:[
-      {id:"vd3_mtb", name:"Vitamin D3 + K2", dose:"2000–3000 IE", when:"Morgens", why:"Knochen und Immunsystem — nach Stürzen und für Knochenstruktur wichtig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
+      {id:"vd3_mtb", name:"Vitamin D3 + K2", dose:"2000-3000 IE", when:"Morgens", why:"Knochen und Immunsystem - nach Stürzen und für Knochenstruktur wichtig.", tags:["Basis","Täglich"], link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", priority:1,
        protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit", hinweis:"Bluttest nach 3 Monaten."}},
     ],
   },
@@ -541,29 +541,29 @@ const SPORT_SUPP = {
 
 const GENERIC_SUPP = {
   performance:[
-    {id:"krea_g",name:"Kreatin Monohydrat",dose:"5g täglich",        when:"Nach Training",       why:"Kraft, Explosivität, Regeneration — am besten erforschtes Supplement",tags:["Täglich","Kraft"],   link:AFF.iherb("creatine monohydrate"),   shop:"iHerb",    priority:1,
-     protocol:{dauer:"Ganzjährig möglich", pause:"Keine wissenschaftlich notwendig", timing:"Nach Training mit Kohlenhydraten", hinweis:"5g täglich ohne Ladephase. 3–4 Wochen bis Volle Wirkung."}},
-    {id:"koff_g",name:"Koffein 100–200mg", dose:"100–200mg",         when:"45 min vor Training", why:"Ausdauer, Kraft, Reaktionszeit, Fettverbrennung",                    tags:["Pre-Training"],      link:AFF.iherb("caffeine"),               shop:"iHerb",    priority:1,
+    {id:"krea_g",name:"Kreatin Monohydrat",dose:"5g täglich",        when:"Nach Training",       why:"Kraft, Explosivität, Regeneration - am besten erforschtes Supplement",tags:["Täglich","Kraft"],   link:AFF.iherb("creatine monohydrate"),   shop:"iHerb",    priority:1,
+     protocol:{dauer:"Ganzjährig möglich", pause:"Keine wissenschaftlich notwendig", timing:"Nach Training mit Kohlenhydraten", hinweis:"5g täglich ohne Ladephase. 3-4 Wochen bis Volle Wirkung."}},
+    {id:"koff_g",name:"Koffein 100-200mg", dose:"100-200mg",         when:"45 min vor Training", why:"Ausdauer, Kraft, Reaktionszeit, Fettverbrennung",                    tags:["Pre-Training"],      link:AFF.iherb("caffeine"),               shop:"iHerb",    priority:1,
      protocol:{dauer:"Trainingstage, nicht täglich", pause:"Regelmässige koffeinfreie Tage für Toleranzreduktion", timing:"45 min vor Training, kein Koffein nach 14 Uhr", hinweis:"Koffein 6h vor Schlaf stoppen."}},
   ],
   endurance:[
-    {id:"beta_g",name:"Beta-Alanin",       dose:"3.2–4.8g täglich",  when:"Aufgeteilt auf Tages-Dosen",why:"Puffert Laktat, verzögert Ermüdung bei hochintensiven Einheiten",   tags:["Täglich","Ausdauer"],link:AFF.iherb("beta alanine"),           shop:"iHerb",    priority:1,
-     protocol:{dauer:"8–12 Wochen (Kur)", pause:"9 Wochen Pause nach 12 Wochen Einnahme", timing:"Dosis auf 2–3 Einnahmen aufteilen für weniger Kribbeln", hinweis:"Kribbeln (Parästhesie) harmlos. Nicht mit Herzmedikamenten kombinieren."}},
+    {id:"beta_g",name:"Beta-Alanin",       dose:"3.2-4.8g täglich",  when:"Aufgeteilt auf Tages-Dosen",why:"Puffert Laktat, verzögert Ermüdung bei hochintensiven Einheiten",   tags:["Täglich","Ausdauer"],link:AFF.iherb("beta alanine"),           shop:"iHerb",    priority:1,
+     protocol:{dauer:"8-12 Wochen (Kur)", pause:"9 Wochen Pause nach 12 Wochen Einnahme", timing:"Dosis auf 2-3 Einnahmen aufteilen für weniger Kribbeln", hinweis:"Kribbeln (Parästhesie) harmlos. Nicht mit Herzmedikamenten kombinieren."}},
   ],
   recovery:[
-    {id:"whey_g",name:"Whey Protein Isolat",dose:"25–30g",           when:"Innerhalb 30 min post-Training",why:"Muskelreparatur und -aufbau",                                   tags:["Post-Training"],     link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
+    {id:"whey_g",name:"Whey Protein Isolat",dose:"25-30g",           when:"Innerhalb 30 min post-Training",why:"Muskelreparatur und -aufbau",                                   tags:["Post-Training"],     link:AFF.myprotein("whey protein isolate"),shop:"Myprotein",priority:1,
      protocol:{dauer:"Ganzjährig nach Trainingseinheiten", pause:"Keine", timing:"Innerhalb 30 min nach Training, mit Kohlenhydraten", hinweis:"Mit Wasser oder Milch mischen. Isolat bei Laktoseintoleranz."}},
     {id:"ash_g", name:"Ashwagandha KSM-66",dose:"600mg",             when:"Abends",              why:"Cortisol senken, Schlaf und Recovery verbessern",                    tags:["Abends"],            link:AFF.iherb("ashwagandha"),            shop:"iHerb",    priority:2,
-     protocol:{dauer:"8–12 Wochen (Kur)", pause:"2–4 Wochen Pause nach 12 Wochen", timing:"Abends 1–2h vor Schlaf", hinweis:"Nur KSM-66 oder Sensoril-Extrakt. Nicht bei Schilddrüsenerkrankungen ohne Arztabsprache."}},
+     protocol:{dauer:"8-12 Wochen (Kur)", pause:"2-4 Wochen Pause nach 12 Wochen", timing:"Abends 1-2h vor Schlaf", hinweis:"Nur KSM-66 oder Sensoril-Extrakt. Nicht bei Schilddrüsenerkrankungen ohne Arztabsprache."}},
   ],
   health:[
-    {id:"vd3_g", name:"Vitamin D3 + K2",   dose:"2000–4000 IE",      when:"Morgens",             why:"Immunsystem, Knochen, Hormonstatus — Basis für alle Sportler",       tags:["Basis","Täglich"],   link:AFF.iherb("vitamin d3 k2"),          shop:"iHerb",    priority:1,
-     protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit (fettlöslich)", hinweis:"Bluttest nach 3 Monaten empfohlen. Zielwert: 40–60 ng/ml."}},
+    {id:"vd3_g", name:"Vitamin D3 + K2",   dose:"2000-4000 IE",      when:"Morgens",             why:"Immunsystem, Knochen, Hormonstatus - Basis für alle Sportler",       tags:["Basis","Täglich"],   link:AFF.iherb("vitamin d3 k2"),          shop:"iHerb",    priority:1,
+     protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Mahlzeit (fettlöslich)", hinweis:"Bluttest nach 3 Monaten empfohlen. Zielwert: 40-60 ng/ml."}},
   ],
 };
 
 const HEALTH_ONLY_SUPP = [
-  {id:"vd3_h",  name:"Vitamin D3 + K2",      dose:"2000 IE täglich",       when:"Morgens",           why:"Immunsystem, Knochen, Hormonstatus — 70% der CH-Bevölkerung mangelhaft",    tags:["Täglich","Basis"],        link:AFF.iherb("vitamin d3 k2"),          shop:"iHerb",    priority:1,
+  {id:"vd3_h",  name:"Vitamin D3 + K2",      dose:"2000 IE täglich",       when:"Morgens",           why:"Immunsystem, Knochen, Hormonstatus - 70% der CH-Bevölkerung mangelhaft",    tags:["Täglich","Basis"],        link:AFF.iherb("vitamin d3 k2"),          shop:"iHerb",    priority:1,
    protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Morgens mit Fett", hinweis:"Im Sommer Dosis auf 1000 IE senken. Bluttest alle 6 Monate."}},
   {id:"omega_h",name:"Omega-3 (EPA/DHA)",     dose:"2g täglich",            when:"Zu einer Mahlzeit", why:"Herzgesundheit, Entzündungshemmend, kognitive Funktion",                   tags:["Täglich","Herz"],         link:AFF.iherb("omega 3 epa dha"),        shop:"iHerb",    priority:1,
    protocol:{dauer:"Ganzjährig", pause:"Keine", timing:"Mit Hauptmahlzeit", hinweis:"Bei Blutverdünnern Arzt konsultieren. 4 Wochen bis Wirkung."}},
@@ -572,7 +572,7 @@ const HEALTH_ONLY_SUPP = [
   {id:"zink_h", name:"Zink 15mg",             dose:"15mg täglich",          when:"Abends",            why:"Immunabwehr, Hautgesundheit, Hormonstatus",                                tags:["Täglich","Immunsystem"],  link:AFF.iherb("zinc 15mg"),              shop:"iHerb",    priority:2,
    protocol:{dauer:"3 Monate", pause:"4 Wochen Pause nach 3 Monaten", timing:"Abends, 2h Abstand zu Eisen/Calcium", hinweis:"Langzeit >40mg/Tag senkt Kupferspiegel."}},
   {id:"vitb_h", name:"Vitamin B-Komplex",     dose:"1 Kapsel täglich",      when:"Morgens",           why:"Energie, Nervensystem, Blutbildung",                                       tags:["Morgens","Energie"],      link:AFF.iherb("vitamin b complex"),      shop:"iHerb",    priority:2,
-   protocol:{dauer:"3–6 Monate, dann neu evaluieren", pause:"1–2 Wochen Pause alle 3 Monate", timing:"Morgens mit Frühstück (färbt Urin gelb — normal)", hinweis:"Bei pflanzlicher Ernährung: besonders B12 einzeln prüfen. B12 Bluttest nach 3 Monaten."}},
+   protocol:{dauer:"3-6 Monate, dann neu evaluieren", pause:"1-2 Wochen Pause alle 3 Monate", timing:"Morgens mit Frühstück (färbt Urin gelb - normal)", hinweis:"Bei pflanzlicher Ernährung: besonders B12 einzeln prüfen. B12 Bluttest nach 3 Monaten."}},
 ];
 
 function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
@@ -610,6 +610,9 @@ function getSupplements(sportId, intensity, healthOnly, subSel, childSel={}) {
 }
 
 // ─── LOGO ─────────────────────────────────────────────────────────────────────
+
+// Schreibweise: keine Gedankenstriche, nur Bindestriche (auch in KI-Antworten)
+const noDash=t=>typeof t==="string"?t.replace(/[ \u00a0][\u2014\u2013][ \u00a0]/g," - ").replace(/[\u2014\u2013]/g,"-"):t;
 
 function Logo({size="md"}) {
   // Wortmarke TREYN + Acid-Feld mit schwarzem Plus (kein schwarzes Icon mehr)
@@ -683,33 +686,33 @@ function WhyTREYN({onNext}) {
 
         {/* Title */}
         <h1 style={{fontSize:isMobile?22:28,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>
-          Was, Wie und Wann — kein Raten.<br/>Volles Verständnis über dein Training.
+          Was, Wie und Wann - kein Raten.<br/>Volles Verständnis über dein Training.
         </h1>
         <p style={{fontSize:14,color:C.g600,lineHeight:1.7,marginBottom:32}}>
-          Die präziseste Analyse auf dem Markt — massgeschneidert auf dich.
+          Die präziseste Analyse auf dem Markt - massgeschneidert auf dich.
         </p>
 
-        {/* Key Point 1 — Acid */}
+        {/* Key Point 1 - Acid */}
         <div style={{background:C.neon,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:10}}>
           <div style={{fontSize:11,fontWeight:700,color:C.black,letterSpacing:"-.01em",marginBottom:4}}>
-            Das richtige Gel, Protein oder Magnesium — zur richtigen Zeit.
+            Das richtige Gel, Protein oder Magnesium - zur richtigen Zeit.
           </div>
           <div style={{fontSize:12,color:"rgba(0,0,0,.65)",lineHeight:1.65}}>
-            TREYN+ berechnet alles exakt — Sport, Intensität, Gewicht, Schlaf, Job, Körperzusammensetzung. Kein anderes Tool macht das.
+            TREYN+ berechnet alles exakt - Sport, Intensität, Gewicht, Schlaf, Job, Körperzusammensetzung. Kein anderes Tool macht das.
           </div>
         </div>
 
-        {/* Key Point 2 — Acid */}
+        {/* Key Point 2 - Acid */}
         <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:10}}>
           <div style={{fontSize:11,fontWeight:700,color:"#3A6000",letterSpacing:"-.01em",marginBottom:4}}>
             Aus 22 Datenpunkten. 50+ Sportdisziplinen. 16 Berechnungsmodelle. MET-2024 Standard.
           </div>
           <div style={{fontSize:12,color:C.g700,lineHeight:1.65}}>
-            Erfahre alles über deinen Körper, deine Leistung und optimale Verbrauchswerte. Job-Aktivität, Sonnenlicht, Koffein-Toleranz, Zyklusphase, Schlafqualität — alles einberechnet. Präziser als jede andere Plattform.
+            Erfahre alles über deinen Körper, deine Leistung und optimale Verbrauchswerte. Job-Aktivität, Sonnenlicht, Koffein-Toleranz, Zyklusphase, Schlafqualität - alles einberechnet. Präziser als jede andere Plattform.
           </div>
         </div>
 
-        {/* Key Point 3 — Plan */}
+        {/* Key Point 3 - Plan */}
         <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:28}}>
           <div style={{fontSize:isMobile?10:11,fontWeight:700,color:C.black,marginBottom:10,letterSpacing:"-.01em"}}>Du erhältst einen vollständigen, übersichtlichen Plan.</div>
           <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:10}}>
@@ -729,7 +732,7 @@ function WhyTREYN({onNext}) {
             ))}
           </div>
           <div style={{fontSize:10,color:C.g400,borderTop:`1px solid ${C.g200}`,paddingTop:8}}>
-            100% auf dich — kein generischer Plan, keine Schätzung.
+            100% auf dich - kein generischer Plan, keine Schätzung.
           </div>
         </div>
 
@@ -769,13 +772,13 @@ function Intro({onNext, onDemo}) {
   ];
 
   const DE_LINES=[
-    {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung — berechnet aus deinen Daten.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Die meisten Sportler raten. TREYN+ berechnet — und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung - berechnet aus deinen Daten.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Die meisten Sportler raten. TREYN+ berechnet - und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
-    {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel — obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
+    {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel - obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
-    {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht — besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
-    {text:"Anhand deiner Daten berechnet TREYN+ deine Bedarfswerte, Supplemente & Sportnahrung — präziser als jede andere Plattform. Verfügbar in der Schweiz, Deutschland und Österreich.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht - besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
+    {text:"Anhand deiner Daten berechnet TREYN+ deine Bedarfswerte, Supplemente & Sportnahrung - präziser als jede andere Plattform. Verfügbar in der Schweiz, Deutschland und Österreich.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
   const lines=DE_LINES;
 
@@ -855,7 +858,7 @@ function Demo({onNext, onDemo, lang="de"}) {
         <div className="fu" style={{marginBottom:40}}><Logo size="lg"/></div>
         <div className="fu2"><span className="mono">So funktioniert es</span></div>
         <h2 className="fu2" style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2,color:C.black}}>Deine Analyse in 5 Schritten.</h2>
-        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>5 Minuten Eingabe. Lebenslanges Profil — automatisch aktualisiert. Aus einer riesigen Datenbank & Shops empfehlen wir die für dich besten Produkte.</p>
+        <p className="fu3" style={{fontSize:14,color:C.g600,marginBottom:28,lineHeight:1.65}}>5 Minuten Eingabe. Lebenslanges Profil - automatisch aktualisiert. Aus einer riesigen Datenbank & Shops empfehlen wir die für dich besten Produkte.</p>
         <div className="fu3" style={{display:"grid",gridTemplateColumns:isMobile?"repeat(5,minmax(64px,1fr))":"repeat(5,1fr)",gap:6,marginBottom:20,overflowX:isMobile?"auto":"visible",paddingBottom:isMobile?6:0}}>
           {/* Step 1 */}
           <div style={{background:C.white,borderRadius:12,border:`0.5px solid ${C.g200}`,padding:"12px 10px"}}>
@@ -937,7 +940,7 @@ function Demo({onNext, onDemo, lang="de"}) {
           <button onClick={onDemo} style={{width:"100%",padding:"12px",borderRadius:12,border:`1px solid ${C.g200}`,background:"#F8F8F8",color:"#666",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
             Demo-Plattform ausprobieren →
           </button>
-          <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort — Login per E-Mail-Link</div>
+          <div style={{textAlign:"center",marginTop:8,fontSize:11,color:C.g400}}>Kein Passwort - Login per E-Mail-Link</div>
         </div>
       </div>
     </div>
@@ -959,9 +962,9 @@ function useWindowWidth() {
 // ─── REVIEWS ──────────────────────────────────────────────────────────────────
 
 const REVIEWS=[
-  {name:"Marco R.",sport:"Rennrad · Ironman",stars:5,text:"Endlich eine Plattform die mir wirklich sagt was ich brauche. Keine generischen Empfehlungen — alles auf mein Gewicht und Training gerechnet. Das Supplement-Timing hat meine Recovery komplett verändert.",date:"März 2025"},
-  {name:"Sarah M.",sport:"Marathon · Trail",stars:5,text:"Ich hab 3 Jahre lang Supplements nach Gefühl genommen. Nach TREYN+ weiss ich: ich hatte die Hälfte des Eisens was ich brauchte. Erster Test danach — PR beim Zürich Marathon.",date:"April 2025"},
-  {name:"Lukas B.",sport:"Hyrox · CrossFit",stars:5,text:"Die Carb-Berechnung für Wettkampftage ist gold. Ich dachte ich esse genug — war aber 600 kcal zu wenig an jedem Trainingstag. Massiver Unterschied seither.",date:"Februar 2025"},
+  {name:"Marco R.",sport:"Rennrad · Ironman",stars:5,text:"Endlich eine Plattform die mir wirklich sagt was ich brauche. Keine generischen Empfehlungen - alles auf mein Gewicht und Training gerechnet. Das Supplement-Timing hat meine Recovery komplett verändert.",date:"März 2025"},
+  {name:"Sarah M.",sport:"Marathon · Trail",stars:5,text:"Ich hab 3 Jahre lang Supplements nach Gefühl genommen. Nach TREYN+ weiss ich: ich hatte die Hälfte des Eisens was ich brauchte. Erster Test danach - PR beim Zürich Marathon.",date:"April 2025"},
+  {name:"Lukas B.",sport:"Hyrox · CrossFit",stars:5,text:"Die Carb-Berechnung für Wettkampftage ist gold. Ich dachte ich esse genug - war aber 600 kcal zu wenig an jedem Trainingstag. Massiver Unterschied seither.",date:"Februar 2025"},
 ];
 
 function ReviewStars({n=5,size=12}){
@@ -983,7 +986,7 @@ function ReviewsCompact(){
   return (
     <div style={{display:"flex",alignItems:"flex-start",gap:8,padding:"10px 0",borderTop:`0.5px solid ${C.g100}`}}>
       <ReviewStars n={5} size={10}/>
-      <div style={{fontSize:11,color:C.g400,lineHeight:1.5,fontStyle:"italic"}}>"{r.text.slice(0,80)}…" — {r.name}</div>
+      <div style={{fontSize:11,color:C.g400,lineHeight:1.5,fontStyle:"italic"}}>"{r.text.slice(0,80)}…" - {r.name}</div>
     </div>
   );
 }
@@ -1008,17 +1011,17 @@ const TRANSLATIONS={
 
     // DEMO
     demo_title:"So funktioniert TREYN+",
-    demo_basic_title:"Basicdaten — sofort sichtbar",
-    demo_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten/Jahr — sofort sichtbar. Keine Kreditkarte.",
-    demo_pro_title:"PRO — alles freigeschaltet",
-    demo_pro_desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
+    demo_basic_title:"Basicdaten - sofort sichtbar",
+    demo_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten/Jahr - sofort sichtbar. Keine Kreditkarte.",
+    demo_pro_title:"PRO - alles freigeschaltet",
+    demo_pro_desc:"Alle Daten, alle Empfehlungen - inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan. Jederzeit aktivierbar.",
     demo_cta:"Kostenlose Analyse entdecken →",
 
     // ONBOARDING STEPS
     step_weiter:"Weiter →",
     step_zurueck:"← Zurück",
     step_sport_title:"Welche Sportarten betreibst du?",
-    step_sport_sub:"Mehrfachauswahl möglich — wähle alle aktiven Sportarten.",
+    step_sport_sub:"Mehrfachauswahl möglich - wähle alle aktiven Sportarten.",
     step_training_title:"Wie trainierst du?",
     step_profil_title:"Dein Profil",
     step_lebensstil_title:"Lebensstil & Kontext",
@@ -1041,7 +1044,7 @@ const TRANSLATIONS={
     // SUMMARY
     summary_progress_label:"DEINE ANALYSE · BASIC",
     summary_progress_pct:"30% sichtbar",
-    summary_locked:"Vollständige Analyse — gesperrt",
+    summary_locked:"Vollständige Analyse - gesperrt",
     summary_upgrade_title:"Alles was du brauchst. Einmalig. Für 6 Monate.",
     summary_upgrade_price:"CHF 12.90",
     summary_upgrade_period:"/ 6 Monate · CHF 2.15/Mt.",
@@ -1115,13 +1118,13 @@ const TRANSLATIONS={
 
     // WETTKAMPF
     wettkampf_title:"Wettkampf",
-    wettkampf_sub:"Race-Day Strategie — personalisiert auf dein Profil.",
+    wettkampf_sub:"Race-Day Strategie - personalisiert auf dein Profil.",
     wettkampf_no_comp:"Kein Wettkampf aktiviert",
     wettkampf_no_comp_desc:"Aktiviere 'Wettkämpfe' in deinen Trainingsangaben.",
 
     // EINKAUF
     einkauf_title:"Einkauf",
-    einkauf_sub:"Dein Warenkorb und Bluttest — alles an einem Ort.",
+    einkauf_sub:"Dein Warenkorb und Bluttest - alles an einem Ort.",
     einkauf_bluttest:"Bluttest",
     einkauf_bluttest_sub:"Echte Laborwerte direkt in deine Berechnungen.",
 
@@ -1149,7 +1152,7 @@ const TRANSLATIONS={
     summary_rest_day:"Ruhetag",
     summary_training_day:"Trainingstag",
     summary_unlocked:"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?",
-    summary_unlock_desc:"8 weitere Werte, 198 Supplement-Optionen, Tagesplan, Race-Day Strategie — vollständig berechnet auf deinen Körper, dein Training und deinen Lifestyle.",
+    summary_unlock_desc:"8 weitere Werte, 198 Supplement-Optionen, Tagesplan, Race-Day Strategie - vollständig berechnet auf deinen Körper, dein Training und deinen Lifestyle.",
     summary_one_time:"Einmalig · Jederzeit erneuerbar",
     summary_no_cc:"Kein Passwort · Kein Abo · Jederzeit erneuerbar",
     intensity_low:"Leicht",
@@ -1205,14 +1208,14 @@ const TRANSLATIONS={
 
     // STEP SPORT
     step_sport_title:"Welche Sportarten betreibst du?",
-    step_sport_sub:"Mehrfachauswahl möglich — wähle alle aktiven Sportarten.",
+    step_sport_sub:"Mehrfachauswahl möglich - wähle alle aktiven Sportarten.",
     step_sport_hint:"Tippe auf eine Sportart um Details zu wählen.",
     step_sport_next1:"Disziplin wählen →",
     step_sport_next:"Weiter →",
     step_sport_back:"← Zurück",
     step_sport_missing:"Bitte wähle eine Disziplin:",
     step_sport_health:"Nur Gesundheit & Allgemein",
-    step_sport_health_sub:"Keine spezifischen Sportarten — Fokus auf Grundgesundheit",
+    step_sport_health_sub:"Keine spezifischen Sportarten - Fokus auf Grundgesundheit",
 
     // STEP TRAINING
     step_training_title:"Wie trainierst du?",
@@ -1232,10 +1235,10 @@ const TRANSLATIONS={
     step_training_comp_no:"Nein",
     step_training_comp_count:"Wettkämpfe pro Jahr",
     step_training_time:"Trainingszeit",
-    step_training_time_morning:"Morgens (6–10h)",
-    step_training_time_midday:"Mittags (11–14h)",
-    step_training_time_afternoon:"Nachmittags (15–18h)",
-    step_training_time_evening:"Abends (19–22h)",
+    step_training_time_morning:"Morgens (6-10h)",
+    step_training_time_midday:"Mittags (11-14h)",
+    step_training_time_afternoon:"Nachmittags (15-18h)",
+    step_training_time_evening:"Abends (19-22h)",
     step_training_sweat:"Schweissrate",
     step_training_sweat_low:"Niedrig",
     step_training_sweat_medium:"Mittel",
@@ -1287,8 +1290,8 @@ const TRANSLATIONS={
     step_ls_diet_excellent:"Sehr gut / Profi",
     step_ls_altitude:"Trainingsumgebung",
     step_ls_altitude_low:"Unter 800m",
-    step_ls_altitude_medium:"800–1500m",
-    step_ls_altitude_high:"1500–2500m",
+    step_ls_altitude_medium:"800-1500m",
+    step_ls_altitude_high:"1500-2500m",
     step_ls_altitude_alpine:"2500m+",
     step_ls_injuries:"Verletzungen / Beschwerden",
     step_ls_injuries_none:"Keine",
@@ -1307,8 +1310,8 @@ const TRANSLATIONS={
     step_ls_meds_bp:"Blutdruck",
     step_ls_budget:"Monatliches Budget",
     step_ls_budget_low:"Bis CHF 30",
-    step_ls_budget_medium:"CHF 30–80",
-    step_ls_budget_high:"CHF 80–150",
+    step_ls_budget_medium:"CHF 30-80",
+    step_ls_budget_high:"CHF 80-150",
     step_ls_budget_max:"Kein Limit",
 
     // STEP ALLERGIEN
@@ -1340,7 +1343,7 @@ const TRANSLATIONS={
     step_welcome_title:"Bereit.",
     step_welcome_sub:"Deine Analyse wird jetzt berechnet.",
     step_welcome_basic:"Basicdaten sofort sichtbar",
-    step_welcome_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten — kostenlos.",
+    step_welcome_basic_desc:"Energieverbrauch, Wasser & Trainingseinheiten - kostenlos.",
     step_welcome_pro:"PRO freischalten",
     step_welcome_pro_desc:"Alle Empfehlungen, Dosierungen & Tagesplan.",
     step_welcome_cta:"Analyse ansehen →",
@@ -1348,7 +1351,7 @@ const TRANSLATIONS={
 
     // ANALYSE PREVIEW
     preview_title:"Deine Analyse ist bereit.",
-    preview_upgrade:"PRO freischalten — CHF 12.90 / 6 Mt.",
+    preview_upgrade:"PRO freischalten - CHF 12.90 / 6 Mt.",
     preview_free:"Kostenlos weiter",
     preview_features_title:"Was du mit PRO bekommst:",
     preview_no_sub:"Kein Abo · Einmalig · Jederzeit erneuerbar",
@@ -1371,17 +1374,17 @@ const TRANSLATIONS={
 
     // DEMO
     demo_title:"How TREYN+ works",
-    demo_basic_title:"Basic data — instantly visible",
-    demo_basic_desc:"Energy expenditure & basal metabolic rate — instantly. No credit card.",
-    demo_pro_title:"PRO — everything unlocked",
-    demo_pro_desc:"All data, all recommendations — incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan. Unlock anytime.",
+    demo_basic_title:"Basic data - instantly visible",
+    demo_basic_desc:"Energy expenditure & basal metabolic rate - instantly. No credit card.",
+    demo_pro_title:"PRO - everything unlocked",
+    demo_pro_desc:"All data, all recommendations - incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan. Unlock anytime.",
     demo_cta:"Discover your free analysis →",
 
     // ONBOARDING STEPS
     step_weiter:"Continue →",
     step_zurueck:"← Back",
     step_sport_title:"Which sports do you practise?",
-    step_sport_sub:"Multiple selection — choose all active sports.",
+    step_sport_sub:"Multiple selection - choose all active sports.",
     step_training_title:"How do you train?",
     step_profil_title:"Your Profile",
     step_lebensstil_title:"Lifestyle & Context",
@@ -1404,7 +1407,7 @@ const TRANSLATIONS={
     // SUMMARY
     summary_progress_label:"YOUR ANALYSIS · BASIC",
     summary_progress_pct:"30% visible",
-    summary_locked:"Full analysis — locked",
+    summary_locked:"Full analysis - locked",
     summary_upgrade_title:"Everything you need. Once. For 6 months.",
     summary_upgrade_price:"CHF 12.90",
     summary_upgrade_period:"/ 6 months · CHF 2.15/mo.",
@@ -1478,13 +1481,13 @@ const TRANSLATIONS={
 
     // WETTKAMPF
     wettkampf_title:"Race Day",
-    wettkampf_sub:"Race-day strategy — personalised to your profile.",
+    wettkampf_sub:"Race-day strategy - personalised to your profile.",
     wettkampf_no_comp:"No competition activated",
     wettkampf_no_comp_desc:"Enable 'Competitions' in your training details.",
 
     // EINKAUF
     einkauf_title:"Shop",
-    einkauf_sub:"Your cart and blood test — all in one place.",
+    einkauf_sub:"Your cart and blood test - all in one place.",
     einkauf_bluttest:"Blood Test",
     einkauf_bluttest_sub:"Real lab values directly in your calculations.",
 
@@ -1515,7 +1518,7 @@ const TRANSLATIONS={
     summary_rest_day:"rest day",
     summary_training_day:"training day",
     summary_unlocked:"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?",
-    summary_unlock_desc:"All locked data cards, supplement dosages, sports nutrition with exact intervals and your personal race-day strategy — 100% calculated for your weight, sport and intensity.",
+    summary_unlock_desc:"All locked data cards, supplement dosages, sports nutrition with exact intervals and your personal race-day strategy - 100% calculated for your weight, sport and intensity.",
     summary_one_time:"One-time · Renewable anytime",
     summary_no_cc:"No password · No subscription · Renew anytime",
 
@@ -1585,14 +1588,14 @@ const TRANSLATIONS={
 
     // STEP SPORT
     step_sport_title:"Which sports do you practise?",
-    step_sport_sub:"Multiple selection — choose all active sports.",
+    step_sport_sub:"Multiple selection - choose all active sports.",
     step_sport_hint:"Tap a sport to choose your discipline.",
     step_sport_next1:"Choose discipline →",
     step_sport_next:"Continue →",
     step_sport_back:"← Back",
     step_sport_missing:"Please select a discipline:",
     step_sport_health:"Health & General only",
-    step_sport_health_sub:"No specific sports — focus on general health",
+    step_sport_health_sub:"No specific sports - focus on general health",
 
     // STEP TRAINING
     step_training_title:"How do you train?",
@@ -1612,10 +1615,10 @@ const TRANSLATIONS={
     step_training_comp_no:"No",
     step_training_comp_count:"Competitions per year",
     step_training_time:"Training time",
-    step_training_time_morning:"Morning (6–10am)",
-    step_training_time_midday:"Midday (11am–2pm)",
-    step_training_time_afternoon:"Afternoon (3–6pm)",
-    step_training_time_evening:"Evening (7–10pm)",
+    step_training_time_morning:"Morning (6-10am)",
+    step_training_time_midday:"Midday (11am-2pm)",
+    step_training_time_afternoon:"Afternoon (3-6pm)",
+    step_training_time_evening:"Evening (7-10pm)",
     step_training_sweat:"Sweat rate",
     step_training_sweat_low:"Low",
     step_training_sweat_medium:"Medium",
@@ -1667,8 +1670,8 @@ const TRANSLATIONS={
     step_ls_diet_excellent:"Very good / Pro",
     step_ls_altitude:"Training environment",
     step_ls_altitude_low:"Below 800m",
-    step_ls_altitude_medium:"800–1500m",
-    step_ls_altitude_high:"1500–2500m",
+    step_ls_altitude_medium:"800-1500m",
+    step_ls_altitude_high:"1500-2500m",
     step_ls_altitude_alpine:"2500m+",
     step_ls_injuries:"Injuries / complaints",
     step_ls_injuries_none:"None",
@@ -1687,8 +1690,8 @@ const TRANSLATIONS={
     step_ls_meds_bp:"Blood pressure",
     step_ls_budget:"Monthly budget",
     step_ls_budget_low:"Up to CHF 30",
-    step_ls_budget_medium:"CHF 30–80",
-    step_ls_budget_high:"CHF 80–150",
+    step_ls_budget_medium:"CHF 30-80",
+    step_ls_budget_high:"CHF 80-150",
     step_ls_budget_max:"No limit",
 
     // STEP ALLERGIEN
@@ -1720,7 +1723,7 @@ const TRANSLATIONS={
     step_welcome_title:"Ready.",
     step_welcome_sub:"Your analysis is being calculated.",
     step_welcome_basic:"Basic data instantly visible",
-    step_welcome_basic_desc:"Energy expenditure & basal rate — instant and free.",
+    step_welcome_basic_desc:"Energy expenditure & basal rate - instant and free.",
     step_welcome_pro:"Unlock PRO",
     step_welcome_pro_desc:"All recommendations, dosages & daily plan.",
     step_welcome_cta:"View analysis →",
@@ -1728,7 +1731,7 @@ const TRANSLATIONS={
 
     // ANALYSE PREVIEW
     preview_title:"Your analysis is ready.",
-    preview_upgrade:"Unlock PRO — CHF 12.90 / 6 mo.",
+    preview_upgrade:"Unlock PRO - CHF 12.90 / 6 mo.",
     preview_free:"Continue free",
     preview_features_title:"What you get with PRO:",
     preview_no_sub:"No subscription · One-time · Renew anytime",
@@ -1745,15 +1748,15 @@ const TRANSLATIONS={
       intro_countries_sub:"CH · DE · AT",
       intro_close:"Close",
       demo_title:"How TREYN+ Works",
-      demo_basic_title:"Basic Data — instantly visible",
+      demo_basic_title:"Basic Data - instantly visible",
       demo_basic_desc:"Energy consumption & basal metabolic rate. No credit card, no subscription.",
-      demo_pro_title:"PRO — everything unlocked",
-      demo_pro_desc:"All data, all recommendations — incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan.",
+      demo_pro_title:"PRO - everything unlocked",
+      demo_pro_desc:"All data, all recommendations - incl. electrolytes, VO₂max, carbs/h, products, dosages & daily plan.",
       demo_cta:"Discover Free Analysis →",
       step_weiter:"Continue →",
       step_zurueck:"← Back",
       step_sport_title:"Which sports do you do?",
-      step_sport_sub:"Multiple selection — choose all active sports.",
+      step_sport_sub:"Multiple selection - choose all active sports.",
       step_ls_goal:"Primary Goal",
       step_ls_goal_performance:"Improve Performance",
       step_ls_goal_muscle:"Build Muscle",
@@ -1763,13 +1766,13 @@ const TRANSLATIONS={
       step_ls_goal_recovery:"Better Recovery",
       step_ls_job:"Activity Level at Work",
       step_ls_job_sedentary:"Sedentary",
-      step_ls_job_sedentary_desc:"Office, home office — minimal movement",
+      step_ls_job_sedentary_desc:"Office, home office - minimal movement",
       step_ls_job_light:"Lightly Active",
-      step_ls_job_light_desc:"Teacher, doctor — standing but little walking",
+      step_ls_job_light_desc:"Teacher, doctor - standing but little walking",
       step_ls_job_moderate:"Moderately Active",
-      step_ls_job_moderate_desc:"Waiter, salesperson — regularly walking",
+      step_ls_job_moderate_desc:"Waiter, salesperson - regularly walking",
       step_ls_job_very:"Very Active",
-      step_ls_job_very_desc:"Construction, crafts — physical labour",
+      step_ls_job_very_desc:"Construction, crafts - physical labour",
       step_ls_sleep_hours:"Sleep Duration",
       step_ls_sleep_5:"≤ 5h",
       step_ls_sleep_5_desc:"Chronically low",
@@ -1782,9 +1785,9 @@ const TRANSLATIONS={
       step_ls_water:"Daily Water Intake",
       step_ls_water_low:"< 1L",
       step_ls_water_low_desc:"Too little",
-      step_ls_water_med:"1–2L",
+      step_ls_water_med:"1-2L",
       step_ls_water_med_desc:"Average",
-      step_ls_water_good:"2–3L",
+      step_ls_water_good:"2-3L",
       step_ls_water_good_desc:"Good",
       step_ls_water_high:"> 3L",
       step_ls_water_high_desc:"Very good",
@@ -1793,19 +1796,19 @@ const TRANSLATIONS={
       step_ls_sun_none_desc:"Office, indoor training, rarely outside",
       step_ls_sun_low:"< 30 min",
       step_ls_sun_low_desc:"Short commute, occasionally outside",
-      step_ls_sun_mod:"30–60 min",
+      step_ls_sun_mod:"30-60 min",
       step_ls_sun_mod_desc:"Lunch outside, outdoor training",
       step_ls_sun_high:"> 60 min",
       step_ls_sun_high_desc:"Lots of outdoor training, garden",
       step_ls_caffeine:"Daily Caffeine",
       step_ls_caf_none:"No Caffeine",
       step_ls_caf_none_desc:"Caffeine-free, no tea",
-      step_ls_caf_low:"1–2 Coffees",
-      step_ls_caf_low_desc:"~100–200mg daily",
-      step_ls_caf_med:"3–4 Coffees",
-      step_ls_caf_med_desc:"~300–400mg daily",
+      step_ls_caf_low:"1-2 Coffees",
+      step_ls_caf_low_desc:"~100-200mg daily",
+      step_ls_caf_med:"3-4 Coffees",
+      step_ls_caf_med_desc:"~300-400mg daily",
       step_ls_caf_high:"> 4 Coffees",
-      step_ls_caf_high_desc:"> 400mg — high tolerance",
+      step_ls_caf_high_desc:"> 400mg - high tolerance",
       step_ls_body:"Body Composition",
       step_ls_body_lean:"Very Muscular / Lean",
       step_ls_body_lean_desc:"Low body fat, high muscle mass",
@@ -1818,11 +1821,11 @@ const TRANSLATIONS={
       step_ls_cycle:"Cycle Phase",
       step_ls_cycle_sub:"Affects iron, magnesium and calorie needs significantly",
       step_ls_cycle_follikel:"Follicular Phase",
-      step_ls_cycle_follikel_desc:"Day 1–14 — after period, more energy",
+      step_ls_cycle_follikel_desc:"Day 1-14 - after period, more energy",
       step_ls_cycle_ovulation:"Ovulation",
-      step_ls_cycle_ovulation_desc:"Day 14–16 — peak form",
+      step_ls_cycle_ovulation_desc:"Day 14-16 - peak form",
       step_ls_cycle_luteal:"Luteal Phase",
-      step_ls_cycle_luteal_desc:"Day 15–28 — more hunger, more magnesium",
+      step_ls_cycle_luteal_desc:"Day 15-28 - more hunger, more magnesium",
       step_ls_cycle_period:"Period",
       step_ls_cycle_period_desc:"Highest iron loss",
       step_ls_cycle_pcos:"PCOS",
@@ -1832,8 +1835,8 @@ const TRANSLATIONS={
       step_ls_stress:"Stress Level",
       step_ls_altitude:"Training Altitude",
       step_ls_altitude_low:"Lowland (< 500m)",
-      step_ls_altitude_medium:"Mid-altitude (500–1500m)",
-      step_ls_altitude_high:"Alpine (1500–2500m)",
+      step_ls_altitude_medium:"Mid-altitude (500-1500m)",
+      step_ls_altitude_high:"Alpine (1500-2500m)",
       step_ls_altitude_alpine:"High Alpine (> 2500m)",
       step_ls_recovery:"Recovery Status",
       step_ls_recovery_excellent:"Excellent",
@@ -1841,10 +1844,10 @@ const TRANSLATIONS={
       step_ls_recovery_tired:"Tired",
       step_ls_recovery_injured:"Injured / Recovery",
       step_ls_diet:"Diet Quality",
-      step_ls_diet_excellent:"Excellent — very clean",
-      step_ls_diet_good:"Good — mostly clean",
-      step_ls_diet_average:"Average — some processed food",
-      step_ls_diet_poor:"Poor — lots of processed food",
+      step_ls_diet_excellent:"Excellent - very clean",
+      step_ls_diet_good:"Good - mostly clean",
+      step_ls_diet_average:"Average - some processed food",
+      step_ls_diet_poor:"Poor - lots of processed food",
       step_ls_injuries:"Current Injuries",
       step_ls_injuries_none:"None",
       step_ls_injuries_knee:"Knee",
@@ -1880,8 +1883,8 @@ const TRANSLATIONS={
       step_pref_drink:"Drink",
       step_pref_budget:"Monthly Budget (Supplements)",
       step_pref_budget_low:"< CHF 30",
-      step_pref_budget_medium:"CHF 30–80",
-      step_pref_budget_high:"CHF 80–150",
+      step_pref_budget_medium:"CHF 30-80",
+      step_pref_budget_high:"CHF 80-150",
       step_pref_budget_max:"> CHF 150",
       step_pref_diet_pref:"Diet",
       step_pref_standard:"Standard",
@@ -1922,7 +1925,7 @@ const TRANSLATIONS={
       plan_post_workout:"Post-Workout",
       plan_evening:"Evening",
       emp_title:"Recommendations",
-      emp_sub:"100% calculated on your data — supplements, sports nutrition, meals & recovery.",
+      emp_sub:"100% calculated on your data - supplements, sports nutrition, meals & recovery.",
       emp_supplements:"Supplements",
       emp_nahrung:"Sports Nutrition",
       emp_mahlzeiten:"Meals",
@@ -1954,7 +1957,7 @@ const TRANSLATIONS={
       profil_reset:"Reset Analysis",
       profil_delete:"Delete Account",
       einkauf_title:"Shopping Cart",
-      einkauf_sub:"All products grouped by shop — order together and save shipping.",
+      einkauf_sub:"All products grouped by shop - order together and save shipping.",
       einkauf_empty:"Your cart is empty.",
       einkauf_empty_sub:"Go to Recommendations and add products.",
       einkauf_order:"Order at",
@@ -1966,7 +1969,7 @@ const TRANSLATIONS={
       aichat_error:"Connection error.",
       aichat_sub:"Powered by Claude · Answers based on your personal data",
       bluttest_title:"Blood Test",
-      bluttest_sub:"Real lab values — imported directly into your calculations.",
+      bluttest_sub:"Real lab values - imported directly into your calculations.",
       bluttest_order:"Order Blood Test",
       bluttest_why:"Why a blood test?",
       bluttest_why_desc:"TREYN+ calculates with estimates. Real lab values make the calculation even more precise.",
@@ -2160,7 +2163,7 @@ function StepSport({onNext}) {
         <Progress step={1} total={6}/>
         <div className="su">
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Wähle deine Sportarten.</h2>
-          <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Mehrfach-Auswahl möglich — selektiere alle Sportarten die du regelmässig betreibst. Bei einigen Sportarten öffnen sich die diversen Disziplinen.</p>
+          <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Mehrfach-Auswahl möglich - selektiere alle Sportarten die du regelmässig betreibst. Bei einigen Sportarten öffnen sich die diversen Disziplinen.</p>
 
           {/* Health-only option */}
           {/* Sport grid */}
@@ -2271,7 +2274,7 @@ function StepTraining({sportData,onNext,onBack}) {
         <Progress step={2} total={6}/>
         <div className="su">
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:8,lineHeight:1.2}}>Dein Training.</h2>
-          <p style={{fontSize:14,color:C.g600,marginBottom:32,lineHeight:1.65}}>Fülle für jede Sportart aus — so berechnet TREYN+ die optimalen Mengen.</p>
+          <p style={{fontSize:14,color:C.g600,marginBottom:32,lineHeight:1.65}}>Fülle für jede Sportart aus - so berechnet TREYN+ die optimalen Mengen.</p>
           <div style={{display:"flex",flexDirection:"column",gap:20}}>
             {sports.map(id=>{
               const s=SPORT_GROUPS.find(g=>g.id===id);
@@ -2287,7 +2290,7 @@ function StepTraining({sportData,onNext,onBack}) {
                     <span style={{fontSize:15,fontWeight:600}}>{s?.label||id}</span>
                   </div>
 
-                  {/* Einheiten pro Woche — max 7 */}
+                  {/* Einheiten pro Woche - max 7 */}
                   <div style={{marginBottom:16}}>
                     <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
                       <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Einheiten pro Woche</span>
@@ -2515,13 +2518,13 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
           </div>
           {platform&&(<>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"1fr 1fr 1fr",gap:10,marginBottom:10}}>
-              <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geschlecht *</div><select value={form.gender} onChange={e=>set("gender",e.target.value)} style={sel}><option value="">— wählen</option><option value="m">Männlich</option><option value="f">Weiblich</option></select></div>
+              <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geschlecht *</div><select value={form.gender} onChange={e=>set("gender",e.target.value)} style={sel}><option value="">- wählen</option><option value="m">Männlich</option><option value="f">Weiblich</option></select></div>
               <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Geburtsjahr *</div><input type="number" value={form.birthyear} onChange={e=>set("birthyear",e.target.value)} placeholder="1990" min="1940" max={new Date().getFullYear()-16} style={{...inp(form.birthyear),width:"100%"}}/></div>
               <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Grösse (cm) *</div><input type="number" value={form.height} onChange={e=>set("height",e.target.value)} placeholder="180" style={{...inp(form.height),width:"100%"}}/></div>
             </div>
             <div style={{marginBottom:10}}><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Gewicht (kg) *</div><input type="number" value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="75" style={{...inp(form.weight),width:"100%"}}/></div>
             <div style={{marginBottom:10,padding:"12px 14px",background:C.g100,borderRadius:11,border:`1px solid ${C.g200}`}}>
-              <div style={{fontSize:11,color:C.g400,marginBottom:10}}>Optional — für genauere VO₂max & Erholungs-Berechnungen</div>
+              <div style={{fontSize:11,color:C.g400,marginBottom:10}}>Optional - für genauere VO₂max & Erholungs-Berechnungen</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
                 <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Ruhepuls (bpm)</div><input type="number" value={form.rhr||""} onChange={e=>set("rhr",e.target.value)} placeholder="52" min="30" max="100" style={{...inp(form.rhr),width:"100%"}}/></div>
                 <div><div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Schlaf (h/Nacht)</div><input type="number" value={form.sleep||""} onChange={e=>set("sleep",e.target.value)} placeholder="7.5" min="4" max="12" step="0.5" style={{...inp(form.sleep),width:"100%"}}/></div>
@@ -2533,14 +2536,14 @@ function StepProfil({sportData,trainingData,onNext,onBack}) {
               <div className="mono" style={{color:"rgba(0,0,0,.5)",marginBottom:10}}>Erste Schätzung · wird nach Analyse präzisiert</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
                 <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Grundumsatz (Ruhe)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr.toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
-                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr?Math.round(bmr*1.65).toLocaleString("de-CH"):"—"}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
+                <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training (Ø)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr?Math.round(bmr*1.65).toLocaleString("de-CH"):"-"}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
               </div>
             </div>
           )}
           <div style={{marginBottom:24}}>
             <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>E-Mail *</div>
             <input type="email" value={form.email} onChange={e=>set("email",e.target.value)} placeholder="deine@email.ch" style={inp(form.email.includes("@")&&form.email.includes("."))}/>
-            <div style={{fontSize:11,color:C.g400,marginTop:5}}>Kein Passwort nötig — wir senden dir bei Bedarf einen Link.</div>
+            <div style={{fontSize:11,color:C.g400,marginTop:5}}>Kein Passwort nötig - wir senden dir bei Bedarf einen Link.</div>
           </div>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:8}}>
             <button className="btn-ghost" onClick={onBack}>{"← Zurück"}</button>
@@ -2571,7 +2574,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
   const Q=({label,sub})=>(<div style={{marginBottom:12}}><div style={{fontSize:13,fontWeight:600,color:C.black,letterSpacing:"-.01em"}}>{label}</div>{sub&&<div style={{fontSize:11,color:C.g400,marginTop:2,lineHeight:1.4}}>{sub}</div>}</div>);
   const ddStyle=(active)=>({width:"100%",padding:"10px 12px",border:`1.5px solid ${active?"#C8FF00":C.g200}`,borderRadius:10,fontSize:13,fontFamily:"Inter,sans-serif",background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,appearance:"none",cursor:"pointer"});
 
-  // Compact tile button — used for 2×N grids
+  // Compact tile button - used for 2×N grids
   const Tile=({id,label,desc,active,onClick,multi=false})=>(
     <button onClick={onClick} style={{
       padding:"11px 13px",borderRadius:11,
@@ -2590,7 +2593,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
     </button>
   );
 
-  // Pill chip — for multi-select tags
+  // Pill chip - for multi-select tags
   const Chip=({label,active,onClick})=>(
     <button onClick={onClick} style={{
       padding:"6px 13px",borderRadius:100,
@@ -2611,7 +2614,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
           <h2 style={{fontSize:23,fontWeight:600,letterSpacing:"-.03em",marginBottom:6,lineHeight:1.2}}>Dein Lebensstil.</h2>
           <p style={{fontSize:14,color:C.g600,marginBottom:24,lineHeight:1.65}}>Damit wir deine Empfehlungen wirklich präzise auf dich zuschneiden können.</p>
 
-          {/* ROW 1: Ziel (full width — 6 options in 2×3 grid) */}
+          {/* ROW 1: Ziel (full width - 6 options in 2×3 grid) */}
           <div style={{...card,marginBottom:10}}>
             <Q label={"Primäres Ziel"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
@@ -2657,10 +2660,10 @@ function StepLebensstil({onNext, onBack, gender=""}) {
 
           {/* JOB AKTIVITÄT */}
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Aktivität im Alltag (Job)"} sub={"Ausserhalb des Trainings — beeinflusst deinen Gesamtenergiebedarf massiv"}/>
+            <Q label={"Aktivität im Alltag (Job)"} sub={"Ausserhalb des Trainings - beeinflusst deinen Gesamtenergiebedarf massiv"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
-                {id:"sedentary",   l:"Sitzend",          d:"Büro, Homeoffice, Computer — kaum Bewegung"},
+                {id:"sedentary",   l:"Sitzend",          d:"Büro, Homeoffice, Computer - kaum Bewegung"},
                 {id:"light",       l:"Leicht aktiv",     d:"Lehrer, Arzt, stehend aber wenig laufend"},
                 {id:"moderate",    l:"Mässig aktiv",     d:"Kellner, Verkäufer, regelmässig gehend"},
                 {id:"very_active", l:"Sehr aktiv",       d:"Bauarbeiter, Handwerker, körperliche Arbeit"},
@@ -2683,12 +2686,12 @@ function StepLebensstil({onNext, onBack, gender=""}) {
 
           {/* WASSERMENGE */}
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Tägliche Wassermenge"} sub={"Ohne Training — wie viel trinkst du im Alltag?"}/>
+            <Q label={"Tägliche Wassermenge"} sub={"Ohne Training - wie viel trinkst du im Alltag?"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:7}}>
               {[
                 {id:"low",    l:"< 1L",   d:"Zu wenig"},
-                {id:"medium", l:"1–2L",   d:"Durchschnitt"},
-                {id:"good",   l:"2–3L",   d:"Gut"},
+                {id:"medium", l:"1-2L",   d:"Durchschnitt"},
+                {id:"good",   l:"2-3L",   d:"Gut"},
                 {id:"high",   l:"> 3L",   d:"Sehr gut"},
               ].map(o=><Tile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.waterIntake===o.id} onClick={()=>set("waterIntake",o.id)}/>)}
             </div>
@@ -2696,12 +2699,12 @@ function StepLebensstil({onNext, onBack, gender=""}) {
 
           {/* SONNENLICHT */}
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Sonnenlicht täglich"} sub={"Direktes Sonnenlicht auf der Haut — beeinflusst Vitamin D stark"}/>
+            <Q label={"Sonnenlicht täglich"} sub={"Direktes Sonnenlicht auf der Haut - beeinflusst Vitamin D stark"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"none",     l:"Kaum / indoor",  d:"Büro, training indoor, wenig draussen"},
                 {id:"low",      l:"< 30 min",        d:"Kurzer Weg, gelegentlich draussen"},
-                {id:"moderate", l:"30–60 min",       d:"Mittagspause draussen, Outdoor-Training"},
+                {id:"moderate", l:"30-60 min",       d:"Mittagspause draussen, Outdoor-Training"},
                 {id:"high",     l:"> 60 min",        d:"Viel Outdoor-Training, Garten, Handwerk"},
               ].map(o=><Tile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.sunExposure===o.id} onClick={()=>set("sunExposure",o.id)}/>)}
             </div>
@@ -2709,20 +2712,20 @@ function StepLebensstil({onNext, onBack, gender=""}) {
 
           {/* KOFFEIN */}
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Täglicher Koffein-Konsum"} sub={"Kaffee, Tee, Energy Drinks — beeinflusst Pre-Workout Empfehlungen"}/>
+            <Q label={"Täglicher Koffein-Konsum"} sub={"Kaffee, Tee, Energy Drinks - beeinflusst Pre-Workout Empfehlungen"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"none",   l:"Kein Koffein",     d:"Kaffee-frei, kein Tee"},
-                {id:"low",    l:"1–2 Tassen Kaffee",d:"~100–200mg täglich"},
-                {id:"medium", l:"3–4 Tassen",       d:"~300–400mg täglich"},
-                {id:"high",   l:"> 4 Tassen",       d:"> 400mg — hohe Toleranz"},
+                {id:"low",    l:"1-2 Tassen Kaffee",d:"~100-200mg täglich"},
+                {id:"medium", l:"3-4 Tassen",       d:"~300-400mg täglich"},
+                {id:"high",   l:"> 4 Tassen",       d:"> 400mg - hohe Toleranz"},
               ].map(o=><Tile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.caffeineDaily===o.id} onClick={()=>set("caffeineDaily",o.id)}/>)}
             </div>
           </div>
 
           {/* KÖRPERZUSAMMENSETZUNG */}
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Körperbau"} sub={"Selbsteinschätzung — beeinflusst Proteinbedarf"}/>
+            <Q label={"Körperbau"} sub={"Selbsteinschätzung - beeinflusst Proteinbedarf"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
                 {id:"lean",     l:"Sehr muskulös / lean", d:"Wenig Körperfett, viel Muskelmasse"},
@@ -2733,15 +2736,15 @@ function StepLebensstil({onNext, onBack, gender=""}) {
             </div>
           </div>
 
-          {/* ZYKLUS — nur bei Frauen */}
+          {/* ZYKLUS - nur bei Frauen */}
           {gender==="f"&&(
           <div style={{...card,marginBottom:10}}>
-            <Q label={"Aktuelle Zyklusphase"} sub={"Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark — kann jederzeit im Profil angepasst werden"}/>
+            <Q label={"Aktuelle Zyklusphase"} sub={"Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark - kann jederzeit im Profil angepasst werden"}/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
               {[
-                {id:"follikel",  l:"Follikelphase",     d:"Tag 1–14 — nach Periode, mehr Energie"},
-                {id:"ovulation", l:"Ovulation",         d:"Tag 14–16 — Hochform, Peak-Performance"},
-                {id:"luteal",    l:"Lutealphase",       d:"Tag 15–28 — mehr Hunger, mehr Magnesium"},
+                {id:"follikel",  l:"Follikelphase",     d:"Tag 1-14 - nach Periode, mehr Energie"},
+                {id:"ovulation", l:"Ovulation",         d:"Tag 14-16 - Hochform, Peak-Performance"},
+                {id:"luteal",    l:"Lutealphase",       d:"Tag 15-28 - mehr Hunger, mehr Magnesium"},
                 {id:"period",    l:"Periode",           d:"Höchster Eisenverlust, mehr Bedarf"},
                 {id:"pcos",      l:"PCOS",              d:"Polyzystisches Ovarsyndrom"},
                 {id:"menopause", l:"Menopause / Post",  d:"Andere Hormonlage"},
@@ -2750,7 +2753,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
           </div>
           )}
 
-          {/* ROW 2: Erholungsstatus (full width — 4 options in 2×2 grid) */}
+          {/* ROW 2: Erholungsstatus (full width - 4 options in 2×2 grid) */}
           <div style={{...card,marginBottom:10}}>
             <Q label="Aktueller Erholungsstatus" sub="Beeinflusst Recovery-Priorität und Magnesiumbedarf."/>
             <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:7}}>
@@ -2768,7 +2771,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
             <div style={{...card}}>
               <Q label={"Stresslevel"} sub="Wie belastet bist du im Alltag ausserhalb des Sports?"/>
               <select value={form.stressLevel||""} onChange={e=>set("stressLevel",+e.target.value||null)} style={ddStyle(form.stressLevel)}>
-                <option value="">— wählen</option>
+                <option value="">- wählen</option>
                 <option value="1">Sehr niedrig</option>
                 <option value="2">Niedrig</option>
                 <option value="3">Mittel</option>
@@ -2779,7 +2782,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
             <div style={{...card}}>
               <Q label="Ernährung" sub="Wie ausgewogen isst du im Alltag?"/>
               <select value={form.dietQuality||""} onChange={e=>set("dietQuality",e.target.value||null)} style={ddStyle(form.dietQuality)}>
-                <option value="">— wählen</option>
+                <option value="">- wählen</option>
                 <option value="excellent">Sehr ausgewogen</option>
                 <option value="good">Gut</option>
                 <option value="average">Durchschnittlich</option>
@@ -2793,7 +2796,7 @@ function StepLebensstil({onNext, onBack, gender=""}) {
             <div style={{...card}}>
               <Q label="Trainingshöhe" sub="Wo lebst und trainierst du meistens?"/>
               <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                {[{id:"low",l:"0–500m",d:"Flachland"},{id:"medium",l:"500–1500m",d:"Mittelland"},{id:"high",l:"1500–2500m",d:"Alpen"},{id:"alpine",l:"2500m+",d:"Hochgebirge"}].map(o=>(
+                {[{id:"low",l:"0-500m",d:"Flachland"},{id:"medium",l:"500-1500m",d:"Mittelland"},{id:"high",l:"1500-2500m",d:"Alpen"},{id:"alpine",l:"2500m+",d:"Hochgebirge"}].map(o=>(
                   <button key={o.id} onClick={()=>set("altitude",o.id)}
                     style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${form.altitude===o.id?"#C8FF00":C.g200}`,background:form.altitude===o.id?"#F5FFE0":C.white,color:form.altitude===o.id?"#0A0A0A":C.g600,fontSize:11,fontWeight:form.altitude===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                     <span style={{fontWeight:600}}>{o.l}</span>
@@ -2870,12 +2873,12 @@ function StepLebensstil({onNext, onBack, gender=""}) {
 
 // ─── SUB-SPORT PROFILES ───────────────────────────────────────────────────────
 // Differenzierte Werte pro Sub-Sportart. Felder:
-//   met: {low, medium, high, competition}  — überschreibt SPORT_MET
-//   protType: "endurance"|"strength"|"team"|"skill"  — überschreibt SPORT_TYPE_MAP
-//   suppKey: key in SPORT_SUPP  — überschreibt getSupplements Mapping
-//   nutritionKey: key in SPORT_NUTRITION  — überschreibt getSportNutrition
-//   sodiumPerL: number  — überschreibt SODIUM_PER_L
-//   ironRisk: bool  — überschreibt HIGH_IRON_RISK check
+//   met: {low, medium, high, competition}  - überschreibt SPORT_MET
+//   protType: "endurance"|"strength"|"team"|"skill"  - überschreibt SPORT_TYPE_MAP
+//   suppKey: key in SPORT_SUPP  - überschreibt getSupplements Mapping
+//   nutritionKey: key in SPORT_NUTRITION  - überschreibt getSportNutrition
+//   sodiumPerL: number  - überschreibt SODIUM_PER_L
+//   ironRisk: bool  - überschreibt HIGH_IRON_RISK check
 const SUB_SPORT_PROFILE = {
   // ─── CYCLING ────────────────────────────────────────────────────────────────
   cycling_road:   {met:{low:4.5,medium:8.0,high:11.0,competition:14.5}, protType:"endurance", suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:950, ironRisk:true},
@@ -2887,7 +2890,7 @@ const SUB_SPORT_PROFILE = {
   cycling_ebike:  {met:{low:2.5,medium:4.0,high:6.0, competition:8.0},  protType:"endurance", suppKey:"cycling",      nutritionKey:"cycling",      sodiumPerL:700, ironRisk:false},
   // ─── RUNNING ────────────────────────────────────────────────────────────────
   run_road:       {met:{low:5.5,medium:9.0,high:12.5,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
-  // Road Running — distanzspezifisch
+  // Road Running - distanzspezifisch
   run_road_5k:    {met:{low:5.5,medium:10.0,high:14.0,competition:17.0}, protType:"strength",  suppKey:"running",      nutritionKey:"run_short",    sodiumPerL:800, ironRisk:false},
   run_road_10k:   {met:{low:5.5,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_short",    sodiumPerL:850, ironRisk:true},
   run_road_hm:    {met:{low:5.0,medium:9.0, high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"run_hm",       sodiumPerL:900, ironRisk:true},
@@ -2898,13 +2901,13 @@ const SUB_SPORT_PROFILE = {
   run_trail_short:{met:{low:5.0,medium:8.5, high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"run_hm",       sodiumPerL:950, ironRisk:true},
   run_trail_ultra:{met:{low:4.0,medium:7.5, high:10.0,competition:12.5}, protType:"endurance", suppKey:"running",      nutritionKey:"run_ultra",    sodiumPerL:1100,ironRisk:true},
   run_track:      {met:{low:5.0,medium:9.5,high:14.0,competition:17.0}, protType:"strength",  suppKey:"running",      nutritionKey:"running",      sodiumPerL:850, ironRisk:true},
-  // Triathlon — distanzspezifisch
+  // Triathlon - distanzspezifisch
   tri_sprint:     {met:{low:6.0,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_sprint",   sodiumPerL:850, ironRisk:true},
   tri_olympic:    {met:{low:6.0,medium:9.5, high:13.0,competition:16.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_olympic",  sodiumPerL:900, ironRisk:true},
   tri_half:       {met:{low:5.5,medium:9.0, high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_half",     sodiumPerL:950, ironRisk:true},
   tri_full:       {met:{low:5.0,medium:8.5, high:12.0,competition:15.0}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_full",     sodiumPerL:1000,ironRisk:true},
   tri_ultra:      {met:{low:4.5,medium:8.0, high:11.0,competition:13.5}, protType:"endurance", suppKey:"running",      nutritionKey:"tri_ultra",    sodiumPerL:1100,ironRisk:true},
-  // Schwimmen — distanzspezifisch
+  // Schwimmen - distanzspezifisch
   swim_sprint:    {met:{low:5.0,medium:7.5, high:10.0,competition:12.5}, protType:"strength",  suppKey:"running",      nutritionKey:"swim_sprint",  sodiumPerL:600, ironRisk:false},
   swim_mid:       {met:{low:5.0,medium:8.0, high:11.0,competition:13.5}, protType:"endurance", suppKey:"running",      nutritionKey:"swim_mid",     sodiumPerL:650, ironRisk:true},
   swim_open:      {met:{low:5.0,medium:8.5, high:11.5,competition:14.0}, protType:"endurance", suppKey:"running",      nutritionKey:"swim_open",    sodiumPerL:750, ironRisk:true},
@@ -2985,22 +2988,22 @@ const PROTEIN_NEED = {
 };
 const SPORT_CONTEXT = {
   cycling_ebike: {
-    note: "E-Bike reduziert den Energieaufwand um ca. 60% gegenüber Rennrad — trotzdem echter Kalorienverbrauch, Schweiss und Elektrolytbedarf.",
+    note: "E-Bike reduziert den Energieaufwand um ca. 60% gegenüber Rennrad - trotzdem echter Kalorienverbrauch, Schweiss und Elektrolytbedarf.",
     protein_note: "Auch E-Bike-Fahrer brauchen Protein für Muskelerhalt und Regeneration.",
-    carb_note: "Geringerer Kohlenhydratbedarf als konventionelles Radfahren — aber Elektrolyte bleiben wichtig.",
+    carb_note: "Geringerer Kohlenhydratbedarf als konventionelles Radfahren - aber Elektrolyte bleiben wichtig.",
   },
   cycling_mtb_xc: {
-    note: "MTB XC kombiniert Ausdauer und explosive Kraft — einer der energieintensivsten Radsport-Disziplinen.",
+    note: "MTB XC kombiniert Ausdauer und explosive Kraft - einer der energieintensivsten Radsport-Disziplinen.",
     carb_note: "Lange XC-Rennen brauchen kontinuierliche Kohlenhydratzufuhr wie beim Strassenrad.",
   },
   cycling_mtb_end: {
-    note: "Enduro verbindet technische Abfahrten mit kraftintensiven Uphills — asymmetrische Belastung mit hohem Regenerationsbedarf.",
-    protein_note: "Mehr Protein als XC — explosive Muskelbeanspruchung erhöht den Reparaturbedarf.",
+    note: "Enduro verbindet technische Abfahrten mit kraftintensiven Uphills - asymmetrische Belastung mit hohem Regenerationsbedarf.",
+    protein_note: "Mehr Protein als XC - explosive Muskelbeanspruchung erhöht den Reparaturbedarf.",
     recovery_note: "Gelenk- und Sehnenbelastung durch technisches Terrain: Kollagen + Omega-3 besonders wertvoll.",
   },
   cycling_mtb_dh: {
-    note: "Downhill ist anaerob und explosiv — kurze, maximale Anstrengungen mit hohem Muskelstress.",
-    protein_note: "Kraftsport-ähnlicher Proteinbedarf — kurze Runs, hohe neuromuskuläre Belastung.",
+    note: "Downhill ist anaerob und explosiv - kurze, maximale Anstrengungen mit hohem Muskelstress.",
+    protein_note: "Kraftsport-ähnlicher Proteinbedarf - kurze Runs, hohe neuromuskuläre Belastung.",
     carb_note: "Weniger Ausdauer-Carbs, mehr Kreatin und schnelle Energiequellen für explosive Wiederholungsläufe.",
   },
 };
@@ -3180,10 +3183,10 @@ function calcPro(profilData, trainingData, sportData) {
 
   // Training time → supplement timing recommendations
   const timingRecs={
-    morning:  {preWorkout:"6:00–7:00",postWorkout:"8:00–9:00",creatine:"Morgens nüchtern",note:"Nüchterntraining: niedrige Carbs vor, sofort Protein danach"},
-    midday:   {preWorkout:"11:00–12:00",postWorkout:"13:00–14:00",creatine:"Mit Mittagessen",note:"Ideales Fenster: Körper ist aufgewärmt, Cortisol niedrig"},
-    afternoon:{preWorkout:"15:00–16:00",postWorkout:"17:00–18:00",creatine:"Nachmittags",note:"Peak-Performance-Zeit: optimale Kraft & Koordination"},
-    evening:  {preWorkout:"18:00–19:00",postWorkout:"20:00–21:00",creatine:"Mit Abendessen",note:"Kein Koffein nach 16h — beeinträchtigt Schlafqualität"},
+    morning:  {preWorkout:"6:00-7:00",postWorkout:"8:00-9:00",creatine:"Morgens nüchtern",note:"Nüchterntraining: niedrige Carbs vor, sofort Protein danach"},
+    midday:   {preWorkout:"11:00-12:00",postWorkout:"13:00-14:00",creatine:"Mit Mittagessen",note:"Ideales Fenster: Körper ist aufgewärmt, Cortisol niedrig"},
+    afternoon:{preWorkout:"15:00-16:00",postWorkout:"17:00-18:00",creatine:"Nachmittags",note:"Peak-Performance-Zeit: optimale Kraft & Koordination"},
+    evening:  {preWorkout:"18:00-19:00",postWorkout:"20:00-21:00",creatine:"Mit Abendessen",note:"Kein Koffein nach 16h - beeinträchtigt Schlafqualität"},
   }[primaryTrainingTime]||{preWorkout:"Variabel",postWorkout:"Variabel",creatine:"Täglich gleiche Zeit",note:"Kreatin immer zur selben Zeit einnehmen"};
 
   const VO2MAX_SPORTS = ["cycling","running","swimming","triathlon","langlauf","rudern","velo"];
@@ -3203,7 +3206,7 @@ function calcPro(profilData, trainingData, sportData) {
   // Stress → cortisol impact on recovery + magnesium need
   const stressMgBonus = (stressLevel-3)*30; // high stress = +60mg Mg, low = -60mg
   const stressAshwaNeeded = stressLevel >= 4;
-  const stressRecoveryNote = stressLevel >= 4 ? "Hoher Stress erhöht Cortisol — Ashwagandha, Magnesium und Schlaf sind kritisch für Regeneration." : null;
+  const stressRecoveryNote = stressLevel >= 4 ? "Hoher Stress erhöht Cortisol - Ashwagandha, Magnesium und Schlaf sind kritisch für Regeneration." : null;
 
   // Diet quality → micronutrient risk
   const vitDRisk = dietQuality==="poor"||dietQuality==="average";
@@ -3252,13 +3255,13 @@ function calcPro(profilData, trainingData, sportData) {
 
   // Medication contraindications map: suppId → warning text
   const MEDI_WARNINGS = {
-    omega3:    hasBlutverd  ? "⚠ Blutverdünner: Omega-3 kann die Blutungszeit verlängern — Dosis mit Arzt absprechen." : null,
-    ashwa:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
-    ash_cy:    hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
-    ash_g:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone — Arzt konsultieren." : null,
-    koff_fit:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
-    koff_run:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
-    koff_g:    hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen — Rücksprache empfohlen." : null,
+    omega3:    hasBlutverd  ? "⚠ Blutverdünner: Omega-3 kann die Blutungszeit verlängern - Dosis mit Arzt absprechen." : null,
+    ashwa:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone - Arzt konsultieren." : null,
+    ash_cy:    hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone - Arzt konsultieren." : null,
+    ash_g:     hasSchilddruese ? "⚠ Schilddrüsenmedikamente: Ashwagandha beeinflusst Schilddrüsenhormone - Arzt konsultieren." : null,
+    koff_fit:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen - Rücksprache empfohlen." : null,
+    koff_run:  hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen - Rücksprache empfohlen." : null,
+    koff_g:    hasBlutdruck ? "⚠ Blutdruckmedikamente: Koffein kann Blutdruck temporär erhöhen - Rücksprache empfohlen." : null,
     vitd3:     null,
     krea_cy:   null,
     krea_g:    null,
@@ -3319,27 +3322,27 @@ function buildProfile(sportData, trainingData, profilData) {
 const SPORT_NUTRITION = {
   cycling:{
     primary:[
-      {id:"sn_mau_320",barcode:"73160700",name:"Maurten Drink Mix 320",dose:"80g / 500ml — 1 Flasche/h",when:"Ausfahrten über 2h",why:"Konstante Kohlenhydratzufuhr mit Hydrogel-Technologie — reduziert GI-Stress bei hoher Intensität.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
-      {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40–45 min",when:"Rennen & intensive Einheiten",why:"Koffein + Kohlenhydrate für maximale Leistung — unverzichtbar bei Wettkämpfen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+      {id:"sn_mau_320",barcode:"73160700",name:"Maurten Drink Mix 320",dose:"80g / 500ml - 1 Flasche/h",when:"Ausfahrten über 2h",why:"Konstante Kohlenhydratzufuhr mit Hydrogel-Technologie - reduziert GI-Stress bei hoher Intensität.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF 100",dose:"1 Gel alle 40-45 min",when:"Rennen & intensive Einheiten",why:"Koffein + Kohlenhydrate für maximale Leistung - unverzichtbar bei Wettkämpfen.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
     ],
     secondary:[
       {id:"sn_mn_heat_2",name:"MNSTRY Fast Carb Heat",dose:"1 Portion 30 min vor Start",when:"Vor Touren über 3h",why:"Optionale Kohlenhydrat-Aufladung für sehr lange Einheiten.",link:AFF.mnstry("fast-carb-heat"),shop:"MNSTRY"},
-      {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Sommer & intensive Einheiten",why:"Natriumverlust ausgleichen — besonders sinnvoll ab 25°C.",link:AFF.sponser("elektrolyt"),shop:"Sponser"},
+      {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Sommer & intensive Einheiten",why:"Natriumverlust ausgleichen - besonders sinnvoll ab 25°C.",link:AFF.sponser("elektrolyt"),shop:"Sponser"},
     ],
   },
   running:{
     primary:[
-      {id:"sn_mau_gel_r",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",when:"Läufe ab 75 min",why:"Magenfreundliche Energieversorgung durch Hydrogel-Technologie.",link:AFF.maurten("gel-100"),shop:"Maurten"},
-      {id:"sn_mn_gel_r",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",when:"Tempoläufe & Rennen",why:"Natürliche Zutaten, geringe GI-Belastung.",link:AFF.mnstry("intensity-gel"),shop:"MNSTRY"},
+      {id:"sn_mau_gel_r",name:"Maurten Gel 100",dose:"1 Gel alle 30-40 min",when:"Läufe ab 75 min",why:"Magenfreundliche Energieversorgung durch Hydrogel-Technologie.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_mn_gel_r",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30-45 min",when:"Tempoläufe & Rennen",why:"Natürliche Zutaten, geringe GI-Belastung.",link:AFF.mnstry("intensity-gel"),shop:"MNSTRY"},
     ],
     secondary:[
-      {id:"sn_mau_160",name:"Maurten Drink Mix 160",dose:"40g / 500ml",when:"Mittellange Läufe (60–90 min)",why:"Optional für Läufe wenn du Kohlenhydrate trinken statt essen willst.",link:AFF.maurten("drink-mix-160"),shop:"Maurten"},
+      {id:"sn_mau_160",name:"Maurten Drink Mix 160",dose:"40g / 500ml",when:"Mittellange Läufe (60-90 min)",why:"Optional für Läufe wenn du Kohlenhydrate trinken statt essen willst.",link:AFF.maurten("drink-mix-160"),shop:"Maurten"},
     ],
   },
-  // Strassenlauf — distanzspezifisch
+  // Strassenlauf - distanzspezifisch
   run_short:{
     primary:[
-      {id:"sn_koff_5k",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Rennen",why:"5–10km ist hochintensiv und anaerob — Koffein für Reaktion und Pace-Halten kritischer als Carbs.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+      {id:"sn_koff_5k",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Rennen",why:"5-10km ist hochintensiv und anaerob - Koffein für Reaktion und Pace-Halten kritischer als Carbs.",link:AFF.iherb("caffeine"),shop:"iHerb"},
     ],
     secondary:[
       {id:"sn_elek_5k",name:"Elektrolyt-Tabs",dose:"1 Tab vor Start",when:"Vor Rennen",why:"Kurze Distanz: Hydration vor dem Start wichtiger als während.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3347,7 +3350,7 @@ const SPORT_NUTRITION = {
   },
   run_hm:{
     primary:[
-      {id:"sn_gel_hm",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Ab km 8, alle 45 min",why:"Halbmarathon: 1–2 Gels reichen — Timing und Magenverträglichkeit trainieren.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_hm",name:"Maurten Gel 100",dose:"1-2 Gels",when:"Ab km 8, alle 45 min",why:"Halbmarathon: 1-2 Gels reichen - Timing und Magenverträglichkeit trainieren.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
       {id:"sn_elek_hm",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Vor Start und während",why:"90 min Lauf: Natrium- und Kaliumverlust beachten, v.a. bei Hitze.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3355,28 +3358,28 @@ const SPORT_NUTRITION = {
   },
   run_marathon:{
     primary:[
-      {id:"sn_gel_m",name:"Maurten Gel 100",dose:"1 Gel alle 30–35 min",when:"Ab km 10",why:"Marathon: 60–90g Carbs/h nötig — regelmässiges Fueling ab früh, nicht erst wenn Hunger kommt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_m",name:"Maurten Gel 100",dose:"1 Gel alle 30-35 min",when:"Ab km 10",why:"Marathon: 60-90g Carbs/h nötig - regelmässiges Fueling ab früh, nicht erst wenn Hunger kommt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
       {id:"sn_320_m",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Alternierend mit Gels",why:"Flüssige Carbs kombinieren mit Gels für maximale Aufnahme ohne GI-Stress.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45–60 min",why:"3–4h Lauf: erheblicher Natriumverlust — Krampfprävention essentiell.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
-      {id:"sn_caf_m",name:"Maurten Gel 100 CAF 100",dose:"1 Gel bei km 30–35",when:"Letzte 10km",why:"Koffein-Gel für die kritische Schlussphase — bekämpft den berühmten Einbruch bei km 32.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+      {id:"sn_elek_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45-60 min",why:"3-4h Lauf: erheblicher Natriumverlust - Krampfprävention essentiell.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_m",name:"Maurten Gel 100 CAF 100",dose:"1 Gel bei km 30-35",when:"Letzte 10km",why:"Koffein-Gel für die kritische Schlussphase - bekämpft den berühmten Einbruch bei km 32.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
     ],
   },
   run_ultra:{
     primary:[
-      {id:"sn_gel_ul",name:"Maurten Gel 100",dose:"1 Gel alle 45–60 min",when:"Kontinuierlich ab Start",why:"Ultra: niedrigere Intensität erlaubt weniger Carbs — aber Konstanz ist alles.",link:AFF.maurten("gel-100"),shop:"Maurten"},
-      {id:"sn_real_ul",name:"Echtes Essen (Banane, Reis, Kartoffeln)",dose:"Alle 2–3h",when:"An Verpflegungsstationen",why:"Ab 4h+ versagt der Körper bei reinen Gels — feste, salzige Nahrung ist Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+      {id:"sn_gel_ul",name:"Maurten Gel 100",dose:"1 Gel alle 45-60 min",when:"Kontinuierlich ab Start",why:"Ultra: niedrigere Intensität erlaubt weniger Carbs - aber Konstanz ist alles.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_real_ul",name:"Echtes Essen (Banane, Reis, Kartoffeln)",dose:"Alle 2-3h",when:"An Verpflegungsstationen",why:"Ab 4h+ versagt der Körper bei reinen Gels - feste, salzige Nahrung ist Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
     ],
     secondary:[
-      {id:"sn_elek_ul",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Alle 45 min",why:"Ultra: Natriummangel (Hyponatriämie) ist ein reales Risiko — mehr als nur Wasser trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
-      {id:"sn_kof_ul",name:"Koffein-Gel (100mg)",dose:"1 Gel nachts oder bei km 60+",when:"Bei Müdigkeit / Nachtabschnitt",why:"Strategisch einsetzen, nicht früh — maximale Wirkung für die dunkelsten Stunden.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+      {id:"sn_elek_ul",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Alle 45 min",why:"Ultra: Natriummangel (Hyponatriämie) ist ein reales Risiko - mehr als nur Wasser trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_kof_ul",name:"Koffein-Gel (100mg)",dose:"1 Gel nachts oder bei km 60+",when:"Bei Müdigkeit / Nachtabschnitt",why:"Strategisch einsetzen, nicht früh - maximale Wirkung für die dunkelsten Stunden.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
     ],
   },
-  // Triathlon — distanzspezifisch
+  // Triathlon - distanzspezifisch
   tri_sprint:{
     primary:[
-      {id:"sn_koff_tri_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint-Tri (ca. 60 min): kein Fueling nötig — Koffein für Intensität ausreichend.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+      {id:"sn_koff_tri_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint-Tri (ca. 60 min): kein Fueling nötig - Koffein für Intensität ausreichend.",link:AFF.iherb("caffeine"),shop:"iHerb"},
     ],
     secondary:[
       {id:"sn_elek_tri_s",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Vor Start",why:"Hydration vorbereiten, keine Gels nötig bei dieser Distanz.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3384,7 +3387,7 @@ const SPORT_NUTRITION = {
   },
   tri_olympic:{
     primary:[
-      {id:"sn_gel_tri_o",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Auf der Radstrecke",why:"Olympic (ca. 2h): 1–2 Gels auf dem Rad, nichts auf der Laufstrecke.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_tri_o",name:"Maurten Gel 100",dose:"1-2 Gels",when:"Auf der Radstrecke",why:"Olympic (ca. 2h): 1-2 Gels auf dem Rad, nichts auf der Laufstrecke.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
       {id:"sn_elek_tri_o",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Rad und Lauf",why:"Natrium für Leistungserhalt über alle drei Disziplinen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3392,39 +3395,39 @@ const SPORT_NUTRITION = {
   },
   tri_half:{
     primary:[
-      {id:"sn_gel_tri_h",name:"Maurten Gel 100",dose:"1 Gel alle 40 min",when:"Rad ab km 20",why:"70.3 (ca. 4–5h): 60g Carbs/h anstreben — Magen-Training kritisch im Aufbau.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_tri_h",name:"Maurten Gel 100",dose:"1 Gel alle 40 min",when:"Rad ab km 20",why:"70.3 (ca. 4-5h): 60g Carbs/h anstreben - Magen-Training kritisch im Aufbau.",link:AFF.maurten("gel-100"),shop:"Maurten"},
       {id:"sn_160_tri_h",name:"Maurten Drink Mix 160",dose:"40g / 500ml",when:"Auf dem Rad",why:"Flüssige Carbs reduzieren GI-Risiko auf dem Rad gegenüber Gels.",link:AFF.maurten("drink-mix-160"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_tri_h",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Konstant",why:"4–5h Belastung: Natrium-, Kalium- und Magnesiumverlust erheblich.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_tri_h",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Konstant",why:"4-5h Belastung: Natrium-, Kalium- und Magnesiumverlust erheblich.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   tri_full:{
     primary:[
-      {id:"sn_320_tri_f",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Auf dem Rad, alle 45 min",why:"Ironman (8–17h): 80–90g Carbs/h auf dem Rad ist der Schlüssel — mit Hydrogel magenfreundlich.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
-      {id:"sn_gel_tri_f",name:"Maurten Gel 100",dose:"1 Gel alle 35–40 min",when:"Auf dem Lauf",why:"Marathon-Teil: weiter mit Gels — festes Essen nur wenn Magen es verlangt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_320_tri_f",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Auf dem Rad, alle 45 min",why:"Ironman (8-17h): 80-90g Carbs/h auf dem Rad ist der Schlüssel - mit Hydrogel magenfreundlich.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_gel_tri_f",name:"Maurten Gel 100",dose:"1 Gel alle 35-40 min",when:"Auf dem Lauf",why:"Marathon-Teil: weiter mit Gels - festes Essen nur wenn Magen es verlangt.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_tri_f",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Konstant alle 45 min",why:"10h+: Elektrolythaushalt ist Hauptursache für DNF — niemals vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
-      {id:"sn_caf_tri_f",name:"Maurten Gel 100 CAF 100",dose:"1–2 Gels",when:"Ab km 25 auf dem Lauf",why:"Koffein für die kritische Schlussphase des Ironman-Laufs.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
+      {id:"sn_elek_tri_f",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Konstant alle 45 min",why:"10h+: Elektrolythaushalt ist Hauptursache für DNF - niemals vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_tri_f",name:"Maurten Gel 100 CAF 100",dose:"1-2 Gels",when:"Ab km 25 auf dem Lauf",why:"Koffein für die kritische Schlussphase des Ironman-Laufs.",link:AFF.maurten("gel-100-caf-100"),shop:"Maurten"},
     ],
   },
   tri_ultra:{
     primary:[
-      {id:"sn_320_tri_u",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Konstant auf dem Rad",why:"Ultra-Tri (T100, Deca): Magentraining ist trainierbare Fähigkeit — konsequentes Fueling von Stunde 1.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
-      {id:"sn_real_tri_u",name:"Echtes Essen",dose:"Alle 2–3h",when:"An Verpflegung",why:"Ab 10h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+      {id:"sn_320_tri_u",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Konstant auf dem Rad",why:"Ultra-Tri (T100, Deca): Magentraining ist trainierbare Fähigkeit - konsequentes Fueling von Stunde 1.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_real_tri_u",name:"Echtes Essen",dose:"Alle 2-3h",when:"An Verpflegung",why:"Ab 10h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
     ],
     secondary:[
-      {id:"sn_elek_tri_u",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Alle 30–45 min",why:"Extreme Distanz: Hyponatriämie-Risiko hoch — konsequent salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_tri_u",name:"Elektrolyt-Tabs",dose:"2 Tabs / 0.5L",when:"Alle 30-45 min",why:"Extreme Distanz: Hyponatriämie-Risiko hoch - konsequent salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
-  // Schwimmen — distanzspezifisch
+  // Schwimmen - distanzspezifisch
   swim_sprint:{
     primary:[
-      {id:"sn_koff_sw_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint/Kurzbahn: hochintensiv, kurz — Koffein für Reaktion und Startpower.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+      {id:"sn_koff_sw_s",name:"Koffein 100mg",dose:"100mg",when:"45 min vor Start",why:"Sprint/Kurzbahn: hochintensiv, kurz - Koffein für Reaktion und Startpower.",link:AFF.iherb("caffeine"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_sw_s",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Vor dem Training",why:"Schwimmen täuscht über Flüssigkeitsverlust — Schweiss wird weggespült.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_sw_s",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Vor dem Training",why:"Schwimmen täuscht über Flüssigkeitsverlust - Schweiss wird weggespült.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   swim_mid:{
@@ -3432,49 +3435,49 @@ const SPORT_NUTRITION = {
       {id:"sn_gel_sw_m",name:"Maurten Gel 100",dose:"1 Gel vor Start",when:"30 min vor längeren Einheiten",why:"Mitteldistanz: Energieversorgung vor dem Start, im Wasser kein Fueling möglich.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_sw_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Nach Einheit",why:"Schwimmen: Flüssigkeitsverlust wird unterschätzt — Rehydration nach der Einheit.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_sw_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Nach Einheit",why:"Schwimmen: Flüssigkeitsverlust wird unterschätzt - Rehydration nach der Einheit.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   swim_open:{
     primary:[
-      {id:"sn_gel_sw_o",name:"Maurten Gel 100",dose:"1–2 Gels",when:"Vor Start, ggf. Pause bei langer Distanz",why:"Open Water / Freiwasser: Fueling nur vor und bei Pausen möglich — Energiereserven vorladen.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_sw_o",name:"Maurten Gel 100",dose:"1-2 Gels",when:"Vor Start, ggf. Pause bei langer Distanz",why:"Open Water / Freiwasser: Fueling nur vor und bei Pausen möglich - Energiereserven vorladen.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_sw_o",name:"Elektrolyt-Tabs",dose:"1–2 Tabs",when:"Vor und nach",why:"Freiwasser: Kälte und Dauer erhöhen Elektrolytverlust — gute Vorbereitung entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_sw_o",name:"Elektrolyt-Tabs",dose:"1-2 Tabs",when:"Vor und nach",why:"Freiwasser: Kälte und Dauer erhöhen Elektrolytverlust - gute Vorbereitung entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
-  // MTB Downhill — wenig Ausdauer, mehr Fokus & explosive Energie
+  // MTB Downhill - wenig Ausdauer, mehr Fokus & explosive Energie
   cycling_dh:{
     primary:[
-      {id:"sn_koff_dh",name:"Koffein-Gel (100mg)",dose:"1 Gel 45 min vor erstem Run",when:"Wettkampf / Training",why:"Fokus und Reaktionszeit auf technischem Terrain — kein langer Kohlenhydratbedarf bei kurzen Runs.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+      {id:"sn_koff_dh",name:"Koffein-Gel (100mg)",dose:"1 Gel 45 min vor erstem Run",when:"Wettkampf / Training",why:"Fokus und Reaktionszeit auf technischem Terrain - kein langer Kohlenhydratbedarf bei kurzen Runs.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_dh",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Zwischen Runs",why:"Auch kurze Renntage haben Schweissverlust — Krampfprävention.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_dh",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Zwischen Runs",why:"Auch kurze Renntage haben Schweissverlust - Krampfprävention.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Fitness Strength-focused (Powerlifting, Weightlifting, Sprung, Wurf)
   fitness_str:{
     primary:[
-      {id:"sn_krea_sn",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Kraftsport-Basisnahrung — verbessert Maximalkraft und Wiederholungen nachweislich.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+      {id:"sn_krea_sn",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Kraftsport-Basisnahrung - verbessert Maximalkraft und Wiederholungen nachweislich.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_str",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Bei intensivem Training",why:"Auch Krafttraining erzeugt Schweiss — Hydration nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_str",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Bei intensivem Training",why:"Auch Krafttraining erzeugt Schweiss - Hydration nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Fitness (Hyrox, CrossFit)
   fitness:{
     primary:[
-      {id:"sn_krea_fit",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Hyrox und CrossFit: explosive Kraft und Wiederholbarkeit — Kreatin ist Basis.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
-      {id:"sn_koff_fit",name:"Koffein 100–200mg",dose:"100–200mg",when:"30–45 min vor Training",why:"Maximale Leistung bei hochintensiven WODs und Hyrox-Stationen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+      {id:"sn_krea_fit",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Hyrox und CrossFit: explosive Kraft und Wiederholbarkeit - Kreatin ist Basis.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+      {id:"sn_koff_fit",name:"Koffein 100-200mg",dose:"100-200mg",when:"30-45 min vor Training",why:"Maximale Leistung bei hochintensiven WODs und Hyrox-Stationen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_fit",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Während Training",why:"Crossfit und Hyrox erzeugen hohe Schweissraten — Hydration entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_fit",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Während Training",why:"Crossfit und Hyrox erzeugen hohe Schweissraten - Hydration entscheidend.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Leichtathletik Sprint
   la_sprint:{
     primary:[
-      {id:"sn_koff_sp",name:"Koffein 100–200mg",dose:"100–200mg",when:"45 min vor Start",why:"Reaktionszeit und neuromuskuläre Aktivierung für explosive Kurzbelastungen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
+      {id:"sn_koff_sp",name:"Koffein 100-200mg",dose:"100-200mg",when:"45 min vor Start",why:"Reaktionszeit und neuromuskuläre Aktivierung für explosive Kurzbelastungen.",link:AFF.iherb("caffeine"),shop:"iHerb"},
     ],
     secondary:[
       {id:"sn_elek_sp",name:"Elektrolyt-Tabs",dose:"1 Tab",when:"Nach Einheit",why:"Aufwärmprogramme und Sprints erzeugen mehr Schweiss als wahrgenommen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3483,17 +3486,17 @@ const SPORT_NUTRITION = {
   // Ski (Alpin, Freeride, Snowboard)
   ski:{
     primary:[
-      {id:"sn_riegel_ski",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Am Berg zwischen Läufen",why:"Kompakt, gefriert nicht wie Gels — ideal für kalte Umgebungen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+      {id:"sn_riegel_ski",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Am Berg zwischen Läufen",why:"Kompakt, gefriert nicht wie Gels - ideal für kalte Umgebungen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
     ],
     secondary:[
-      {id:"sn_elek_ski",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Mittagspause / zwischendurch",why:"Kälte täuscht über Flüssigkeitsverlust — trotzdem regelmässig trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_ski",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Mittagspause / zwischendurch",why:"Kälte täuscht über Flüssigkeitsverlust - trotzdem regelmässig trinken.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Skitouren
   ski_touring:{
     primary:[
-      {id:"sn_mau_gel_st2",name:"Maurten Gel 100",dose:"1 Gel alle 45–60 min",when:"Aufstieg",why:"Magenfreundlich auch bei Kälte — keine Einfrierproblematik bei Körperwärme.",link:AFF.maurten("gel-100"),shop:"Maurten"},
-      {id:"sn_riegel_st",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Gipfelpause / Abstieg",why:"Solide Energie für lange Touren — Sättigung wichtiger als bei kurzen Rennen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+      {id:"sn_mau_gel_st2",name:"Maurten Gel 100",dose:"1 Gel alle 45-60 min",when:"Aufstieg",why:"Magenfreundlich auch bei Kälte - keine Einfrierproblematik bei Körperwärme.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_riegel_st",name:"Energieriegel",dose:"1 Riegel / 2h",when:"Gipfelpause / Abstieg",why:"Solide Energie für lange Touren - Sättigung wichtiger als bei kurzen Rennen.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
     ],
     secondary:[
       {id:"sn_elek_st2",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 60 min",why:"Hoher Schweiss- und Energieverbrauch bei langen Aufstiegen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3502,41 +3505,41 @@ const SPORT_NUTRITION = {
   // Langlauf & Biathlon
   langlauf:{
     primary:[
-      {id:"sn_mau_gel_xl2",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",when:"Einheiten über 60 min",why:"Höchster MET aller Sportarten — kontinuierliche Kohlenhydratzufuhr kritisch.",link:AFF.maurten("gel-100"),shop:"Maurten"},
-      {id:"sn_mau_320_xl2",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Lange Einheiten über 2h",why:"Maximale Kohlenhydratdichte für 2–4h Ausdauerbelastungen.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_mau_gel_xl2",name:"Maurten Gel 100",dose:"1 Gel alle 30-40 min",when:"Einheiten über 60 min",why:"Höchster MET aller Sportarten - kontinuierliche Kohlenhydratzufuhr kritisch.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_mau_320_xl2",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Lange Einheiten über 2h",why:"Maximale Kohlenhydratdichte für 2-4h Ausdauerbelastungen.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_xl2",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45–60 min",why:"Hoher Natriumverlust auch bei Kälte — Krampfprävention und Leistungserhalt.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_xl2",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45-60 min",why:"Hoher Natriumverlust auch bei Kälte - Krampfprävention und Leistungserhalt.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Langlauf Kurzdistanz (bis 15km)
   langlauf_kurz:{
     primary:[
-      {id:"sn_koff_xl_k",name:"Koffein-Gel 100mg",dose:"1 Gel 45 min vor Start",when:"Wettkampf / Intensivtraining",why:"Kurzdistanz Langlauf ist hochintensiv — Koffein für maximale Pace und Reaktion.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+      {id:"sn_koff_xl_k",name:"Koffein-Gel 100mg",dose:"1 Gel 45 min vor Start",when:"Wettkampf / Intensivtraining",why:"Kurzdistanz Langlauf ist hochintensiv - Koffein für maximale Pace und Reaktion.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
     ],
     secondary:[
       {id:"sn_elek_xl_k",name:"Elektrolyt-Tabs",dose:"1 Tab vor Start",when:"Vor Rennen",why:"Kurze Distanz: Hydration vor dem Start entscheidend, kein Fueling unterwegs nötig.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
-  // Langlauf Mitteldistanz (15–50km, z.B. Engadin)
+  // Langlauf Mitteldistanz (15-50km, z.B. Engadin)
   langlauf_mittel:{
     primary:[
-      {id:"sn_gel_xl_m",name:"Maurten Gel 100",dose:"1 Gel alle 40–45 min",when:"Ab km 10",why:"Mitteldistanz (1.5–3h): 2–4 Gels je nach Tempo — früh starten, nicht erst bei Hunger.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_gel_xl_m",name:"Maurten Gel 100",dose:"1 Gel alle 40-45 min",when:"Ab km 10",why:"Mitteldistanz (1.5-3h): 2-4 Gels je nach Tempo - früh starten, nicht erst bei Hunger.",link:AFF.maurten("gel-100"),shop:"Maurten"},
     ],
     secondary:[
-      {id:"sn_elek_xl_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45 min",why:"Natrium und Kalium für Leistungserhalt — Kälte täuscht über Schweissverlust.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
-      {id:"sn_320_xl_m",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"An Verpflegungsstationen",why:"Flüssige Carbs ergänzen Gels — an Stationen trinken wenn vorhanden.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
+      {id:"sn_elek_xl_m",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Alle 45 min",why:"Natrium und Kalium für Leistungserhalt - Kälte täuscht über Schweissverlust.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_320_xl_m",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"An Verpflegungsstationen",why:"Flüssige Carbs ergänzen Gels - an Stationen trinken wenn vorhanden.",link:AFF.maurten("drink-mix-320"),shop:"Maurten"},
     ],
   },
   // Langlauf Langdistanz (50km+, z.B. Vasaloppet, Birkebeiner)
   langlauf_lang:{
     primary:[
-      {id:"sn_gel_xl_l",name:"Maurten Gel 100",dose:"1 Gel alle 35–40 min",when:"Kontinuierlich ab Start",why:"50km+ Langlauf: höchster Energieumsatz aller Ausdauersportarten — konsequentes Fueling von km 1.",link:AFF.maurten("gel-100"),shop:"Maurten"},
-      {id:"sn_real_xl_l",name:"Echtes Essen (Banane, Riegel, Suppe)",dose:"Alle 1.5–2h",when:"An Verpflegungsstationen",why:"Ab 3h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig — feste Nahrung Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
+      {id:"sn_gel_xl_l",name:"Maurten Gel 100",dose:"1 Gel alle 35-40 min",when:"Kontinuierlich ab Start",why:"50km+ Langlauf: höchster Energieumsatz aller Ausdauersportarten - konsequentes Fueling von km 1.",link:AFF.maurten("gel-100"),shop:"Maurten"},
+      {id:"sn_real_xl_l",name:"Echtes Essen (Banane, Riegel, Suppe)",dose:"Alle 1.5-2h",when:"An Verpflegungsstationen",why:"Ab 3h+ wird reines Gel-Fueling psychologisch und physiologisch schwierig - feste Nahrung Pflicht.",link:AFF.mnstry("energy-bar"),shop:"MNSTRY"},
     ],
     secondary:[
-      {id:"sn_elek_xl_l",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Alle 30–40 min",why:"Langdistanz: Natriummangel (Hyponatriämie) ist reales Risiko — regelmässig salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
-      {id:"sn_caf_xl_l",name:"Koffein-Gel 100mg",dose:"1–2 Gels strategisch",when:"Ab km 40, bei Einbruch",why:"Koffein gezielt einsetzen für die kritische Schlussphase — nicht zu früh verbrauchen.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
+      {id:"sn_elek_xl_l",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Alle 30-40 min",why:"Langdistanz: Natriummangel (Hyponatriämie) ist reales Risiko - regelmässig salzen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_caf_xl_l",name:"Koffein-Gel 100mg",dose:"1-2 Gels strategisch",when:"Ab km 40, bei Einbruch",why:"Koffein gezielt einsetzen für die kritische Schlussphase - nicht zu früh verbrauchen.",link:AFF.iherb("caffeine gel"),shop:"iHerb"},
     ],
   },
   // Tennis & Padel
@@ -3545,13 +3548,13 @@ const SPORT_NUTRITION = {
       {id:"sn_banana_ten",name:"Banane / schnelle Carbs",dose:"1 Stück pro Satzpause",when:"Seitenwechsel / Spielpausen",why:"ATP-Standard: Bananen für schnelle Energie bei langen Matches.",link:AFF.iherb("dextrose"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_ten2",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Während Match",why:"Tennis-Matches bis 5h — Natriumverlust erheblich auf Hartplatz.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_ten2",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Während Match",why:"Tennis-Matches bis 5h - Natriumverlust erheblich auf Hartplatz.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
   // Team Sports (Handball, Volleyball)
   team_sport:{
     primary:[
-      {id:"sn_krea_team",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training / Spiel",why:"Sprintwiederholungen und explosive Bewegungen — Kreatin direkt relevant.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+      {id:"sn_krea_team",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training / Spiel",why:"Sprintwiederholungen und explosive Bewegungen - Kreatin direkt relevant.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
     ],
     secondary:[
       {id:"sn_elek_team",name:"Elektrolyt-Tabs",dose:"1 Tab / 0.5L",when:"Während Spiel / Training",why:"Hochintensive Teamspiele mit hohem Schweissvolumen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
@@ -3560,15 +3563,15 @@ const SPORT_NUTRITION = {
   // Kampfsport
   kampfsport:{
     primary:[
-      {id:"sn_krea_ks2",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Explosive Schläge und Würfe — Kreatin verbessert Kraft-Wiederholbarkeit.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
+      {id:"sn_krea_ks2",name:"Kreatin Monohydrat",dose:"5g täglich",when:"Nach Training",why:"Explosive Schläge und Würfe - Kreatin verbessert Kraft-Wiederholbarkeit.",link:AFF.iherb("creatine monohydrate"),shop:"iHerb"},
     ],
     secondary:[
-      {id:"sn_elek_ks2",name:"Elektrolyt-Tabs",dose:"1–2 Tabs / 0.5L",when:"Sparring und lange Einheiten",why:"Hohes Schweissvolumen bei Kampfsport — Elektrolyte nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
+      {id:"sn_elek_ks2",name:"Elektrolyt-Tabs",dose:"1-2 Tabs / 0.5L",when:"Sparring und lange Einheiten",why:"Hohes Schweissvolumen bei Kampfsport - Elektrolyte nicht vernachlässigen.",link:AFF.sponser("elektrolyt tabletten"),shop:"Sponser"},
     ],
   },
 };
 const genericSportNutrition={
-  primary:[{id:"sn_gen",name:"Energie-Gel (Maurten / MNSTRY)",dose:"1 Gel alle 30–45 min",when:"Einheiten über 60 min",why:"Schnell verfügbare Kohlenhydrate für Training und Wettkampf.",link:AFF.maurten("gel-100"),shop:"Maurten"}],
+  primary:[{id:"sn_gen",name:"Energie-Gel (Maurten / MNSTRY)",dose:"1 Gel alle 30-45 min",when:"Einheiten über 60 min",why:"Schnell verfügbare Kohlenhydrate für Training und Wettkampf.",link:AFF.maurten("gel-100"),shop:"Maurten"}],
   secondary:[{id:"sn_elek_g",name:"Elektrolyt-Tabletten",dose:"1 Tab / 500ml",when:"Bei starkem Schwitzen",why:"Natriumverlust ausgleichen.",link:AFF.iherb("electrolyte"),shop:"iHerb"}],
 };
 function getSportNutrition(id, subSel, childSel={}) {
@@ -3620,7 +3623,7 @@ function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
   const recoveryAshwaNeeded = proData?.recoveryAshwaNeeded||false;
   const recoveryStatus = proData?.recoveryStatus||"good";
 
-  // Suppress helper — returns true if this supplement should be hidden/deprioritised
+  // Suppress helper - returns true if this supplement should be hidden/deprioritised
   function isSuppressed(s) {
     if(suppress.kreatin && (s.id.includes("krea")||s.id.includes("kreatin"))) return true;
     if(suppress.protein  && (s.id.includes("whey")||s.id.includes("protein"))) return true;
@@ -3648,19 +3651,19 @@ function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
 
     let personalWhy=s.why, boost=false;
     if(s.id==="vitd3"||s.id.startsWith("vd3_")){
-      personalWhy=`70% der CH-Bevölkerung ist Vitamin D-mangelhaft.${isHighLoad?" Bei deiner Trainingsbelastung steigt der Bedarf durch Knochenumbau und Immunstress.":""}${isPro?` Empfohlene Dosis: ${isHighLoad?"3000–4000":"2000"} IE/Tag.`:""}`;
+      personalWhy=`70% der CH-Bevölkerung ist Vitamin D-mangelhaft.${isHighLoad?" Bei deiner Trainingsbelastung steigt der Bedarf durch Knochenumbau und Immunstress.":""}${isPro?` Empfohlene Dosis: ${isHighLoad?"3000-4000":"2000"} IE/Tag.`:""}`;
       boost=true;
     }
     if((s.id==="eisen_cy"||s.id==="eisen_run")&&(isFemale||ironRisk)){
-      personalWhy=s.why+(isFemale?" Frauen haben generell erhöhten Eisenbedarf.":"")+(ironRisk&&isPro?" Deine Sportart erhöht den Eisenverlust durch Hämolyse — Bluttest zwingend.":"");
+      personalWhy=s.why+(isFemale?" Frauen haben generell erhöhten Eisenbedarf.":"")+(ironRisk&&isPro?" Deine Sportart erhöht den Eisenverlust durch Hämolyse - Bluttest zwingend.":"");
       boost=true;
     }
     if((s.id==="magnesium"||s.id==="mag_h")&&(isHighLoad||highMg)){
-      personalWhy=s.why+(isPro&&highMg?` Dein berechneter Magnesiumverlust: ${proData.magnesiumMg}mg/Tag — Supplementierung zwingend.`:` Bei ${days}× Training/Woche verlierst du deutlich mehr Magnesium über Schweiss.`);
+      personalWhy=s.why+(isPro&&highMg?` Dein berechneter Magnesiumverlust: ${proData.magnesiumMg}mg/Tag - Supplementierung zwingend.`:` Bei ${days}× Training/Woche verlierst du deutlich mehr Magnesium über Schweiss.`);
       boost=true;
     }
     if((s.id==="whey_cy"||s.id==="whey_fit"||s.id==="whey_g")&&isHeavy){
-      personalWhy=s.why+(isPro?` Bei ${weight}kg und ${proData?.proteinMin||Math.round(weight*1.4)}g Proteinbedarf täglich: 30–35g pro Portion.`:` Bei ${weight}kg empfehlen sich 30–35g pro Portion.`);
+      personalWhy=s.why+(isPro?` Bei ${weight}kg und ${proData?.proteinMin||Math.round(weight*1.4)}g Proteinbedarf täglich: 30-35g pro Portion.`:` Bei ${weight}kg empfehlen sich 30-35g pro Portion.`);
       boost=true;
     }
     if((s.id==="kreatin_cy"||s.id==="kreatin_fit"||s.id==="krea_g"||s.id.startsWith("krea_"))&&isCompetitor){
@@ -3695,21 +3698,21 @@ function getPersonalizedSupps(profile, sportSupps, basisSupps, proData) {
 // Wissenschaftlich belegte Interaktionen zwischen Supplements
 // type: "conflict" = nicht gleichzeitig, "synergy" = zusammen einnehmen
 const INTERACTIONS = {
-  // KONFLIKTE — mindestens 2h Abstand
-  "eisen_cy":   [{with:["zink_cy","zink_h"],type:"conflict",msg:"Nicht gleichzeitig — konkurrieren um denselben Aufnahmeweg im Darm. Mind. 2h Abstand."},
+  // KONFLIKTE - mindestens 2h Abstand
+  "eisen_cy":   [{with:["zink_cy","zink_h"],type:"conflict",msg:"Nicht gleichzeitig - konkurrieren um denselben Aufnahmeweg im Darm. Mind. 2h Abstand."},
                  {with:["zink_run","eisen_run"],type:"conflict",msg:"Eisen + Calcium: klares Nein. Mind. 2h Abstand einhalten."}],
-  "eisen_run":  [{with:["zink_cy","zink_h","zink_fit"],type:"conflict",msg:"Nicht gleichzeitig — konkurrieren um denselben Aufnahmeweg. Mind. 2h Abstand."}],
-  "zink_cy":    [{with:["eisen_cy","eisen_run"],type:"conflict",msg:"Nicht gleichzeitig mit Eisen einnehmen — konkurrieren um Aufnahme. Mind. 2h Abstand."}],
+  "eisen_run":  [{with:["zink_cy","zink_h","zink_fit"],type:"conflict",msg:"Nicht gleichzeitig - konkurrieren um denselben Aufnahmeweg. Mind. 2h Abstand."}],
+  "zink_cy":    [{with:["eisen_cy","eisen_run"],type:"conflict",msg:"Nicht gleichzeitig mit Eisen einnehmen - konkurrieren um Aufnahme. Mind. 2h Abstand."}],
   "zink_h":     [{with:["eisen_cy","eisen_run"],type:"conflict",msg:"Nicht gleichzeitig mit Eisen einnehmen. Mind. 2h Abstand."},
-                 {with:["magnesium","mag_h"],type:"warning",msg:"Zink tagsüber, Magnesium abends — bei normalen Dosen (15mg Zink) kein Problem, aber zeitliche Trennung empfohlen."}],
-  "magnesium":  [{with:["zink_h","zink_cy","zink_fit"],type:"warning",msg:"Magnesium abends, Zink tagsüber — bei normalen Dosen unproblematisch, zeitliche Trennung für optimale Absorption."}],
-  "mag_h":      [{with:["zink_h"],type:"warning",msg:"Magnesium abends, Zink tagsüber — zeitliche Trennung empfohlen."}],
+                 {with:["magnesium","mag_h"],type:"warning",msg:"Zink tagsüber, Magnesium abends - bei normalen Dosen (15mg Zink) kein Problem, aber zeitliche Trennung empfohlen."}],
+  "magnesium":  [{with:["zink_h","zink_cy","zink_fit"],type:"warning",msg:"Magnesium abends, Zink tagsüber - bei normalen Dosen unproblematisch, zeitliche Trennung für optimale Absorption."}],
+  "mag_h":      [{with:["zink_h"],type:"warning",msg:"Magnesium abends, Zink tagsüber - zeitliche Trennung empfohlen."}],
   "koff_fit":   [{with:["krea_cy","kreatin_cy","kreatin_fit","krea_fit","krea_g"],type:"warning",msg:"Koffein kann die Wirksamkeit von Kreatin leicht verringern. Zeitliche Trennung sinnvoll."}],
   "koff_run":   [{with:["krea_cy","kreatin_cy"],type:"warning",msg:"Koffein + Kreatin: leicht verminderter Effekt. Wenn möglich getrennt einnehmen."}],
-  // SYNERGIEN — zusammen einnehmen
-  "vitd3":      [{with:["omega3"],type:"synergy",msg:"Vitamin D3 ist fettlöslich — zusammen mit Omega-3 oder einer fetthaltigen Mahlzeit einnehmen für optimale Absorption."}],
-  "vd3_h":      [{with:["omega_h","omega3"],type:"synergy",msg:"Vitamin D3 zusammen mit Omega-3 oder fetthaltiger Mahlzeit — verbessert Absorption deutlich."}],
-  "eisen_cy":   [{with:["vitd3","vd3_h"],type:"synergy",msg:"Eisen + Vitamin C gleichzeitig einnehmen — Vitamin C erhöht die Eisenaufnahme im Darm nachweislich."}],
+  // SYNERGIEN - zusammen einnehmen
+  "vitd3":      [{with:["omega3"],type:"synergy",msg:"Vitamin D3 ist fettlöslich - zusammen mit Omega-3 oder einer fetthaltigen Mahlzeit einnehmen für optimale Absorption."}],
+  "vd3_h":      [{with:["omega_h","omega3"],type:"synergy",msg:"Vitamin D3 zusammen mit Omega-3 oder fetthaltiger Mahlzeit - verbessert Absorption deutlich."}],
+  "eisen_cy":   [{with:["vitd3","vd3_h"],type:"synergy",msg:"Eisen + Vitamin C gleichzeitig einnehmen - Vitamin C erhöht die Eisenaufnahme im Darm nachweislich."}],
 };
 
 // Get all interactions for a supplement given current active supplements
@@ -3750,7 +3753,7 @@ function checkAllergens(suppId, suppName, allergenData) {
     };
     const suppAllergens = SUPP_ALLERGEN_MAP[suppId] || [];
     if(match || suppAllergens.includes(aid)) {
-      warnings.push({type:"allergen", allergen:group.label, icon:group.icon, msg:`Enthält möglicherweise ${group.label} — prüfe die Inhaltsstoffe beim Hersteller.`});
+      warnings.push({type:"allergen", allergen:group.label, icon:group.icon, msg:`Enthält möglicherweise ${group.label} - prüfe die Inhaltsstoffe beim Hersteller.`});
     }
   });
   return warnings;
@@ -3876,12 +3879,12 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         </div>
       </div>
 
-      {/* Why — prominent */}
+      {/* Why - prominent */}
       <div style={{fontSize:13,color:C.g800,lineHeight:1.65,marginBottom:10,padding:"10px 12px",background:"#FAFAFA",borderRadius:9,borderLeft:`3px solid ${isPrimary?C.neon:C.g300}`}}>
         {showBudget&&s.budget?s.budget.why:(s.personalWhy||s.why)}
       </div>
 
-      {/* Budget/Quality Toggle Switch — nur wenn Budget vorhanden */}
+      {/* Budget/Quality Toggle Switch - nur wenn Budget vorhanden */}
       {s.budget&&(
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderRadius:9,background:"#F8F8F8",marginBottom:10}}>
           <span style={{fontSize:11,fontWeight:showBudget?400:700,color:showBudget?C.g400:C.black}}>★ Höchste Qualität</span>
@@ -3932,7 +3935,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         <div key={i} style={{display:"flex",gap:8,padding:"8px 11px",borderRadius:8,background:"rgba(255,59,48,.06)",border:"1px solid rgba(255,59,48,.2)",marginBottom:6}}>
           <span style={{fontSize:14,flexShrink:0}}>{w.icon}</span>
           <div>
-            <div style={{fontSize:11,fontWeight:700,color:C.red,marginBottom:1}}>{w.allergen} — mögliche Unverträglichkeit</div>
+            <div style={{fontSize:11,fontWeight:700,color:C.red,marginBottom:1}}>{w.allergen} - mögliche Unverträglichkeit</div>
             <div style={{fontSize:11,color:"#C0392B",lineHeight:1.4}}>{w.msg}</div>
           </div>
         </div>
@@ -3986,7 +3989,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         </>
       )}
 
-      {/* Owned toggle — ganz unten, full-width */}
+      {/* Owned toggle - ganz unten, full-width */}
       <button onClick={toggleOwned}
         style={{display:"flex",alignItems:"center",justifyContent:"center",gap:7,width:"100%",marginTop:12,padding:"8px",borderRadius:9,border:`1.5px solid ${owned?C.neon:C.g200}`,background:owned?C.neon:"transparent",cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .15s"}}>
         {owned?(
@@ -3996,7 +3999,7 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         )}
         <span style={{fontSize:11,fontWeight:700,color:owned?"#000":C.g500}}>{owned?"✓ Im Warenkorb":"+ Zum Warenkorb"}</span>
       </button>
-      {owned&&<div style={{marginTop:6,fontSize:10,color:"#4A7000",textAlign:"center",lineHeight:1.5}}>Findest du in <strong>Deinen Plan</strong> — inkl. Einnahme-Tagesplan.</div>}
+      {owned&&<div style={{marginTop:6,fontSize:10,color:"#4A7000",textAlign:"center",lineHeight:1.5}}>Findest du in <strong>Deinen Plan</strong> - inkl. Einnahme-Tagesplan.</div>}
     </div>
   );
 }
@@ -4052,12 +4055,12 @@ function AiChat({context, isPro}) {
       const pd=context.proData;
       const sys=`Du bist TREYN AI, Supplement- und Sportnahrungsberater. Deutsch, präzise, keine Emojis, max 150 Wörter.
 Profil: Sport: ${context.sportLabel} · Intensität: ${context.intensity} · ${context.days}×/Woche Ø ${context.duration}min · ${context.weight}kg · ${context.gender==="f"?"Weiblich":"Männlich"} · Wettkämpfe: ${context.hasComp?`${context.compCount}/Jahr`:"Nein"}${pd?`
-Pro-Berechnungen: kcal Ruhe ${pd.restDay} / Training ${pd.trainingDay} · Protein ${pd.proteinMin}–${pd.proteinMax}g/Tag · Carbs ${pd.carbsG}g/Tag · Natrium-Verlust ${pd.natriumMg}mg/Tag · Magnesium ${pd.magnesiumMg}mg/Tag`:""}`;
+Pro-Berechnungen: kcal Ruhe ${pd.restDay} / Training ${pd.trainingDay} · Protein ${pd.proteinMin}-${pd.proteinMax}g/Tag · Carbs ${pd.carbsG}g/Tag · Natrium-Verlust ${pd.natriumMg}mg/Tag · Magnesium ${pd.magnesiumMg}mg/Tag`:""}`;
       const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:400,system:sys,
           messages:[...messages.map(m=>({role:m.role,content:m.content})),{role:"user",content:userMsg}]})});
       const data=await res.json();
-      setMessages(m=>[...m,{role:"assistant",content:data.content?.[0]?.text||"Fehler."}]);
+      setMessages(m=>[...m,{role:"assistant",content:noDash(data.content?.[0]?.text)||"Fehler."}]);
     }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Verbindungsfehler."}]);}
     setLoading(false);
   };
@@ -4079,7 +4082,7 @@ Pro-Berechnungen: kcal Ruhe ${pd.restDay} / Training ${pd.trainingDay} · Protei
       {isLimited&&(
         <div style={{padding:"16px 18px",background:"rgba(255,149,0,.06)",borderBottom:`1px solid rgba(255,149,0,.15)`}}>
           <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4}}>Tageslimit erreicht</div>
-          <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>Du hast heute 3 Fragen gestellt. Morgen stehen dir wieder 3 Fragen zur Verfügung — oder upgrade auf PRO für unlimitierten AI Chat.</div>
+          <div style={{fontSize:11,color:C.g600,lineHeight:1.55}}>Du hast heute 3 Fragen gestellt. Morgen stehen dir wieder 3 Fragen zur Verfügung - oder upgrade auf PRO für unlimitierten AI Chat.</div>
         </div>
       )}
 
@@ -4159,7 +4162,7 @@ function BluttestUpload({isPro}) {
 Antworte NUR mit einem gültigen JSON-Objekt, kein Markdown, keine Erklärungen.
 Format: {"marker_name": {"value": Zahl, "unit": "Einheit", "status": "optimal|niedrig|erhöht|mangel"}}
 Beispiel: {"Vitamin D": {"value": 42, "unit": "ng/ml", "status": "optimal"}}
-Erkenne alle vorhandenen Marker — Vitamin D, Eisen, Ferritin, Magnesium, Omega-3, Vitamin B12, Zink, Testosteron, Cortisol, TSH, CRP, Hämoglobin, etc.
+Erkenne alle vorhandenen Marker - Vitamin D, Eisen, Ferritin, Magnesium, Omega-3, Vitamin B12, Zink, Testosteron, Cortisol, TSH, CRP, Hämoglobin, etc.
 Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
           messages:[{
             role:"user",
@@ -4208,14 +4211,14 @@ Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
 
         {/* Intro */}
         <p style={{fontSize:13,color:C.g800,lineHeight:1.65,marginBottom:14}}>
-          TREYN+ liest deinen cerascreen-Bericht automatisch aus — alle Laborwerte werden sofort erkannt und deine Supplement-Empfehlungen präzise angepasst. Einfach das PDF hochladen, den Rest erledigt TREYN AI.
+          TREYN+ liest deinen cerascreen-Bericht automatisch aus - alle Laborwerte werden sofort erkannt und deine Supplement-Empfehlungen präzise angepasst. Einfach das PDF hochladen, den Rest erledigt TREYN AI.
         </p>
 
         {/* cerascreen CTA */}
         <div style={{background:C.g100,borderRadius:11,padding:"12px 14px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
           <div>
-            <div style={{fontSize:11,fontWeight:600,color:C.black,marginBottom:3}}>cerascreen® — Empfohlener Testpartner</div>
-            <div style={{fontSize:11,color:C.g600}}>19 Länder · CH, DE, AT · Ergebnis in 2–3 Werktagen als PDF</div>
+            <div style={{fontSize:11,fontWeight:600,color:C.black,marginBottom:3}}>cerascreen® - Empfohlener Testpartner</div>
+            <div style={{fontSize:11,color:C.g600}}>19 Länder · CH, DE, AT · Ergebnis in 2-3 Werktagen als PDF</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
               {["Vitamin D","Eisen","Magnesium","Omega-3","B12","Zink","Testosteron"].map(t=>(
                 <span key={t} className="chip" style={{fontSize:9}}>{t}</span>
@@ -4295,7 +4298,7 @@ Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
             </div>
 
             <div style={{padding:"11px 14px",background:C.neonDim,borderRadius:10,border:`1px solid ${C.neonBorder}`,fontSize:12,color:C.g800,lineHeight:1.6}}>
-              ✓ Deine Laborwerte wurden importiert. Die Supplement-Empfehlungen oben berücksichtigen jetzt deine echten Blutwerte — Dosierungen und Priorisierungen wurden automatisch angepasst.
+              ✓ Deine Laborwerte wurden importiert. Die Supplement-Empfehlungen oben berücksichtigen jetzt deine echten Blutwerte - Dosierungen und Priorisierungen wurden automatisch angepasst.
             </div>
           </div>
         )}
@@ -4348,8 +4351,8 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
         <div style={{display:"flex",flexDirection:"column",gap:12,marginBottom:32}}>
           {[
             {icon:"🆓", title:"Basicdaten sofort sichtbar", desc:"4 Werte sofort: Energieverbrauch, Grundumsatz, Wasser & Trainingseinheiten/Jahr."},
-            {icon:"🔒", title:`PRO — ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen — inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan."},
-            {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 — wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
+            {icon:"🔒", title:`PRO - ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen - inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan."},
+            {icon:"🎯", title:"100% auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 - wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
           ].map((item,i)=>(
             <div key={i} style={{display:"flex",gap:14,padding:"14px 16px",borderRadius:12,border:"1px solid #EBEBEB",background:"#fff"}}>
               <span style={{fontSize:22,lineHeight:1,flexShrink:0}}>{item.icon}</span>
@@ -4409,7 +4412,7 @@ function StepPraeferenzen({onNext, onBack}) {
         <h2 style={{fontSize:24,fontWeight:600,color:"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.2,marginBottom:6}}>Deine Präferenzen</h2>
         <p style={{fontSize:13,color:"#666",marginBottom:28,lineHeight:1.5}}>So stimmen wir alles noch gezielter auf dich ab. Mehrfachauswahl möglich.</p>
 
-        <Section title="Supplements — welche Form bevorzugst du?">
+        <Section title="Supplements - welche Form bevorzugst du?">
           {[{id:"kapsel",l:"Kapseln"},{id:"pulver",l:"Pulver"},{id:"beides",l:"Beides"}].map(o=>(
             <Chip key={o.id} label={o.l} active={suppForm===o.id} onClick={()=>setSuppForm(suppForm===o.id?null:o.id)}/>
           ))}
@@ -4421,13 +4424,13 @@ function StepPraeferenzen({onNext, onBack}) {
           ))}
         </Section>
 
-        <Section title="Protein — wie nimmst du es am liebsten?">
+        <Section title="Protein - wie nimmst du es am liebsten?">
           {[{id:"shake",l:"Shake / Pulver"},{id:"riegel",l:"Riegel"},{id:"egal",l:"Egal"}].map(o=>(
             <Chip key={o.id} label={o.l} active={proteinForm.includes(o.id)} onClick={()=>toggleMulti(proteinForm,setProteinForm,o.id)}/>
           ))}
         </Section>
 
-        <Section title="Recovery — wie erholst du dich am liebsten?">
+        <Section title="Recovery - wie erholst du dich am liebsten?">
           {[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionswear"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere zu wenig"}].map(o=>(
             <Chip key={o.id} label={o.l} active={recoveryForm.includes(o.id)} onClick={()=>toggleMulti(recoveryForm,setRecoveryForm,o.id)}/>
           ))}
@@ -4568,7 +4571,7 @@ function StepAllergien({onNext, onBack}) {
           )}
         </div>
 
-        {/* Ernährung — immer sichtbar, separate Sektion */}
+        {/* Ernährung - immer sichtbar, separate Sektion */}
         <div style={{marginBottom:28,paddingTop:20,borderTop:"1px solid #F0F0F0"}}>
           <div style={{fontSize:12,fontWeight:600,color:"#0A0A0A",marginBottom:4}}>Ernährungsweise</div>
           <div style={{fontSize:11,color:"#AAA",marginBottom:10}}>Mehrfachauswahl möglich</div>
@@ -4627,7 +4630,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
     </svg>
   );
 
-  const metVal=(SPORT_MET?.[primarySport]||SPORT_MET?.fussball)?.[primaryTraining?.intensity||"medium"]||"–";
+  const metVal=(SPORT_MET?.[primarySport]||SPORT_MET?.fussball)?.[primaryTraining?.intensity||"medium"]||"-";
 
   const ROWS=[
     {label:"Basic Berechnungen auf BMR-Werten",          basic:true,  basicOnly:true},
@@ -4653,14 +4656,14 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
       <div className="fu2" style={{marginBottom:32}}>
         <div style={{fontSize:11,color:C.g400,letterSpacing:".04em",textTransform:"uppercase",marginBottom:10}}>Deine Analyse{fname?` · ${fname}`:""}</div>
         <h2 style={{fontSize:26,fontWeight:600,color:C.black,lineHeight:1.2,marginBottom:12,letterSpacing:"-.02em"}}>
-          Deine Analyse — Nutze PRO für die genausten Werte. Einmalige Zahlung.
+          Deine Analyse - Nutze PRO für die genausten Werte. Einmalige Zahlung.
         </h2>
         <p style={{fontSize:13,color:C.g600,lineHeight:1.7,maxWidth:480}}>
-          Basic ist eine <strong style={{color:C.black,fontWeight:500}}>Schätzung</strong> aus Pauschalwerten — mit PRO wird alles <strong style={{color:C.black,fontWeight:500}}>exakt berechnet</strong> und wir empfehlen die passgenauen Supplements & Sportnahrung exakt für deinen Körper, Einsatzbereich und Energieverbrauch.
+          Basic ist eine <strong style={{color:C.black,fontWeight:500}}>Schätzung</strong> aus Pauschalwerten - mit PRO wird alles <strong style={{color:C.black,fontWeight:500}}>exakt berechnet</strong> und wir empfehlen die passgenauen Supplements & Sportnahrung exakt für deinen Körper, Einsatzbereich und Energieverbrauch.
         </p>
       </div>
 
-      {/* Basic results — Google style */}
+      {/* Basic results - Google style */}
       <div className="fu3" style={{borderRadius:16,overflow:"hidden",border:"1px solid #E8E8E8",marginBottom:20,background:C.white}}>
         <div style={{padding:"14px 20px",borderBottom:"1px solid #F0F0F0",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <span style={{fontSize:12,fontWeight:500,color:"#444"}}>Basic-Analyse deiner Werte auf Pauschal-Berechnung</span>
@@ -4697,13 +4700,13 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
           <div style={{position:"relative",marginBottom:8}}>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,filter:"blur(4px)",pointerEvents:"none",userSelect:"none",opacity:.7}}>
               {[
-                {label:"Protein / Tag",val:`${pro?.proteinMin||"–"}–${pro?.proteinMax||"–"}g`,unit:"exakt via MET"},
+                {label:"Protein / Tag",val:`${pro?.proteinMin||"-"}-${pro?.proteinMax||"-"}g`,unit:"exakt via MET"},
                 {label:"Kohlenhydrate",val:`${pro?.carbsG||Math.round(basic.withTraining*0.5/4)}g`,unit:"/ Tag"},
                 {label:"Wasser Trainingstag",val:`${pro?.waterMl?Math.round(pro.waterMl/100)/10:3.2}L`,unit:"inkl. Schweiss"},
-                {label:"Schweissrate",val:`${pro?.sweatLitresPerSession??"–"}L`,unit:"/ Einheit"},
+                {label:"Schweissrate",val:`${pro?.sweatLitresPerSession??"-"}L`,unit:"/ Einheit"},
                 {label:"Natrium-Verlust",val:`${pro?.natriumMg||1400}mg`,unit:"/ Training"},
                 {label:"Magnesium",val:`${pro?.magnesiumMg||380}mg`,unit:"täglich"},
-                {label:"Fettverbrennungszone",val:`${pro?.fatBurnMin||108}–${pro?.fatBurnMax||126}`,unit:"bpm"},
+                {label:"Fettverbrennungszone",val:`${pro?.fatBurnMin||108}-${pro?.fatBurnMax||126}`,unit:"bpm"},
                 {label:"VO₂max (Schätzwert)",val:`${pro?.vo2max||52}`,unit:"ml/kg/min"},
               ].map((c,i)=>(
                 <div key={i} style={{padding:"10px 12px",background:C.white,borderRadius:10,border:`1px solid ${C.g200}`}}>
@@ -4744,21 +4747,21 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
                 ))}
               </div>
               <button onClick={scrollToCards} style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"13px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif",letterSpacing:".01em"}}>
-                {`PRO — ${priceStr} ↓`}
+                {`PRO - ${priceStr} ↓`}
               </button>
               <div style={{marginTop:8,padding:"11px 14px",borderRadius:10,background:"#F0F0F0",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}} onClick={scrollToCards}>
-                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC — CHF 0.00 ↓</span>
+                <span style={{fontSize:14,fontWeight:500,color:"#555",fontFamily:"Inter,sans-serif"}}>BASIC - CHF 0.00 ↓</span>
               </div>
               <div style={{marginTop:10,marginBottom:10}}>
                 <ReviewsCompact/>
               </div>
               <div style={{marginTop:10,padding:"12px 14px",background:"#F5FFE0",borderRadius:10,border:"1px solid #C8FF00"}}>
                 <div style={{fontSize:12,color:"#0A0A0A",lineHeight:1.7,fontWeight:400}}>
-                  Dein Körper, dein Sport, dein Bedarf — <strong>exakt berechnet</strong>. Die meisten Sportler geben blind CHF 50–100/Monat für Supplements aus, ohne zu wissen was sie wirklich brauchen. <strong>{monthStr} im Monat</strong>, um das zu ändern, ist kein Investment — das ist das Günstigste, was du für deine Performance tun kannst.
+                  Dein Körper, dein Sport, dein Bedarf - <strong>exakt berechnet</strong>. Die meisten Sportler geben blind CHF 50-100/Monat für Supplements aus, ohne zu wissen was sie wirklich brauchen. <strong>{monthStr} im Monat</strong>, um das zu ändern, ist kein Investment - das ist das Günstigste, was du für deine Performance tun kannst.
                 </div>
                 <div style={{marginTop:8,fontSize:11,color:"#555",display:"flex",alignItems:"center",gap:5}}>
                   <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2" strokeLinecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  {`Einmalig ${priceStr} für 6 Monate`} — danach selbst entscheiden. Kein Passwort, kein Abo.
+                  {`Einmalig ${priceStr} für 6 Monate`} - danach selbst entscheiden. Kein Passwort, kein Abo.
                 </div>
               </div>
             </div>
@@ -4770,11 +4773,11 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
       <div className="fu3" style={{padding:"14px 16px",borderRadius:11,border:`1px solid ${C.g200}`,background:C.white,marginBottom:18}}>
         <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:10}}>
           <p style={{fontSize:12,color:C.g800,lineHeight:1.65,margin:0,flex:1}}>
-            Basic schätzt deinen Bedarf pauschal — mit einem Basiswert für deine Sportarten, Intensität und Körperwerte. PRO berechnet exakt mit{" "}
+            Basic schätzt deinen Bedarf pauschal - mit einem Basiswert für deine Sportarten, Intensität und Körperwerte. PRO berechnet exakt mit{" "}
             <span onClick={()=>setShowInfo(true)} style={{color:C.black,fontWeight:700,textDecoration:"underline",textDecorationStyle:"dotted",textUnderlineOffset:3,cursor:"pointer"}}>
               MET-Werten (Compendium 2024)
             </span>
-            {" "}— sport-spezifisch für deinen Körper. Nur so können wir dir die 100% passenden Supplements und Sportnahrung empfehlen.
+            {" "}- sport-spezifisch für deinen Körper. Nur so können wir dir die 100% passenden Supplements und Sportnahrung empfehlen.
           </p>
           <button onClick={()=>setShowInfo(true)}
             style={{width:22,height:22,borderRadius:"50%",border:`1.5px solid ${C.g200}`,background:"rgba(255,255,255,.8)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1,fontFamily:"Inter,sans-serif"}}>
@@ -4800,7 +4803,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
             {/* BASIC block */}
             <div style={{marginBottom:10,borderRadius:11,overflow:"hidden",border:`1px solid ${C.g200}`}}>
               <div style={{background:C.g100,padding:"8px 12px",borderBottom:`1px solid ${C.g200}`}}>
-                <span style={{fontSize:10,fontWeight:700,color:C.black,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>BASIC — PAUSCHALBERECHNUNG</span>
+                <span style={{fontSize:10,fontWeight:700,color:C.black,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>BASIC - PAUSCHALBERECHNUNG</span>
               </div>
               <div style={{padding:"12px"}}>
                 <p style={{fontSize:12,color:C.g800,lineHeight:1.6,margin:"0 0 10px"}}>
@@ -4816,11 +4819,11 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
             {/* PRO block */}
             <div style={{marginBottom:14,borderRadius:11,overflow:"hidden",border:`1.5px solid ${C.neonBorder}`}}>
               <div style={{background:C.neon,padding:"8px 12px"}}>
-                <span style={{fontSize:10,fontWeight:700,color:C.black,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>PRO — MET-WERTE (COMPENDIUM 2024)</span>
+                <span style={{fontSize:10,fontWeight:700,color:C.black,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>PRO - MET-WERTE (COMPENDIUM 2024)</span>
               </div>
               <div style={{padding:"12px",background:C.neonDim}}>
                 <p style={{fontSize:12,color:C.g800,lineHeight:1.6,margin:"0 0 10px"}}>
-                  MET-Wert (Metabolic Equivalent of Task) deiner Sportart und Intensität aus dem wissenschaftlichen Standard für Energieverbrauch — exakt berechnet für deinen Körper.
+                  MET-Wert (Metabolic Equivalent of Task) deiner Sportart und Intensität aus dem wissenschaftlichen Standard für Energieverbrauch - exakt berechnet für deinen Körper.
                 </p>
                 <div style={{background:"rgba(200,255,0,.2)",borderRadius:8,padding:"8px 10px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{fontSize:11,fontFamily:"JetBrains Mono,monospace",color:C.black,fontWeight:600}}>MET {metVal} × {weight}kg × h</span>
@@ -4874,7 +4877,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
           <div style={{padding:"10px 13px 13px"}}>
             <button onClick={onContinue}
               style={{width:"100%",background:"#EBEBEB",color:"#555",border:"none",borderRadius:9,padding:"11px",fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              Basic — Kostenlos →
+              Basic - Kostenlos →
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#AAA",marginTop:5}}>Kostenlos · ohne Zahlung</div>
           </div>
@@ -4907,7 +4910,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
           <div style={{padding:"10px 13px 14px",background:C.white}}>
             <button onClick={openPro} disabled={loadPro}
               style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:9,padding:"12px",fontSize:13,fontWeight:800,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",marginBottom:6}}>
-              {loadPro?"...":`Pro — ${priceStr} `}{!loadPro&&<span style={{fontSize:10,opacity:.7}}>· {monthStr}/Mt.</span>}{!loadPro&&" →"}
+              {loadPro?"...":`Pro - ${priceStr} `}{!loadPro&&<span style={{fontSize:10,opacity:.7}}>· {monthStr}/Mt.</span>}{!loadPro&&" →"}
             </button>
             <div style={{textAlign:"center",fontSize:10,color:"#888",marginTop:2}}>6 Monate Zugang · jederzeit erneuerbar</div>
           </div>
@@ -5086,18 +5089,18 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
   // Why explanation per format
   const getEnergyReason=(form)=>{
-    if(form==="gel"&&!wantsGel) return "Gels sind bei dir deaktiviert — du bevorzugst Riegel oder Drinks.";
+    if(form==="gel"&&!wantsGel) return "Gels sind bei dir deaktiviert - du bevorzugst Riegel oder Drinks.";
     if(form==="gel") return "Ideal für dich: kompakt, sofort verfügbar, kein Kauen nötig.";
-    if(form==="drink"&&!wantsDrink) return "Drink Mix ausgeblendet — du bevorzugst kompaktere Optionen.";
+    if(form==="drink"&&!wantsDrink) return "Drink Mix ausgeblendet - du bevorzugst kompaktere Optionen.";
     if(form==="drink") return "Perfekt: kombiniert Kohlenhydrate und Hydration in einem.";
-    if(form==="riegel"&&!wantsRiegel) return "Riegel ausgeblendet — du bevorzugst Gels oder Drinks.";
-    if(form==="riegel") return "Gut für längere Einheiten — mehr Sättigung, solider Energieschub.";
+    if(form==="riegel"&&!wantsRiegel) return "Riegel ausgeblendet - du bevorzugst Gels oder Drinks.";
+    if(form==="riegel") return "Gut für längere Einheiten - mehr Sättigung, solider Energieschub.";
     return "";
   };
 
   const getSuppReason=(form)=>{
-    if(form==="kapsel"&&!wantsKapsel) return "Kapseln ausgeblendet — du bevorzugst Pulver.";
-    if(form==="pulver"&&!wantsPulver) return "Pulver ausgeblendet — du bevorzugst Kapseln.";
+    if(form==="kapsel"&&!wantsKapsel) return "Kapseln ausgeblendet - du bevorzugst Pulver.";
+    if(form==="pulver"&&!wantsPulver) return "Pulver ausgeblendet - du bevorzugst Kapseln.";
     return "";
   };
   const sportLabel=SPORT_GROUPS.find(s=>s.id===primarySport)?.label||(healthOnly?"Gesundheit":"Sport");
@@ -5160,7 +5163,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const checkInteractions=(suppIds)=>{
     const warnings=[];
     if(suppIds.includes("koffein")&&suppIds.includes("beta_ala")) warnings.push({ids:["koffein","beta_ala"],text:"Koffein + Beta-Alanin: Kribbeln (Parästhesien) kann sich verstärken. Einzeln einnehmen."});
-    if(suppIds.includes("eisen")&&suppIds.includes("kalk")) warnings.push({ids:["eisen","kalk"],text:"Eisen + Kalzium: Nicht gleichzeitig einnehmen — hemmen gegenseitig die Aufnahme."});
+    if(suppIds.includes("eisen")&&suppIds.includes("kalk")) warnings.push({ids:["eisen","kalk"],text:"Eisen + Kalzium: Nicht gleichzeitig einnehmen - hemmen gegenseitig die Aufnahme."});
     if(suppIds.includes("zink")&&suppIds.includes("kalk")) warnings.push({ids:["zink","kalk"],text:"Zink + Kalzium: Zeitversetzt einnehmen für optimale Absorption."});
     return warnings;
   };
@@ -5197,11 +5200,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
             <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>DEIN SUPPLEMENT STACK</div>
             <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
-              {`${primSupps.length} essentielle${primSupps.length!==1?"":""} Supplement${primSupps.length!==1?"e":""} — berechnet auf dein Gewicht, Sport und Lifestyle.`}
+              {`${primSupps.length} essentielle${primSupps.length!==1?"":""} Supplement${primSupps.length!==1?"e":""} - berechnet auf dein Gewicht, Sport und Lifestyle.`}
             </div>
-            {proData?.vitDRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Vitamin D Risiko erkannt — Supplement besonders wichtig für dich.</div>}
-            {proData?.ironRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Erhöhtes Eisenrisiko — Blutspiegel prüfen empfohlen.</div>}
-            {proData?.sleepAshwaNeeded&&<div style={{fontSize:11,color:"#3A6000"}}>💤 Schlafdefizit erkannt — Ashwagandha & Magnesium priorisiert.</div>}
+            {proData?.vitDRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Vitamin D Risiko erkannt - Supplement besonders wichtig für dich.</div>}
+            {proData?.ironRisk&&<div style={{fontSize:11,color:"#3A6000"}}>⚠ Erhöhtes Eisenrisiko - Blutspiegel prüfen empfohlen.</div>}
+            {proData?.sleepAshwaNeeded&&<div style={{fontSize:11,color:"#3A6000"}}>💤 Schlafdefizit erkannt - Ashwagandha & Magnesium priorisiert.</div>}
           </div>
         )}
         {primSupps.length>0&&(
@@ -5223,19 +5226,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         )}
 
-        {/* Burgerstein — Schweizer Referenz */}
+        {/* Burgerstein - Schweizer Referenz */}
         <div style={{marginBottom:8}}>
           <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>BURGERSTEIN · SWISS QUALITY</div>
           <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"10px 14px",marginBottom:10,fontSize:11,color:C.g600,lineHeight:1.6}}>
-            Official Supplier von Swiss Ski, Swiss Triathlon & Swiss Tennis. Entwickelt von Sportärzten — seit 50 Jahren. Erhältlich via nu3.ch und Zur Rose.
+            Official Supplier von Swiss Ski, Swiss Triathlon & Swiss Tennis. Entwickelt von Sportärzten - seit 50 Jahren. Erhältlich via nu3.ch und Zur Rose.
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
             {[
-              {name:"Burgerstein Sport",dose:"1 Tablette täglich",when:"Zum Frühstück",why:"Das Basisprodukt für Sportler — Antioxidantien, Vitamine, Mineralien. Entwickelt mit Sportärzten.",price:"CHF 29.90",link:"https://www.nu3.ch/products/burgerstein-sport",shop:"nu3.ch"},
-              {name:"Burgerstein Magnesium",dose:"300–400mg abends",when:"Vor dem Schlafen",why:"Hochdosiertes Magnesium in optimaler Form — Muskelkrampfprävention und Regeneration.",price:"CHF 24.90",link:"https://www.nu3.ch/products/burgerstein-magnesium-vital",shop:"nu3.ch"},
-              {name:"Burgerstein Omega-3",dose:"2–3g täglich",when:"Zum Essen",why:"Hochreines Fischöl — entzündungshemmend, herzschützend, HRV-verbessernd.",price:"CHF 34.90",link:"https://www.zur-rose.ch/de/burgerstein-omega-3",shop:"Zur Rose"},
-              {name:"Burgerstein Vitamin D3",dose:"2000–4000 IE täglich",when:"Zum Frühstück",why:"Vitamin D3 in optimaler Dosierung — 70% aller Schweizer mangelhaft versorgt.",price:"CHF 19.90",link:"https://www.nu3.ch/products/burgerstein-vitamin-d3",shop:"nu3.ch"},
-              {name:"Burgerstein Zink",dose:"15mg täglich",when:"Zum Essen",why:"Organisches Zink für Immunsystem, Hormonhaushalt & Wundheilung — oft defizitär bei Ausdauersport.",price:"CHF 22.90",link:"https://www.zur-rose.ch/de/burgerstein-zink",shop:"Zur Rose"},
+              {name:"Burgerstein Sport",dose:"1 Tablette täglich",when:"Zum Frühstück",why:"Das Basisprodukt für Sportler - Antioxidantien, Vitamine, Mineralien. Entwickelt mit Sportärzten.",price:"CHF 29.90",link:"https://www.nu3.ch/products/burgerstein-sport",shop:"nu3.ch"},
+              {name:"Burgerstein Magnesium",dose:"300-400mg abends",when:"Vor dem Schlafen",why:"Hochdosiertes Magnesium in optimaler Form - Muskelkrampfprävention und Regeneration.",price:"CHF 24.90",link:"https://www.nu3.ch/products/burgerstein-magnesium-vital",shop:"nu3.ch"},
+              {name:"Burgerstein Omega-3",dose:"2-3g täglich",when:"Zum Essen",why:"Hochreines Fischöl - entzündungshemmend, herzschützend, HRV-verbessernd.",price:"CHF 34.90",link:"https://www.zur-rose.ch/de/burgerstein-omega-3",shop:"Zur Rose"},
+              {name:"Burgerstein Vitamin D3",dose:"2000-4000 IE täglich",when:"Zum Frühstück",why:"Vitamin D3 in optimaler Dosierung - 70% aller Schweizer mangelhaft versorgt.",price:"CHF 19.90",link:"https://www.nu3.ch/products/burgerstein-vitamin-d3",shop:"nu3.ch"},
+              {name:"Burgerstein Zink",dose:"15mg täglich",when:"Zum Essen",why:"Organisches Zink für Immunsystem, Hormonhaushalt & Wundheilung - oft defizitär bei Ausdauersport.",price:"CHF 22.90",link:"https://www.zur-rose.ch/de/burgerstein-zink",shop:"Zur Rose"},
             ].map((p,i)=>(
               <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:11,padding:"12px 14px",display:"flex",flexDirection:"column",gap:6}}>
                 <div style={{fontSize:13,fontWeight:700,color:C.black,lineHeight:1.3}}>{p.name}</div>
@@ -5263,7 +5266,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
       affiliate:true,
       category:"Sleep & Recovery",
-      why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
+      why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo - einmalig kaufen, fertig.",
       metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
       price:"ab CHF 399",
       shops:[{name:"Ultrahuman",link:"https://www.ultrahuman.com/ring-pro/?ref=DEIN_CODE",affiliate:true}],
@@ -5293,7 +5296,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       badge:"Polar · Ausdauer · HRV",
       affiliate:true,
       category:"Ausdauer",
-      why:"Polars Flaggschiff. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk — einzigartig präzise.",
+      why:"Polars Flaggschiff. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk - einzigartig präzise.",
       metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
       price:"ab CHF 499",
       shops:[{name:"Polar CH",link:"https://www.polar.com/de/vantage/v3",affiliate:true}],
@@ -5303,7 +5306,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       badge:"Laufen · Leicht · Präzise",
       affiliate:true,
       category:"Running",
-      why:"Leichtest mögliche GPS-Uhr für Läufer. Nur 45g — man vergisst sie beim Training.",
+      why:"Leichtest mögliche GPS-Uhr für Läufer. Nur 45g - man vergisst sie beim Training.",
       metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
       price:"ab CHF 299",
       shops:[{name:"Polar CH",link:"https://www.polar.com/de/pacer-pro",affiliate:true}],
@@ -5328,7 +5331,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"★ TOP PICK · 20% Provision · Kein Abo · 15 Tage Akku",
         affiliate:true,
         category:"Sleep & Recovery",
-        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo — einmalig kaufen, fertig.",
+        why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo - einmalig kaufen, fertig.",
         metrics:["HRV","Schlafphasen","Körpertemperatur","Stress Score","Glucose-Integration"],
         price:"ab CHF 399",
         shops:[
@@ -5407,8 +5410,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"MORE Nutrition Sirup",
         badge:"Ohne Zucker · CH-Bestseller",
         affiliate:true,
-        why:"Der einfachste Weg mehr zu trinken — über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
-        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40–60%. Kein Zucker = kein Insulin-Spike.",
+        why:"Der einfachste Weg mehr zu trinken - über 30 Geschmäcker, 0 Kalorien. Für alle die Wasser öde finden.",
+        science:"Süsser Geschmack erhöht die Trinkmotivation nachweislich um 40-60%. Kein Zucker = kein Insulin-Spike.",
         tags:["Täglich","Ohne Zucker"],
         link:AFF.more_sirup(),
         shop:"MORE Nutrition",
@@ -5418,7 +5421,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"GPS · HRV · VO₂max · TOP PICK",
         affiliate:true,
         category:"Multisport",
-        why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand — alles was TREYN+ für präzisere Berechnungen nutzen kann.",
+        why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand - alles was TREYN+ für präzisere Berechnungen nutzen kann.",
         metrics:["VO₂max","HRV","Schlaf","Training Load","Erholungsstatus"],
         price:"ab CHF 599",
         shops:[
@@ -5430,7 +5433,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Premium · Outdoor · Multisport",
         affiliate:true,
         category:"Premium GPS",
-        why:"Für den Athleten der alles will. Solarladung, Topo-Karten, Tauchen — und alle Gesundheitsmetriken die TREYN+ für optimale Berechnungen braucht.",
+        why:"Für den Athleten der alles will. Solarladung, Topo-Karten, Tauchen - und alle Gesundheitsmetriken die TREYN+ für optimale Berechnungen braucht.",
         metrics:["VO₂max","HRV","Schlaf","Altitude Training","Körperbatterie"],
         price:"ab CHF 899",
         shops:[
@@ -5442,7 +5445,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Polar · Ausdauer · HRV",
         affiliate:true,
         category:"Ausdauer",
-        why:"Polars Flaggschiff für Ausdauersportler. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk — einzigartig präzise für Regenerationsberechnungen.",
+        why:"Polars Flaggschiff für Ausdauersportler. Noxim-Technologie misst Sauerstoffsättigung am Handgelenk - einzigartig präzise für Regenerationsberechnungen.",
         metrics:["VO₂max","HRV","Schlaf","Noxim O₂","Running Power"],
         price:"ab CHF 499",
         shops:[
@@ -5454,7 +5457,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Laufen · Leicht · Präzise",
         affiliate:true,
         category:"Running",
-        why:"Leichtest mögliche GPS-Uhr für Läufer mit allen wichtigen Metriken. Nur 45g — man vergisst sie beim Training.",
+        why:"Leichtest mögliche GPS-Uhr für Läufer mit allen wichtigen Metriken. Nur 45g - man vergisst sie beim Training.",
         metrics:["VO₂max","HRV","Laufleistung","Kadenz","Schlaf"],
         price:"ab CHF 299",
         shops:[
@@ -5466,7 +5469,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Ring · Schlaf · HRV · MARKTFÜHRER",
         affiliate:true,
         category:"Sleep & Recovery",
-        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität — ideal für alle die keine Uhr tragen wollen.",
+        why:"Der Marktführer. Als Ring getragen misst er Schlafphasen, HRV und Körpertemperatur mit Laborqualität - ideal für alle die keine Uhr tragen wollen.",
         metrics:["HRV","Schlafphasen","Körpertemperatur","Readiness Score","Zyklusanalyse"],
         price:"ab CHF 349 + Abo",
         shops:[
@@ -5479,7 +5482,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"LMNT Elektrolyt-Packets",
         badge:"1000mg Natrium · Kein Zucker",
         affiliate:true,
-        why:"Extrem hochdosiert — 3× mehr Natrium als normale Elektrolyte. Ideal für Intensiv-Sportler und Keto-Athleten.",
+        why:"Extrem hochdosiert - 3× mehr Natrium als normale Elektrolyte. Ideal für Intensiv-Sportler und Keto-Athleten.",
         science:"Natrium ist der stärkste Hydrations-Trigger. Mehr Natrium = mehr Trinkbereitschaft = bessere Hydration.",
         tags:["Elektrolyte","High Sodium"],
         link:AFF.lmnt(),
@@ -5490,7 +5493,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"Sponser Elektrolyt-Tabs",
         badge:"Bewährt · Schweizer Qualität",
         affiliate:false,
-        why:"Kompaktes Format — einfach in die Trinkflasche, überall dabei. Schweizer Qualitätsstandard.",
+        why:"Kompaktes Format - einfach in die Trinkflasche, überall dabei. Schweizer Qualitätsstandard.",
         science:"Elektrolyt-Balance verbessert Flüssigkeitstransport in die Zellen. Ohne Elektrolyte bleibt Wasser im Darm.",
         tags:["Elektrolyte","Kompakt"],
         link:AFF.sponser("elektrolyt tabletten"),
@@ -5501,7 +5504,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"Kokoswasser",
         badge:"Natürlich · Isotonisch",
         affiliate:false,
-        why:"Natürlich isotonisch mit Kalium, Magnesium und Natrium. Idealer Ersatz für Sportgetränke — ohne Zucker-Overhead.",
+        why:"Natürlich isotonisch mit Kalium, Magnesium und Natrium. Idealer Ersatz für Sportgetränke - ohne Zucker-Overhead.",
         science:"Ähnliche Elektrolyt-Zusammensetzung wie menschliches Blutplasma. Studien zeigen gleiche Rehydrations-Wirkung wie kommerzielle Sportdrinks.",
         tags:["Natürlich","Kalium"],
         link:AFF.iherb("vita coco coconut water"),
@@ -5526,8 +5529,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"Athletic Brewing Co.",
         badge:"Craft Bier · 0% Alkohol",
         affiliate:true,
-        why:"Das beste alkoholfreie Bier das je gemacht wurde — für alle die nach einem harten Training das Bier-Feeling wollen ohne Alkohol.",
-        science:"0% Alkohol eliminiert den wichtigsten Recovery-Killer. Alkohol hemmt Proteinsynthese, Testosteron und Schlafqualität — Athletic Brewing gibt dir das Ritual ohne die Kosten.",
+        why:"Das beste alkoholfreie Bier das je gemacht wurde - für alle die nach einem harten Training das Bier-Feeling wollen ohne Alkohol.",
+        science:"0% Alkohol eliminiert den wichtigsten Recovery-Killer. Alkohol hemmt Proteinsynthese, Testosteron und Schlafqualität - Athletic Brewing gibt dir das Ritual ohne die Kosten.",
         tags:["0% Alkohol","Craft","Recovery"],
         link:AFF.athletic(),
         shop:"Athletic Brewing",
@@ -5537,7 +5540,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         name:"Schokoladenmilch",
         badge:"Klassiker der Sportwissenschaft",
         affiliate:false,
-        why:"Klingt banal — ist aber ernsthaft eines der meistgetesteten Recovery-Getränke der Sportwissenschaft. Günstig, zugänglich, effektiv.",
+        why:"Klingt banal - ist aber ernsthaft eines der meistgetesteten Recovery-Getränke der Sportwissenschaft. Günstig, zugänglich, effektiv.",
         science:"Ideales 1:4 Protein-zu-Carb-Verhältnis für Muskelreparatur und Glykogen-Wiederauffüllung. Studien zeigen: gleich effektiv wie kommerzielle Recovery-Drinks.",
         tags:["Protein","Carbs","Günstig"],
         link:"https://www.migros.ch",
@@ -5549,7 +5552,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         badge:"Probiotika · Protein · Unterschätzt",
         affiliate:false,
         why:"Für Sportler die ihren Darm ernst nehmen. Kefir enthält mehr Probiotika als Joghurt und liefert gleichzeitig Protein und Elektrolyte.",
-        science:"Intensive Trainingsbelastung erhöht Darmpermeabilität ('Leaky Gut'). Probiotika reduzieren Inflammation und verbessern Nährstoffaufnahme — direkt relevant für Recovery.",
+        science:"Intensive Trainingsbelastung erhöht Darmpermeabilität ('Leaky Gut'). Probiotika reduzieren Inflammation und verbessern Nährstoffaufnahme - direkt relevant für Recovery.",
         tags:["Probiotika","Darm","Protein"],
         link:"https://www.migros.ch",
         shop:"Migros / Coop",
@@ -5602,8 +5605,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const FertiggerichteContent=()=>(
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
       {[
-        {name:"Löwenanteil",badge:"Bio · High Protein · TOP PICK",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30–42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
-        {name:"HelloFresh",badge:"Meal Kit · Flexible Lieferung",desc:"Wochentliche Meal Kits mit ausgewogenen Mahlzeiten — einfach zu kochen, sportlergerecht.",products:[{l:"Kalorien",v:"500–800 kcal"},{l:"Protein",v:"25–40g"},{l:"Preis",v:"ab CHF 8.90"}],link:"https://www.hellofresh.ch",img:"https://img.hellofresh.com/hellofresh_s3/image/5f7c6b2f3e36d0000c4e4b1a.jpg"},
+        {name:"Löwenanteil",badge:"Bio · High Protein · TOP PICK",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30-42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
+        {name:"HelloFresh",badge:"Meal Kit · Flexible Lieferung",desc:"Wochentliche Meal Kits mit ausgewogenen Mahlzeiten - einfach zu kochen, sportlergerecht.",products:[{l:"Kalorien",v:"500-800 kcal"},{l:"Protein",v:"25-40g"},{l:"Preis",v:"ab CHF 8.90"}],link:"https://www.hellofresh.ch",img:"https://img.hellofresh.com/hellofresh_s3/image/5f7c6b2f3e36d0000c4e4b1a.jpg"},
       ].map((b,i)=>(
         <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
           <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
@@ -5627,9 +5630,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
       {[
         {name:"Therabody",badge:"Massage Guns · Boots",desc:"Weltmarktführer in Perkussionstherapie. Genutzt von Profiteams in NBA, NFL und Tour de France.",products:[{n:"Theragun PRO Plus",p:"CHF 599"},{n:"Theragun Mini",p:"CHF 199"},{n:"JetBoots PRO",p:"CHF 1'149"}],link:"https://www.therabody.com/de-ch",img:"https://cdn.shopify.com/s/files/1/0624/4657/products/TBY-PRO5-BLK_1.png"},
-        {name:"Hyperice",badge:"Kompression · Massage",desc:"Gold Standard für Kompressionsboots — Ironman, NBA und Tour de France. Hypervolt als günstige Alternative.",products:[{n:"Hypervolt 2",p:"CHF 229"},{n:"Normatec 3 Legs",p:"CHF 899"},{n:"Normatec Elite",p:"CHF 1'099"}],link:"https://hyperice.com/",img:"https://hyperice.com/cdn/shop/products/Normatec3Leg_Lifestyle_ProductPage_1.jpg"},
-        {name:"Blackroll",badge:"Faszienrollen · Selbstmassage",desc:"Schweizer Marktführer für Faszientherapie. Einsteigerfreundlich — ideal für tägliche Selbstmassage.",products:[{n:"Standard Rolle",p:"CHF 35"},{n:"Massage Gun",p:"CHF 149"},{n:"Ball",p:"CHF 15"}],link:"https://www.blackroll.com/ch-de",img:"https://www.blackroll.com/cdn/shop/products/blackroll-standard-rolle-schwarz_1.jpg"},
-        {name:"Compex",badge:"EMS Muskelstimulation",desc:"Pionier in Elektrostimulation — genutzt von Physios und Profiathleten. Aktive Recovery und Muskelaufbau.",products:[{n:"Edge 3.0",p:"CHF 199"},{n:"Performance 3.0",p:"CHF 249"},{n:"Sport Elite 3.0",p:"CHF 349"}],link:"https://www.compex.com/ch-de",img:"https://www.compex.com/medias/sys_master/root/h2e/hef/8796266717214/compex-sp-8-0-wireless.jpg"},
+        {name:"Hyperice",badge:"Kompression · Massage",desc:"Gold Standard für Kompressionsboots - Ironman, NBA und Tour de France. Hypervolt als günstige Alternative.",products:[{n:"Hypervolt 2",p:"CHF 229"},{n:"Normatec 3 Legs",p:"CHF 899"},{n:"Normatec Elite",p:"CHF 1'099"}],link:"https://hyperice.com/",img:"https://hyperice.com/cdn/shop/products/Normatec3Leg_Lifestyle_ProductPage_1.jpg"},
+        {name:"Blackroll",badge:"Faszienrollen · Selbstmassage",desc:"Schweizer Marktführer für Faszientherapie. Einsteigerfreundlich - ideal für tägliche Selbstmassage.",products:[{n:"Standard Rolle",p:"CHF 35"},{n:"Massage Gun",p:"CHF 149"},{n:"Ball",p:"CHF 15"}],link:"https://www.blackroll.com/ch-de",img:"https://www.blackroll.com/cdn/shop/products/blackroll-standard-rolle-schwarz_1.jpg"},
+        {name:"Compex",badge:"EMS Muskelstimulation",desc:"Pionier in Elektrostimulation - genutzt von Physios und Profiathleten. Aktive Recovery und Muskelaufbau.",products:[{n:"Edge 3.0",p:"CHF 199"},{n:"Performance 3.0",p:"CHF 249"},{n:"Sport Elite 3.0",p:"CHF 349"}],link:"https://www.compex.com/ch-de",img:"https://www.compex.com/medias/sys_master/root/h2e/hef/8796266717214/compex-sp-8-0-wireless.jpg"},
       ].map((b,i)=>(
         <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
           <div style={{background:C.g100,height:120,display:"flex",alignItems:"center",justifyContent:"center",overflow:"hidden"}}>
@@ -5679,7 +5682,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {activeSection==="protokoll"&&<ProtokollTab/>}
         {activeSection==="wettkampf"&&hasComp&&(
           <div>
-            <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
+            <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>Race-Day Strategie - personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
             <WettkampfTab/>
           </div>
         )}
@@ -5696,7 +5699,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const activeTD=isRestDay?trainingData:{...(trainingData||{}), _primary:activeSport};
     const activeSD=isRestDay?sportData:{...(sportData||{}), primarySport:activeSport};
     const calc=calcPro(profilData,trainingData,sportData);
-    const t=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
+    const t=calc?.timingRecs||{preWorkout:"-",postWorkout:"-",creatine:"-",note:""};
     const w=+profilData?.weight||75;
     const activeDuration=(trainingData||{})[activeSport]?.duration||60;
     const activeIntensity=(trainingData||{})[activeSport]?.intensity||"medium";
@@ -5706,56 +5709,56 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     const PLAN=[
       {
-        time:"06:00–07:00",phase:"Aufwachen",
+        time:"06:00-07:00",phase:"Aufwachen",
         items:[
-          {label:"Wasser",detail:"500ml direkt nach dem Aufstehen — Rehydration nach 7–8h Schlaf",icon:"💧"},
-          ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:`${calc?.altitude==="alpine"?"4000":"2000–3000"} IE mit erstem Essen — fettlöslich, braucht Mahlzeit`,icon:"☀️"}]:[]),
-          ...(calc?.suppressMag?[]:[{label:"Omega-3",detail:"2–3g EPA/DHA zu einer Mahlzeit",icon:"🐟"}]),
+          {label:"Wasser",detail:"500ml direkt nach dem Aufstehen - Rehydration nach 7-8h Schlaf",icon:"💧"},
+          ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:`${calc?.altitude==="alpine"?"4000":"2000-3000"} IE mit erstem Essen - fettlöslich, braucht Mahlzeit`,icon:"☀️"}]:[]),
+          ...(calc?.suppressMag?[]:[{label:"Omega-3",detail:"2-3g EPA/DHA zu einer Mahlzeit",icon:"🐟"}]),
         ]
       },
       {
         time:t.preWorkout,phase:`Pre-Workout (${TIME})`,
         items:[
-          {label:"Mahlzeit / Snack",detail:`${Math.round(calc?.carbsG*0.25)||60}g Kohlenhydrate, 1.5–2h vor Training`,icon:"🍌"},
-          ...(!calc?.suppressKoffein?[{label:"Koffein 100–200mg",detail:"45 min vor Training — Leistung +3–5%",icon:"☕"}]:[]),
-          {label:"Wasser",detail:"400–600ml in der Stunde vor dem Training",icon:"💧"},
+          {label:"Mahlzeit / Snack",detail:`${Math.round(calc?.carbsG*0.25)||60}g Kohlenhydrate, 1.5-2h vor Training`,icon:"🍌"},
+          ...(!calc?.suppressKoffein?[{label:"Koffein 100-200mg",detail:"45 min vor Training - Leistung +3-5%",icon:"☕"}]:[]),
+          {label:"Wasser",detail:"400-600ml in der Stunde vor dem Training",icon:"💧"},
         ]
       },
       {
         time:"Training",phase:"Training",
         items:[
-          {label:"Wasser + Elektrolyte",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}–${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h bei intensivem Training`,icon:"⚡"},
-          ...(isEndurance&&(trainingData?.[primarySport]?.duration||60)>60?[{label:"Kohlenhydrate",detail:`${calc?.carbsPerHour||45}g/h ab Minute 45 — Gels oder Drink Mix`,icon:"🔋"}]:[]),
+          {label:"Wasser + Elektrolyte",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*500)}-${Math.round((calc?.sweatLitresPerSession||0.8)*700)}ml/h bei intensivem Training`,icon:"⚡"},
+          ...(isEndurance&&(trainingData?.[primarySport]?.duration||60)>60?[{label:"Kohlenhydrate",detail:`${calc?.carbsPerHour||45}g/h ab Minute 45 - Gels oder Drink Mix`,icon:"🔋"}]:[]),
         ]
       },
       {
         time:t.postWorkout,phase:"Post-Workout",
         items:[
-          {label:"Protein",detail:`${Math.round((calc?.proteinMin||140)*0.25)}–${Math.round((calc?.proteinMax||180)*0.25)}g innerhalb 30 min — anaboles Fenster`,icon:"💪"},
-          {label:"Kohlenhydrate",detail:"30–50g für Glykogen-Wiederauffüllung",icon:"🍚"},
-          ...(calc?.needsCollagen?[{label:"Kollagen + Vit C",detail:"10–15g vor Training (nicht danach!) — Sehnen & Gelenke",icon:"🦴"}]:[]),
+          {label:"Protein",detail:`${Math.round((calc?.proteinMin||140)*0.25)}-${Math.round((calc?.proteinMax||180)*0.25)}g innerhalb 30 min - anaboles Fenster`,icon:"💪"},
+          {label:"Kohlenhydrate",detail:"30-50g für Glykogen-Wiederauffüllung",icon:"🍚"},
+          ...(calc?.needsCollagen?[{label:"Kollagen + Vit C",detail:"10-15g vor Training (nicht danach!) - Sehnen & Gelenke",icon:"🦴"}]:[]),
         ]
       },
       {
-        time:"12:00–13:00",phase:"Mittag",
+        time:"12:00-13:00",phase:"Mittag",
         items:[
           {label:"Hauptmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.35)} kcal, ${Math.round((calc?.proteinMin||140)*0.3)}g Protein`,icon:"🥗"},
-          ...(!calc?.suppressKreatin?[{label:"Kreatin",detail:t.creatine+" · 5g täglich — mit Kohlenhydraten",icon:"💊"}]:[]),
+          ...(!calc?.suppressKreatin?[{label:"Kreatin",detail:t.creatine+" · 5g täglich - mit Kohlenhydraten",icon:"💊"}]:[]),
         ]
       },
       {
-        time:"18:00–19:00",phase:"Abend",
+        time:"18:00-19:00",phase:"Abend",
         items:[
           {label:"Abendmahlzeit",detail:`${Math.round((calc?.withTraining||2500)*0.30)} kcal, proteinreich`,icon:"🍽️"},
-          {label:"Magnesium Bisglycinate",detail:`${calc?.magnesiumMg||350}mg — 1h vor Schlaf für beste Schlafwirkung`,icon:"🌙"},
-          ...(calc?.stressAshwaNeeded||calc?.recoveryAshwaNeeded?[{label:"Ashwagandha KSM-66",detail:"600mg abends — Cortisol senken, Schlaf verbessern",icon:"🌿"}]:[]),
+          {label:"Magnesium Bisglycinate",detail:`${calc?.magnesiumMg||350}mg - 1h vor Schlaf für beste Schlafwirkung`,icon:"🌙"},
+          ...(calc?.stressAshwaNeeded||calc?.recoveryAshwaNeeded?[{label:"Ashwagandha KSM-66",detail:"600mg abends - Cortisol senken, Schlaf verbessern",icon:"🌿"}]:[]),
         ]
       },
       {
         time:"22:00",phase:"Vor dem Schlafen",
         items:[
-          {label:"Ziel: 7–9h Schlaf",detail:"Unter 7h = Cortisol hoch, Muskelabbau, schlechtere Regeneration",icon:"😴"},
-          ...(calc?.sleep<7?[{label:"⚠ Schlafdefizit erkannt",detail:`Aktuell ${calc?.sleep}h — das ist dein wichtigster Performance-Hebel`,icon:"⚠️"}]:[]),
+          {label:"Ziel: 7-9h Schlaf",detail:"Unter 7h = Cortisol hoch, Muskelabbau, schlechtere Regeneration",icon:"😴"},
+          ...(calc?.sleep<7?[{label:"⚠ Schlafdefizit erkannt",detail:`Aktuell ${calc?.sleep}h - das ist dein wichtigster Performance-Hebel`,icon:"⚠️"}]:[]),
         ]
       },
     ];
@@ -5783,35 +5786,35 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:4}}>
             {isRestDay?"RUHETAG · REGENERATION & ERNÄHRUNG":`TAGESPLAN · ${sportLabel.toUpperCase()} · ${activeIntensity==="high"||activeIntensity==="competition"?"INTENSIV":activeIntensity==="low"?"LEICHT":"MITTEL"} · ${activeDuration}min`}
           </div>
-          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?"Weniger Kalorien, mehr Regeneration — kein Training heute.":` Personalisiert auf ${w}kg, ${TIME}training.`}</div>
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?"Weniger Kalorien, mehr Regeneration - kein Training heute.":` Personalisiert auf ${w}kg, ${TIME}training.`}</div>
         </div>
 
         {/* Ruhetag Plan */}
         {isRestDay&&(
           <div style={{marginBottom:16}}>
             {[
-              {time:"06:00–08:00",phase:"Aufwachen & Frühstück",icon:"🌅",items:[
-                {label:"Wasser",detail:"500ml direkt — Rehydration",icon:"💧"},
-                {label:"Protein-Frühstück",detail:`${Math.round((calc?.proteinMin||140)*0.25)}g Protein — Eier, Quark, Skyr`,icon:"🥚"},
+              {time:"06:00-08:00",phase:"Aufwachen & Frühstück",icon:"🌅",items:[
+                {label:"Wasser",detail:"500ml direkt - Rehydration",icon:"💧"},
+                {label:"Protein-Frühstück",detail:`${Math.round((calc?.proteinMin||140)*0.25)}g Protein - Eier, Quark, Skyr`,icon:"🥚"},
                 ...(calc?.vitDRisk?[{label:"Vitamin D3 + K2",detail:"2000 IE mit Fett",icon:"☀️"}]:[]),
               ]},
-              {time:"12:00–13:00",phase:"Mittag — leichter",icon:"🥗",items:[
-                {label:"Leichtere Mahlzeit",detail:`${Math.round((calc?.restDay||1800)*0.35)} kcal — weniger Carbs als Trainingstag`,icon:"🥗"},
-                {label:"Kreatin",detail:"5g täglich — auch an Ruhetagen",icon:"💊"},
-                {label:"Omega-3",detail:"2–3g EPA/DHA",icon:"🐟"},
+              {time:"12:00-13:00",phase:"Mittag - leichter",icon:"🥗",items:[
+                {label:"Leichtere Mahlzeit",detail:`${Math.round((calc?.restDay||1800)*0.35)} kcal - weniger Carbs als Trainingstag`,icon:"🥗"},
+                {label:"Kreatin",detail:"5g täglich - auch an Ruhetagen",icon:"💊"},
+                {label:"Omega-3",detail:"2-3g EPA/DHA",icon:"🐟"},
               ]},
-              {time:"15:00–17:00",phase:"Aktive Erholung",icon:"🚶",items:[
-                {label:"Spaziergang 20–30 min",detail:"Fördert Durchblutung und Regeneration ohne Belastung",icon:"🚶"},
-                {label:"Dehnen / Mobility",detail:"10–15 min — Schwerpunkt auf beanspruchte Muskelgruppen",icon:"🧘"},
+              {time:"15:00-17:00",phase:"Aktive Erholung",icon:"🚶",items:[
+                {label:"Spaziergang 20-30 min",detail:"Fördert Durchblutung und Regeneration ohne Belastung",icon:"🚶"},
+                {label:"Dehnen / Mobility",detail:"10-15 min - Schwerpunkt auf beanspruchte Muskelgruppen",icon:"🧘"},
               ]},
-              {time:"18:00–19:00",phase:"Abendessen",icon:"🍽️",items:[
+              {time:"18:00-19:00",phase:"Abendessen",icon:"🍽️",items:[
                 {label:"Hauptmahlzeit",detail:`${Math.round((calc?.restDay||1800)*0.35)} kcal, proteinreich`,icon:"🍽️"},
-                {label:"Magnesium",detail:`${calc?.magnesiumMg||350}mg — Ruhetag ideal für Supplementierung`,icon:"🌙"},
-                ...(calc?.stressAshwaNeeded?[{label:"Ashwagandha",detail:"600mg — Cortisol abbauen",icon:"🌿"}]:[]),
+                {label:"Magnesium",detail:`${calc?.magnesiumMg||350}mg - Ruhetag ideal für Supplementierung`,icon:"🌙"},
+                ...(calc?.stressAshwaNeeded?[{label:"Ashwagandha",detail:"600mg - Cortisol abbauen",icon:"🌿"}]:[]),
               ]},
-              {time:"22:00",phase:"Schlaf — Priorität",icon:"😴",items:[
-                {label:"Mindestens 8–9h anstreben",detail:"Regeneration findet im Schlaf statt — Ruhetag = optimale Recovery-Chance",icon:"😴"},
-                {label:"Casein optional",detail:"30g vor dem Schlafen — langsame Proteinfreisetzung über Nacht",icon:"🥛"},
+              {time:"22:00",phase:"Schlaf - Priorität",icon:"😴",items:[
+                {label:"Mindestens 8-9h anstreben",detail:"Regeneration findet im Schlaf statt - Ruhetag = optimale Recovery-Chance",icon:"😴"},
+                {label:"Casein optional",detail:"30g vor dem Schlafen - langsame Proteinfreisetzung über Nacht",icon:"🥛"},
               ]},
             ].map((block,i,arr)=>(
               <div key={i} style={{display:"flex",gap:12,marginBottom:14}}>
@@ -5843,8 +5846,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",marginBottom:8}}>RUHETAG ZIELE</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,textAlign:"center"}}>
                 {[
-                  {l:"Kalorien",v:`${calc?.restDay?.toLocaleString("de-CH")||"—"} kcal`,s:`~${Math.round((calc?.withTraining||2500)-(calc?.restDay||1800))} kcal unter Trainingstag`},
-                  {l:"Protein",v:`${Math.round((calc?.proteinMin||140)*0.85)}–${Math.round((calc?.proteinMax||180)*0.85)}g`,s:"leicht reduziert"},
+                  {l:"Kalorien",v:`${calc?.restDay?.toLocaleString("de-CH")||"-"} kcal`,s:`~${Math.round((calc?.withTraining||2500)-(calc?.restDay||1800))} kcal unter Trainingstag`},
+                  {l:"Protein",v:`${Math.round((calc?.proteinMin||140)*0.85)}-${Math.round((calc?.proteinMax||180)*0.85)}g`,s:"leicht reduziert"},
                   {l:"Wasser",v:`${Math.round((calc?.waterMl||2500)*0.6/100)/10}L`,s:"ohne Schweissverlust"},
                 ].map(({l,v,s},i)=>(
                   <div key={i}>
@@ -5897,7 +5900,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(4,1fr)",gap:8}}>
             {[
               {l:"Kalorien",v:`${(calc?.withTraining||2500).toLocaleString("de-CH")} kcal`},
-              {l:"Protein",v:`${calc?.proteinMin||140}–${calc?.proteinMax||180}g`},
+              {l:"Protein",v:`${calc?.proteinMin||140}-${calc?.proteinMax||180}g`},
               {l:"Wasser",v:`${((calc?.waterMl||2500)/1000).toFixed(1)}L`},
               {l:"Schlaf",v:`${calc?.sleep||7}h+`},
             ].map(s=>(
@@ -5924,7 +5927,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     return (
       <div>
-        <div style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.65}}>Einnahme-Protokolle für jedes deiner Supplements — Dauer, Pausen und wichtige Hinweise.</div>
+        <div style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.65}}>Einnahme-Protokolle für jedes deiner Supplements - Dauer, Pausen und wichtige Hinweise.</div>
         {allSupps.map((s,i)=>{
           const p=s.protocol;
           const isOpen=open===i;
@@ -6002,46 +6005,46 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {
         label:"3 Tage vorher",icon:"📅",
         items:[
-          {title:"Carb-Loading starten",detail:`Kohlenhydrate auf ${carbLoad}g/Tag erhöhen (${Math.round(carbLoad/w*10)/10}g/kg) — Glykogenspeicher maximal füllen`,bold:true},
-          {title:"Kreatin pausieren",detail:"Letzte Kreatin-Dosis 3 Tage vor Wettkampf — verhindert Magenprobleme"},
-          {title:"Koffein reduzieren",detail:"Koffein-Pause 3–5 Tage vor dem Rennen für maximale Wirkung am Wettkampftag"},
-          {title:"Schlaf priorisieren",detail:"Mindestens 8h — Schlafdefizit am Renntag lässt sich nicht ausgleichen"},
+          {title:"Carb-Loading starten",detail:`Kohlenhydrate auf ${carbLoad}g/Tag erhöhen (${Math.round(carbLoad/w*10)/10}g/kg) - Glykogenspeicher maximal füllen`,bold:true},
+          {title:"Kreatin pausieren",detail:"Letzte Kreatin-Dosis 3 Tage vor Wettkampf - verhindert Magenprobleme"},
+          {title:"Koffein reduzieren",detail:"Koffein-Pause 3-5 Tage vor dem Rennen für maximale Wirkung am Wettkampftag"},
+          {title:"Schlaf priorisieren",detail:"Mindestens 8h - Schlafdefizit am Renntag lässt sich nicht ausgleichen"},
         ]
       },
       {
         label:"Tag vorher",icon:"🌙",
         items:[
-          {title:"Pasta-/Reis-Mahlzeit Abend",detail:`${Math.round(carbLoad*0.6)}g Kohlenhydrate, wenig Fett — leicht verdaulich, kein Risiko`,bold:true},
-          {title:"Magnesium + Salz",detail:`${calc?.magnesiumMg||350}mg Magnesium, zusätzliches Natrium im Essen — Krämpfprophylaxe`},
-          {title:"Hydration aufbauen",detail:"2.5–3L Wasser über den Tag — kein übermässiges Trinken abends"},
-          {title:"Kein neues Essen",detail:"Nur bekannte Lebensmittel — niemals Unbekanntes vor einem Wettkampf"},
+          {title:"Pasta-/Reis-Mahlzeit Abend",detail:`${Math.round(carbLoad*0.6)}g Kohlenhydrate, wenig Fett - leicht verdaulich, kein Risiko`,bold:true},
+          {title:"Magnesium + Salz",detail:`${calc?.magnesiumMg||350}mg Magnesium, zusätzliches Natrium im Essen - Krämpfprophylaxe`},
+          {title:"Hydration aufbauen",detail:"2.5-3L Wasser über den Tag - kein übermässiges Trinken abends"},
+          {title:"Kein neues Essen",detail:"Nur bekannte Lebensmittel - niemals Unbekanntes vor einem Wettkampf"},
         ]
       },
       {
         label:"Race Morning",icon:"☀️",
         items:[
-          {title:`${isEndurance?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${Math.round(carbLoad*0.4)}g Kohlenhydrate, ${Math.round(w*0.3)}g Protein — Hafer, Brot, Banane`,bold:true},
-          {title:"45 min vor Start: Koffein",detail:`${hasBlutdruck?"⚠ Blutdruckmedikamente beachten — Arzt fragen":"150–200mg Koffein für maximale Wirkung beim Start"}`},
+          {title:`${isEndurance?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${Math.round(carbLoad*0.4)}g Kohlenhydrate, ${Math.round(w*0.3)}g Protein - Hafer, Brot, Banane`,bold:true},
+          {title:"45 min vor Start: Koffein",detail:`${hasBlutdruck?"⚠ Blutdruckmedikamente beachten - Arzt fragen":"150-200mg Koffein für maximale Wirkung beim Start"}`},
           {title:"30 min vor Start: Gel",detail:isEndurance?`1 Gel (${raceCarbs}g Carbs) für sofortigen Energieschub`:"Optional: 1 Gel oder Banane"},
-          {title:"Warm-up Hydration",detail:`400–600ml Wasser mit 1 Elektrolyt-Tab — ${na}mg Natrium laden`},
+          {title:"Warm-up Hydration",detail:`400-600ml Wasser mit 1 Elektrolyt-Tab - ${na}mg Natrium laden`},
         ]
       },
       {
         label:"Während Wettkampf",icon:"🏃",
         items:[
-          {title:"Kohlenhydrate/Stunde",detail:`${raceCarbs}–${raceCarbsMax}g/h ab Minute 30 — niemals warten bis Hungergefühl. Bei 90min+ auf 2:1 Glucose:Fruktose Mix wechseln`,bold:true},
-          {title:"Natrium/Stunde",detail:`${Math.round((calc?.natriumMg||1500)/totalRaceHours/2)}mg Natrium pro 500ml Getränk — oder 1 Elektrolyt-Tab pro Flasche`},
-          {title:"Flüssigkeit",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*0.8)}–${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*1.2)}ml/h — Durst als Guideline, nicht überhydrieren`},
-          ...(isEndurance?[{title:"Koffein-Gel strategisch",detail:"1 Koffein-Gel (100mg) 20–30 min vor kritischer Phase oder Schlussspurt"}]:[]),
+          {title:"Kohlenhydrate/Stunde",detail:`${raceCarbs}-${raceCarbsMax}g/h ab Minute 30 - niemals warten bis Hungergefühl. Bei 90min+ auf 2:1 Glucose:Fruktose Mix wechseln`,bold:true},
+          {title:"Natrium/Stunde",detail:`${Math.round((calc?.natriumMg||1500)/totalRaceHours/2)}mg Natrium pro 500ml Getränk - oder 1 Elektrolyt-Tab pro Flasche`},
+          {title:"Flüssigkeit",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*0.8)}-${Math.round((calc?.sweatLitresPerSession||0.8)/Math.max(1,totalRaceHours)*1000*1.2)}ml/h - Durst als Guideline, nicht überhydrieren`},
+          ...(isEndurance?[{title:"Koffein-Gel strategisch",detail:"1 Koffein-Gel (100mg) 20-30 min vor kritischer Phase oder Schlussspurt"}]:[]),
         ]
       },
       {
         label:"Post-Race Recovery",icon:"🏅",
         items:[
           {title:"Sofort: Protein + Carbs",detail:`${Math.round(w*0.4)}g Protein + ${Math.round(calc?.carbsG*0.3)||60}g Kohlenhydrate in den ersten 30 min`,bold:true},
-          {title:"Rehydration",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*1.5*10)/10}L Wasser + Elektrolyte — 150% des Schweissverlusts (${Math.round((calc?.sweatLitresPerSession||0.8)*10)/10}L) für vollständige Rehydration`},
-          {title:"Magnesium abends",detail:`${calc?.magnesiumMg||350}mg Magnesium — deine berechnete Tagesdosis, nicht mehr (GI-Risiko bei Überdosierung)`},
-          {title:"72h Recovery",detail:"Kein intensives Training 48–72h nach Wettkampf — aktive Regeneration (Schwimmen, Gehen)"},
+          {title:"Rehydration",detail:`${Math.round((calc?.sweatLitresPerSession||0.8)*1.5*10)/10}L Wasser + Elektrolyte - 150% des Schweissverlusts (${Math.round((calc?.sweatLitresPerSession||0.8)*10)/10}L) für vollständige Rehydration`},
+          {title:"Magnesium abends",detail:`${calc?.magnesiumMg||350}mg Magnesium - deine berechnete Tagesdosis, nicht mehr (GI-Risiko bei Überdosierung)`},
+          {title:"72h Recovery",detail:"Kein intensives Training 48-72h nach Wettkampf - aktive Regeneration (Schwimmen, Gehen)"},
         ]
       },
     ];
@@ -6106,38 +6109,38 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     ];
 
     const ENERGIE_PRODUKTE=[
-      {id:"sn_mau_gel",   form:"gel",    diet:"standard", timing:"waehrend", kh:40, khTyp:"2:1 Glukose:Fruktose", name:"Maurten Gel 100",         dose:"1 Gel alle 30–40 min",  when:"Ab 75 min Training",      why:"Hydrogel-Technologie — minimaler GI-Stress, maximale Aufnahme.", link:AFF.maurten("gel-100"),          shop:"Maurten", price:"~CHF 3.80/Gel"},
-      {id:"sn_mau_caf",   form:"gel",    diet:"standard", timing:"waehrend", kh:40, khTyp:"2:1 + 100mg Koffein",  name:"Maurten Gel 100 CAF",     dose:"1 Gel alle 40–45 min",  when:"Rennen & Intervalle",     why:"Koffein + Kohlenhydrate — für maximale Leistung in Rennsituationen.", link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", price:"~CHF 4.00/Gel"},
-      {id:"sn_mn_gel",    form:"gel",    diet:"standard", timing:"waehrend", kh:38, khTyp:"Maltodextrin+Fruktose", name:"MNSTRY Intensity Gel",    dose:"1 Gel alle 30–45 min",  when:"Tempoläufe & Rennen",     why:"Natürliche Zutaten, niedriger GI-Stress.", link:AFF.mnstry("intensity-gel"), shop:"MNSTRY", price:"~CHF 3.50/Gel"},
+      {id:"sn_mau_gel",   form:"gel",    diet:"standard", timing:"waehrend", kh:40, khTyp:"2:1 Glukose:Fruktose", name:"Maurten Gel 100",         dose:"1 Gel alle 30-40 min",  when:"Ab 75 min Training",      why:"Hydrogel-Technologie - minimaler GI-Stress, maximale Aufnahme.", link:AFF.maurten("gel-100"),          shop:"Maurten", price:"~CHF 3.80/Gel"},
+      {id:"sn_mau_caf",   form:"gel",    diet:"standard", timing:"waehrend", kh:40, khTyp:"2:1 + 100mg Koffein",  name:"Maurten Gel 100 CAF",     dose:"1 Gel alle 40-45 min",  when:"Rennen & Intervalle",     why:"Koffein + Kohlenhydrate - für maximale Leistung in Rennsituationen.", link:AFF.maurten("gel-100-caf-100"), shop:"Maurten", price:"~CHF 4.00/Gel"},
+      {id:"sn_mn_gel",    form:"gel",    diet:"standard", timing:"waehrend", kh:38, khTyp:"Maltodextrin+Fruktose", name:"MNSTRY Intensity Gel",    dose:"1 Gel alle 30-45 min",  when:"Tempoläufe & Rennen",     why:"Natürliche Zutaten, niedriger GI-Stress.", link:AFF.mnstry("intensity-gel"), shop:"MNSTRY", price:"~CHF 3.50/Gel"},
       {id:"sn_mau_320",   form:"drink",  diet:"standard", timing:"waehrend", name:"Maurten Drink Mix 320",   dose:"80g / 500ml · 1 Flasche/h", kh:80, khTyp:"Trinken 2:1", when:"Ausfahrten über 2h",   why:"Höchste Kohlenhydratdichte ohne Magen-Probleme.", link:AFF.maurten("drink-mix-320"), shop:"Maurten", price:"~CHF 4.50/Port."},
-      {id:"sn_sp_elek",   form:"drink",  diet:"standard", timing:"waehrend", name:"Sponser Elektrolyt-Tabs", dose:"1 Tab / 500ml", kh:0, khTyp:"Elektrolyte",         when:"Ab 60 min Training",      why:"Natrium, Kalium, Magnesium — Krampfprävention.", link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", price:"~CHF 0.50/Tab"},
-      {id:"sn_mn_carb",   form:"riegel", diet:"vegan",    timing:"vor",      name:"MNSTRY Fast Carb Bar",    dose:"1 Riegel 45 min vor Start", when:"Vor langen Einheiten", why:"Natürliches Carb-Loading — pflanzlich, magenfreundlich.", link:AFF.mnstry("fast-carb-heat"), shop:"MNSTRY", price:"~CHF 4.50/Riegel"},
+      {id:"sn_sp_elek",   form:"drink",  diet:"standard", timing:"waehrend", name:"Sponser Elektrolyt-Tabs", dose:"1 Tab / 500ml", kh:0, khTyp:"Elektrolyte",         when:"Ab 60 min Training",      why:"Natrium, Kalium, Magnesium - Krampfprävention.", link:AFF.sponser("elektrolyt tabletten"), shop:"Sponser", price:"~CHF 0.50/Tab"},
+      {id:"sn_mn_carb",   form:"riegel", diet:"vegan",    timing:"vor",      name:"MNSTRY Fast Carb Bar",    dose:"1 Riegel 45 min vor Start", when:"Vor langen Einheiten", why:"Natürliches Carb-Loading - pflanzlich, magenfreundlich.", link:AFF.mnstry("fast-carb-heat"), shop:"MNSTRY", price:"~CHF 4.50/Riegel"},
       {id:"sn_sp_gel",    form:"gel",    diet:"standard", timing:"nach",     name:"Sponser Liquid Energy",   dose:"1 Beutel alle 45 min",  when:"Training & Rennen",       why:"Günstige Alternative mit gutem Kohlenhydratprofil.", link:AFF.sponser("liquid energy"), shop:"Sponser", price:"~CHF 2.20/Port."},
     ];
 
     const PROTEIN_PRODUKTE=[
-      {id:"prot_whey",    form:"shake", diet:"standard", timing:"nach",  name:"Whey Protein Isolat",     dose:"25–30g post-workout",     when:"Innerhalb 30 min nach Training", why:"Schnellste Proteinquelle — maximale Muskelreparatur.", link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", price:"~CHF 1.50/Port."},
-      {id:"prot_esn",     form:"shake", diet:"standard", timing:"nach",  name:"ESN Designer Whey",       dose:"25–30g post-workout",     when:"Direkt nach Training",           why:"Marktführer in DACH — hochwertige Zutaten, viele Geschmäcker.", link:AFF.esn("designer-whey-protein"), shop:"ESN", price:"~CHF 1.20/Port."},
-      {id:"prot_more",    form:"shake", diet:"standard", timing:"nach",  name:"More Nutrition Total Protein", dose:"25g post-workout",  when:"Post-Workout & Snack",          why:"High-Protein, Low-Carb — ideal für Lifestyle-Athleten.", link:AFF.morenutrition("total-protein"), shop:"More Nutrition", price:"~CHF 1.30/Port."},
-      {id:"prot_vegan",   form:"shake", diet:"vegan",    timing:"nach",  name:"Myprotein Vegan Protein", dose:"25g post-workout",        when:"Direkt nach Training",           why:"Erbsen + Reis — vollständiges Aminosäureprofil, pflanzlich.", link:AFF.myprotein("vegan protein blend"), shop:"Myprotein", price:"~CHF 1.40/Port."},
-      {id:"prot_riegel",  form:"riegel",diet:"standard", timing:"nach",  name:"Protein Bar (Myprotein)", dose:"1 Riegel post-workout",   when:"Unterwegs / nach Training",      why:"Praktisch für unterwegs — 25g Protein ohne Schütteln.", link:AFF.myprotein("protein bar"), shop:"Myprotein", price:"~CHF 2.50/Riegel"},
-      {id:"prot_casein",  form:"shake", diet:"standard", timing:"nacht", name:"Micellar Casein",         dose:"30g vor dem Schlafen",    when:"Abends vor dem Schlafen",        why:"Langsame Freisetzung — Muskelschutz über Nacht.", link:AFF.myprotein("micellar casein"), shop:"Myprotein", price:"~CHF 1.80/Port."},
+      {id:"prot_whey",    form:"shake", diet:"standard", timing:"nach",  name:"Whey Protein Isolat",     dose:"25-30g post-workout",     when:"Innerhalb 30 min nach Training", why:"Schnellste Proteinquelle - maximale Muskelreparatur.", link:AFF.myprotein("whey protein isolate"), shop:"Myprotein", price:"~CHF 1.50/Port."},
+      {id:"prot_esn",     form:"shake", diet:"standard", timing:"nach",  name:"ESN Designer Whey",       dose:"25-30g post-workout",     when:"Direkt nach Training",           why:"Marktführer in DACH - hochwertige Zutaten, viele Geschmäcker.", link:AFF.esn("designer-whey-protein"), shop:"ESN", price:"~CHF 1.20/Port."},
+      {id:"prot_more",    form:"shake", diet:"standard", timing:"nach",  name:"More Nutrition Total Protein", dose:"25g post-workout",  when:"Post-Workout & Snack",          why:"High-Protein, Low-Carb - ideal für Lifestyle-Athleten.", link:AFF.morenutrition("total-protein"), shop:"More Nutrition", price:"~CHF 1.30/Port."},
+      {id:"prot_vegan",   form:"shake", diet:"vegan",    timing:"nach",  name:"Myprotein Vegan Protein", dose:"25g post-workout",        when:"Direkt nach Training",           why:"Erbsen + Reis - vollständiges Aminosäureprofil, pflanzlich.", link:AFF.myprotein("vegan protein blend"), shop:"Myprotein", price:"~CHF 1.40/Port."},
+      {id:"prot_riegel",  form:"riegel",diet:"standard", timing:"nach",  name:"Protein Bar (Myprotein)", dose:"1 Riegel post-workout",   when:"Unterwegs / nach Training",      why:"Praktisch für unterwegs - 25g Protein ohne Schütteln.", link:AFF.myprotein("protein bar"), shop:"Myprotein", price:"~CHF 2.50/Riegel"},
+      {id:"prot_casein",  form:"shake", diet:"standard", timing:"nacht", name:"Micellar Casein",         dose:"30g vor dem Schlafen",    when:"Abends vor dem Schlafen",        why:"Langsame Freisetzung - Muskelschutz über Nacht.", link:AFF.myprotein("micellar casein"), shop:"Myprotein", price:"~CHF 1.80/Port."},
     ];
 
     const RECOVERY_PRODUKTE=[
-      {id:"rec_mg",       form:"kapsel", timing:"nacht", name:"Magnesium Bisglycinate",   dose:"300–400mg abends",        when:"Täglich vor dem Schlafen", why:"Beste Bioverfügbarkeit — Muskelentspannung, tiefer Schlaf.", link:AFF.iherb("magnesium bisglycinate"), shop:"iHerb", price:"~CHF 0.15/Tag"},
-      {id:"rec_kolla",    form:"drink",  timing:"vor",   name:"Kollagen + Vitamin C",     dose:"10–15g vor Training",     when:"Täglich vor Einheit",      why:"Sehnen- und Gelenkschutz — besonders bei hohem Laufvolumen.", link:AFF.iherb("collagen vitamin c"), shop:"iHerb", price:"~CHF 0.60/Tag"},
-      {id:"rec_tart",     form:"kapsel", timing:"nach",  name:"Tart Cherry Extrakt",      dose:"480mg täglich",           when:"Nach intensiven Einheiten", why:"Reduziert DOMS um bis zu 20% — natürliches Antioxidans.", link:AFF.iherb("tart cherry"), shop:"iHerb", price:"~CHF 0.40/Tag"},
-      {id:"rec_omega",    form:"kapsel", timing:"vor",   name:"Omega-3 (EPA/DHA)",        dose:"2–3g täglich",            when:"Täglich zum Essen",        why:"Entzündungshemmend — verbessert HRV und Erholung.", link:AFF.iherb("omega 3 epa dha"), shop:"iHerb", price:"~CHF 0.30/Tag"},
-      {id:"rec_ashwa",    form:"kapsel", timing:"nacht", name:"Ashwagandha KSM-66",       dose:"600mg täglich",           when:"Abends vor dem Schlafen",  why:"Senkt Cortisol — verbessert Schlaftiefe und Erholung.", link:AFF.iherb("ashwagandha ksm-66"), shop:"iHerb", price:"~CHF 0.50/Tag"},
-      {id:"rec_vit_d",    form:"kapsel", timing:"vor",   name:"Vitamin D3 + K2",          dose:"2000–4000 IE täglich",    when:"Täglich zum Frühstück",    why:"Immunsystem, Knochen, Hormonstatus — 56% der Sportler mangelversorgt.", link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", price:"~CHF 0.10/Tag"},
+      {id:"rec_mg",       form:"kapsel", timing:"nacht", name:"Magnesium Bisglycinate",   dose:"300-400mg abends",        when:"Täglich vor dem Schlafen", why:"Beste Bioverfügbarkeit - Muskelentspannung, tiefer Schlaf.", link:AFF.iherb("magnesium bisglycinate"), shop:"iHerb", price:"~CHF 0.15/Tag"},
+      {id:"rec_kolla",    form:"drink",  timing:"vor",   name:"Kollagen + Vitamin C",     dose:"10-15g vor Training",     when:"Täglich vor Einheit",      why:"Sehnen- und Gelenkschutz - besonders bei hohem Laufvolumen.", link:AFF.iherb("collagen vitamin c"), shop:"iHerb", price:"~CHF 0.60/Tag"},
+      {id:"rec_tart",     form:"kapsel", timing:"nach",  name:"Tart Cherry Extrakt",      dose:"480mg täglich",           when:"Nach intensiven Einheiten", why:"Reduziert DOMS um bis zu 20% - natürliches Antioxidans.", link:AFF.iherb("tart cherry"), shop:"iHerb", price:"~CHF 0.40/Tag"},
+      {id:"rec_omega",    form:"kapsel", timing:"vor",   name:"Omega-3 (EPA/DHA)",        dose:"2-3g täglich",            when:"Täglich zum Essen",        why:"Entzündungshemmend - verbessert HRV und Erholung.", link:AFF.iherb("omega 3 epa dha"), shop:"iHerb", price:"~CHF 0.30/Tag"},
+      {id:"rec_ashwa",    form:"kapsel", timing:"nacht", name:"Ashwagandha KSM-66",       dose:"600mg täglich",           when:"Abends vor dem Schlafen",  why:"Senkt Cortisol - verbessert Schlaftiefe und Erholung.", link:AFF.iherb("ashwagandha ksm-66"), shop:"iHerb", price:"~CHF 0.50/Tag"},
+      {id:"rec_vit_d",    form:"kapsel", timing:"vor",   name:"Vitamin D3 + K2",          dose:"2000-4000 IE täglich",    when:"Täglich zum Frühstück",    why:"Immunsystem, Knochen, Hormonstatus - 56% der Sportler mangelversorgt.", link:AFF.iherb("vitamin d3 k2"), shop:"iHerb", price:"~CHF 0.10/Tag"},
     ];
 
     const SC={};
 
     const getItems=()=>{
       let items = rubrik==="energie"?ENERGIE_PRODUKTE:rubrik==="protein"?PROTEIN_PRODUKTE:RECOVERY_PRODUKTE;
-      // Filter by onboarding preference — only show what user likes (unless showAll)
+      // Filter by onboarding preference - only show what user likes (unless showAll)
       if(!formPref && !showAll) {
         if(rubrik==="energie" && !prefEnergy.includes("egal"))
           items=items.filter(p=>!p.form||prefEnergy.includes(p.form));
@@ -6209,7 +6212,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
             <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>DEIN ENERGIE-BEDARF</div>
             <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
-              {`${raceCarbs}g Kohlenhydrate pro Stunde — starte ab Minute 30. Nie warten bis Hunger kommt.`}
+              {`${raceCarbs}g Kohlenhydrate pro Stunde - starte ab Minute 30. Nie warten bis Hunger kommt.`}
             </div>
             <div style={{fontSize:11,color:"#3A6000"}}>💡 Gel bei hoher Intensität · Riegel nur unter 70% HFmax · Drink reduziert Gel-Bedarf</div>
           </div>
@@ -6217,7 +6220,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {!isPro&&<ProUnlockBanner text="Dosierung, Timing und Begründung für jedes Produkt sind mit PRO freigeschaltet."/>}
         {activePrefFilter&&(
           <div style={{marginBottom:12,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000"}}>
-            ✓ {activePrefFilter} — basierend auf deiner Präferenz
+            ✓ {activePrefFilter} - basierend auf deiner Präferenz
           </div>
         )}
 
@@ -6237,7 +6240,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             <div style={{height:1,background:C.g100}}/>
             <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
               <span style={{fontSize:12,flexShrink:0}}>🤝</span>
-              <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir empfehlen alle verfügbaren Produkte für deine Performance — unabhängig von Listung oder Verlinkung.</span>
+              <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir empfehlen alle verfügbaren Produkte für deine Performance - unabhängig von Listung oder Verlinkung.</span>
             </div>
           </div>
         </div>
@@ -6254,7 +6257,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           ))}
         </div>
 
-        {/* Präferenz-Filter — Dropdowns nebeneinander */}
+        {/* Präferenz-Filter - Dropdowns nebeneinander */}
         <div style={{display:"flex",gap:6,marginBottom:16}} onClick={e=>e.stopPropagation()}>
           <Dropdown id="form" label="Format" value={formPref}
             options={FORM_OPTS[rubrik]||[]}
@@ -6320,7 +6323,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                     {owned&&<svg width="11" height="11" viewBox="0 0 8 8" fill="none"><path d="M1 4l2.2 2.2L7 1.5" stroke="#000" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                     <span style={{fontSize:10,fontWeight:700,color:owned?"#000":"#888"}}>{owned?"✓ Im Warenkorb":"+ Zum Warenkorb"}</span>
                   </button>
-                  {owned&&<div style={{marginTop:5,fontSize:10,color:"#4A7000",textAlign:"center"}}>Findest du in <strong>Deinen Plan</strong> — inkl. Tagesplan.</div>}
+                  {owned&&<div style={{marginTop:5,fontSize:10,color:"#4A7000",textAlign:"center"}}>Findest du in <strong>Deinen Plan</strong> - inkl. Tagesplan.</div>}
                 </div>
               );
             })}
@@ -6338,47 +6341,47 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {id:"fertiggerichte",label:"Fertiggerichte"},
     ];
     const SUPPS=[
-      {name:"Omega-3 (EPA/DHA)",dose:"2–3g täglich",shop:"iHerb",price:"~CHF 0.30/Tag",link:AFF.iherb("omega 3 epa dha"),desc:"Entzündungshemmend, Herzgesundheit, HRV-Verbesserung",tags:["Basis","Täglich"]},
-      {name:"Magnesium Bisglycinate",dose:"300–400mg täglich",shop:"iHerb",price:"~CHF 0.15/Tag",link:AFF.iherb("magnesium bisglycinate"),desc:"Schlafqualität, Muskelentspannung, Krampfprävention",tags:["Basis","Abends"]},
-      {name:"Vitamin D3 + K2",dose:"2000–4000 IE täglich",shop:"iHerb",price:"~CHF 0.10/Tag",link:AFF.iherb("vitamin d3 k2"),desc:"Immunsystem, Knochen, Hormonstatus",tags:["Basis","Täglich"]},
+      {name:"Omega-3 (EPA/DHA)",dose:"2-3g täglich",shop:"iHerb",price:"~CHF 0.30/Tag",link:AFF.iherb("omega 3 epa dha"),desc:"Entzündungshemmend, Herzgesundheit, HRV-Verbesserung",tags:["Basis","Täglich"]},
+      {name:"Magnesium Bisglycinate",dose:"300-400mg täglich",shop:"iHerb",price:"~CHF 0.15/Tag",link:AFF.iherb("magnesium bisglycinate"),desc:"Schlafqualität, Muskelentspannung, Krampfprävention",tags:["Basis","Abends"]},
+      {name:"Vitamin D3 + K2",dose:"2000-4000 IE täglich",shop:"iHerb",price:"~CHF 0.10/Tag",link:AFF.iherb("vitamin d3 k2"),desc:"Immunsystem, Knochen, Hormonstatus",tags:["Basis","Täglich"]},
       {name:"Ashwagandha KSM-66",dose:"600mg täglich",shop:"iHerb",price:"~CHF 0.50/Tag",link:AFF.iherb("ashwagandha ksm-66"),desc:"Senkt Cortisol, verbessert Schlaftiefe und Regeneration",tags:["Adaptogen","Abends"]},
-      {name:"Whey Protein Isolat",dose:"25–30g post-workout",shop:"Myprotein",price:"~CHF 1.50/Portion",link:AFF.myprotein("whey protein isolate"),desc:"Muskelreparatur und -aufbau nach dem Training",tags:["Protein","Post-Training"]},
-      {name:"ESN Designer Whey",dose:"25–30g post-workout",shop:"ESN",price:"~CHF 1.20/Portion",link:AFF.esn("designer-whey-protein"),desc:"Marktführer in DE/CH/AT — hochwertige Zutaten, viele Geschmacksrichtungen",tags:["Protein","Post-Training"]},
-      {name:"More Nutrition Total Protein",dose:"25g post-workout",shop:"More Nutrition",price:"~CHF 1.30/Portion",link:AFF.morenutrition("total-protein"),desc:"High-Protein, Low-Carb — beliebt bei Fitness & Lifestyle Athleten",tags:["Protein","Low-Carb"]},
-      {name:"Kreatin Monohydrat",dose:"5g täglich",shop:"iHerb",price:"~CHF 0.20/Tag",link:AFF.iherb("creatine monohydrate"),desc:"Sprintleistung und Regeneration — bestens erforscht",tags:["Kraft","Täglich"]},
-      {name:"Beta-Alanin",dose:"3.2–6.4g täglich",shop:"iHerb",price:"~CHF 0.30/Tag",link:AFF.iherb("beta alanine"),desc:"Puffert Laktat, verzögert Ermüdung bei Intervallen",tags:["Ausdauer","Pre-Workout"]},
+      {name:"Whey Protein Isolat",dose:"25-30g post-workout",shop:"Myprotein",price:"~CHF 1.50/Portion",link:AFF.myprotein("whey protein isolate"),desc:"Muskelreparatur und -aufbau nach dem Training",tags:["Protein","Post-Training"]},
+      {name:"ESN Designer Whey",dose:"25-30g post-workout",shop:"ESN",price:"~CHF 1.20/Portion",link:AFF.esn("designer-whey-protein"),desc:"Marktführer in DE/CH/AT - hochwertige Zutaten, viele Geschmacksrichtungen",tags:["Protein","Post-Training"]},
+      {name:"More Nutrition Total Protein",dose:"25g post-workout",shop:"More Nutrition",price:"~CHF 1.30/Portion",link:AFF.morenutrition("total-protein"),desc:"High-Protein, Low-Carb - beliebt bei Fitness & Lifestyle Athleten",tags:["Protein","Low-Carb"]},
+      {name:"Kreatin Monohydrat",dose:"5g täglich",shop:"iHerb",price:"~CHF 0.20/Tag",link:AFF.iherb("creatine monohydrate"),desc:"Sprintleistung und Regeneration - bestens erforscht",tags:["Kraft","Täglich"]},
+      {name:"Beta-Alanin",dose:"3.2-6.4g täglich",shop:"iHerb",price:"~CHF 0.30/Tag",link:AFF.iherb("beta alanine"),desc:"Puffert Laktat, verzögert Ermüdung bei Intervallen",tags:["Ausdauer","Pre-Workout"]},
       {name:"Zink 15mg",dose:"15mg täglich",shop:"iHerb",price:"~CHF 0.10/Tag",link:AFF.iherb("zinc 15mg"),desc:"Immunabwehr, Testosteron, Wundheilung",tags:["Immunsystem","Täglich"]},
-      {name:"Kollagen + Vitamin C",dose:"10–15g vor Training",shop:"iHerb",price:"~CHF 0.60/Tag",link:AFF.iherb("collagen vitamin c"),desc:"Sehnen- und Gelenkschutz",tags:["Gelenke","Prävention"]},
+      {name:"Kollagen + Vitamin C",dose:"10-15g vor Training",shop:"iHerb",price:"~CHF 0.60/Tag",link:AFF.iherb("collagen vitamin c"),desc:"Sehnen- und Gelenkschutz",tags:["Gelenke","Prävention"]},
       {name:"Tart Cherry Extrakt",dose:"480mg täglich",shop:"iHerb",price:"~CHF 0.40/Tag",link:AFF.iherb("tart cherry"),desc:"DOMS-Reduktion nach langen Einheiten",tags:["Recovery","Post-Training"]},
-      {name:"Rote Beete Nitrat",dose:"400–600mg Nitrat",shop:"iHerb",price:"~CHF 0.50/Tag",link:AFF.iherb("beet root nitrate"),desc:"Verbessert O2-Effizienz um 1–3%",tags:["Ausdauer","Pre-Training"]},
+      {name:"Rote Beete Nitrat",dose:"400-600mg Nitrat",shop:"iHerb",price:"~CHF 0.50/Tag",link:AFF.iherb("beet root nitrate"),desc:"Verbessert O2-Effizienz um 1-3%",tags:["Ausdauer","Pre-Training"]},
     ];
     const SPORT=[
-      {name:"Maurten Gel 100",dose:"1 Gel alle 30–45 min",shop:"Maurten",price:"~CHF 4.00",link:AFF.maurten("gel-100-box"),desc:"Hydrogel-Technologie — minimaler GI-Stress",tags:["Race-Day","Kohlenhydrate"],affiliate:true},
+      {name:"Maurten Gel 100",dose:"1 Gel alle 30-45 min",shop:"Maurten",price:"~CHF 4.00",link:AFF.maurten("gel-100-box"),desc:"Hydrogel-Technologie - minimaler GI-Stress",tags:["Race-Day","Kohlenhydrate"],affiliate:true},
       {name:"Maurten Gel 100 CAF",dose:"1 Gel bei Rennen",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("gel-100-caf-100"),desc:"Koffein + Kohlenhydrate für maximale Leistung",tags:["Race-Day","Koffein"],affiliate:true},
       {name:"Maurten Drink Mix 320",dose:"80g / 500ml",shop:"Maurten",price:"~CHF 4.50",link:AFF.maurten("drink-mix-320"),desc:"Hohe Kohlenhydratdichte ohne GI-Probleme",tags:["Ausdauer","Kohlenhydrate"],affiliate:true},
-      {name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",shop:"MNSTRY",price:"~CHF 3.50",link:AFF.mnstry("intensity-gel"),desc:"Magenfreundlich — genutzt von Canyon//SRAM & EF Education",tags:["Race-Day","Carbs"],affiliate:true},
-      {name:"SiS Beta Fuel Gel",dose:"1 Gel alle 30–40 min",shop:"SiS",price:"~CHF 3.80",link:AFF.sis("collections/gels"),desc:"40g Kohlenhydrate, 2:1 Maltodextrin:Fructose — für Einheiten über 90 min",tags:["Ausdauer","80g Carbs"],affiliate:true},
-      {name:"SiS GO Isotonic Gel",dose:"1 Gel alle 20–30 min",shop:"SiS",price:"~CHF 2.80",link:AFF.sis("collections/gels"),desc:"Kein Wasser nötig — isotonisch, sofort verfügbar",tags:["Einsteiger","Isotonisch"],affiliate:true},
-      {name:"226ERS Sub9 Gel",dose:"1 Gel alle 30–45 min",shop:"226ERS",price:"~CHF 3.20",link:AFF.ers226("collections/gels"),desc:"Speziell für Ironman & Ultra — bis zu 60g Carbs/h möglich",tags:["Ultra","Triathlon"],affiliate:false},
-      {name:"226ERS High Energy Bar",dose:"1 Riegel alle 45–60 min",shop:"226ERS",price:"~CHF 2.80",link:AFF.ers226("collections/bars"),desc:"Bio-Zutaten, hohe Kohlenhydratdichte — ideal für lange Ausfahrten",tags:["Riegel","Bio"],affiliate:false},
-      {name:"Näak Ultra Energy Bar",dose:"1 Riegel alle 60 min",shop:"Näak",price:"~CHF 4.50",link:AFF.naak("collections/energy-bars"),desc:"Grillen-Protein + pflanzliche Kohlenhydrate — nachhaltig und effektiv",tags:["Nachhaltig","Ultra"],affiliate:false},
-      {name:"Veloforte Di Bosco",dose:"1 Riegel alle 45 min",shop:"Veloforte",price:"~CHF 3.90",link:AFF.veloforte("products/di-bosco"),desc:"Echte Lebensmittel, kein künstlicher Beigeschmack — Wildblaubeere & Haselnuss",tags:["Rennrad","Real Food"],affiliate:true},
-      {name:"BAOUW Energieriegel",dose:"1 Riegel alle 45–60 min",shop:"BAOUW",price:"~CHF 3.50",link:AFF.baouw("collections/all"),desc:"100% natürliche Zutaten, keine Zusatzstoffe — für sensible Mägen",tags:["Natürlich","Vegan"],affiliate:false},
-      {name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",shop:"Sponser",price:"~CHF 0.50",link:AFF.sponser("elektrolyt tabletten"),desc:"Natrium, Kalium, Magnesium — Krampfprävention. Schweizer Qualität.",tags:["Hydration","Sommer"],affiliate:false},
-      {name:"Koffein 100–200mg",dose:"30–45 min vor Wettkampf",shop:"iHerb",price:"~CHF 0.15",link:AFF.iherb("caffeine 100mg"),desc:"Kognitive Leistung + Ausdauer",tags:["Pre-Race","Koffein"],affiliate:true},
+      {name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30-45 min",shop:"MNSTRY",price:"~CHF 3.50",link:AFF.mnstry("intensity-gel"),desc:"Magenfreundlich - genutzt von Canyon//SRAM & EF Education",tags:["Race-Day","Carbs"],affiliate:true},
+      {name:"SiS Beta Fuel Gel",dose:"1 Gel alle 30-40 min",shop:"SiS",price:"~CHF 3.80",link:AFF.sis("collections/gels"),desc:"40g Kohlenhydrate, 2:1 Maltodextrin:Fructose - für Einheiten über 90 min",tags:["Ausdauer","80g Carbs"],affiliate:true},
+      {name:"SiS GO Isotonic Gel",dose:"1 Gel alle 20-30 min",shop:"SiS",price:"~CHF 2.80",link:AFF.sis("collections/gels"),desc:"Kein Wasser nötig - isotonisch, sofort verfügbar",tags:["Einsteiger","Isotonisch"],affiliate:true},
+      {name:"226ERS Sub9 Gel",dose:"1 Gel alle 30-45 min",shop:"226ERS",price:"~CHF 3.20",link:AFF.ers226("collections/gels"),desc:"Speziell für Ironman & Ultra - bis zu 60g Carbs/h möglich",tags:["Ultra","Triathlon"],affiliate:false},
+      {name:"226ERS High Energy Bar",dose:"1 Riegel alle 45-60 min",shop:"226ERS",price:"~CHF 2.80",link:AFF.ers226("collections/bars"),desc:"Bio-Zutaten, hohe Kohlenhydratdichte - ideal für lange Ausfahrten",tags:["Riegel","Bio"],affiliate:false},
+      {name:"Näak Ultra Energy Bar",dose:"1 Riegel alle 60 min",shop:"Näak",price:"~CHF 4.50",link:AFF.naak("collections/energy-bars"),desc:"Grillen-Protein + pflanzliche Kohlenhydrate - nachhaltig und effektiv",tags:["Nachhaltig","Ultra"],affiliate:false},
+      {name:"Veloforte Di Bosco",dose:"1 Riegel alle 45 min",shop:"Veloforte",price:"~CHF 3.90",link:AFF.veloforte("products/di-bosco"),desc:"Echte Lebensmittel, kein künstlicher Beigeschmack - Wildblaubeere & Haselnuss",tags:["Rennrad","Real Food"],affiliate:true},
+      {name:"BAOUW Energieriegel",dose:"1 Riegel alle 45-60 min",shop:"BAOUW",price:"~CHF 3.50",link:AFF.baouw("collections/all"),desc:"100% natürliche Zutaten, keine Zusatzstoffe - für sensible Mägen",tags:["Natürlich","Vegan"],affiliate:false},
+      {name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",shop:"Sponser",price:"~CHF 0.50",link:AFF.sponser("elektrolyt tabletten"),desc:"Natrium, Kalium, Magnesium - Krampfprävention. Schweizer Qualität.",tags:["Hydration","Sommer"],affiliate:false},
+      {name:"Koffein 100-200mg",dose:"30-45 min vor Wettkampf",shop:"iHerb",price:"~CHF 0.15",link:AFF.iherb("caffeine 100mg"),desc:"Kognitive Leistung + Ausdauer",tags:["Pre-Race","Koffein"],affiliate:true},
     ];
     const FERTIG=[
-      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas — 30–42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","TOP PICK"],affiliate:true},
-      {name:"Huel",desc:"Vollwertige Mahlzeiten & Shakes — alle 26 Vitamine & Mineralien",price:"ab CHF 2.50 / Mahlzeit",link:AFF.huel("collections/all"),tags:["Vegan","Vollwertig"],affiliate:true},
-      {name:"Foodspring",desc:"Sport-Nutrition Mahlzeiten — Protein-Porridge, Recovery Shakes",price:"ab CHF 4.90 / Portion",link:AFF.foodspring("collections/all"),tags:["Sport","CH/DE/AT"],affiliate:true},
-      {name:"Saturo",desc:"Flüssige Vollmahlzeiten — sofort trinkfertig, 0 Min. Zubereitung",price:"ab CHF 3.50 / Flasche",link:"https://saturo.com/de?ref=TREYN",tags:["Vegan","Sofort"],affiliate:false},
+      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","TOP PICK"],affiliate:true},
+      {name:"Huel",desc:"Vollwertige Mahlzeiten & Shakes - alle 26 Vitamine & Mineralien",price:"ab CHF 2.50 / Mahlzeit",link:AFF.huel("collections/all"),tags:["Vegan","Vollwertig"],affiliate:true},
+      {name:"Foodspring",desc:"Sport-Nutrition Mahlzeiten - Protein-Porridge, Recovery Shakes",price:"ab CHF 4.90 / Portion",link:AFF.foodspring("collections/all"),tags:["Sport","CH/DE/AT"],affiliate:true},
+      {name:"Saturo",desc:"Flüssige Vollmahlzeiten - sofort trinkfertig, 0 Min. Zubereitung",price:"ab CHF 3.50 / Flasche",link:"https://saturo.com/de?ref=TREYN",tags:["Vegan","Sofort"],affiliate:false},
     ];
     const SC={};
     const items=shopCat==="supplements"?SUPPS:shopCat==="sportnahrung"?SPORT:FERTIG;
     return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Shop</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.5}}>Alle Affiliate-Produkte auf einen Blick — direkt beim Anbieter kaufen.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.5}}>Alle Affiliate-Produkte auf einen Blick - direkt beim Anbieter kaufen.</p>
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {CATS.map(c=>(
             <button key={c.id} onClick={()=>setShopCat(c.id)}
@@ -6424,7 +6427,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const weight=parseFloat(profilData?.weight||75);
     const age=new Date().getFullYear()-(+profilData?.birthyear||1990);
     const localSports=sportData?.selectedSports||sports||[];
-    const SPORT_NAMES={cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",cycling_mtb_xc:"MTB XC",cycling_mtb_end:"MTB Enduro",cycling_mtb_dh:"MTB DH",run_road:"Strassenlauf",run_road_5k:"5–10km Lauf",run_road_hm:"Halbmarathon",run_road_m:"Marathon",run_road_ultra:"Ultra",run_trail:"Trail",run_trail_ultra:"Ultra Trail",triathlon:"Triathlon",tri_sprint:"Tri Sprint",tri_olympic:"Tri Olympic",tri_half:"70.3 Half",tri_full:"Ironman",swimming:"Schwimmen",swim_sprint:"Schwimmen Sprint",swim_open:"Open Water",football:"Fussball",icehockey:"Eishockey",hyrox:"Hyrox",krafttraining:"Krafttraining",crossfit:"CrossFit",powerlifting:"Powerlifting",ski_alpin:"Ski Alpin",ski_freeride:"Freeride",ski_touring:"Skitouren",snowboard:"Snowboard",langlauf_klassisch:"Langlauf",langlauf_skating:"Skating",biathlon:"Biathlon",tennis:"Tennis",padel:"Padel",basketball:"Basketball",kampfsport:"Kampfsport",handball:"Handball",volleyball:"Volleyball"};
+    const SPORT_NAMES={cycling_road:"Rennrad",cycling_gravel:"Gravel",cycling_mtb:"MTB",cycling_mtb_xc:"MTB XC",cycling_mtb_end:"MTB Enduro",cycling_mtb_dh:"MTB DH",run_road:"Strassenlauf",run_road_5k:"5-10km Lauf",run_road_hm:"Halbmarathon",run_road_m:"Marathon",run_road_ultra:"Ultra",run_trail:"Trail",run_trail_ultra:"Ultra Trail",triathlon:"Triathlon",tri_sprint:"Tri Sprint",tri_olympic:"Tri Olympic",tri_half:"70.3 Half",tri_full:"Ironman",swimming:"Schwimmen",swim_sprint:"Schwimmen Sprint",swim_open:"Open Water",football:"Fussball",icehockey:"Eishockey",hyrox:"Hyrox",krafttraining:"Krafttraining",crossfit:"CrossFit",powerlifting:"Powerlifting",ski_alpin:"Ski Alpin",ski_freeride:"Freeride",ski_touring:"Skitouren",snowboard:"Snowboard",langlauf_klassisch:"Langlauf",langlauf_skating:"Skating",biathlon:"Biathlon",tennis:"Tennis",padel:"Padel",basketball:"Basketball",kampfsport:"Kampfsport",handball:"Handball",volleyball:"Volleyball"};
     const sportNames=localSports.map(s=>SPORT_NAMES[s]||s).join(", ");
     const GOAL_LABEL={performance:"Leistung steigern",muscle:"Muskelaufbau",endurance:"Ausdauer verbessern",weightloss:"Gewicht reduzieren",health:"Gesundheit & Longevity",recovery:"Regeneration"}[calc.goal]||"";
     const TIME_LABEL={morning:"Morgentraining",midday:"Mittagstraining",afternoon:"Nachmittagstraining",evening:"Abendtraining"}[calc.primaryTrainingTime]||"Training";
@@ -6442,19 +6445,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Personalized hero text
     const heroLines=(()=>{
       const lines=[];
-      if(primaryDays>=5) lines.push(`Du trainierst in den <strong>oberen 10%</strong> — ${primaryDays}× pro Woche auf ${localSports.length>1?"mehreren Disziplinen":"einer der anspruchsvollsten Disziplinen"}.`);
-      else if(primaryDays>=3) lines.push(`Du trainierst regelmässig — <strong>${primaryDays}× pro Woche</strong>, strukturiert und mit klarem Ziel.`);
-      else lines.push(`Du trainierst ${primaryDays}× pro Woche — solide Basis mit Potenzial nach oben.`);
-      if(kcalShown>3000) lines.push(`Dein Energiebedarf liegt <strong>weit über dem Durchschnitt</strong>. Die meisten Athleten in deiner Situation ernähren sich falsch — nicht weil sie es nicht wollen, sondern weil niemand ihnen die richtigen Zahlen gibt. <strong>Das ändern wir.</strong>`);
+      if(primaryDays>=5) lines.push(`Du trainierst in den <strong>oberen 10%</strong> - ${primaryDays}× pro Woche auf ${localSports.length>1?"mehreren Disziplinen":"einer der anspruchsvollsten Disziplinen"}.`);
+      else if(primaryDays>=3) lines.push(`Du trainierst regelmässig - <strong>${primaryDays}× pro Woche</strong>, strukturiert und mit klarem Ziel.`);
+      else lines.push(`Du trainierst ${primaryDays}× pro Woche - solide Basis mit Potenzial nach oben.`);
+      if(kcalShown>3000) lines.push(`Dein Energiebedarf liegt <strong>weit über dem Durchschnitt</strong>. Die meisten Athleten in deiner Situation ernähren sich falsch - nicht weil sie es nicht wollen, sondern weil niemand ihnen die richtigen Zahlen gibt. <strong>Das ändern wir.</strong>`);
       else lines.push(`Dein Körper arbeitet hart. Ohne die richtigen Zahlen lässt du Leistung auf dem Tisch. <strong>Das ändern wir.</strong>`);
       return lines;
     })();
 
     // Warnings
     const WARNINGS=[];
-    if(calc.stressLevel>=4) WARNINGS.push({text:`<strong>Stresslevel ${STRESS_LABEL} erkannt.</strong> Cortisol hemmt aktiv deine Regeneration und Muskelproteinsynthese. Das bremst dich mehr als jedes fehlende Supplement — Ashwagandha und erhöhtes Magnesium sind für dich jetzt besonders relevant.`});
-    if(calc.needsCollagen&&(calc.injuries||[]).some(x=>x!=="none")) WARNINGS.push({text:`<strong>Gelenke & Sehnen.</strong> Bei deinen Beschwerden ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam. 10–15g, 30 min vor der Einheit.`});
-    if(calc.ironRisk&&calc.isFemale) WARNINGS.push({text:`<strong>Eisenbedarf erhöht.</strong> Sportlerinnen haben durch Menstruationsverlust und Sport-Hämolyse ein erhöhtes Risiko. Ferritin regelmässig testen — Zielwert: >50 µg/L.`});
+    if(calc.stressLevel>=4) WARNINGS.push({text:`<strong>Stresslevel ${STRESS_LABEL} erkannt.</strong> Cortisol hemmt aktiv deine Regeneration und Muskelproteinsynthese. Das bremst dich mehr als jedes fehlende Supplement - Ashwagandha und erhöhtes Magnesium sind für dich jetzt besonders relevant.`});
+    if(calc.needsCollagen&&(calc.injuries||[]).some(x=>x!=="none")) WARNINGS.push({text:`<strong>Gelenke & Sehnen.</strong> Bei deinen Beschwerden ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam. 10-15g, 30 min vor der Einheit.`});
+    if(calc.ironRisk&&calc.isFemale) WARNINGS.push({text:`<strong>Eisenbedarf erhöht.</strong> Sportlerinnen haben durch Menstruationsverlust und Sport-Hämolyse ein erhöhtes Risiko. Ferritin regelmässig testen - Zielwert: >50 µg/L.`});
     if(calc.sleep<7) WARNINGS.push({text:`<strong>Schlafdefizit erkannt (${calc.sleep}h).</strong> Unter 7h Schlaf erhöht Cortisol, hemmt Muskelproteinsynthese und verlängert Regenerationszeit. Dein wichtigster Hebel.`});
 
     // Tags from selected sports + training context
@@ -6489,13 +6492,13 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{height:"0.5px",background:C.g100,margin:"12px 0"}}/>
           <div style={{display:"flex"}}>
             {(isPro?[
-              {v:calc.withTraining?.toLocaleString("de-CH")||"—",l:"kcal / Tag"},
-              {v:`${calc.proteinMin||"—"}g`,l:"Protein"},
+              {v:calc.withTraining?.toLocaleString("de-CH")||"-",l:"kcal / Tag"},
+              {v:`${calc.proteinMin||"-"}g`,l:"Protein"},
               {v:`${(calc.waterMl/1000).toFixed(1)}L`,l:"Wasser"},
-              {v:`${calc.sleep||"—"}h`,l:"Schlaf"},
+              {v:`${calc.sleep||"-"}h`,l:"Schlaf"},
             ]:[
-              {v:basicCalc.bmr?.toLocaleString("de-CH")||"—",l:"Grundumsatz"},
-              {v:basicCalc.withTraining?.toLocaleString("de-CH")||"—",l:"mit Training"},
+              {v:basicCalc.bmr?.toLocaleString("de-CH")||"-",l:"Grundumsatz"},
+              {v:basicCalc.withTraining?.toLocaleString("de-CH")||"-",l:"mit Training"},
               {v:`~${waterEstL}L`,l:"Wasser"},
               {v:sessionsYear,l:"Einheiten / Jahr"},
             ]).map((s,i,arr)=>(
@@ -6508,16 +6511,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         </div>
 
         {/* Key metrics */}
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Basisdaten — sichtbar</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Basisdaten - sichtbar</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
           {(isPro?[
-            {label:"ENERGIEBEDARF",val:calc.withTraining?.toLocaleString("de-CH")||"—",unit:"kcal / Tag",hi:true},
-            {label:"PROTEIN",val:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g`,unit:"täglich",hi:true},
+            {label:"ENERGIEBEDARF",val:calc.withTraining?.toLocaleString("de-CH")||"-",unit:"kcal / Tag",hi:true},
+            {label:"PROTEIN",val:`${calc.proteinMin||"-"}-${calc.proteinMax||"-"}g`,unit:"täglich",hi:true},
             {label:"WASSER",val:`${(calc.waterMl/1000).toFixed(1)}L`,unit:"täglich",hi:false},
-            {label:"GRUNDUMSATZ",val:calc.bmr?.toLocaleString("de-CH")||"—",unit:"kcal Ruhe",hi:false},
+            {label:"GRUNDUMSATZ",val:calc.bmr?.toLocaleString("de-CH")||"-",unit:"kcal Ruhe",hi:false},
           ]:[
-            {label:"GRUNDUMSATZ",val:basicCalc.bmr?.toLocaleString("de-CH")||"—",unit:"kcal / Tag",hi:false},
-            {label:"MIT TRAINING",val:basicCalc.withTraining?.toLocaleString("de-CH")||"—",unit:"kcal / Tag",hi:true},
+            {label:"GRUNDUMSATZ",val:basicCalc.bmr?.toLocaleString("de-CH")||"-",unit:"kcal / Tag",hi:false},
+            {label:"MIT TRAINING",val:basicCalc.withTraining?.toLocaleString("de-CH")||"-",unit:"kcal / Tag",hi:true},
             {label:"WASSER",val:`~${waterEstL}L`,unit:"Schätzwert · exakt mit PRO",hi:false},
             {label:"TRAININGSEINHEITEN",val:sessionsYear,unit:"pro Jahr",hi:true},
           ]).map(m=>(
@@ -6531,8 +6534,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
         {/* 2 insights */}
         {[
-          {title:"Energiebedarf",val:`${kcalShown?.toLocaleString("de-CH")||"—"} kcal`,text:`Basierend auf ${sportNames}, ${weight}kg und ${primaryDays}× Training. An harten Tagen steigt dein Bedarf auf ~${Math.round((kcalShown||3000)*1.1).toLocaleString("de-CH")} kcal — die meisten Athleten unterschätzen das um 400–600 kcal täglich.`},
-          isPro?{title:"Proteinbedarf",val:`${calc.proteinMin||"—"}–${calc.proteinMax||"—"}g`,text:`Für "${GOAL_LABEL}" brauchst du 1.8–2.2g/kg täglich. Schützt deine Muskelmasse beim intensiven Training. Post-Workout Fenster: innerhalb 30 min nach der Einheit für maximale Proteinsynthese.`}
+          {title:"Energiebedarf",val:`${kcalShown?.toLocaleString("de-CH")||"-"} kcal`,text:`Basierend auf ${sportNames}, ${weight}kg und ${primaryDays}× Training. An harten Tagen steigt dein Bedarf auf ~${Math.round((kcalShown||3000)*1.1).toLocaleString("de-CH")} kcal - die meisten Athleten unterschätzen das um 400-600 kcal täglich.`},
+          isPro?{title:"Proteinbedarf",val:`${calc.proteinMin||"-"}-${calc.proteinMax||"-"}g`,text:`Für "${GOAL_LABEL}" brauchst du 1.8-2.2g/kg täglich. Schützt deine Muskelmasse beim intensiven Training. Post-Workout Fenster: innerhalb 30 min nach der Einheit für maximale Proteinsynthese.`}
           :{title:"Proteinbedarf",val:"🔒 PRO",text:"Wie viel Protein du täglich brauchst, berechnet PRO exakt auf dein Gewicht, dein Training und dein Ziel."},
         ].map((ins,i)=>(
           <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:8}}>
@@ -6554,14 +6557,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
         {!isPro&&(<>
         {/* Locked 2-col grid */}
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>{"Vollständige Analyse — gesperrt"}</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>{"Vollständige Analyse - gesperrt"}</div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
           {[
             {title:"Elektrolyte & Schweiss",rows:[{l:"Natrium/h",v:"████ mg"},{l:"Magnesium",v:"████ mg"},{l:"Schweiss/h",v:"█.█ L"}]},
             {title:"VO₂max & Zonen",rows:[{l:"VO₂max",v:"██ ml/kg"},{l:"Zone 2",v:"███ W"},{l:"Laktatschwelle",v:"███ bpm"}]},
-            {title:"Carbs & Energie",rows:[{l:"Carbs/Stunde",v:"██–██ g"},{l:"Carbs/Tag",v:"████ g"},{l:"Pre-Workout",v:"██ g"}]},
+            {title:"Carbs & Energie",rows:[{l:"Carbs/Stunde",v:"██-██ g"},{l:"Carbs/Tag",v:"████ g"},{l:"Pre-Workout",v:"██ g"}]},
             {title:"Supplement-Tagesplan",rows:[{l:"Morgens",v:"██████"},{l:"Pre-Workout",v:"██████"},{l:"Post-Workout",v:"██████"}]},
-            {title:"Recovery & Schlaf",rows:[{l:"Magnesium Abends",v:"████ mg"},{l:"Ashwagandha",v:"████ mg"},{l:"HRV-Zielbereich",v:"██–██"}]},
+            {title:"Recovery & Schlaf",rows:[{l:"Magnesium Abends",v:"████ mg"},{l:"Ashwagandha",v:"████ mg"},{l:"HRV-Zielbereich",v:"██-██"}]},
             {title:"Wettkampf-Strategie",rows:[{l:"Carb-Loading",v:"████ g"},{l:"Race-Day Timing",v:"██████"},{l:"Koffein-Einsatz",v:"████ mg"}]},
           ].map((card,i)=>(
             <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,overflow:"hidden"}}>
@@ -6582,10 +6585,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         </div>
 
         {/* Supplement teaser */}
-        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Empfehlungen — gesperrt</div>
+        <div style={{fontSize:10,color:C.g400,fontFamily:"JetBrains Mono,monospace",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8,marginTop:16}}>Empfehlungen - gesperrt</div>
         {[
-          {icon:"💊",title:"Supplements — 100% auf dich",sub:"Dosierungen & Timing exakt berechnet",more:"+ 6 weitere Empfehlungen für dich",rows:[{v:"████ ████████████"},{v:"█████ ████████████████"}]},
-          {icon:"⚡",title:"Sportnahrung — präzise getimed",sub:"Gels, Drinks & Riegel mit exakten Intervallen",more:"+ Race-Day Ernährungsplan",rows:[{v:"██████████████████"},{v:"███████████████████████"}]},
+          {icon:"💊",title:"Supplements - 100% auf dich",sub:"Dosierungen & Timing exakt berechnet",more:"+ 6 weitere Empfehlungen für dich",rows:[{v:"████ ████████████"},{v:"█████ ████████████████"}]},
+          {icon:"⚡",title:"Sportnahrung - präzise getimed",sub:"Gels, Drinks & Riegel mit exakten Intervallen",more:"+ Race-Day Ernährungsplan",rows:[{v:"██████████████████"},{v:"███████████████████████"}]},
         ].map((card,i)=>(
           <div key={i} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:8}}>
             <div style={{padding:"12px 14px 10px",display:"flex",alignItems:"center",gap:10}}>
@@ -6618,7 +6621,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{background:C.neon,borderRadius:16,padding:20,marginTop:8}}>
           <div style={{fontSize:10,fontWeight:700,color:"rgba(0,0,0,.4)",letterSpacing:".1em",fontFamily:"JetBrains Mono,monospace",marginBottom:8}}>{"BEREIT FÜR DIE VOLLSTÄNDIGE ANALYSE?"}</div>
           <div style={{fontSize:18,fontWeight:700,color:C.black,letterSpacing:"-.04em",lineHeight:1.2,marginBottom:6}}>Alles was du brauchst.<br/>Einmalig. Für 6 Monate.</div>
-          <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${sessionsYear} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht — auf dich, nicht auf den Durchschnitt.`}</div>
+          <div style={{fontSize:11,color:"rgba(0,0,0,.6)",lineHeight:1.65,marginBottom:14}}>{`Du siehst gerade ${sessionsYear} Trainingseinheiten pro Jahr. PRO berechnet für jede einzelne was dein Körper braucht - auf dich, nicht auf den Durchschnitt.`}</div>
 
           {/* Stats row */}
           <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:14}}>
@@ -6639,10 +6642,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               "Elektrolyte, VO₂max, Natrium-Verlust & Kohlenhydrate/h",
               "Alle 22 Datenpunkte vollständig ausgewertet",
               "Supplement-Dosierungen mit Timing, Protokoll & Begründung",
-              "Sportnahrung mit exakten Intervallen — berechnet auf dein Gewicht",
+              "Sportnahrung mit exakten Intervallen - berechnet auf dein Gewicht",
               "Persönlicher Tagesplan für Trainings- & Ruhetage",
-              "Race-Day Strategie — Carb-Loading bis After-Race Recovery",
-              `Kein Abo — einmalig ${PRICE_MONTH}/Monat, jederzeit erneuerbar`,
+              "Race-Day Strategie - Carb-Loading bis After-Race Recovery",
+              `Kein Abo - einmalig ${PRICE_MONTH}/Monat, jederzeit erneuerbar`,
             ].map((f,i)=>(
               <div key={i} style={{display:"flex",alignItems:"flex-start",gap:8}}>
                 <div style={{width:15,height:15,borderRadius:"50%",background:"rgba(0,0,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:8,color:C.black,fontWeight:700,flexShrink:0,marginTop:1}}>✓</div>
@@ -6691,7 +6694,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const w=+profilData?.weight||75;
     const age=profilData?.birthyear?new Date().getFullYear()-+profilData.birthyear:30;
     const calc=calcPro(profilData,localTraining,sportData);
-    const timingRecs=calc?.timingRecs||{preWorkout:"—",postWorkout:"—",creatine:"—",note:""};
+    const timingRecs=calc?.timingRecs||{preWorkout:"-",postWorkout:"-",creatine:"-",note:""};
     if(!calc||!profilData||!trainingData) return (
       <div style={{padding:24,textAlign:"center"}}>
         <div style={{fontSize:14,color:C.g400,marginBottom:8}}>Daten werden geladen...</div>
@@ -6700,7 +6703,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
     // Safe accessors
     const safeNum=(v,fb=0)=>isNaN(+v)||v==null?fb:+v;
-    const safeStr=(v,fb="—")=>v==null||v===undefined?fb:String(v);
+    const safeStr=(v,fb="-")=>v==null||v===undefined?fb:String(v);
     const bmr=safeNum(calc.bmr,2000);
     const withTraining=safeNum(calc.withTraining,2500);
     const proteinMin=safeNum(calc.proteinMin,Math.round((+profilData?.weight||75)*1.4));
@@ -6747,7 +6750,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
           <div>
             <div style={{fontSize:20,fontWeight:500,color:"#0A0A0A",letterSpacing:"-.02em"}}>{profilData?.firstname||"Dein Profil"}</div>
-            <div style={{fontSize:12,color:"#AAA",marginTop:2}}>{age} Jahre · {profilData?.height||"—"} cm · {w} kg</div>
+            <div style={{fontSize:12,color:"#AAA",marginTop:2}}>{age} Jahre · {profilData?.height||"-"} cm · {w} kg</div>
           </div>
           <div style={{fontSize:10,padding:"4px 10px",borderRadius:20,background:isPro?C.neon:"#F0F0F0",color:isPro?"#000":"#888",fontWeight:600}}>
             {isPro?"PRO · exakt berechnet":"BASIC · Schätzung"}
@@ -6837,7 +6840,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                   body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
                 });
                 const data=await res.json();
-                const text=data.content?.[0]?.text||"";
+                const text=noDash(data.content?.[0]?.text)||"";
                 setSummary(text);
                 setLoaded(true);
               }catch(e){
@@ -6876,9 +6879,9 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {/* ── ENERGIE ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Energie"}</div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:8}}>
-          <M label={"Grundumsatz"} value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht — Atmung, Herzschlag, Organe. Basis für alle Berechnungen."/>
-          <M label={"Trainingstag"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · exakt":"Schätzung"} desc="Gesamtbedarf an Trainingstagen — Grundumsatz plus Kalorienverbrauch durch Sport." accent/>
-          <M label={"Ruhetag"} value={calc.restDay?calc.restDay.toLocaleString("de-CH"):bmr.toLocaleString("de-CH")} unit="kcal" sub="ohne Sportverbrauch" desc="An Ruhetagen deutlich weniger — nur Grundumsatz plus leichte Alltagsaktivität."/>
+          <M label={"Grundumsatz"} value={bmr.toLocaleString("de-CH")} unit="kcal" sub="täglich, ohne Training" desc="Kalorien die dein Körper in Ruhe verbraucht - Atmung, Herzschlag, Organe. Basis für alle Berechnungen."/>
+          <M label={"Trainingstag"} value={withTraining.toLocaleString("de-CH")} unit="kcal" sub={isPro?"MET-basiert · exakt":"Schätzung"} desc="Gesamtbedarf an Trainingstagen - Grundumsatz plus Kalorienverbrauch durch Sport." accent/>
+          <M label={"Ruhetag"} value={calc.restDay?calc.restDay.toLocaleString("de-CH"):bmr.toLocaleString("de-CH")} unit="kcal" sub="ohne Sportverbrauch" desc="An Ruhetagen deutlich weniger - nur Grundumsatz plus leichte Alltagsaktivität."/>
         </div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
           <M label="Kaloriendefizit Training" value={(withTraining-bmr||0).toLocaleString("de-CH")} unit="kcal" desc="Zusätzliche Kalorien die du durch Training verbrennst. Musst du täglich ersetzen."/>
@@ -6889,8 +6892,8 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {/* ── MAKROS ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Makronährstoffe"}</div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":"repeat(3,1fr)",gap:8,marginBottom:20}}>
-          <M label={"Protein / Tag"} value={isPro?`${proteinMin}–${proteinMax}`:"—"} unit={isPro?"g":""} sub={isPro?"exakt":undefined} locked={!isPro} desc="Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport."/>
-          <M label={"Kohlenhydrate / Tag"} value={isPro?`${carbsG}`:"—"} unit={isPro?"g":""} sub={isPro?"exakt":undefined} locked={!isPro} desc="Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."/>
+          <M label={"Protein / Tag"} value={isPro?`${proteinMin}-${proteinMax}`:"-"} unit={isPro?"g":""} sub={isPro?"exakt":undefined} locked={!isPro} desc="Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport."/>
+          <M label={"Kohlenhydrate / Tag"} value={isPro?`${carbsG}`:"-"} unit={isPro?"g":""} sub={isPro?"exakt":undefined} locked={!isPro} desc="Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."/>
           <M label="Fett / Tag" value={Math.round(withTraining*0.25/9)} unit="g" sub="~25% Kalorien" desc="Wichtig für Hormonsynthese, fettlösliche Vitamine und Langzeitenergie."/>
         </div>
 
@@ -6898,13 +6901,13 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <BlurGate isPro={isPro} onUpgrade={onUpgrade} priceStr={PRICE_STR} label="Elektrolyte & Hydration">
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Elektrolyte & Flüssigkeit"}</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:8}}>
-          <M label="Natrium-Verlust / Tag" value={isPro?natriumMg.toLocaleString("de-CH"):"—"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
-          <M label="Magnesium-Bedarf / Tag" value={isPro?magnesiumMg:"—"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
+          <M label="Natrium-Verlust / Tag" value={isPro?natriumMg.toLocaleString("de-CH"):"-"} unit={isPro?"mg":""} locked={!isPro} desc="Natrium verlierst du hauptsächlich durch Schweiss. Zu wenig führt zu Krämpfen und Leistungseinbruch."/>
+          <M label="Magnesium-Bedarf / Tag" value={isPro?magnesiumMg:"-"} unit={isPro?"mg":""} locked={!isPro} desc="Magnesium ist essenziell für Muskelkontraktion und Regeneration. Sportler verlieren mehr als Nichtsportler."/>
         </div>
-        {calc?.waterDeficit&&<div style={{background:"#FFF8E1",border:"1px solid #FFD54F",borderRadius:10,padding:"10px 14px",marginBottom:10,fontSize:11,color:"#7A5200"}}>⚠ Du trinkst wenig im Alltag — dein berechneter Wasserbedarf berücksichtigt das. Versuch vor dem Training bereits gut hydriert zu sein.</div>}
+        {calc?.waterDeficit&&<div style={{background:"#FFF8E1",border:"1px solid #FFD54F",borderRadius:10,padding:"10px 14px",marginBottom:10,fontSize:11,color:"#7A5200"}}>⚠ Du trinkst wenig im Alltag - dein berechneter Wasserbedarf berücksichtigt das. Versuch vor dem Training bereits gut hydriert zu sein.</div>}
         <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)",gap:8,marginBottom:20}}>
-          <M label={"Wasser Trainingstag"} value={isPro?(Math.round(waterMl/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc={`Gesamter Wasserbedarf an Trainingstagen inkl. Schweiss${calc?.neatKcal>=500?" und Job-Aktivität":""}.`} accent/>
-          <M label={"Wasser Ruhetag"} value={isPro?(Math.round(waterMl*0.6/100)/10):"—"} unit={isPro?"L":""} locked={!isPro} desc="An Ruhetagen deutlich weniger — nur Grundbedarf und Alltagsaktivität."/>
+          <M label={"Wasser Trainingstag"} value={isPro?(Math.round(waterMl/100)/10):"-"} unit={isPro?"L":""} locked={!isPro} desc={`Gesamter Wasserbedarf an Trainingstagen inkl. Schweiss${calc?.neatKcal>=500?" und Job-Aktivität":""}.`} accent/>
+          <M label={"Wasser Ruhetag"} value={isPro?(Math.round(waterMl*0.6/100)/10):"-"} unit={isPro?"L":""} locked={!isPro} desc="An Ruhetagen deutlich weniger - nur Grundbedarf und Alltagsaktivität."/>
         </div>
 
         </BlurGate>
@@ -6912,11 +6915,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {/* ── LEISTUNGSZONEN ── */}
         <div style={{fontSize:11,color:"#AAA",letterSpacing:".06em",textTransform:"uppercase",marginBottom:8}}>{"Leistung & Herzfrequenz-Zonen"}</div>
         <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr 1fr":isPro&&calc?.vo2max?"repeat(4,1fr)":"repeat(3,1fr)",gap:8,marginBottom:20}}>
-          <M label="Max. Herzfrequenz" value={220-age} unit="bpm" desc="Deine theoretische maximale Herzfrequenz. Basis für alle Trainingszonenbergechnungen (220 – Alter)."/>
-          <M label="Fettverbrennungszone" value={`${Math.round((220-age)*.60)}–${Math.round((220-age)*.70)}`} unit="bpm" desc="In dieser Zone verbrennt dein Körper anteilsmässig am meisten Fett. Ideal für lange, ruhige Ausdauereinheiten."/>
-          <M label="Ausdauerzone" value={`${Math.round((220-age)*.70)}–${Math.round((220-age)*.80)}`} unit="bpm" desc="Typische Zone für Grundlagenausdauer. Fordert das Herz-Kreislauf-System ohne zu überlasten."/>
+          <M label="Max. Herzfrequenz" value={220-age} unit="bpm" desc="Deine theoretische maximale Herzfrequenz. Basis für alle Trainingszonenbergechnungen (220 - Alter)."/>
+          <M label="Fettverbrennungszone" value={`${Math.round((220-age)*.60)}-${Math.round((220-age)*.70)}`} unit="bpm" desc="In dieser Zone verbrennt dein Körper anteilsmässig am meisten Fett. Ideal für lange, ruhige Ausdauereinheiten."/>
+          <M label="Ausdauerzone" value={`${Math.round((220-age)*.70)}-${Math.round((220-age)*.80)}`} unit="bpm" desc="Typische Zone für Grundlagenausdauer. Fordert das Herz-Kreislauf-System ohne zu überlasten."/>
           {isPro&&calc.vo2max&&(
-            <M label="VO₂max (geschätzt)" value={calc.vo2max} unit="ml/kg/min" sub={calc.vo2maxLabel} desc="Maximale Sauerstoffaufnahme — der wichtigste Wert für Ausdauerleistung. Geschätzt via Uth-Sørensen Formel." accent/>
+            <M label="VO₂max (geschätzt)" value={calc.vo2max} unit="ml/kg/min" sub={calc.vo2maxLabel} desc="Maximale Sauerstoffaufnahme - der wichtigste Wert für Ausdauerleistung. Geschätzt via Uth-Sørensen Formel." accent/>
           )}
         </div>
 
@@ -6934,13 +6937,13 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
               note="Bei unter 60 Minuten reichen deine Glykogenspeicher vollständig aus.";
             } else if(dur<=90&&intens==="low"){
               carbPerH=20; strategy="Wenig Kohlenhydrate"; method="Elektrolytgetränk";
-              note="Leichte bis moderate Belastung — kleiner Zuschuss stabilisiert Blutzucker.";
+              note="Leichte bis moderate Belastung - kleiner Zuschuss stabilisiert Blutzucker.";
             } else if(dur<=90){
               carbPerH=45; strategy="Moderat nachladen"; method="Isotonisches Getränk oder 1 Gel";
-              note="Pro Stunde: 1 Gel (25–30g) + Wasser oder isotonisches Sportgetränk (500ml).";
+              note="Pro Stunde: 1 Gel (25-30g) + Wasser oder isotonisches Sportgetränk (500ml).";
             } else if(dur<=150){
               carbPerH=60; strategy="Regelmässig nachladen"; method="Getränk + Gel kombinieren";
-              note="Pro Stunde: 1 Gel + 400–500ml Sportgetränk. Alle 20–30 min aufnehmen.";
+              note="Pro Stunde: 1 Gel + 400-500ml Sportgetränk. Alle 20-30 min aufnehmen.";
             } else {
               carbPerH=80; strategy="Maximales Nachladen (2:1)"; method="Glukose + Fruktose Mix";
               note="Über 2.5h: Glukose+Fruktose 2:1 für max. 90g/h Aufnahme. Maurten Drink Mix oder ähnlich.";
@@ -6974,7 +6977,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             );
           })}
           <div style={{padding:"10px 16px",background:C.neonDim,border:`1px solid ${C.neon}`,fontSize:10,color:"#4A7000",lineHeight:1.5,fontWeight:500}}>
-            💡 Richtwerte nach ACSM & IOC. Bei Rennen oder Wettkämpfen 20–30% mehr einplanen. Verträglichkeit individuell testen.
+            💡 Richtwerte nach ACSM & IOC. Bei Rennen oder Wettkämpfen 20-30% mehr einplanen. Verträglichkeit individuell testen.
           </div>
         </div>
 
@@ -7038,22 +7041,22 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       ...([...primSupps,...secSupps]).map(s=>({id:s.id,name:s.name,dose:s.dose,shop:s.shop||"iHerb",link:s.link,category:"Supplement",price:s.price||""})),
       // Nutrition
       ...[
-        {id:"sn_mau_gel",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",shop:"Maurten",link:AFF.maurten("gel-100-box"),category:"Sportnahrung",price:"~CHF 3.80"},
+        {id:"sn_mau_gel",name:"Maurten Gel 100",dose:"1 Gel alle 30-40 min",shop:"Maurten",link:AFF.maurten("gel-100-box"),category:"Sportnahrung",price:"~CHF 3.80"},
         {id:"sn_mau_320",name:"Maurten Drink Mix 320",dose:"80g/500ml",shop:"Maurten",link:AFF.maurten("drink-mix-320"),category:"Sportnahrung",price:"~CHF 4.50"},
-        {id:"sn_mau_caf",name:"Maurten Gel 100 CAF",dose:"1 Gel alle 40–45 min",shop:"Maurten",link:AFF.maurten("gel-100-caf-100"),category:"Sportnahrung",price:"~CHF 4.00"},
-        {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",shop:"MNSTRY",link:AFF.mnstry("intensity-gel"),category:"Sportnahrung",price:"~CHF 3.50"},
+        {id:"sn_mau_caf",name:"Maurten Gel 100 CAF",dose:"1 Gel alle 40-45 min",shop:"Maurten",link:AFF.maurten("gel-100-caf-100"),category:"Sportnahrung",price:"~CHF 4.00"},
+        {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30-45 min",shop:"MNSTRY",link:AFF.mnstry("intensity-gel"),category:"Sportnahrung",price:"~CHF 3.50"},
         {id:"sn_sp_elek",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab/500ml",shop:"Sponser",link:AFF.sponser("elektrolyt tabletten"),category:"Sportnahrung",price:"~CHF 0.50"},
-        {id:"prot_whey",name:"Whey Protein Isolat",dose:"25–30g post-workout",shop:"Myprotein",link:AFF.myprotein("whey protein isolate"),category:"Protein",price:"~CHF 1.50"},
-        {id:"prot_esn",name:"ESN Designer Whey",dose:"25–30g post-workout",shop:"ESN",link:AFF.esn("designer-whey-protein"),category:"Protein",price:"~CHF 1.20"},
+        {id:"prot_whey",name:"Whey Protein Isolat",dose:"25-30g post-workout",shop:"Myprotein",link:AFF.myprotein("whey protein isolate"),category:"Protein",price:"~CHF 1.50"},
+        {id:"prot_esn",name:"ESN Designer Whey",dose:"25-30g post-workout",shop:"ESN",link:AFF.esn("designer-whey-protein"),category:"Protein",price:"~CHF 1.20"},
         {id:"prot_more",name:"More Nutrition Total Protein",dose:"25g post-workout",shop:"More Nutrition",link:AFF.morenutrition("total-protein"),category:"Protein",price:"~CHF 1.30"},
         {id:"prot_vegan",name:"Myprotein Vegan Protein",dose:"25g post-workout",shop:"Myprotein",link:AFF.myprotein("vegan protein blend"),category:"Protein",price:"~CHF 1.40"},
         {id:"prot_casein",name:"Micellar Casein",dose:"30g vor dem Schlafen",shop:"Myprotein",link:AFF.myprotein("micellar casein"),category:"Protein",price:"~CHF 1.80"},
-        {id:"rec_mg",name:"Magnesium Bisglycinate",dose:"300–400mg abends",shop:"iHerb",link:AFF.iherb("magnesium bisglycinate"),category:"Recovery",price:"~CHF 0.15"},
-        {id:"rec_kolla",name:"Kollagen + Vitamin C",dose:"10–15g vor Training",shop:"iHerb",link:AFF.iherb("collagen vitamin c"),category:"Recovery",price:"~CHF 0.60"},
+        {id:"rec_mg",name:"Magnesium Bisglycinate",dose:"300-400mg abends",shop:"iHerb",link:AFF.iherb("magnesium bisglycinate"),category:"Recovery",price:"~CHF 0.15"},
+        {id:"rec_kolla",name:"Kollagen + Vitamin C",dose:"10-15g vor Training",shop:"iHerb",link:AFF.iherb("collagen vitamin c"),category:"Recovery",price:"~CHF 0.60"},
         {id:"rec_tart",name:"Tart Cherry Extrakt",dose:"480mg täglich",shop:"iHerb",link:AFF.iherb("tart cherry"),category:"Recovery",price:"~CHF 0.40"},
-        {id:"rec_omega",name:"Omega-3 (EPA/DHA)",dose:"2–3g täglich",shop:"iHerb",link:AFF.iherb("omega 3 epa dha"),category:"Recovery",price:"~CHF 0.30"},
+        {id:"rec_omega",name:"Omega-3 (EPA/DHA)",dose:"2-3g täglich",shop:"iHerb",link:AFF.iherb("omega 3 epa dha"),category:"Recovery",price:"~CHF 0.30"},
         {id:"rec_ashwa",name:"Ashwagandha KSM-66",dose:"600mg täglich",shop:"iHerb",link:AFF.iherb("ashwagandha ksm-66"),category:"Recovery",price:"~CHF 0.50"},
-        {id:"rec_vit_d",name:"Vitamin D3 + K2",dose:"2000–4000 IE täglich",shop:"iHerb",link:AFF.iherb("vitamin d3 k2"),category:"Recovery",price:"~CHF 0.10"},
+        {id:"rec_vit_d",name:"Vitamin D3 + K2",dose:"2000-4000 IE täglich",shop:"iHerb",link:AFF.iherb("vitamin d3 k2"),category:"Recovery",price:"~CHF 0.10"},
       ],
       // Wearables
       ...WEARABLES.map(w=>({id:`wear_${w.name.replace(/\s/g,"_")}`,name:w.name,dose:"",shop:w.shops[0]?.name||"Shop",link:w.shops[0]?.link||"#",category:"Wearable",price:w.price})),
@@ -7098,11 +7101,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     if(cartItems.length===0) return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Warenkorb</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:24,lineHeight:1.5}}>Alle markierten Produkte gesammelt — direkt zum Partnershop.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:24,lineHeight:1.5}}>Alle markierten Produkte gesammelt - direkt zum Partnershop.</p>
         <div style={{padding:"32px 20px",textAlign:"center",background:"#FAFAFA",borderRadius:14,border:"1px solid #EBEBEB"}}>
           <div style={{fontSize:32,marginBottom:12}}>🛒</div>
           <div style={{fontSize:14,fontWeight:500,color:C.black,marginBottom:6}}>Noch keine Produkte im Warenkorb</div>
-          <div style={{fontSize:12,color:"#AAA",lineHeight:1.6}}>Markiere Produkte bei Supplements, Sportnahrung oder Recovery mit "Ich habe das Produkt bereits" — sie erscheinen dann automatisch hier.</div>
+          <div style={{fontSize:12,color:"#AAA",lineHeight:1.6}}>Markiere Produkte bei Supplements, Sportnahrung oder Recovery mit "Ich habe das Produkt bereits" - sie erscheinen dann automatisch hier.</div>
         </div>
       </div>
     );
@@ -7110,7 +7113,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Warenkorb</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{cartItems.length} Produkte bei {Object.keys(byShop).length} Shops — direkt zur Bestellung.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{cartItems.length} Produkte bei {Object.keys(byShop).length} Shops - direkt zur Bestellung.</p>
 
         {/* Info */}
         <div style={{marginBottom:16,padding:"10px 14px",background:C.neonDim,borderRadius:10,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",lineHeight:1.6}}>
@@ -7181,10 +7184,10 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     });
     // Also pull in nutrition products that are marked as owned
     const SN_DATA=[
-      {id:"sn_mau_gel",name:"Maurten Gel 100",dose:"1 Gel alle 30–40 min",when:"Während Training",protocol:{timing:"Während Training · alle 30–40 min"}},
+      {id:"sn_mau_gel",name:"Maurten Gel 100",dose:"1 Gel alle 30-40 min",when:"Während Training",protocol:{timing:"Während Training · alle 30-40 min"}},
       {id:"sn_mau_320",name:"Maurten Drink Mix 320",dose:"80g / 500ml",when:"Während Training",protocol:{timing:"Während Training · pro Stunde"}},
-      {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF",dose:"1 Gel alle 40–45 min",when:"Während Training",protocol:{timing:"Während Training · bei Rennen"}},
-      {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30–45 min",when:"Während Training",protocol:{timing:"Während Training"}},
+      {id:"sn_mau_caf_2",name:"Maurten Gel 100 CAF",dose:"1 Gel alle 40-45 min",when:"Während Training",protocol:{timing:"Während Training · bei Rennen"}},
+      {id:"sn_mn_gel",name:"MNSTRY Intensity Gel",dose:"1 Gel alle 30-45 min",when:"Während Training",protocol:{timing:"Während Training"}},
       {id:"sn_mn_heat_2",name:"MNSTRY Fast Carb Heat",dose:"1 Portion",when:"Vor Training",protocol:{timing:"30 min vor Training"}},
       {id:"sn_elek_2",name:"Sponser Elektrolyt-Tabs",dose:"1 Tab / 500ml",when:"Während Training",protocol:{timing:"Während Training · zum Wasser"}},
       {id:"sn_sp_gel",name:"Sponser Liquid Energy",dose:"1 Beutel alle 45 min",when:"Während Training",protocol:{timing:"Während Training"}},
@@ -7197,7 +7200,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     const TIMING_ORDER=[
       {key:"morgens",    label:"Morgens",          icon:"🌅", desc:"Am besten nüchtern oder zum Frühstück"},
       {key:"mittags",    label:"Mittags / Training",icon:"⚡", desc:"Rund ums Training oder zur Mittagsmahlzeit"},
-      {key:"abends",     label:"Abends",            icon:"🌙", desc:"Abends, 1–2h vor dem Schlafen"},
+      {key:"abends",     label:"Abends",            icon:"🌙", desc:"Abends, 1-2h vor dem Schlafen"},
       {key:"training",   label:"Während Training",  icon:"🏃", desc:"Direkt während der Einheit"},
       {key:"post",       label:"Nach Training",     icon:"💪", desc:"Innerhalb 30 Min. nach dem Training"},
     ];
@@ -7218,11 +7221,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     if(ownedSupps.length===0) return (
       <div>
         <h2 style={{fontSize:18,fontWeight:500,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Deinen Plan</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:24,lineHeight:1.5}}>Hier siehst du alle Supplements die du besitzt oder bestellt hast — inklusive Tagesplan.</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:24,lineHeight:1.5}}>Hier siehst du alle Supplements die du besitzt oder bestellt hast - inklusive Tagesplan.</p>
         <div style={{padding:"32px 20px",textAlign:"center",background:"#FAFAFA",borderRadius:14,border:"1px solid #EBEBEB"}}>
           <div style={{fontSize:32,marginBottom:12}}>📦</div>
           <div style={{fontSize:14,fontWeight:500,color:C.black,marginBottom:6}}>Noch keine Produkte erfasst</div>
-          <div style={{fontSize:12,color:"#AAA",lineHeight:1.6}}>Gehe zu Supplements und markiere Produkte mit "Ich habe das Produkt bereits" — sie erscheinen dann automatisch hier mit Einnahme-Tagesplan.</div>
+          <div style={{fontSize:12,color:"#AAA",lineHeight:1.6}}>Gehe zu Supplements und markiere Produkte mit "Ich habe das Produkt bereits" - sie erscheinen dann automatisch hier mit Einnahme-Tagesplan.</div>
         </div>
       </div>
     );
@@ -7241,7 +7244,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
     return (
       <div>
-        {/* TREYN Score Hero — kompakt */}
+        {/* TREYN Score Hero - kompakt */}
         <div style={{borderRadius:12,border:`1px solid ${C.neon}`,background:C.neonDim,padding:"14px 18px",marginBottom:24}}>
           {/* Top row: score + level */}
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
@@ -7362,7 +7365,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{padding:"16px",fontSize:11,color:C.g600,lineHeight:1.8}}>
           TREYN+ erhebt ausschliesslich die Daten, die du bei der Registrierung und Nutzung angibst (Sport, Körperdaten, Ernährungspräferenzen). Diese Daten werden verschlüsselt gespeichert und nicht an Dritte weitergegeben.
           <br/><br/>
-          Affiliate-Links zu Partnershops (iHerb, Maurten etc.) werden beim Klick mit einem Tracking-Parameter versehen — dies ist für die Provisionszuordnung notwendig. Es werden keine Cookies ohne deine Zustimmung gesetzt.
+          Affiliate-Links zu Partnershops (iHerb, Maurten etc.) werden beim Klick mit einem Tracking-Parameter versehen - dies ist für die Provisionszuordnung notwendig. Es werden keine Cookies ohne deine Zustimmung gesetzt.
           <br/><br/>
           Du hast jederzeit das Recht auf Auskunft, Berichtigung oder Löschung deiner Daten. Anfragen an: <span style={{color:C.black,fontWeight:600}}>info@treynplus.com</span>
         </div>
@@ -7392,7 +7395,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             {l:"Inhaber",v:"Kevin Oberholzer"},
             {l:"E-Mail",v:"info@treynplus.com"},
             {l:"Rechtsform",v:"GmbH, Handelsregister Kanton Glarus"},
-            {l:"Affiliate-Hinweis",v:"Diese Plattform enthält Affiliate-Links. Bei Käufen über diese Links erhalten wir eine Provision — für dich entstehen keine Mehrkosten."},
+            {l:"Affiliate-Hinweis",v:"Diese Plattform enthält Affiliate-Links. Bei Käufen über diese Links erhalten wir eine Provision - für dich entstehen keine Mehrkosten."},
           ].map((r,i,arr)=>(
             <div key={r.l} style={{display:"flex",gap:12,padding:"9px 0",borderBottom:i<arr.length-1?`1px solid ${C.g100}`:"none"}}>
               <span style={{fontSize:11,color:"#AAA",minWidth:80,flexShrink:0}}>{r.l}</span>
@@ -7406,7 +7409,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       <div style={{marginTop:10,padding:"14px 16px",background:C.g100,borderRadius:12,border:`0.5px solid ${C.g200}`}}>
         <div style={{fontSize:11,fontWeight:600,color:C.g600,marginBottom:6,fontFamily:"JetBrains Mono,monospace",letterSpacing:".04em"}}>© {new Date().getFullYear()} TREYN+ · WBCS GmbH</div>
         <div style={{fontSize:11,color:C.g400,lineHeight:1.7}}>
-          Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung — auch auszugsweise oder durch KI-gestützte Tools — ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
+          Alle Inhalte, Berechnungsmodelle, Algorithmen, Texte und das Design dieser Plattform sind urheberrechtlich geschützt. Jede Vervielfältigung, Nachahmung oder Nutzung - auch auszugsweise oder durch KI-gestützte Tools - ohne ausdrückliche schriftliche Genehmigung der WBCS GmbH ist untersagt. Zuwiderhandlungen werden zivilrechtlich verfolgt.
         </div>
         <div style={{marginTop:10,paddingTop:10,borderTop:`0.5px solid ${C.g200}`,fontSize:10,color:C.g300}}>
           {"Verstösse melden:"} info@treynplus.com
@@ -7476,7 +7479,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
 
     return (
       <div>
-        {/* Loyalty Card — kompakt */}
+        {/* Loyalty Card - kompakt */}
         <div style={{borderRadius:12,border:`1.5px solid ${currentTier.id==="black"?C.black:C.g200}`,overflow:"hidden",marginBottom:12}}>
           <div style={{background:currentTier.id==="black"?C.black:C.g100,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
             <div>
@@ -7501,7 +7504,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           )}
         </div>
 
-        {/* Tier overview — 2 Karten nebeneinander */}
+        {/* Tier overview - 2 Karten nebeneinander */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
           {TIERS.filter(t=>t.id!=="none").map((t,i)=>(
             <div key={i} style={{borderRadius:10,border:`1.5px solid ${t.id===currentTier.id?C.neon:"#EBEBEB"}`,background:t.id===currentTier.id?C.neonDim:"#fff",padding:"10px 12px",display:"flex",alignItems:"center",gap:8}}>
@@ -7511,7 +7514,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                 <div style={{fontSize:9,color:"#AAA"}}>ab {t.min} Best.</div>
               </div>
               {t.id===currentTier.id&&<span style={{fontSize:8,padding:"2px 5px",borderRadius:4,background:C.black,color:C.neon,fontFamily:"JetBrains Mono,monospace",fontWeight:700}}>AKTIV</span>}
-              {orders<t.min&&<span style={{fontSize:9,color:"#CCC",fontFamily:"JetBrains Mono,monospace"}}>–{t.min-orders}</span>}
+              {orders<t.min&&<span style={{fontSize:9,color:"#CCC",fontFamily:"JetBrains Mono,monospace"}}>-{t.min-orders}</span>}
             </div>
           ))}
         </div>
@@ -7533,10 +7536,10 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <div style={{padding:"14px 16px"}}>
               {/* Static read-only: name, email, country, gender */}
               {[
-                {l:"Name",v:`${profilData?.firstname||""} ${profilData?.lastname||""}`.trim()||"—"},
-                {l:"E-Mail",v:profilData?.email||"—"},
-                {l:"Herkunft",v:profilData?.country||"—"},
-                {l:"Geschlecht",v:{m:"Männlich",f:"Weiblich"}[profilData?.gender]||"—"},
+                {l:"Name",v:`${profilData?.firstname||""} ${profilData?.lastname||""}`.trim()||"-"},
+                {l:"E-Mail",v:profilData?.email||"-"},
+                {l:"Herkunft",v:profilData?.country||"-"},
+                {l:"Geschlecht",v:{m:"Männlich",f:"Weiblich"}[profilData?.gender]||"-"},
               ].map((r,i)=>(
                 <div key={r.l} style={{display:"flex",justifyContent:"space-between",padding:"7px 0",borderBottom:`1px solid ${C.g100}`}}>
                   <span style={{fontSize:12,color:C.g600}}>{r.l}</span>
@@ -7549,16 +7552,16 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                 // Read-only view of editable fields
                 <div style={{marginTop:8}}>
                   {[
-                    {l:"Gewicht",v:profilData?.weight?`${profilData.weight} kg`:"—"},
-                    {l:"Grösse",v:profilData?.height?`${profilData.height} cm`:"—"},
-                    {l:"Schlaf",v:profilData?.sleep?`${profilData.sleep}h/Nacht`:"—"},
-                    {l:"Ruhepuls",v:profilData?.rhr?`${profilData.rhr} bpm`:"—"},
-                    {l:"Ziel",v:{performance:"Leistung",muscle:"Muskelaufbau",endurance:"Ausdauer",weightloss:"Gewicht",health:"Gesundheit",recovery:"Regeneration"}[profilData?.goal]||"—"},
-                    {l:"Stresslevel",v:{1:"Sehr niedrig",2:"Niedrig",3:"Mittel",4:"Hoch",5:"Sehr hoch"}[profilData?.stressLevel]||"—"},
-                    {l:"Ernährung",v:{excellent:"Sehr ausgewogen",good:"Gut",average:"Durchschnittlich",poor:"Verbesserungswürdig"}[profilData?.dietQuality]||"—"},
-                    {l:"Höhe",v:{low:"0–500m",medium:"500–1500m",high:"1500–2500m",alpine:"2500m+"}[profilData?.altitude]||"—"},
-                    {l:"Erholungsstatus",v:{excellent:"Top-Form",good:"Normal",tired:"Müde / überlastet",recovery:"Verletzung / Pause"}[profilData?.recoveryStatus]||"—"},
-                    {l:"Budget / Monat",v:{low:"< CHF 30",medium:"CHF 30–80",high:"CHF 80–150",max:"CHF 150+"}[profilData?.monthlyBudget]||"—"},
+                    {l:"Gewicht",v:profilData?.weight?`${profilData.weight} kg`:"-"},
+                    {l:"Grösse",v:profilData?.height?`${profilData.height} cm`:"-"},
+                    {l:"Schlaf",v:profilData?.sleep?`${profilData.sleep}h/Nacht`:"-"},
+                    {l:"Ruhepuls",v:profilData?.rhr?`${profilData.rhr} bpm`:"-"},
+                    {l:"Ziel",v:{performance:"Leistung",muscle:"Muskelaufbau",endurance:"Ausdauer",weightloss:"Gewicht",health:"Gesundheit",recovery:"Regeneration"}[profilData?.goal]||"-"},
+                    {l:"Stresslevel",v:{1:"Sehr niedrig",2:"Niedrig",3:"Mittel",4:"Hoch",5:"Sehr hoch"}[profilData?.stressLevel]||"-"},
+                    {l:"Ernährung",v:{excellent:"Sehr ausgewogen",good:"Gut",average:"Durchschnittlich",poor:"Verbesserungswürdig"}[profilData?.dietQuality]||"-"},
+                    {l:"Höhe",v:{low:"0-500m",medium:"500-1500m",high:"1500-2500m",alpine:"2500m+"}[profilData?.altitude]||"-"},
+                    {l:"Erholungsstatus",v:{excellent:"Top-Form",good:"Normal",tired:"Müde / überlastet",recovery:"Verletzung / Pause"}[profilData?.recoveryStatus]||"-"},
+                    {l:"Budget / Monat",v:{low:"< CHF 30",medium:"CHF 30-80",high:"CHF 80-150",max:"CHF 150+"}[profilData?.monthlyBudget]||"-"},
                     {l:"Aktuelle Supplements",v:(profilData?.currentSupps||[]).includes("none")||!(profilData?.currentSupps||[]).length?"Keine":(profilData?.currentSupps||[]).join(", ")},
                     {l:"Medikamente",v:(profilData?.medications||[]).includes("none")||!(profilData?.medications||[]).length?"Keine":(profilData?.medications||[]).map(m=>({blutverd:"Blutverdünner",schilddruese:"Schilddrüse",blutdruck:"Blutdruck"}[m]||m)).join(", ")},
                   ].map((r,i,arr)=>(
@@ -7637,7 +7640,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                   <div style={{marginBottom:10}}>
                     <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Trainings-Höhe</div>
                     <div style={{display:"flex",gap:6}}>
-                      {[{id:"low",l:"0–500m"},{id:"medium",l:"500–1500m"},{id:"high",l:"1500–2500m"},{id:"alpine",l:"2500m+"}].map(o=>(
+                      {[{id:"low",l:"0-500m"},{id:"medium",l:"500-1500m"},{id:"high",l:"1500-2500m"},{id:"alpine",l:"2500m+"}].map(o=>(
                         <button key={o.id} onClick={()=>setEF("altitude",o.id)}
                           style={{flex:1,padding:"6px 2px",borderRadius:8,border:`1.5px solid ${editForm.altitude===o.id?C.neon:C.g200}`,background:editForm.altitude===o.id?C.neonDim:C.white,fontSize:10,fontWeight:editForm.altitude===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
                           {o.l}
@@ -7650,7 +7653,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
                   <div style={{marginBottom:10}}>
                     <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Monatliches Budget</div>
                     <div style={{display:"flex",gap:6}}>
-                      {[{id:"low",l:"< CHF 30"},{id:"medium",l:"CHF 30–80"},{id:"high",l:"CHF 80–150"},{id:"max",l:"CHF 150+"}].map(o=>(
+                      {[{id:"low",l:"< CHF 30"},{id:"medium",l:"CHF 30-80"},{id:"high",l:"CHF 80-150"},{id:"max",l:"CHF 150+"}].map(o=>(
                         <button key={o.id} onClick={()=>setEF("monthlyBudget",o.id)}
                           style={{flex:1,padding:"6px 2px",borderRadius:8,border:`1.5px solid ${editForm.monthlyBudget===o.id?C.neon:C.g200}`,background:editForm.monthlyBudget===o.id?C.neonDim:C.white,fontSize:10,fontWeight:editForm.monthlyBudget===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"center"}}>
                           {o.l}
@@ -7708,7 +7711,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         <div style={{marginBottom:12,padding:"12px 14px",background:C.g100,borderRadius:10,border:`1px solid ${C.g200}`}}>
           <div style={{fontSize:10,fontWeight:600,color:C.g600,marginBottom:4,letterSpacing:".03em",textTransform:"uppercase"}}>Haftungsausschluss</div>
           <div style={{fontSize:10,color:C.g400,lineHeight:1.7}}>
-            TREYN+ liefert Ernährungsempfehlungen auf Basis deiner Angaben — kein Ersatz für medizinische Beratung. Prüfe Inhaltsstoffe, Allergene und Wechselwirkungen immer direkt beim Hersteller. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.
+            TREYN+ liefert Ernährungsempfehlungen auf Basis deiner Angaben - kein Ersatz für medizinische Beratung. Prüfe Inhaltsstoffe, Allergene und Wechselwirkungen immer direkt beim Hersteller. Bei Erkrankungen oder Medikamenten: Arzt konsultieren.
           </div>
         </div>
 
@@ -7725,7 +7728,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {!isPro&&(
             <button onClick={onUpgrade}
               style={{width:"100%",background:C.black,color:C.neon,border:"none",borderRadius:9,padding:"10px",fontSize:12,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              {`Upgrade auf PRO — ${PRICE_STR} / 6 Monate`}
+              {`Upgrade auf PRO - ${PRICE_STR} / 6 Monate`}
             </button>
           )}
         </div>
@@ -7770,10 +7773,10 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <div style={{padding:"16px",background:C.white}}>
             <div style={{display:"flex",flexDirection:"column",gap:12}}>
               {[
-                {n:"1",t:"Bluttest bestellen",d:"Wir vermitteln dir einen At-Home Bluttest via cerascreen® — dem führenden Bluttest-Anbieter in 19 europäischen Ländern. Fingerprick-Methode, du schickst die Probe per Post ein."},
-                {n:"2",t:"Ergebnis erhalten",d:"cerascreen® wertet deine Probe im zertifizierten Fachlabor aus. Das Ergebnis erhältst du als PDF innerhalb von 2–3 Werktagen per E-Mail."},
-                {n:"3",t:"PDF hier hochladen",d:"Hast du dein Ergebnis? Lade das PDF direkt hier hoch. TREYN AI liest alle Laborwerte automatisch aus — Vitamin D, Eisen, Magnesium, Omega-3 und mehr. Keine manuelle Eingabe nötig."},
-                {n:"4",t:"Werte werden überschrieben — höchste Genauigkeit",d:"Deine bisherigen Schätzwerte werden durch die echten Laborwerte ersetzt. Supplement-Empfehlungen, Priorisierungen und Dosierungen passen sich sofort an. Dies ist die höchste Genauigkeit die TREYN+ bieten kann."},
+                {n:"1",t:"Bluttest bestellen",d:"Wir vermitteln dir einen At-Home Bluttest via cerascreen® - dem führenden Bluttest-Anbieter in 19 europäischen Ländern. Fingerprick-Methode, du schickst die Probe per Post ein."},
+                {n:"2",t:"Ergebnis erhalten",d:"cerascreen® wertet deine Probe im zertifizierten Fachlabor aus. Das Ergebnis erhältst du als PDF innerhalb von 2-3 Werktagen per E-Mail."},
+                {n:"3",t:"PDF hier hochladen",d:"Hast du dein Ergebnis? Lade das PDF direkt hier hoch. TREYN AI liest alle Laborwerte automatisch aus - Vitamin D, Eisen, Magnesium, Omega-3 und mehr. Keine manuelle Eingabe nötig."},
+                {n:"4",t:"Werte werden überschrieben - höchste Genauigkeit",d:"Deine bisherigen Schätzwerte werden durch die echten Laborwerte ersetzt. Supplement-Empfehlungen, Priorisierungen und Dosierungen passen sich sofort an. Dies ist die höchste Genauigkeit die TREYN+ bieten kann."},
               ].map((s,i)=>(
                 <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start"}}>
                   <div style={{width:24,height:24,borderRadius:"50%",background:C.neon,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,fontSize:11,fontWeight:800,color:C.black}}>{s.n}</div>
@@ -7803,13 +7806,13 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             </div>
             {blutPurchased?(
               <div style={{padding:"10px 12px",background:C.white,borderRadius:9,border:`1px solid ${C.neonBorder}`,fontSize:12,color:C.g800,marginBottom:10}}>
-                ✓ Bluttest bestellt — du erhältst dein Kit per Post. Nach Eingang des Ergebnisses (2–3 Werktage) das PDF unten hochladen.
+                ✓ Bluttest bestellt - du erhältst dein Kit per Post. Nach Eingang des Ergebnisses (2-3 Werktage) das PDF unten hochladen.
               </div>
             ):(
               <div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
                   <div>
-                    <div style={{fontSize:14,fontWeight:600,color:C.black,letterSpacing:"-.02em"}}>ab CHF 60.– <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· bei cerascreen®</span></div>
+                    <div style={{fontSize:14,fontWeight:600,color:C.black,letterSpacing:"-.02em"}}>ab CHF 60.- <span style={{fontSize:10,fontWeight:400,color:C.g600}}>· bei cerascreen®</span></div>
                     <div style={{fontSize:10,color:C.g600}}>Sportler-Paket: Vitamin D, B12, Omega-3, Testosteron</div>
                   </div>
                   <div style={{display:"flex",gap:5}}>
@@ -7827,11 +7830,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           </div>
         </div>
 
-        {/* PDF Upload — kostenlos, für alle */}
+        {/* PDF Upload - kostenlos, für alle */}
         <div style={{marginBottom:4}}>
           <div style={{fontSize:12,fontWeight:500,color:"#666",marginBottom:10}}>Ergebnisse hochladen & automatisch einpflegen</div>
           <div style={{padding:"10px 14px",background:"#FAFAFA",borderRadius:10,border:"1px solid #EBEBEB",marginBottom:10}}>
-            <div style={{fontSize:11,color:"#888",lineHeight:1.5,marginBottom:8}}>TREYN AI liest dein PDF automatisch aus — alle Laborwerte werden direkt in dein Profil eingespeist und deine Supplement-Empfehlungen passen sich sofort an.</div>
+            <div style={{fontSize:11,color:"#888",lineHeight:1.5,marginBottom:8}}>TREYN AI liest dein PDF automatisch aus - alle Laborwerte werden direkt in dein Profil eingespeist und deine Supplement-Empfehlungen passen sich sofort an.</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
               {["Vitamin D","Eisen & Ferritin","Magnesium","Omega-3","Vitamin B12","Zink","Testosteron","Cortisol"].map(t=>(
                 <span key={t} style={{fontSize:9,padding:"2px 7px",borderRadius:10,background:"#F0F0F0",color:"#666",fontFamily:"JetBrains Mono,monospace"}}>{t}</span>
@@ -7858,7 +7861,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
     return (
       <div>
         <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Empfehlungen"}</h2>
-        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"100% auf deine Daten berechnet — Supplements, Sportnahrung, Mahlzeiten & Recovery."}</p>
+        <p style={{fontSize:13,color:C.g600,marginBottom:16,lineHeight:1.6}}>{"100% auf deine Daten berechnet - Supplements, Sportnahrung, Mahlzeiten & Recovery."}</p>
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {SUB.map(s=>(
             <button key={s.id} onClick={()=>{setSubTab(s.id);window.scrollTo({top:0,behavior:"instant"});}}
@@ -7870,27 +7873,27 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
         {subTab==="supplements"&&(
           <div>
             <p style={{fontSize:12,color:C.g600,marginBottom:12}}>{isPro?"Sport-spezifisch priorisiert nach deinen Berechnungen.":"Empfohlen für deinen Sport und deine Intensität."}</p>
-            {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> — basierend auf deiner Präferenz.</div>)}
+            {prefSupp!=="beides"&&(<div style={{marginBottom:10,padding:"8px 12px",background:C.neonDim,borderRadius:8,border:`1px solid ${C.neon}`,fontSize:11,color:"#4A7000",display:"flex",alignItems:"center",gap:6}}><span>✓</span> Nur <strong>{prefSupp==="kapsel"?"Kapseln / Tabletten":"Pulver"}</strong> - basierend auf deiner Präferenz.</div>)}
             <SupplementsContent isPro={isPro} primSupps={primSupps} secSupps={secSupps} allergenData={allergenData} proData={kcal}/>
           </div>
         )}
         {subTab==="ernaehrung"&&<NutritionTab/>}
         {subTab==="mahlzeiten"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen — aber trotzdem optimal versorgt sein wollen.</p>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.6}}>Ideal für Sportler die nicht gerne kochen - aber trotzdem optimal versorgt sein wollen.</p>
             <FertiggerichteContent/>
           </div>
         )}
         {subTab==="hydration"&&<HydrationContent/>}
         {subTab==="recovery"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Professionelle Recovery-Technologie — empfohlen nach intensiven Trainings.</p>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Professionelle Recovery-Technologie - empfohlen nach intensiven Trainings.</p>
             <RecoveryContent/>
           </div>
         )}
         {subTab==="tracking"&&(
           <div>
-            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Wearables für präziseres Tracking — machen deine TREYN+ Analyse noch genauer.</p>
+            <p style={{fontSize:12,color:C.g600,marginBottom:16,lineHeight:1.5}}>Wearables für präziseres Tracking - machen deine TREYN+ Analyse noch genauer.</p>
             <WearablesContent/>
           </div>
         )}
@@ -7899,7 +7902,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
             <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
               <div style={{fontSize:9,fontFamily:"JetBrains Mono,monospace",color:"#4A7000",letterSpacing:".08em",marginBottom:5}}>WARUM EIN BLUTTEST?</div>
               <div style={{fontSize:12,color:"#333",lineHeight:1.7,marginBottom:4}}>
-                TREYN+ rechnet mit Schätzwerten. Echte Laborwerte machen die Berechnung noch präziser. Kostet einmalig ~CHF 80–120.
+                TREYN+ rechnet mit Schätzwerten. Echte Laborwerte machen die Berechnung noch präziser. Kostet einmalig ~CHF 80-120.
               </div>
               <div style={{fontSize:11,color:"#3A6000"}}>💡 Besonders wichtig für: Vitamin D, Ferritin (Eisen), Magnesium, Omega-3 Index.</div>
             </div>
@@ -7926,10 +7929,10 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
       {isMobile?(
         <div style={{padding:"16px 16px 90px"}}>
           {tab==="summary"&&<SummaryTab/>}
-          {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Deine Zahlen"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil."}</p><VerbrauchTab/></div>)}
+          {tab==="zahlen"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Deine Zahlen"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten - exakt berechnet auf dein Profil."}</p><VerbrauchTab/></div>)}
           {tab==="tagesplan"&&<TagesplanWrapper trainingData={trainingData}/>}
           {tab==="empfehlungen"&&<EmpfehlungenTab/>}
-          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p><CartTab/></div>)}
+          {tab==="einkauf"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest - alles an einem Ort."}</p><CartTab/></div>)}
           {tab==="aichat"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"TREYN AI Chat"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>{"Stelle Fragen zu deinen Daten, Supplements und Ernährung."}</p><AiChat context={aiCtx} isPro={isPro}/></div>)}
           {tab==="profil"&&(<div><h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Profil"}</h2><p style={{fontSize:13,color:C.g600,marginBottom:20}}>{"Deine persönlichen Angaben anpassen."}</p><ProfilTab/></div>)}
           {tab==="kontakt"&&<KontaktTab/>}
@@ -7965,7 +7968,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {/* ── DEINE ZAHLEN (PRO only) ──────────────────────────────────── */}
           {tab==="zahlen"&&(<div>
             <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Deine Zahlen"}</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten — exakt berechnet auf dein Profil."}</p>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Alle Verbrauchs- und Leistungsdaten - exakt berechnet auf dein Profil."}</p>
             <VerbrauchTab/>
           </div>)}
 
@@ -7978,7 +7981,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {/* ── WETTKAMPF ────────────────────────────────────────────────── */}
           {tab==="wettkampf"&&(<div>
             <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Wettkampf</h2>
-            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Race-Day Strategie — personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
+            <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>Race-Day Strategie - personalisiert auf dein Gewicht, deine Sportart und Intensität.</p>
             <WettkampfTab/>
           </div>)}
 
@@ -7986,7 +7989,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {tab==="einkauf"&&(
             <div>
               <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>{"Einkauf"}</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest — alles an einem Ort."}</p>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.6}}>{"Dein Warenkorb und Bluttest - alles an einem Ort."}</p>
               <CartTab/>
             </div>
           )}
@@ -7995,7 +7998,7 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           {tab==="aichat"&&(
             <div>
               <h2 style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>TREYN AI Chat</h2>
-              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten, Supplements und Ernährung — direkt beantwortet von TREYN AI.</p>
+              <p style={{fontSize:13,color:C.g600,marginBottom:20,lineHeight:1.5}}>Stelle Fragen zu deinen Daten, Supplements und Ernährung - direkt beantwortet von TREYN AI.</p>
               <AiChat context={aiCtx} isPro={isPro}/>
             </div>
           )}
@@ -8049,7 +8052,7 @@ class ErrorBoundary extends React.Component {
             </div>
             <div style={{fontSize:18,fontWeight:700,color:"#0A0A0A",marginBottom:8,letterSpacing:"-.02em"}}>Kurzer Aussetzer.</div>
             <div style={{fontSize:13,color:"#666",lineHeight:1.7,marginBottom:24}}>
-              Etwas ist schiefgelaufen. Deine Daten sind sicher — einfach neu laden.
+              Etwas ist schiefgelaufen. Deine Daten sind sicher - einfach neu laden.
             </div>
             <div style={{fontSize:10,color:"#BBB",fontFamily:"JetBrains Mono,monospace",marginBottom:20,padding:"8px 12px",background:"#F5F5F5",borderRadius:8,wordBreak:"break-all"}}>
               {err.slice(0,120)}
@@ -8094,7 +8097,7 @@ function App() {
 
   const reset=()=>{setSportData(null);setTrainingData(null);setProfilData(null);setAllergenData(null);setPraeferenzenData(null);setIsDemoMode(false);setTier("basic");setPhase("intro");};
 
-  // Dev shortcut — only active when ?dev=1 in URL
+  // Dev shortcut - only active when ?dev=1 in URL
   const DEV_SPORT={primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{cycling_road:true,run_road:true},childSel:{"run_road_run_road_m":true},healthOnly:false};
   const DEV_TRAINING={cycling:{days:5,intensity:"high",duration:90,hasCompetition:true,compCount:8,compTypes:["Rennen"],trainingTimes:["morning"],sweatRate:"high"},running:{days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:3,compTypes:[],trainingTimes:["morning"],sweatRate:"medium"}};
   const DEV_PROFIL={firstname:"Kevin",lastname:"Oberholzer",email:"kevin@test.ch",gender:"m",birthyear:"1988",height:"192",weight:"100",country:"Schweiz",platform:"wahoo",rhr:"48",sleep:"7",goal:"performance",stressLevel:3,dietQuality:"good",altitude:"low",recoveryStatus:"good",jobActivity:"sedentary",sleepHours:"7",waterIntake:"medium",sunExposure:"low",caffeineDaily:"medium",bodyComposition:"athletic",cyclePhase:null,currentSupps:["kreatin"],medications:["none"],monthlyBudget:"high",injuries:[]};
