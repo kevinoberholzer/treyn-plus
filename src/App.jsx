@@ -2246,25 +2246,150 @@ function OnbTile({label,desc,note,active,onClick,multi=false,disabled=false}) {
   );
 }
 
-// Kleiner Auswahl-Pill für Mehrfach-Tags
-function OnbChip({label,active,onClick}) {
+// Kompakter Auswahl-Chip (Fragen-Zeilen und Mehrfach-Tags); optional kleine Beschreibung darunter.
+// Gewählt = hell-acid mit Acid-Rand, bei Mehrfachauswahl zusätzlich mit Haken.
+function OnbChip({label,desc,active,onClick,multi=false,disabled=false}) {
   return (
-    <button type="button" onClick={onClick} aria-pressed={!!active} style={{
-      display:"inline-flex",alignItems:"center",gap:5,
-      padding:"6px 13px",borderRadius:100,
+    <button type="button" onClick={disabled?undefined:onClick} disabled={disabled} aria-disabled={disabled||undefined} aria-pressed={!!active} style={{
+      display:"inline-flex",alignItems:"center",gap:7,
+      minHeight:36,maxWidth:"100%",minWidth:0,
+      padding:desc?"6px 14px":"0 14px",borderRadius:desc?12:100,
       border:`1.5px solid ${active?C.neon:C.g200}`,
       background:active?ONB_SEL:C.white,
-      color:active?C.black:C.g600,
-      fontSize:12,fontWeight:active?600:400,
-      cursor:"pointer",fontFamily:"Inter,sans-serif",
-      transition:"all .13s",whiteSpace:"nowrap",
-    }}>{label}{active&&<span style={{fontSize:10,color:C.black}}>✓</span>}</button>
+      color:C.black,fontSize:13,fontWeight:500,lineHeight:1.3,
+      cursor:disabled?"default":"pointer",fontFamily:"Inter,sans-serif",
+      textAlign:"left",transition:"all .13s",opacity:disabled?.4:1,
+    }}>
+      <span style={{display:"flex",flexDirection:"column",minWidth:0}}>
+        <span style={{overflowWrap:"anywhere"}}>{label}</span>
+        {desc&&<span style={{fontSize:11,fontWeight:400,color:active?"#555":C.g500,marginTop:1,lineHeight:1.35,overflowWrap:"anywhere"}}>{desc}</span>}
+      </span>
+      {multi&&active&&<OnbCheck size={14}/>}
+    </button>
   );
 }
 
-// Knopfleiste unten: Zurück + Weiter, gleiche Höhe, Weiter füllt die Breite
-function OnbNav({onBack,onNext,canNext=true,label="Weiter →",hint=null}) {
+// Chips im Umbruch; options = [{id,l,d?}]
+function OnbChips({options,isOn,onPick,multi=false,isDisabled=null}) {
+  return (
+    <div style={{display:"flex",flexWrap:"wrap",gap:7}}>
+      {(options||[]).map(o=>(
+        <OnbChip key={o.id} label={o.l} desc={o.d} multi={multi} active={!!isOn(o.id)}
+          disabled={isDisabled?!!isDisabled(o.id):false} onClick={()=>onPick(o.id)}/>
+      ))}
+    </div>
+  );
+}
+
+// Kurze Antwort für eine geschlossene Fragen-Zeile: "Kreatin, Magnesium" oder "3 gewählt"
+function onbSummary(options,values) {
+  const arr=(Array.isArray(values)?values:[values]).filter(v=>v!=null&&v!=="");
+  if(!arr.length) return "";
+  const names=arr.map(v=>{ const o=(options||[]).find(x=>String(x.id)===String(v)); return o?o.l:null; }).filter(Boolean);
+  if(names.length===arr.length&&names.length<=2) return names.join(", ");
+  return `${arr.length} gewählt`;
+}
+
+const onbRowDomId=(qid)=>`onbq-${qid}`;
+
+// Aufklapp-Logik der Fragen-Zeilen: pro Schritt ist höchstens eine Frage offen.
+// order = alle Zeilen in Anzeige-Reihenfolge, missing = noch offene Pflicht-Fragen (gleiche Reihenfolge).
+// Beim Start ist die erste offene Pflicht-Frage aufgeklappt; ist alles beantwortet, ist alles zu.
+function useOnbRows(order,missing) {
+  const [openId,setOpenId]=useState(()=>missing[0]||null);
+  const [scrollReq,setScrollReq]=useState(null);
+  const live=useRef({order,missing});
+  const timer=useRef(null);
+  useEffect(()=>{ live.current={order,missing}; });
+  useEffect(()=>()=>{ if(timer.current) clearTimeout(timer.current); },[]);
+  // Neu geöffnete Frage sanft ins Bild holen (html hat scroll-padding-top für den festen Kopf)
+  useEffect(()=>{
+    if(!scrollReq||typeof document==="undefined") return;
+    const el=document.getElementById(onbRowDomId(scrollReq.id));
+    if(!el||typeof el.scrollIntoView!=="function") return;
+    let smooth=true;
+    try{ smooth=!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches); }catch{ smooth=true; }
+    try{ el.scrollIntoView({behavior:smooth?"smooth":"auto",block:"nearest"}); }catch{ /* ältere Browser */ }
+  },[scrollReq]);
+  const hold=()=>{ if(timer.current){ clearTimeout(timer.current); timer.current=null; } };
+  const nextAfter=(fromId)=>{
+    const {order:o,missing:m}=live.current;
+    const i=o.indexOf(fromId);
+    return m.find(x=>x!==fromId&&o.indexOf(x)>i)||null;
+  };
+  // Frage öffnen und ins Bild scrollen (z. B. erste fehlende Frage bei "Weiter")
+  const reveal=(id)=>{ hold(); setOpenId(id||null); if(id) setScrollReq({id}); };
+  const toggle=(id)=>{ hold(); setOpenId(cur=>cur===id?null:id); };
+  const close=()=>{ hold(); setOpenId(null); };
+  // Sofort schliessen und die nächste offene Pflicht-Frage öffnen ("Fertig")
+  const finish=(fromId)=>{ hold(); const nx=nextAfter(fromId); setOpenId(nx); if(nx) setScrollReq({id:nx}); };
+  // Nach einer Wahl kurz zeigen, dann schliessen; go=true öffnet danach die nächste offene Pflicht-Frage
+  const advance=(fromId,go=true)=>{
+    hold();
+    timer.current=setTimeout(()=>{
+      timer.current=null;
+      const nx=go?nextAfter(fromId):null;
+      setOpenId(cur=>cur===fromId?nx:cur);
+      if(nx) setScrollReq({id:nx});
+    },180);
+  };
+  return {openId,reveal,toggle,close,finish,advance,hold};
+}
+
+// Weisse Karte mit Fragen-Zeilen und kleinem Abschnittstitel
+function OnbGroup({title,style,children}) {
+  return (
+    <section style={{...ONB_CARD,padding:title?"14px 16px 2px":"2px 16px",marginBottom:10,...(style||{})}}>
+      {title&&<h3 style={{fontSize:12,fontWeight:500,color:C.g500,lineHeight:1.4,marginBottom:2}}>{title}</h3>}
+      {children}
+    </section>
+  );
+}
+
+// Fragen-Zeile zum Aufklappen. Zu: Titel + aktuelle Antwort, rechts "Wählen"/"Ändern".
+// Offen: Erklärung (sub) und die Optionen; bei Mehrfachauswahl unten "Fertig" (onDone).
+function OnbRow({qid,label,sub,answer,optional=false,warn=false,open=false,onToggle,onDone=null,first=false,children}) {
+  const has=answer!=null&&answer!=="";
+  const btnId=`onbb-${qid}`, panelId=`onbp-${qid}`;
+  const late=!has&&!optional&&warn;
+  return (
+    <div id={onbRowDomId(qid)} style={{borderTop:first?"none":`1px solid ${C.g100}`}}>
+      <button type="button" id={btnId} onClick={onToggle} aria-expanded={!!open} aria-controls={open?panelId:undefined}
+        style={{width:"100%",minHeight:56,display:"flex",alignItems:"center",gap:12,padding:"11px 0",background:"none",border:"none",borderRadius:8,cursor:"pointer",textAlign:"left",fontFamily:"Inter,sans-serif",color:C.black}}>
+        <span style={{display:"block",flex:1,minWidth:0}}>
+          <span style={{display:"block",fontSize:13,fontWeight:600,lineHeight:1.35,letterSpacing:"-.01em",overflowWrap:"anywhere"}}>{label}</span>
+          <span style={{display:"block",fontSize:12,fontWeight:has?500:400,lineHeight:1.4,marginTop:2,color:has?"#3A6000":late?C.orange:C.g500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+            {has?answer:(optional?"Optional":"Noch offen")}
+          </span>
+        </span>
+        <span style={{display:"inline-flex",alignItems:"center",gap:6,flexShrink:0,fontSize:12,fontWeight:500,color:C.g600}}>
+          {has?"Ändern":"Wählen"}
+          <OnbChevron open={open} size={12}/>
+        </span>
+      </button>
+      {open&&(
+        <div id={panelId} role="group" aria-labelledby={btnId} style={{paddingBottom:14}}>
+          {sub&&<div style={{fontSize:12,color:C.g500,lineHeight:1.45,marginTop:-2,marginBottom:10}}>{sub}</div>}
+          {children}
+          {onDone&&(
+            <div style={{display:"flex",justifyContent:"flex-end",marginTop:10}}>
+              <button type="button" onClick={onDone}
+                style={{minHeight:34,padding:"0 16px",borderRadius:100,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                Fertig
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Knopfleiste unten: Zurück + Weiter, gleiche Höhe, Weiter füllt die Breite.
+// onBlocked: Weiter bleibt antippbar, solange etwas fehlt (zeigt dann die erste fehlende Frage).
+function OnbNav({onBack,onNext,canNext=true,label="Weiter →",hint=null,onBlocked=null}) {
   const ok=!!canNext;
+  const tapBlocked=!ok&&typeof onBlocked==="function";
   return (
     <div style={{marginTop:20}}>
       <div style={{display:"flex",gap:10,alignItems:"stretch"}}>
@@ -2274,9 +2399,9 @@ function OnbNav({onBack,onNext,canNext=true,label="Weiter →",hint=null}) {
             {"← Zurück"}
           </button>
         )}
-        <button type="button" className="btn btn-neon" disabled={!ok} aria-disabled={!ok}
-          onClick={()=>{ if(ok&&onNext) onNext(); }}
-          style={{flex:1,minWidth:0,minHeight:50,padding:"0 16px",fontSize:15,fontWeight:600,lineHeight:1.25,textAlign:"center",opacity:ok?1:.4,cursor:ok?"pointer":"default"}}>
+        <button type="button" className="btn btn-neon" disabled={!ok&&!tapBlocked} aria-disabled={!ok}
+          onClick={()=>{ if(ok){ if(onNext) onNext(); } else if(tapBlocked) onBlocked(); }}
+          style={{flex:1,minWidth:0,minHeight:50,padding:"0 16px",fontSize:15,fontWeight:600,lineHeight:1.25,textAlign:"center",opacity:ok?1:.4,cursor:ok||tapBlocked?"pointer":"default"}}>
           {label}
         </button>
       </div>
@@ -2466,7 +2591,6 @@ function StepSport({onNext, initial}) {
 // ─── STEP 2: TRAINING ─────────────────────────────────────────────────────────
 
 function StepTraining({sportData,onNext,onBack,initial}) {
-  const isMobile=useWindowWidth()<=768;
 
   const sports=sportData?.selectedSports||[];
   const [data,setData]=useState(()=>{
@@ -2500,10 +2624,10 @@ function StepTraining({sportData,onNext,onBack,initial}) {
   const setSweat=(sid)=>setData(d=>{const nd={...d};Object.keys(nd).forEach(id=>{nd[id]={...nd[id],sweatRate:sid}});return nd;});
 
   const INTENSITY=[
-    {id:"low",label:"Leicht",desc:"Erholung, Basis"},
-    {id:"medium",label:"Mittel",desc:"Normales Training"},
-    {id:"high",label:"Intensiv",desc:"Strukturiert, hart"},
-    {id:"competition",label:"Wettkampf",desc:"Rennen & Spiele"},
+    {id:"low",l:"Leicht",d:"Erholung, Basis"},
+    {id:"medium",l:"Mittel",d:"Normales Training"},
+    {id:"high",l:"Intensiv",d:"Strukturiert, hart"},
+    {id:"competition",l:"Wettkampf",d:"Rennen & Spiele"},
   ];
   const TIMES=[{id:"morning",l:"Morgens",d:"vor 10h"},{id:"midday",l:"Mittags"},{id:"afternoon",l:"Nachmittags"},{id:"evening",l:"Abends",d:"nach 18h"}];
   const SWEAT=[{id:"low",l:"Wenig"},{id:"medium",l:"Normal"},{id:"high",l:"Stark"},{id:"very_high",l:"Sehr stark"}];
@@ -2515,19 +2639,35 @@ function StepTraining({sportData,onNext,onBack,initial}) {
   if(!first?.trainingTimes?.length)missing.push("Trainingszeit");
   if(!first?.sweatRate)missing.push("Schweissrate");
 
+  // Fragen-Zeilen: je Sportart Intensität + Wettkampf-Details, danach die gemeinsamen Fragen
+  const ORDER=[...sports.flatMap(id=>[`${id}-int`,`${id}-comp`]),"times","sweat"];
+  const missingIds=ORDER.filter(q=>(q==="times"&&!first?.trainingTimes?.length)||(q==="sweat"&&!first?.sweatRate));
+  const rows=useOnbRows(ORDER,missingIds);
+  const [tried,setTried]=useState(false);
+  const row=(qid)=>({qid,open:rows.openId===qid,onToggle:()=>rows.toggle(qid),warn:tried});
+  const setComp=(id,on)=>{
+    upd(id,"hasCompetition",on);
+    // Eingeschaltet: Details gleich aufklappen, damit Anzahl und Art sichtbar sind
+    if(on) rows.reveal(`${id}-comp`);
+    else if(rows.openId===`${id}-comp`) rows.close();
+  };
+
   const rowLbl={fontSize:12,color:C.g600,fontWeight:500};
 
   return (
     <OnbShell step={2} total={6}>
       <OnbTitle title="Dein Training." sub="Fülle für jede Sportart aus - so berechnet TREYN+ die optimalen Mengen."/>
 
-      {sports.map(id=>{
+      {sports.map((id,idx)=>{
         const s=SPORT_GROUPS.find(g=>g.id===id);
         const d=data[id]||{days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:5,compTypes:[]};
         const compLabel=COMPETITION_LABEL[id]||"Wettkämpfe";
         const compTypes=COMPETITION_TYPES[id]||[];
+        const compOpts=compTypes.map(t=>({id:t,l:t}));
+        const selTypes=d.compTypes||[];
+        const isLast=idx===sports.length-1;
         return (
-          <div key={id} style={{...ONB_CARD,marginBottom:10}}>
+          <div key={id} style={{...ONB_CARD,marginBottom:10,paddingBottom:4}}>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
               <div style={{width:32,height:32,borderRadius:8,background:C.g100,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
                 <SportIcon icon={s?.icon||"GYM"} active={false} size={16}/>
@@ -2548,7 +2688,7 @@ function StepTraining({sportData,onNext,onBack,initial}) {
             </div>
 
             {/* Durchschnittliche Einheitsdauer */}
-            <div style={{marginBottom:16}}>
+            <div style={{marginBottom:12}}>
               <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:8}}>
                 <span style={rowLbl}>Durchschnittliche Einheitsdauer (Ø)</span>
                 <span style={{fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{d.duration} min</span>
@@ -2559,82 +2699,69 @@ function StepTraining({sportData,onNext,onBack,initial}) {
               </div>
             </div>
 
-            {/* Intensität */}
-            <div style={{marginBottom:16}}>
-              <div style={{...rowLbl,marginBottom:8}}>Intensität</div>
-              <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:7}}>
-                {INTENSITY.map(inten=>(
-                  <OnbTile key={inten.id} label={inten.label} desc={inten.desc} active={d.intensity===inten.id} onClick={()=>upd(id,"intensity",inten.id)}/>
-                ))}
-              </div>
-            </div>
+            {/* Intensität (Einfachauswahl; springt nur bei der letzten Sportart weiter, damit keine Karte übersprungen wird) */}
+            <OnbRow {...row(`${id}-int`)} label="Intensität" optional answer={onbSummary(INTENSITY,d.intensity)}>
+              <OnbChips options={INTENSITY} isOn={v=>d.intensity===v}
+                onPick={v=>{ upd(id,"intensity",v); rows.advance(`${id}-int`,isLast); }}/>
+            </OnbRow>
 
             {/* Wettkämpfe / Rennen / Spiele */}
-            <div style={{padding:"12px 13px",background:C.off,borderRadius:11}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,marginBottom:d.hasCompetition?14:0}}>
-                <div style={{minWidth:0}}>
-                  <div style={{fontSize:12,fontWeight:600}}>{compLabel}</div>
-                  <div style={{fontSize:11,color:C.g500,marginTop:2,lineHeight:1.4}}>Nimmst du an {compLabel.includes("Rennen") ? "Rennen oder Wettkämpfen" : compLabel.includes("Spiele") ? "Spielen oder Turnieren" : compLabel.includes("Turniere") ? "Turnieren" : "Wettkämpfen oder Events"} teil?</div>
-                </div>
-                <button type="button" className="icon-btn" role="switch" aria-checked={!!d.hasCompetition} aria-label={compLabel}
-                  onClick={()=>upd(id,"hasCompetition",!d.hasCompetition)}
-                  style={{width:44,height:26,minHeight:26,padding:0,border:"none",background:d.hasCompetition?C.black:C.g200,borderRadius:100,position:"relative",cursor:"pointer",transition:"background .18s",flexShrink:0}}>
-                  <span style={{width:20,height:20,background:C.white,borderRadius:"50%",position:"absolute",top:3,left:d.hasCompetition?21:3,transition:"left .18s",boxShadow:"0 1px 4px rgba(0,0,0,.2)"}}/>
-                </button>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,padding:"11px 0",borderTop:`1px solid ${C.g100}`}}>
+              <div style={{minWidth:0}}>
+                <div style={{fontSize:13,fontWeight:600,lineHeight:1.35}}>{compLabel}</div>
+                <div style={{fontSize:12,color:C.g500,marginTop:2,lineHeight:1.4}}>Nimmst du an {compLabel.includes("Rennen") ? "Rennen oder Wettkämpfen" : compLabel.includes("Spiele") ? "Spielen oder Turnieren" : compLabel.includes("Turniere") ? "Turnieren" : "Wettkämpfen oder Events"} teil?</div>
               </div>
-
-              {d.hasCompetition&&(
-                <>
-                  {/* Anzahl pro Jahr */}
-                  <div style={{marginBottom:12}}>
-                    <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:6}}>
-                      <span style={{fontSize:11,color:C.g600}}>Ø Anzahl pro Jahr</span>
-                      <span style={{fontSize:12,fontWeight:600}}>{d.compCount}</span>
-                    </div>
-                    <input type="range" min="1" max="50" step="1" value={d.compCount} onChange={e=>upd(id,"compCount",+e.target.value)} aria-label={`Anzahl ${compLabel} pro Jahr`}/>
-                    <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
-                      <span style={{fontSize:10,color:C.g400}}>1</span><span style={{fontSize:10,color:C.g400}}>50+</span>
-                    </div>
-                  </div>
-
-                  {/* Wettkampf-Typen Multi-Select */}
-                  {compTypes.length>0&&(
-                    <div>
-                      <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Art der {compLabel}</div>
-                      <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-                        {compTypes.map(type=>(
-                          <OnbChip key={type} label={type} active={(d.compTypes||[]).includes(type)} onClick={()=>toggleCompType(id,type)}/>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
+              <button type="button" className="icon-btn" role="switch" aria-checked={!!d.hasCompetition} aria-label={compLabel}
+                onClick={()=>setComp(id,!d.hasCompetition)}
+                style={{width:52,height:36,minHeight:36,padding:0,border:"none",background:"transparent",cursor:"pointer",display:"inline-flex",alignItems:"center",justifyContent:"flex-end",flexShrink:0}}>
+                <span aria-hidden="true" style={{display:"block",width:44,height:26,background:d.hasCompetition?C.black:C.g200,borderRadius:100,position:"relative",transition:"background .18s"}}>
+                  <span style={{width:20,height:20,background:C.white,borderRadius:"50%",position:"absolute",top:3,left:d.hasCompetition?21:3,transition:"left .18s",boxShadow:"0 1px 4px rgba(0,0,0,.2)"}}/>
+                </span>
+              </button>
             </div>
+
+            {/* Wettkampf-Details: Anzahl pro Jahr + Art (Mehrfachauswahl) */}
+            {d.hasCompetition&&(
+              <OnbRow {...row(`${id}-comp`)} label={compTypes.length>0?"Anzahl und Art":"Anzahl pro Jahr"} optional
+                answer={`Ø ${d.compCount} pro Jahr${selTypes.length>0?` · ${onbSummary(compOpts,selTypes)}`:""}`}
+                onDone={()=>rows.finish(`${id}-comp`)}>
+                <div style={{marginBottom:compTypes.length>0?14:0}}>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:6}}>
+                    <span style={{fontSize:12,color:C.g600}}>Ø Anzahl pro Jahr</span>
+                    <span style={{fontSize:13,fontWeight:600}}>{d.compCount}</span>
+                  </div>
+                  <input type="range" min="1" max="50" step="1" value={d.compCount} onChange={e=>upd(id,"compCount",+e.target.value)} aria-label={`Anzahl ${compLabel} pro Jahr`}/>
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:3}}>
+                    <span style={{fontSize:10,color:C.g400}}>1</span><span style={{fontSize:10,color:C.g400}}>50+</span>
+                  </div>
+                </div>
+                {compTypes.length>0&&(
+                  <div>
+                    <div style={{fontSize:12,color:C.g600,marginBottom:8}}>Art der {compLabel}</div>
+                    <OnbChips options={compOpts} multi isOn={t=>selTypes.includes(t)} onPick={t=>{ rows.hold(); toggleCompType(id,t); }}/>
+                  </div>
+                )}
+              </OnbRow>
+            )}
           </div>
         );
       })}
 
-      {/* Trainingszeit */}
-      <OnbCard label="Wann trainierst du meistens?" sub="Beeinflusst Supplement-Timing. Bis zu 2 Zeiten wählbar.">
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:7}}>
-          {TIMES.map(tm=>(
-            <OnbTile key={tm.id} label={tm.l} desc={tm.d} multi active={currentTimes.includes(tm.id)} onClick={()=>toggleTime(tm.id)}/>
-          ))}
-        </div>
-      </OnbCard>
-
-      {/* Schweissrate */}
-      <OnbCard label="Wie stark schwitzt du beim Sport?" sub="Bestimmt deinen Elektrolyt- und Flüssigkeitsbedarf.">
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:7}}>
-          {SWEAT.map(sw=>(
-            <OnbTile key={sw.id} label={sw.l} active={first?.sweatRate===sw.id} onClick={()=>setSweat(sw.id)}/>
-          ))}
-        </div>
-      </OnbCard>
+      {/* Gemeinsame Fragen: Trainingszeit + Schweissrate */}
+      <OnbGroup title={sports.length>1?"Gilt für alle Sportarten":null}>
+        <OnbRow {...row("times")} first={sports.length<=1} label="Wann trainierst du meistens?" sub="Beeinflusst Supplement-Timing. Bis zu 2 Zeiten wählbar."
+          answer={onbSummary(TIMES,currentTimes)} onDone={()=>rows.finish("times")}>
+          <OnbChips options={TIMES} multi isOn={v=>currentTimes.includes(v)} onPick={v=>{ rows.hold(); toggleTime(v); }}/>
+        </OnbRow>
+        <OnbRow {...row("sweat")} label="Wie stark schwitzt du beim Sport?" sub="Bestimmt deinen Elektrolyt- und Flüssigkeitsbedarf."
+          answer={onbSummary(SWEAT,first?.sweatRate)}>
+          <OnbChips options={SWEAT} isOn={v=>first?.sweatRate===v} onPick={v=>{ setSweat(v); rows.advance("sweat"); }}/>
+        </OnbRow>
+      </OnbGroup>
 
       <OnbNav onBack={onBack} canNext={canNext}
         onNext={()=>{ if(canNext) onNext(data); }}
+        onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }}
         hint={missing.length>0?`Noch ausfüllen: ${missing.join(", ")}`:null}/>
     </OnbShell>
   );
@@ -2786,7 +2913,6 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
 // ─── STEP 4: LEBENSSTIL ───────────────────────────────────────────────────────
 
 function StepLebensstil({onNext, onBack, gender="", initial}) {
-  const isMobile=useWindowWidth()<=768;
   const [form,setForm]=useState(()=>{
     // Gespeicherte Antworten übernehmen (z. B. nach "Zurück")
     const p=initial||{};
@@ -2801,16 +2927,8 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
     };
   });
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
-  const toggleArr=(k,v)=>setForm(f=>{
-    const curr=(f[k]||[]).filter(x=>x!=="none");
-    if(v==="none") return {...f,[k]:["none"]};
-    return {...f,[k]:curr.includes(v)?curr.filter(x=>x!==v):[...curr,v]};
-  });
 
   const valid=form.goal&&form.stressLevel&&form.dietQuality&&form.altitude&&form.recoveryStatus&&form.currentSupps.length>0&&form.medications.length>0&&form.jobActivity;
-
-  // Karten, Fragen-Titel und Kacheln: gemeinsame Onboarding-Bausteine (OnbQ, OnbTile, ONB_CARD)
-  const ddStyle=(active)=>({width:"100%",padding:"10px 32px 10px 12px",border:`1.5px solid ${active?"#C8FF00":C.g200}`,borderRadius:10,fontSize:13,fontFamily:"Inter,sans-serif",backgroundColor:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,appearance:"none",WebkitAppearance:"none",cursor:"pointer",...SELECT_ARROW_STYLE});
 
   const missingLs=[];
   if(!form.goal)missingLs.push("Ziel");
@@ -2822,257 +2940,155 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
   if(!(form.currentSupps||[]).length)missingLs.push("Supplements");
   if(!(form.medications||[]).length)missingLs.push("Medikamente");
 
+  // Antwort-Optionen (gespeichert wird die id, wie bisher)
+  const GOALS=[
+    {id:"performance", l:"Leistung steigern"},
+    {id:"muscle",      l:"Muskelaufbau"},
+    {id:"endurance",   l:"Ausdauer verbessern"},
+    {id:"weightloss",  l:"Gewicht reduzieren"},
+    {id:"health",      l:"Gesundheit & Longevity"},
+    {id:"recovery",    l:"Regeneration"},
+  ];
+  const CHALLENGES=[
+    {id:"sleep",    l:"Schlaf"},
+    {id:"stress",   l:"Stress & Cortisol"},
+    {id:"recovery", l:"Regeneration"},
+    {id:"weight",   l:"Gewicht halten"},
+    {id:"energy",   l:"Energie & Fokus"},
+    {id:"joints",   l:"Gelenke & Sehnen"},
+  ];
+  const JOBS=[
+    {id:"sedentary",   l:"Sitzend",      d:"Büro, Homeoffice, Computer - kaum Bewegung"},
+    {id:"light",       l:"Leicht aktiv", d:"Lehrer, Arzt, stehend aber wenig laufend"},
+    {id:"moderate",    l:"Mässig aktiv", d:"Kellner, Verkäufer, regelmässig gehend"},
+    {id:"very_active", l:"Sehr aktiv",   d:"Bauarbeiter, Handwerker, körperliche Arbeit"},
+  ];
+  const STRESS=[{id:1,l:"Sehr niedrig"},{id:2,l:"Niedrig"},{id:3,l:"Mittel"},{id:4,l:"Hoch"},{id:5,l:"Sehr hoch"}];
+  const ALTITUDE=[{id:"low",l:"0-500m",d:"Flachland"},{id:"medium",l:"500-1500m",d:"Mittelland"},{id:"high",l:"1500-2500m",d:"Alpen"},{id:"alpine",l:"2500m+",d:"Hochgebirge"}];
+  const SUN=[{id:"none",l:"Kaum / indoor"},{id:"low",l:"< 30 min"},{id:"moderate",l:"30-60 min"},{id:"high",l:"> 60 min"}];
+  const BODY=[
+    {id:"lean",      l:"Sehr muskulös / lean", d:"Wenig Körperfett, viel Muskelmasse"},
+    {id:"athletic",  l:"Athletisch",           d:"Normaler Sportler-Körper"},
+    {id:"average",   l:"Durchschnitt",         d:"Normale Körperzusammensetzung"},
+    {id:"higher_bf", l:"Etwas mehr KFA",       d:"Etwas Übergewicht, Abnehm-Ziel"},
+  ];
+  const SLEEP=[{id:"5",l:"≤ 5h"},{id:"6",l:"6h"},{id:"7",l:"7h"},{id:"8",l:"8h+"}];
+  const RECOVERY=[{id:"excellent",l:"Top-Form"},{id:"good",l:"Normal"},{id:"tired",l:"Akkumulierte Müdigkeit"},{id:"recovery",l:"Verletzung / Pause"}];
+  const CYCLE=[
+    {id:"follikel",  l:"Follikelphase",    d:"Tag 6-13 - nach der Periode, mehr Energie"},
+    {id:"ovulation", l:"Ovulation",        d:"Tag 14-16 - Hochform, Peak-Performance"},
+    {id:"luteal",    l:"Lutealphase",      d:"Tag 17-28 - mehr Hunger, mehr Magnesium"},
+    {id:"period",    l:"Periode",          d:"Tag 1-5 - höchster Eisenverlust, mehr Bedarf"},
+    {id:"pcos",      l:"PCOS",             d:"Polyzystisches Ovarsyndrom"},
+    {id:"menopause", l:"Menopause / Post", d:"Andere Hormonlage"},
+  ];
+  const DIET=[{id:"excellent",l:"Sehr ausgewogen"},{id:"good",l:"Gut"},{id:"average",l:"Durchschnittlich"},{id:"poor",l:"Verbesserungswürdig"}];
+  const WATER=[{id:"low",l:"< 1L"},{id:"medium",l:"1-2L"},{id:"good",l:"2-3L"},{id:"high",l:"> 3L"}];
+  const CAFFEINE=[{id:"none",l:"Kein Koffein"},{id:"low",l:"1-2 Tassen Kaffee"},{id:"medium",l:"3-4 Tassen"},{id:"high",l:"> 4 Tassen"}];
+  const INJURIES=[{id:"none",l:"Keine"},{id:"knee",l:"Knie"},{id:"back",l:"Rücken"},{id:"shoulder",l:"Schulter"},{id:"ankle",l:"Knöchel / Fuss"},{id:"muscle",l:"Muskel"},{id:"tendon",l:"Sehnen"}];
+  const SUPPS=[{id:"none",l:"Keine"},{id:"kreatin",l:"Kreatin"},{id:"protein",l:"Protein / Whey"},{id:"vitd",l:"Vitamin D"},{id:"omega3",l:"Omega-3"},{id:"magnesium",l:"Magnesium"},{id:"koffein",l:"Koffein / Pre-WO"},{id:"eisen",l:"Eisen"},{id:"zink",l:"Zink"},{id:"ashwa",l:"Ashwagandha"},{id:"collagen",l:"Kollagen"},{id:"beta_ala",l:"Beta-Alanin"}];
+  const MEDS=[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"}];
+
+  // Reihenfolge der Fragen-Zeilen (Zyklusphase nur bei Frauen) und welche davon Pflicht sind
+  const ORDER=["goal","challenges","job","stress","altitude","sun","body","sleep","recovery",...(gender==="f"?["cycle"]:[]),"diet","water","caffeine","injuries","supps","meds"];
+  const REQ_MISSING={
+    goal:!form.goal, job:!form.jobActivity, stress:!form.stressLevel, altitude:!form.altitude,
+    recovery:!form.recoveryStatus, diet:!form.dietQuality,
+    supps:!(form.currentSupps||[]).length, meds:!(form.medications||[]).length,
+  };
+  const REQUIRED=["goal","job","stress","altitude","recovery","diet","supps","meds"];
+  const missingIds=ORDER.filter(q=>REQ_MISSING[q]);
+  const rows=useOnbRows(ORDER,missingIds);
+  const [tried,setTried]=useState(false);
+
+  // Einfachauswahl: speichern, kurz zeigen, dann zur nächsten offenen Pflicht-Frage
+  const single=(qid,key,list,label,sub)=>(
+    <OnbRow qid={qid} label={label} sub={sub} optional={!REQUIRED.includes(qid)} warn={tried}
+      answer={onbSummary(list,form[key])} open={rows.openId===qid} onToggle={()=>rows.toggle(qid)}>
+      <OnbChips options={list} isOn={v=>form[key]!=null&&String(form[key])===String(v)}
+        onPick={v=>{ set(key,v); rows.advance(qid); }}/>
+    </OnbRow>
+  );
+  // Mehrfachauswahl mit "Keine": Keine schliesst die Frage, sonst bleibt sie offen bis "Fertig"
+  const pickWithNone=(qid,key,id)=>{
+    const active=(form[key]||[]).includes(id);
+    if(id==="none"){
+      set(key,active?[]:["none"]);
+      if(active) rows.hold(); else rows.advance(qid);
+      return;
+    }
+    rows.hold();
+    const curr=(form[key]||[]).filter(x=>x!=="none");
+    set(key,curr.includes(id)?curr.filter(x=>x!==id):[...curr,id]);
+  };
+  const multi=(qid,key,list,label,sub,extra=null)=>(
+    <OnbRow qid={qid} label={label} sub={sub} optional={!REQUIRED.includes(qid)} warn={tried}
+      answer={onbSummary(list,form[key])} open={rows.openId===qid} onToggle={()=>rows.toggle(qid)} onDone={()=>rows.finish(qid)}>
+      <OnbChips options={list} multi isOn={v=>(form[key]||[]).includes(v)} onPick={v=>pickWithNone(qid,key,v)}/>
+      {extra}
+    </OnbRow>
+  );
+
+  const nChal=(form.challenges||[]).length;
+
   return (
     <OnbShell step={4} total={6}>
       <OnbTitle title="Dein Lebensstil." sub="Damit wir deine Empfehlungen wirklich präzise auf dich zuschneiden können."/>
 
-      {/* ROW 1: Ziel (full width - 6 options in 2×3 grid) */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Primäres Ziel"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"performance", l:"Leistung steigern",     d:"Schneller, stärker, weiter"},
-            {id:"muscle",      l:"Muskelaufbau",           d:"Muskeln aufbauen & definieren"},
-            {id:"endurance",   l:"Ausdauer verbessern",    d:"Mehr Volumen, längere Einheiten"},
-            {id:"weightloss",  l:"Gewicht reduzieren",     d:"Fett verlieren, lean bleiben"},
-            {id:"health",      l:"Gesundheit & Longevity", d:"Vitalität, Prävention"},
-            {id:"recovery",    l:"Regeneration",           d:"Erholung & Prävention"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.goal===o.id} onClick={()=>set("goal",o.id)}/>)}
-        </div>
-      </div>
+      <OnbGroup title="Ziel und Alltag">
+        {single("goal","goal",GOALS,"Primäres Ziel")}
 
+        {/* Grösste Herausforderung (optional, max 3) */}
+        <OnbRow qid="challenges" label="Grösste Herausforderung" optional
+          sub={`Optional · ${nChal}/3 gewählt${nChal>=3?" - zum Wechseln zuerst eine Auswahl entfernen":""}`}
+          answer={onbSummary(CHALLENGES,form.challenges)} open={rows.openId==="challenges"}
+          onToggle={()=>rows.toggle("challenges")} onDone={()=>rows.finish("challenges")}>
+          <OnbChips options={CHALLENGES} multi
+            isOn={v=>(form.challenges||[]).includes(v)}
+            isDisabled={v=>(form.challenges||[]).length>=3&&!(form.challenges||[]).includes(v)}
+            onPick={v=>{
+              rows.hold();
+              const arr=form.challenges||[];
+              const on=arr.includes(v);
+              if(on) set("challenges",arr.filter(c=>c!==v));
+              else if(arr.length<3) set("challenges",[...arr,v]);
+            }}/>
+        </OnbRow>
 
-      {/* ROW: Grösste Herausforderung (optional, max 3) */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Grösste Herausforderung"} sub={`Optional · ${(form.challenges||[]).length}/3 gewählt${(form.challenges||[]).length>=3?" - zum Wechseln zuerst eine Auswahl entfernen":""}`}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"sleep",      l:"Schlaf",              d:"Zu wenig oder schlechte Schlafqualität"},
-            {id:"stress",     l:"Stress & Cortisol",   d:"Hohes Stresslevel, Erholung fällt schwer"},
-            {id:"recovery",   l:"Regeneration",        d:"Körper erholt sich zu langsam"},
-            {id:"weight",     l:"Gewicht halten",      d:"Trotz Training schwer zu kontrollieren"},
-            {id:"energy",     l:"Energie & Fokus",     d:"Müdigkeit, mentale Erschöpfung"},
-            {id:"joints",     l:"Gelenke & Sehnen",    d:"Schmerzen oder Verletzungsanfälligkeit"},
-          ].map(o=>{
-            const active=(form.challenges||[]).includes(o.id);
-            const atMax=(form.challenges||[]).length>=3&&!active;
-            return <OnbTile key={o.id} id={o.id} label={o.l} desc={o.d}
-              active={active}
-              multi
-              disabled={atMax}
-              onClick={()=>{
-                const arr=form.challenges||[];
-                const on=arr.includes(o.id);
-                if(on) set("challenges",arr.filter(c=>c!==o.id));
-                else if(arr.length<3) set("challenges",[...arr,o.id]);
-              }}
-            />;
-          })}
-        </div>
-      </div>
+        {single("job","jobActivity",JOBS,"Aktivität im Alltag (Job)","Ausserhalb des Trainings - beeinflusst deinen Gesamtenergiebedarf massiv")}
+        {single("stress","stressLevel",STRESS,"Stresslevel","Wie belastet bist du im Alltag ausserhalb des Sports?")}
+        {single("altitude","altitude",ALTITUDE,"Trainingshöhe","Wo lebst und trainierst du meistens?")}
+        {single("sun","sunExposure",SUN,"Sonnenlicht täglich","Direktes Sonnenlicht auf der Haut - beeinflusst Vitamin D stark")}
+      </OnbGroup>
 
-      {/* JOB AKTIVITÄT */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Aktivität im Alltag (Job)"} sub={"Ausserhalb des Trainings - beeinflusst deinen Gesamtenergiebedarf massiv"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"sedentary",   l:"Sitzend",          d:"Büro, Homeoffice, Computer - kaum Bewegung"},
-            {id:"light",       l:"Leicht aktiv",     d:"Lehrer, Arzt, stehend aber wenig laufend"},
-            {id:"moderate",    l:"Mässig aktiv",     d:"Kellner, Verkäufer, regelmässig gehend"},
-            {id:"very_active", l:"Sehr aktiv",       d:"Bauarbeiter, Handwerker, körperliche Arbeit"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.jobActivity===o.id} onClick={()=>set("jobActivity",o.id)}/>)}
-        </div>
-      </div>
+      <OnbGroup title="Körper und Erholung">
+        {single("body","bodyComposition",BODY,"Körperbau","Selbsteinschätzung - beeinflusst Proteinbedarf")}
+        {single("sleep","sleepHours",SLEEP,"Schlafdauer","Durchschnittliche Stunden pro Nacht")}
+        {single("recovery","recoveryStatus",RECOVERY,"Aktueller Erholungsstatus","Beeinflusst Recovery-Priorität und Magnesiumbedarf.")}
+        {/* ZYKLUS - nur bei Frauen */}
+        {gender==="f"&&single("cycle","cyclePhase",CYCLE,"Aktuelle Zyklusphase","Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark - kann jederzeit im Profil angepasst werden")}
+      </OnbGroup>
 
-      {/* SCHLAFDAUER */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Schlafdauer"} sub={"Durchschnittliche Stunden pro Nacht"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"5",l:"≤ 5h",d:"Chronisch wenig"},
-            {id:"6",l:"6h",d:"Zu wenig"},
-            {id:"7",l:"7h",d:"Ok"},
-            {id:"8",l:"8h+",d:"Optimal"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.sleepHours===o.id} onClick={()=>set("sleepHours",o.id)}/>)}
-        </div>
-      </div>
+      <OnbGroup title="Essen und Trinken">
+        {single("diet","dietQuality",DIET,"Ernährung","Wie ausgewogen isst du im Alltag?")}
+        {single("water","waterIntake",WATER,"Tägliche Wassermenge","Ohne Training - wie viel trinkst du im Alltag?")}
+        {single("caffeine","caffeineDaily",CAFFEINE,"Täglicher Koffein-Konsum","Kaffee, Tee, Energy Drinks - beeinflusst Pre-Workout Empfehlungen")}
+      </OnbGroup>
 
-      {/* WASSERMENGE */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Tägliche Wassermenge"} sub={"Ohne Training - wie viel trinkst du im Alltag?"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"low",    l:"< 1L",   d:"Zu wenig"},
-            {id:"medium", l:"1-2L",   d:"Durchschnitt"},
-            {id:"good",   l:"2-3L",   d:"Gut"},
-            {id:"high",   l:"> 3L",   d:"Sehr gut"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.waterIntake===o.id} onClick={()=>set("waterIntake",o.id)}/>)}
-        </div>
-      </div>
-
-      {/* SONNENLICHT */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Sonnenlicht täglich"} sub={"Direktes Sonnenlicht auf der Haut - beeinflusst Vitamin D stark"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"none",     l:"Kaum / indoor",  d:"Büro, training indoor, wenig draussen"},
-            {id:"low",      l:"< 30 min",        d:"Kurzer Weg, gelegentlich draussen"},
-            {id:"moderate", l:"30-60 min",       d:"Mittagspause draussen, Outdoor-Training"},
-            {id:"high",     l:"> 60 min",        d:"Viel Outdoor-Training, Garten, Handwerk"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.sunExposure===o.id} onClick={()=>set("sunExposure",o.id)}/>)}
-        </div>
-      </div>
-
-      {/* KOFFEIN */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Täglicher Koffein-Konsum"} sub={"Kaffee, Tee, Energy Drinks - beeinflusst Pre-Workout Empfehlungen"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"none",   l:"Kein Koffein",     d:"Kaffee-frei, kein Tee"},
-            {id:"low",    l:"1-2 Tassen Kaffee",d:"~100-200mg täglich"},
-            {id:"medium", l:"3-4 Tassen",       d:"~300-400mg täglich"},
-            {id:"high",   l:"> 4 Tassen",       d:"> 400mg - hohe Toleranz"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.caffeineDaily===o.id} onClick={()=>set("caffeineDaily",o.id)}/>)}
-        </div>
-      </div>
-
-      {/* KÖRPERZUSAMMENSETZUNG */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Körperbau"} sub={"Selbsteinschätzung - beeinflusst Proteinbedarf"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"lean",     l:"Sehr muskulös / lean", d:"Wenig Körperfett, viel Muskelmasse"},
-            {id:"athletic", l:"Athletisch",            d:"Normaler Sportler-Körper"},
-            {id:"average",  l:"Durchschnitt",          d:"Normale Körperzusammensetzung"},
-            {id:"higher_bf",l:"Etwas mehr KFA",        d:"Etwas Übergewicht, Abnehm-Ziel"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.bodyComposition===o.id} onClick={()=>set("bodyComposition",o.id)}/>)}
-        </div>
-      </div>
-
-      {/* ZYKLUS - nur bei Frauen */}
-      {gender==="f"&&(
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label={"Aktuelle Zyklusphase"} sub={"Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark - kann jederzeit im Profil angepasst werden"}/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"follikel",  l:"Follikelphase",     d:"Tag 6-13 - nach der Periode, mehr Energie"},
-            {id:"ovulation", l:"Ovulation",         d:"Tag 14-16 - Hochform, Peak-Performance"},
-            {id:"luteal",    l:"Lutealphase",       d:"Tag 17-28 - mehr Hunger, mehr Magnesium"},
-            {id:"period",    l:"Periode",           d:"Tag 1-5 - höchster Eisenverlust, mehr Bedarf"},
-            {id:"pcos",      l:"PCOS",              d:"Polyzystisches Ovarsyndrom"},
-            {id:"menopause", l:"Menopause / Post",  d:"Andere Hormonlage"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.cyclePhase===o.id} onClick={()=>set("cyclePhase",o.id)}/>)}
-        </div>
-      </div>
-      )}
-
-      {/* ROW 2: Erholungsstatus (full width - 4 options in 2×2 grid) */}
-      <div style={{...ONB_CARD,marginBottom:10}}>
-        <OnbQ label="Aktueller Erholungsstatus" sub="Beeinflusst Recovery-Priorität und Magnesiumbedarf."/>
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:7}}>
-          {[
-            {id:"excellent", l:"Top-Form",              d:"Gut erholt, leistungsbereit"},
-            {id:"good",      l:"Normal",                d:"Kein Defizit, solide Basis"},
-            {id:"tired",     l:"Akkumulierte Müdigkeit",d:"Harte Woche, leicht überlastet"},
-            {id:"recovery",  l:"Verletzung / Pause",   d:"Komme von Verletzung oder Pause"},
-          ].map(o=><OnbTile key={o.id} id={o.id} label={o.l} desc={o.d} active={form.recoveryStatus===o.id} onClick={()=>set("recoveryStatus",o.id)}/>)}
-        </div>
-      </div>
-
-      {/* ROW 3: Stress + Ernährung side by side */}
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:10,marginBottom:10}}>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label={"Stresslevel"} sub="Wie belastet bist du im Alltag ausserhalb des Sports?"/>
-          <select value={form.stressLevel||""} onChange={e=>set("stressLevel",+e.target.value||null)} style={ddStyle(form.stressLevel)} aria-label="Stresslevel">
-            <option value="">- wählen</option>
-            <option value="1">Sehr niedrig</option>
-            <option value="2">Niedrig</option>
-            <option value="3">Mittel</option>
-            <option value="4">Hoch</option>
-            <option value="5">Sehr hoch</option>
-          </select>
-        </div>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label="Ernährung" sub="Wie ausgewogen isst du im Alltag?"/>
-          <select value={form.dietQuality||""} onChange={e=>set("dietQuality",e.target.value||null)} style={ddStyle(form.dietQuality)} aria-label="Ernährung">
-            <option value="">- wählen</option>
-            <option value="excellent">Sehr ausgewogen</option>
-            <option value="good">Gut</option>
-            <option value="average">Durchschnittlich</option>
-            <option value="poor">Verbesserungswürdig</option>
-          </select>
-        </div>
-      </div>
-
-      {/* ROW 4: Höhe + Verletzungen side by side */}
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:10,marginBottom:10}}>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label="Trainingshöhe" sub="Wo lebst und trainierst du meistens?"/>
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {[{id:"low",l:"0-500m",d:"Flachland"},{id:"medium",l:"500-1500m",d:"Mittelland"},{id:"high",l:"1500-2500m",d:"Alpen"},{id:"alpine",l:"2500m+",d:"Hochgebirge"}].map(o=>(
-              <button type="button" key={o.id} onClick={()=>set("altitude",o.id)} aria-pressed={form.altitude===o.id}
-                style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${form.altitude===o.id?"#C8FF00":C.g200}`,background:form.altitude===o.id?"#F5FFE0":C.white,color:form.altitude===o.id?"#0A0A0A":C.g600,fontSize:11,fontWeight:form.altitude===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <span style={{fontWeight:600}}>{o.l}</span>
-                <span style={{fontSize:10,opacity:.7}}>{o.d}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label="Verletzungen?" sub="Aktuelle Beschwerden, mehrere möglich."/>
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {[{id:"none",l:"Keine"},{id:"knee",l:"Knie"},{id:"back",l:"Rücken"},{id:"shoulder",l:"Schulter"},{id:"ankle",l:"Knöchel / Fuss"},{id:"muscle",l:"Muskel"},{id:"tendon",l:"Sehnen"}].map(o=>{
-              const active=(form.injuries||[]).includes(o.id);
-              return (
-                <button type="button" key={o.id} aria-pressed={active} onClick={()=>{if(o.id==="none"){set("injuries",active?[]:["none"]);return;}const curr=(form.injuries||[]).filter(x=>x!=="none");set("injuries",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
-                  style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
-                  {o.l}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* ROW 5: Supplements + Medikamente side by side */}
-      <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"repeat(2,minmax(0,1fr))",gap:10,marginBottom:10}}>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label="Aktuelle Supplements?" sub="Verhindert Doppelempfehlungen, mehrere möglich."/>
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {[{id:"none",l:"Keine"},{id:"kreatin",l:"Kreatin"},{id:"protein",l:"Protein / Whey"},{id:"vitd",l:"Vitamin D"},{id:"omega3",l:"Omega-3"},{id:"magnesium",l:"Magnesium"},{id:"koffein",l:"Koffein / Pre-WO"},{id:"eisen",l:"Eisen"},{id:"zink",l:"Zink"},{id:"ashwa",l:"Ashwagandha"},{id:"collagen",l:"Kollagen"},{id:"beta_ala",l:"Beta-Alanin"}].map(o=>{
-              const active=(form.currentSupps||[]).includes(o.id);
-              return (
-                <button type="button" key={o.id} aria-pressed={active} onClick={()=>{if(o.id==="none"){set("currentSupps",active?[]:["none"]);return;}const curr=(form.currentSupps||[]).filter(x=>x!=="none");set("currentSupps",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
-                  style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
-                  {o.l}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        <div style={{...ONB_CARD}}>
-          <OnbQ label="Medikamente?" sub="Für Warnhinweise bei Supplements, mehrere möglich."/>
-          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            {[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"}].map(o=>{
-              const active=(form.medications||[]).includes(o.id);
-              return (
-                <button type="button" key={o.id} aria-pressed={active} onClick={()=>{if(o.id==="none"){set("medications",active?[]:["none"]);return;}const curr=(form.medications||[]).filter(x=>x!=="none");set("medications",curr.includes(o.id)?curr.filter(x=>x!==o.id):[...curr,o.id]);}}
-                  style={{width:"100%",padding:"8px 11px",borderRadius:9,border:`1.5px solid ${active?"#C8FF00":C.g200}`,background:active?"#F5FFE0":C.white,color:active?"#0A0A0A":C.g600,fontSize:11,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",transition:"all .13s"}}>
-                  {o.l}
-                </button>
-              );
-            })}
-            {(form.medications||[]).some(m=>m!=="none")&&(form.medications||[]).length>0&&(
-              <div style={{marginTop:4,padding:"8px 10px",background:"#FFF8E1",borderRadius:8,border:"1px solid #FFE082"}}>
-                <div style={{fontSize:10,color:"#856404",lineHeight:1.5}}>Warnhinweise erscheinen direkt beim Supplement.</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
+      <OnbGroup title="Gesundheit">
+        {multi("injuries","injuries",INJURIES,"Verletzungen?","Aktuelle Beschwerden, mehrere möglich.")}
+        {multi("supps","currentSupps",SUPPS,"Aktuelle Supplements?","Verhindert Doppelempfehlungen, mehrere möglich.")}
+        {multi("meds","medications",MEDS,"Medikamente?","Für Warnhinweise bei Supplements, mehrere möglich.",
+          (form.medications||[]).some(m=>m!=="none")&&(form.medications||[]).length>0?(
+            <div style={{marginTop:10,padding:"8px 10px",background:"#FFF8E1",borderRadius:8,border:"1px solid #FFE082"}}>
+              <div style={{fontSize:11,color:"#856404",lineHeight:1.5}}>Warnhinweise erscheinen direkt beim Supplement.</div>
+            </div>
+          ):null)}
+      </OnbGroup>
 
       <OnbNav onBack={onBack} canNext={!!valid}
         onNext={()=>{ if(valid) onNext(form); }}
+        onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }}
         hint={!valid&&missingLs.length>0?`Noch ausfüllen: ${missingLs.join(" · ")}`:null}/>
     </OnbShell>
   );
@@ -4905,7 +4921,6 @@ function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
 }
 
 function StepPraeferenzen({onNext, onBack, initial}) {
-  const isMobile=useWindowWidth()<=768;
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   // Gespeicherte Auswahl übernehmen (z. B. nach "Zurück"); ältere Daten können Einzelwerte statt Listen enthalten
   const asList=(v)=>Array.isArray(v)?v:(v?[v]:[]);
@@ -4929,46 +4944,53 @@ function StepPraeferenzen({onNext, onBack, initial}) {
   if(!proteinForm.length)missing.push("Protein");
   if(!recoveryForm.length)missing.push("Recovery");
 
-  const grid=(cols)=>({display:"grid",gridTemplateColumns:`repeat(${cols},minmax(0,1fr))`,gap:7});
+  const SUPP=[{id:"kapsel",l:"Kapseln"},{id:"pulver",l:"Pulver"},{id:"beides",l:"Beides"}];
+  const ENERGIE=[{id:"gel",l:"Gels"},{id:"riegel",l:"Riegel"},{id:"drink",l:"Drink Mix"},{id:"egal",l:"Egal"}];
+  const PROTEIN=[{id:"shake",l:"Shake / Pulver"},{id:"riegel",l:"Riegel"},{id:"egal",l:"Egal"}];
+  const RECOVERY=[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionswear"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere zu wenig"}];
+
+  // Fragen-Zeilen: alle vier sind Pflicht
+  const ORDER=["supp","energie","protein","recovery"];
+  const missingIds=ORDER.filter(q=>(q==="supp"&&!suppForm)||(q==="energie"&&!energieForm.length)||(q==="protein"&&!proteinForm.length)||(q==="recovery"&&!recoveryForm.length));
+  const rows=useOnbRows(ORDER,missingIds);
+  const [tried,setTried]=useState(false);
+  const row=(qid)=>({qid,open:rows.openId===qid,onToggle:()=>rows.toggle(qid),warn:tried});
+  // Mehrfachauswahl: "Egal" bzw. "Ich regeneriere zu wenig" schliesst die Frage, sonst bleibt sie offen bis "Fertig"
+  const pickMulti=(qid,arr,setArr,val)=>{
+    const exclusiveOn=(val==="egal"||val==="keine")&&!arr.includes(val);
+    toggleMulti(arr,setArr,val);
+    if(exclusiveOn) rows.advance(qid); else rows.hold();
+  };
 
   return (
     <OnbShell step={6} total={6}>
       <OnbTitle title="Deine Präferenzen." sub="So stimmen wir alles noch gezielter auf dich ab."/>
 
-      <OnbCard label="Supplements - welche Form bevorzugst du?">
-        <div style={grid(3)}>
-          {[{id:"kapsel",l:"Kapseln"},{id:"pulver",l:"Pulver"},{id:"beides",l:"Beides"}].map(o=>(
-            <OnbTile key={o.id} label={o.l} active={suppForm===o.id} onClick={()=>setSuppForm(suppForm===o.id?null:o.id)}/>
-          ))}
-        </div>
-      </OnbCard>
+      <OnbGroup>
+        <OnbRow {...row("supp")} first label="Supplements - welche Form bevorzugst du?" answer={onbSummary(SUPP,suppForm)}>
+          <OnbChips options={SUPP} isOn={v=>suppForm===v}
+            onPick={v=>{ const next=suppForm===v?null:v; setSuppForm(next); if(next) rows.advance("supp"); else rows.hold(); }}/>
+        </OnbRow>
 
-      <OnbCard label="Wie nimmst du Energie während dem Training zu dir?" sub="Mehrfachauswahl möglich">
-        <div style={grid(isMobile?2:4)}>
-          {[{id:"gel",l:"Gels"},{id:"riegel",l:"Riegel"},{id:"drink",l:"Drink Mix"},{id:"egal",l:"Egal"}].map(o=>(
-            <OnbTile key={o.id} label={o.l} multi active={energieForm.includes(o.id)} onClick={()=>toggleMulti(energieForm,setEnergieForm,o.id)}/>
-          ))}
-        </div>
-      </OnbCard>
+        <OnbRow {...row("energie")} label="Wie nimmst du Energie während dem Training zu dir?" sub="Mehrfachauswahl möglich"
+          answer={onbSummary(ENERGIE,energieForm)} onDone={()=>rows.finish("energie")}>
+          <OnbChips options={ENERGIE} multi isOn={v=>energieForm.includes(v)} onPick={v=>pickMulti("energie",energieForm,setEnergieForm,v)}/>
+        </OnbRow>
 
-      <OnbCard label="Protein - wie nimmst du es am liebsten?" sub="Mehrfachauswahl möglich">
-        <div style={grid(3)}>
-          {[{id:"shake",l:"Shake / Pulver"},{id:"riegel",l:"Riegel"},{id:"egal",l:"Egal"}].map(o=>(
-            <OnbTile key={o.id} label={o.l} multi active={proteinForm.includes(o.id)} onClick={()=>toggleMulti(proteinForm,setProteinForm,o.id)}/>
-          ))}
-        </div>
-      </OnbCard>
+        <OnbRow {...row("protein")} label="Protein - wie nimmst du es am liebsten?" sub="Mehrfachauswahl möglich"
+          answer={onbSummary(PROTEIN,proteinForm)} onDone={()=>rows.finish("protein")}>
+          <OnbChips options={PROTEIN} multi isOn={v=>proteinForm.includes(v)} onPick={v=>pickMulti("protein",proteinForm,setProteinForm,v)}/>
+        </OnbRow>
 
-      <OnbCard label="Recovery - wie erholst du dich am liebsten?" sub="Mehrfachauswahl möglich">
-        <div style={grid(isMobile?2:3)}>
-          {[{id:"massage",l:"Massage"},{id:"foam",l:"Foam Roll"},{id:"kalt",l:"Kältebad"},{id:"stretching",l:"Stretching"},{id:"kompression",l:"Kompressionswear"},{id:"sauna",l:"Sauna"},{id:"dampfbad",l:"Dampfbad"},{id:"schlaf",l:"Schlaf"},{id:"keine",l:"Ich regeneriere zu wenig"}].map(o=>(
-            <OnbTile key={o.id} label={o.l} multi active={recoveryForm.includes(o.id)} onClick={()=>toggleMulti(recoveryForm,setRecoveryForm,o.id)}/>
-          ))}
-        </div>
-      </OnbCard>
+        <OnbRow {...row("recovery")} label="Recovery - wie erholst du dich am liebsten?" sub="Mehrfachauswahl möglich"
+          answer={onbSummary(RECOVERY,recoveryForm)} onDone={()=>rows.finish("recovery")}>
+          <OnbChips options={RECOVERY} multi isOn={v=>recoveryForm.includes(v)} onPick={v=>pickMulti("recovery",recoveryForm,setRecoveryForm,v)}/>
+        </OnbRow>
+      </OnbGroup>
 
       <OnbNav onBack={onBack} canNext={allDone}
         onNext={()=>{ if(allDone) onNext({suppForm,energieForm,proteinForm,recoveryForm}); }}
+        onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }}
         hint={!allDone?`Noch ausfüllen: ${missing.join(" · ")}`:null}/>
     </OnbShell>
   );
@@ -4978,7 +5000,7 @@ function StepPraeferenzen({onNext, onBack, initial}) {
 function StepAllergien({onNext, onBack, initial}) {
   useEffect(()=>{ window.scrollTo(0,0); },[]);
 
-  // Kacheln; "group" ist die id aus ALLERGEN_GROUPS und wird gespeichert
+  // Chips; "group" ist die id aus ALLERGEN_GROUPS und wird gespeichert
   const ALLERGEN_LIST = [
     {id:"gluten",     group:"gluten",   label:"Gluten",        desc:"Weizen, Roggen, Gerste"},
     {id:"laktose",    group:"laktose",  label:"Laktose",       desc:"Milch & Milchprodukte"},
@@ -4991,7 +5013,7 @@ function StepAllergien({onNext, onBack, initial}) {
     {id:"krebstiere", group:"fisch",    label:"Krebstiere",    desc:"Garnelen, Hummer, Krabben"},
     {id:"senf",       group:"senf",     label:"Senf",          desc:"Senf & Senfprodukte"},
   ];
-  // Ältere gespeicherte ids (englisch) auf die heutigen Kacheln abbilden
+  // Ältere gespeicherte ids (englisch) auf die heutigen Chips abbilden
   const LEGACY_IDS={lactose:"laktose",soy:"soja",nuts:"nüsse",egg:"eier",fish:"fisch",fructose:"fruktose",histamine:"histamin",crustacean:"krebstiere",mustard:"senf"};
   const chipIds=ALLERGEN_LIST.map(a=>a.id);
   const toTextList=(v)=>Array.isArray(v)?v.map(x=>String(x).trim()).filter(Boolean):(typeof v==="string"?v.split(",").map(x=>x.trim()).filter(Boolean):[]);
@@ -5051,57 +5073,76 @@ function StepAllergien({onNext, onBack, initial}) {
     onNext({allergens:groups,allergenChips:chips,customAllergens:finalCustom,noAllergens:hasAllergies===false,diet});
   };
 
-  const grid2={display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:7};
   const hint = hasAllergies===null
     ? "Bitte oben eine Option auswählen."
     : (hasAllergies===true&&!hasAnyAllergy ? "Bitte mindestens eine Allergie wählen oder eintragen." : null);
+
+  // Fragen-Zeilen: "Hast du Allergien?" -> bei Ja "Welche Allergien?" -> Ernährungsweise (optional)
+  const HAS_OPTS=[{id:"none",l:"Keine Allergien"},{id:"yes",l:"Ich habe Allergien"}];
+  const ALLERGEN_OPTS=ALLERGEN_LIST.map(a=>({id:a.id,l:a.label}));
+  const DIET_OPTS=DIET_LIST.map(d=>({id:d.id,l:d.label}));
+  const ORDER=["has",...(hasAllergies===true?["which"]:[]),"diet"];
+  const missingIds=ORDER.filter(q=>(q==="has"&&hasAllergies===null)||(q==="which"&&hasAllergies===true&&!hasAnyAllergy));
+  const rows=useOnbRows(ORDER,missingIds);
+  const [tried,setTried]=useState(false);
+  const row=(qid)=>({qid,open:rows.openId===qid,onToggle:()=>rows.toggle(qid),warn:tried});
+
+  // Antwort der Allergie-Zeile: gewählte Chips + eigene Einträge (auch ein noch nicht übernommener)
+  const allergyNames=[
+    ...allergens.map(id=>ALLERGEN_LIST.find(a=>a.id===id)?.label).filter(Boolean),
+    ...customTags,
+    ...(pendingCustom&&!customTags.includes(pendingCustom)?[pendingCustom]:[]),
+  ];
+  const allergyAnswer=allergyNames.length===0?"":allergyNames.length<=2?allergyNames.join(", "):`${allergyNames.length} gewählt`;
 
   return (
     <OnbShell step={5} total={6}>
       <OnbTitle title="Allergien & Ernährung." sub="So filtern wir Supplements und Sportnahrung korrekt für dich."/>
 
-      {/* Allergien */}
-      <OnbCard label="Hast du Allergien oder Unverträglichkeiten?">
-        <div style={grid2}>
-          <OnbTile label="Keine Allergien" active={hasAllergies===false} onClick={chooseNone}/>
-          <OnbTile label="Ich habe Allergien" active={hasAllergies===true} onClick={()=>setHasAllergies(true)}/>
-        </div>
+      <OnbGroup>
+        {/* Allergien */}
+        <OnbRow {...row("has")} first label="Hast du Allergien oder Unverträglichkeiten?"
+          answer={hasAllergies===false?"Keine Allergien":hasAllergies===true?"Ich habe Allergien":""}>
+          <OnbChips options={HAS_OPTS} isOn={v=>v==="none"?hasAllergies===false:hasAllergies===true}
+            onPick={v=>{ if(v==="none") chooseNone(); else setHasAllergies(true); rows.advance("has"); }}/>
+        </OnbRow>
 
         {hasAllergies===true&&(
-          <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.g100}`,animation:"fadeUp .25s ease forwards"}}>
-            <div style={{...grid2,marginBottom:10}}>
-              {ALLERGEN_LIST.map(a=><OnbTile key={a.id} label={a.label} desc={a.desc} multi active={allergens.includes(a.id)} onClick={()=>toggleAllergen(a.id)}/>)}
-            </div>
+          <OnbRow {...row("which")} label="Welche Allergien?" sub="Mehrfachauswahl möglich"
+            answer={allergyAnswer} onDone={()=>rows.finish("which")}>
+            <OnbChips options={ALLERGEN_OPTS} multi isOn={v=>allergens.includes(v)} onPick={v=>{ rows.hold(); toggleAllergen(v); }}/>
             {/* Eigene Einträge */}
-            <div style={{display:"flex",gap:8,marginBottom:customTags.length>0?8:0}}>
-              <input type="text" value={customInput} onChange={e=>setCustomInput(e.target.value)}
+            <div style={{display:"flex",gap:8,marginTop:12,marginBottom:customTags.length>0?8:0}}>
+              <input type="text" value={customInput} onChange={e=>{ rows.hold(); setCustomInput(e.target.value); }}
                 onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();addCustom();}}}
                 placeholder="Weitere Allergie hinzufügen..." aria-label="Weitere Allergie"
-                style={{flex:1,minWidth:0,padding:"10px 13px",borderRadius:10,border:`1.5px solid ${C.g200}`,fontSize:13,fontFamily:"Inter,sans-serif",outline:"none",background:C.white,color:C.black}}/>
-              <button type="button" onClick={addCustom} aria-label="Allergie hinzufügen" style={{padding:"0 16px",borderRadius:10,background:C.neon,color:C.black,border:"none",fontSize:16,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>+</button>
+                style={{flex:1,minWidth:0,minHeight:44,padding:"10px 13px",borderRadius:10,border:`1.5px solid ${C.g200}`,fontSize:16,fontFamily:"Inter,sans-serif",outline:"none",background:C.white,color:C.black}}/>
+              <button type="button" onClick={addCustom} aria-label="Allergie hinzufügen" style={{minWidth:44,minHeight:44,padding:"0 16px",borderRadius:10,background:C.neon,color:C.black,border:"none",fontSize:16,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",flexShrink:0}}>+</button>
             </div>
             {customTags.length>0&&(
               <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
                 {customTags.map(tag=>(
-                  <span key={tag} style={{display:"inline-flex",alignItems:"center",gap:5,padding:"4px 10px",borderRadius:20,background:ONB_SEL,border:`1px solid ${C.neon}`,fontSize:12,color:C.black,maxWidth:"100%",overflowWrap:"anywhere"}}>
+                  <span key={tag} style={{display:"inline-flex",alignItems:"center",gap:2,minHeight:34,padding:"0 0 0 12px",borderRadius:100,background:ONB_SEL,border:`1.5px solid ${C.neon}`,fontSize:13,color:C.black,maxWidth:"100%",overflowWrap:"anywhere"}}>
                     {tag}
-                    <button className="icon-btn" aria-label={`${tag} entfernen`} onClick={()=>setCustomTags(prev=>prev.filter(x=>x!==tag))} style={{background:"none",border:"none",cursor:"pointer",fontSize:14,color:"#888",padding:0,lineHeight:1}}>×</button>
+                    <button type="button" className="icon-btn" aria-label={`${tag} entfernen`} onClick={()=>setCustomTags(prev=>prev.filter(x=>x!==tag))}
+                      style={{width:34,height:34,minHeight:34,display:"inline-flex",alignItems:"center",justifyContent:"center",background:"none",border:"none",cursor:"pointer",fontSize:16,color:"#888",padding:0,lineHeight:1,flexShrink:0}}>×</button>
                   </span>
                 ))}
               </div>
             )}
-          </div>
+          </OnbRow>
         )}
-      </OnbCard>
 
-      {/* Ernährung - immer sichtbar, eigene Karte */}
-      <OnbCard label="Ernährungsweise" sub="Optional · Mehrfachauswahl möglich">
-        <div style={grid2}>
-          {DIET_LIST.map(d=><OnbTile key={d.id} label={d.label} desc={d.desc} multi active={diet.includes(d.id)} onClick={()=>toggleDiet(d.id)}/>)}
-        </div>
-      </OnbCard>
+        {/* Ernährung - optional; "Keine Einschränkungen" schliesst die Frage */}
+        <OnbRow {...row("diet")} label="Ernährungsweise" sub="Optional · Mehrfachauswahl möglich" optional
+          answer={onbSummary(DIET_OPTS,diet)} onDone={()=>rows.finish("diet")}>
+          <OnbChips options={DIET_OPTS} multi isOn={v=>diet.includes(v)}
+            onPick={v=>{ const noneOn=v==="none"&&!diet.includes("none"); toggleDiet(v); if(noneOn) rows.advance("diet"); else rows.hold(); }}/>
+        </OnbRow>
+      </OnbGroup>
 
-      <OnbNav onBack={onBack} canNext={canNext} onNext={handleNext} hint={hint}/>
+      <OnbNav onBack={onBack} canNext={canNext} onNext={handleNext}
+        onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }} hint={hint}/>
       <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}`}</style>
     </OnbShell>
   );
