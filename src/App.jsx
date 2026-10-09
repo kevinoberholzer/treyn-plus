@@ -2088,20 +2088,20 @@ function StepSport({onNext}) {
   const [expanded,setExpanded]=useState(null);
   const [subExp,setSubExp]=useState(null);
 
+  // Hat die Rubrik eine Auswahl? (optional ohne eine bestimmte Disziplin)
+  const groupHasSel=(id,exceptSub=null)=>{
+    const g=SPORT_GROUPS.find(x=>x.id===id);
+    return !!g?.subs?.some(sb=>sb.id!==exceptSub&&(subSel[sb.id]||sb.children?.some(ch=>childSel[sb.id+"_"+ch.id])));
+  };
   const toggleGroup=(id,hasSubs)=>{
     if(hasSubs){
-      const isOn=!!sel[id];
-      if(isOn&&expanded===id){
-        setSel(s=>({...s,[id]:false}));
+      // Antippen klappt nur auf/zu - die Auswahl bleibt. Ohne Auswahl ist die Sportart nicht gewählt.
+      if(expanded===id){
         setExpanded(null);
-        const group=SPORT_GROUPS.find(g=>g.id===id);
-        if(group?.subs){
-          setSubSel(s=>{const n={...s};group.subs.forEach(sb=>{n[sb.id]=false;});return n;});
-          setChildSel(s=>{const n={...s};group.subs.forEach(sb=>{sb.children?.forEach(ch=>{delete n[sb.id+"_"+ch.id];});});return n;});
-        }
+        if(!groupHasSel(id)) setSel(s=>({...s,[id]:false}));
       } else {
-        setExpanded(e=>e===id?null:id);
-        setSel(s=>({...s,[id]:true}));
+        if(expanded&&!groupHasSel(expanded)){ const prev=expanded; setSel(s=>({...s,[prev]:false})); }
+        setExpanded(id);
       }
     } else {
       setSel(s=>({...s,[id]:!s[id]}));
@@ -2117,6 +2117,7 @@ function StepSport({onNext}) {
         setSubSel(s=>({...s,[sub.id]:false}));
         setChildSel(s=>{const n={...s};sub.children.forEach(ch=>{delete n[sub.id+"_"+ch.id];});return n;});
         setSubExp(x=>x===sub.id?null:x);
+        if(!groupHasSel(groupId,sub.id)) setSel(g=>({...g,[groupId]:false}));
       } else {
         // Select: open children picker
         setSubExp(x=>x===sub.id?null:sub.id);
@@ -2124,8 +2125,10 @@ function StepSport({onNext}) {
         setSel(g=>({...g,[groupId]:true}));
       }
     } else {
-      setSubSel(s=>({...s,[sub.id]:!s[sub.id]}));
-      setSel(g=>({...g,[groupId]:true}));
+      const turnOn=!subSel[sub.id];
+      setSubSel(s=>({...s,[sub.id]:turnOn}));
+      if(turnOn) setSel(g=>({...g,[groupId]:true}));
+      else if(!groupHasSel(groupId,sub.id)) setSel(g=>({...g,[groupId]:false}));
     }
   };
   const toggleChild=(e,subId,childId)=>{
