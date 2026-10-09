@@ -5352,7 +5352,7 @@ function AnalysingScreen({onDone, profilData, sportData}) {
           {firstname?`${firstname}, deine Analyse läuft.`:"Deine Analyse läuft."}
         </div>
         <div style={{fontSize:14,color:C.g600,marginBottom:40,lineHeight:1.6}}>
-          TREYN AI verarbeitet deine Daten und berechnet deinen persönlichen Plan.
+          TREYN+ verarbeitet deine Daten und berechnet deinen Plan.
         </div>
 
         {/* Progress bar */}
