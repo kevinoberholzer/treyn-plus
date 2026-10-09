@@ -2180,22 +2180,25 @@ function StepSport({onNext}) {
                 const hasSubs=s.subs&&s.subs.length>0;
                 const isOpen=expanded===s.id;
                 const selSubs=hasSubs?s.subs.filter(sb=>subSel[sb.id]||sb.children?.some(ch=>childSel[sb.id+"_"+ch.id])):[];
+                // Hell-Acid erst, wenn die Auswahl in der Rubrik vollständig übernommen ist
+                const done=hasSubs?selSubs.length>0&&selSubs.every(sb=>!sb.children?.length||sb.children.some(ch=>childSel[sb.id+"_"+ch.id])):active;
+                const pending=active&&!done&&!isOpen;
                 return (
                   <div key={s.id} style={{gridColumn:isOpen?"1 / -1":"auto"}}>
-                    <div onClick={()=>toggleGroup(s.id,hasSubs)} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:isOpen?"13px 13px 0 0":13,cursor:"pointer",transition:"all .15s",border:`1.5px solid ${active?C.neon:C.g200}`,background:active?C.neonDim:C.white}}>
-                      <div style={{width:32,height:32,borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:active?C.neon:C.g100}}>
-                        <SportIcon icon={s.icon} active={active} size={17}/>
+                    <div onClick={()=>toggleGroup(s.id,hasSubs)} style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:isOpen?"13px 13px 0 0":13,cursor:"pointer",transition:"all .15s",border:`1.5px solid ${done?C.neon:isOpen?C.black:C.g200}`,background:done?"#F5FFE0":C.white}}>
+                      <div style={{width:32,height:32,borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",background:done?C.neon:C.g100}}>
+                        <SportIcon icon={s.icon} active={done} size={17}/>
                       </div>
                       <div style={{flex:1,minWidth:0}}>
                         <div style={{fontSize:13,fontWeight:600,color:C.black}}>{s.label}</div>
-                        {selSubs.length>0&&<div style={{fontSize:10,color:"rgba(0,0,0,.5)",marginTop:1}}>{selSubs.map(sb=>sb.label).join(" · ")}</div>}
-                        {selSubs.length===0&&hasSubs&&<div style={{fontSize:10,color:active?"rgba(0,0,0,.45)":C.g400,marginTop:1}}>{isOpen?"Disziplin wählen →":"Disziplinen →"}</div>}
+                        {selSubs.length>0&&<div style={{fontSize:10,color:done?"#3A6000":pending?C.orange:"rgba(0,0,0,.5)",marginTop:1}}>{selSubs.map(sb=>sb.label).join(" · ")}{pending?" - Unterkategorie wählen":""}</div>}
+                        {selSubs.length===0&&hasSubs&&<div style={{fontSize:10,color:pending?C.orange:isOpen?C.g600:C.g400,marginTop:1}}>{isOpen||pending?"Disziplin wählen →":"Disziplinen →"}</div>}
                       </div>
-                      {hasSubs&&<span style={{fontSize:11,color:"rgba(0,0,0,.4)",transition:"transform .18s",display:"inline-block",transform:isOpen?"rotate(180deg)":"none"}}>▼</span>}
-                      {!hasSubs&&active&&<div style={{width:18,height:18,background:C.neon,border:`1.5px solid ${C.black}`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:C.black,flexShrink:0}}>✓</div>}
+                      {hasSubs&&!(done&&!isOpen)&&<span style={{fontSize:11,color:"rgba(0,0,0,.4)",transition:"transform .18s",display:"inline-block",transform:isOpen?"rotate(180deg)":"none"}}>▼</span>}
+                      {done&&!isOpen&&<div style={{width:18,height:18,background:C.neon,border:`1.5px solid ${C.black}`,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:C.black,flexShrink:0}}>✓</div>}
                     </div>
                     {isOpen&&hasSubs&&(
-                      <div style={{padding:"10px 12px",background:C.g100,border:`1.5px solid ${C.neon}`,borderTop:"none",borderRadius:"0 0 13px 13px"}}>
+                      <div style={{padding:"10px 12px",background:C.g100,border:`1.5px solid ${done?C.neon:C.black}`,borderTop:"none",borderRadius:"0 0 13px 13px"}}>
                         <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
                           {s.subs.map(sb=>{
                             const on=!!subSel[sb.id]||(sb.children?.some(ch=>childSel[sb.id+"_"+ch.id]));
