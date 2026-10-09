@@ -741,7 +741,7 @@ function WhyTREYN({onNext}) {
 
         {/* Title */}
         <h1 style={{fontSize:isMobile?22:28,fontWeight:600,color:C.black,letterSpacing:"-.03em",lineHeight:1.2,marginBottom:8}}>
-          Was, Wie und Wann - kein Raten.<br/>Volles Verständnis über dein Training.
+          Was, Wie, Wo und Wann.<br/>Volles Verständnis über deine Supplementierung & Training.
         </h1>
         <p style={{fontSize:14,color:C.g600,lineHeight:1.7,marginBottom:32}}>
           Die präziseste Analyse auf dem Markt - massgeschneidert auf dich.
