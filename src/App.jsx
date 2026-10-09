@@ -833,8 +833,8 @@ function Intro({onNext, onDemo}) {
   ];
 
   const DE_LINES=[
-    {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung - berechnet aus deinen Daten.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Die meisten Sportler raten. TREYN+ berechnet - und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
+    {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung. Berechnet aus deinen Daten.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
+    {text:"Die meisten Sportler raten. TREYN+ berechnet und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:200},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel - obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
