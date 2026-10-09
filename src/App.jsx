@@ -839,7 +839,7 @@ function Intro({onNext, onDemo}) {
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel - obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"Der Rest hofft, dass die Ernährung reicht. Tut sie nicht - besonders nicht bei intensivem Training. (PubMed, 2018)",size:13,weight:400,color:C.g600,leading:1.65,mb:20,delay:180},
-    {text:"Anhand deiner Daten berechnet TREYN+ deine Bedarfswerte, Supplemente & Sportnahrung - präziser als jede andere Plattform. Verfügbar in der Schweiz, Deutschland und Österreich.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
+    {text:"Anhand deiner Daten berechnet TREYN+ deine Bedarfswerte, Supplemente & Sportnahrung, präziser als jede andere Plattform. Verfügbar in der Schweiz, Deutschland & Österreich.",size:13,weight:400,color:C.g800,leading:1.7,mb:4,delay:160},
   ];
   const lines=DE_LINES;
 
