@@ -2160,16 +2160,18 @@ function Progress({step=1,total=6,done=false}) {
 const ONB_CARD={background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:"18px 18px"};
 const ONB_SEL="#F5FFE0";
 
-// Seitenrahmen: hellgrauer Hintergrund, fester Kopf, Inhalt oben beginnend
+// Seitenrahmen: hellgrauer Hintergrund, fester Kopf. Füllt der Inhalt die Seite nicht,
+// steht er senkrecht mittig zwischen Kopf und unterem Rand; ist er länger, beginnt er oben.
 function OnbShell({step=1,total=6,done=false,children}) {
   const isMobile=useWindowWidth()<=768;
   const gutter=isMobile?16:24;
+  const padY=isMobile?28:40;
   return (
-    <div style={{minHeight:"100vh",background:C.off,fontFamily:"Inter,sans-serif",color:C.black}}>
-      {/* Fokussierte Felder nicht unter den festen Kopf scrollen */}
-      <style>{`html{scroll-padding-top:80px;}`}</style>
+    <div className="onb-shell" style={{display:"flex",flexDirection:"column",background:C.off,fontFamily:"Inter,sans-serif",color:C.black}}>
+      {/* Fokussierte Felder nicht unter den festen Kopf scrollen; Höhe = sichtbarer Bildschirm (auch mit Safari-Leisten) */}
+      <style>{`html{scroll-padding-top:80px;} .onb-shell{min-height:100vh;min-height:100dvh;}`}</style>
       <Progress step={step} total={total} done={done}/>
-      <div style={{display:"flex",justifyContent:"center",paddingTop:isMobile?24:36,paddingBottom:80,paddingLeft:gutter,paddingRight:gutter}}>
+      <div style={{flex:1,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",paddingTop:padY,paddingBottom:padY,paddingLeft:gutter,paddingRight:gutter}}>
         <div className="su" style={{width:"100%",maxWidth:520,minWidth:0}}>{children}</div>
       </div>
     </div>
