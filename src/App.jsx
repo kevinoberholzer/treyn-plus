@@ -7315,7 +7315,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   useEffect(()=>{window.__TREYN_PROFIL__=profilData;},[profilData]);
   const userCountry=profilData?.country||"Schweiz";
   const isEUR=["Deutschland","Österreich"].includes(userCountry);
-  const PRICE_STR=isEUR?"EUR 9.90":"CHF 14.90";
+  const PRICE_STR=isEUR?"EUR 14.90":"CHF 14.90";
   const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
   const PRICE_MONTH=isEUR?"EUR 1.65":"CHF 2.15";
   const ProUnlockBanner=({text})=>(
@@ -11860,7 +11860,7 @@ function App() {
   const [profilData,setProfilData]=useState(()=>saved?.profilData??null);
   const [selectedCountry,setSelectedCountry]=useState(()=>saved?.profilData?.country||"Schweiz");
   const isEUR_global=["Deutschland","Österreich"].includes(selectedCountry);
-  const PRICE_GLOBAL=isEUR_global?"EUR 9.90":"CHF 14.90";
+  const PRICE_GLOBAL=isEUR_global?"EUR 14.90":"CHF 14.90";
   const PERIOD_GLOBAL=isEUR_global?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
   const [allergenData,setAllergenData]=useState(()=>saved?.allergenData??null);
   const [praeferenzenData,setPraeferenzenData]=useState(()=>saved?.praeferenzenData??null);
@@ -11946,11 +11946,11 @@ function App() {
   },[]);
 
   const openStripePayment=(sd,td,pd,ad,pf)=>{
-    // CH → CHF 14.90 | DE/AT → EUR 9.90
+    // CH → CHF 14.90 | DE/AT → EUR 14.90
     const country=pd?.country||"Schweiz";
     const isEUR=["Deutschland","Österreich"].includes(country);
     const STRIPE_CHF="https://buy.stripe.com/DEIN_PAYMENT_LINK_CHF"; // CHF 14.90
-    const STRIPE_EUR="https://buy.stripe.com/DEIN_PAYMENT_LINK_EUR"; // EUR 9.90
+    const STRIPE_EUR="https://buy.stripe.com/DEIN_PAYMENT_LINK_EUR"; // EUR 14.90
     const STRIPE_LINK=isEUR?STRIPE_EUR:STRIPE_CHF;
     const isPlaceholder=STRIPE_LINK.includes("DEIN_PAYMENT_LINK");
     if(isPlaceholder){
