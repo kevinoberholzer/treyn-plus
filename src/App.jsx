@@ -885,7 +885,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
     ["Tagesplan mit Uhrzeiten",false],
     ["Supplemente mit Dosis, Timing und Begründung",false],
     ["Lange Einheit und Rennplan",false],
-    ["Saisonphasen bis zum Rennen",false],
+    ["Saisonphasen und Trainingsrechner «Heute»",false],
   ];
 
   return (
@@ -1012,7 +1012,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
           {[
             {h:"Supplemente",p:"Welche du brauchst, mit Dosis, Zeitpunkt und Begründung. Was du schon nimmst, lassen wir weg.",ic:<path d="M7 8h10a4 4 0 010 8H7a4 4 0 010-8zM12 8v8"/>},
             {h:"Passende Produkte",p:"Gels, Drinks und Supplemente aus Shops in der Schweiz, Deutschland und Österreich.",ic:<><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6L5 3H2"/></>},
-            {h:"Wettkampf & Rennplan",p:"Für jedes Rennen: Carb-Loading, Gels, Trinken und Salz für die Renndauer.",pro:true,ic:<><path d="M5 21V4"/><path d="M5 4h12l-2 4 2 4H5"/></>},
+            {h:"Trainingsrechner «Heute»",p:"Gib ein, was du heute trainierst, und du bekommst den Plan für genau diesen Tag.",pro:true,ic:<><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></>},
             {h:"Sicher eingestellt",p:"Hinweise bei Medikamenten, Allergien und in der Schwangerschaft. Keine Dosis über den empfohlenen Grenzen.",ic:<><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></>},
           ].map(c=>(
             <div key={c.h} style={sCard}>
@@ -4245,7 +4245,7 @@ function calcBasic(profilData, trainingData, healthOnly, sportData) {
   return {bmr:pro.bmr, withTraining:pro.withTraining, trainingExtra:pro.trainingExtra, waterMl, sessionsPerYear:(+pro.sessionsPerWeek||0)*52};
 }
 
-// sportData: {primarySport, healthOnly, subSel, childSel, raceData}. raceData (Objekt wie trainingData) = Quelle der Rennen für die Saison:
+// sportData: {primarySport, healthOnly, subSel, childSel, raceData, actualDay}. raceData (Objekt wie trainingData) = Quelle der Rennen für die Saison:
 // Einzelrechnung einer Sportart (Tagesplan) gibt das ganze trainingData mit, damit Phase, Taper und Defizit-Pause gleich bleiben.
 // raceData:{} = ohne Saison (Rennplan im Wettkampf-Reiter). Ohne raceData gelten die Rennen aus trainingData.
 function calcPro(profilData, trainingData, sportData) {
@@ -4410,7 +4410,9 @@ function calcPro(profilData, trainingData, sportData) {
   let prim=null;
   const sportBreakdown=[], measuredSports=[];
 
-  entries.forEach(([id,d])=>{
+  // Schlüssel "sport~2": zweite Einheit derselben Sportart am selben Tag (Trainingsrechner), zählt als eigene Einheit
+  entries.forEach(([key,d])=>{
+    const id=String(key).split("~")[0];
     const intens=INTENS_OK.includes(d.intensity)?d.intensity:"medium";
     const daysRaw=treynNum(d.days);
     const days=daysRaw==null?3:treynClamp(Math.round(daysRaw),0,7);
@@ -4421,7 +4423,8 @@ function calcPro(profilData, trainingData, sportData) {
     const longestMin=longestRaw==null?null:treynClamp(Math.round(longestRaw),durationMin,720);
 
     // Resolve to sub-sport if available
-    const resolvedId = resolveSubId(id, sportData);
+    // subOverride: eigene Disziplin dieser Einheit (Trainingsrechner, z. B. Rennrad und E-Bike am selben Tag)
+    const resolvedId = (d.subOverride&&getSubProfile(d.subOverride))?d.subOverride:resolveSubId(id, sportData);
     const sub = getSubProfile(resolvedId);
 
     // MET: sub-profile > parent SPORT_MET > fallback (lange harte Einheiten etwas tiefer)
@@ -4459,19 +4462,19 @@ function calcPro(profilData, trainingData, sportData) {
     // Protein type: sub-profile > SPORT_TYPE_MAP > endurance
     const st = sub?.protType || SPORT_TYPE_MAP[id] || "endurance";
     const pf=(PROTEIN_NEED[st]||PROTEIN_NEED.endurance)[intens]; if(pf>maxProt)maxProt=pf;
-    const endurance=isEnduranceSport(id, sportData);
+    const endurance=(d.subOverride&&sub)?(sub.protType==="endurance"||sub.endurance===true):isEnduranceSport(id, sportData);
 
     const kcalPerSession=Math.round(kcalS);
     sportBreakdown.push({id, subId:resolvedId, days, durationMin, intensity:intens, met:Math.round(met*10)/10, kcalPerSession, endurance});
-    if(id===primarySport) prim={id, subId:resolvedId, metTable, intens, durationMin, durH, sweatLh, sweatS, naPerL, naS, kcalPerSession, liftF, typeF, protType:st, endurance, raceDuration:d.raceDuration||null, met, measured, longestMin};
+    if(key===primarySport) prim={id, subId:resolvedId, metTable, intens, durationMin, durH, sweatLh, sweatS, naPerL, naS, kcalPerSession, liftF, typeF, protType:st, endurance, raceDuration:d.raceDuration||null, met, measured, longestMin};
 
     // Training time: Hauptsportart zuerst, sonst erste Angabe
     const times=Array.isArray(d.trainingTimes)?d.trainingTimes:[];
-    if(times.length&&(!primaryTimeSet||id===primarySport)) {
+    if(times.length&&(!primaryTimeSet||key===primarySport)) {
       const ORDER = ["morning","midday","afternoon","evening"];
       const sorted = [...times].sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));
       primaryTrainingTime = sorted[0]; // earliest
-      primaryTimeSet = id===primarySport || primaryTimeSet;
+      primaryTimeSet = key===primarySport || primaryTimeSet;
     } else if(!times.length&&d.trainingTime&&!primaryTimeSet) primaryTrainingTime=d.trainingTime; // legacy fallback
 
     // Iron risk: sub-profile flag hat Vorrang, sonst HIGH_IRON_RISK
@@ -4511,7 +4514,8 @@ function calcPro(profilData, trainingData, sportData) {
   // Taper bis zum Hauptrennen (1-13 Tage): Umfang -30 % bei gleicher Intensität (Bosquet 2007: -41-60 % Umfang).
   // Gilt auch, wenn davor die Rennwoche oder Erholung eines kleineren Rennens angezeigt wird, nie am Renntag.
   const mainTaper=!!mainRaceR&&mainRaceR.daysUntil>=1&&mainRaceR.daysUntil<=13;
-  const phaseTrainingFactor=(mainTaper&&seasonPhase!=="race_day")?0.7:1;
+  // sportData.actualDay (Trainingsrechner «Heute»): die Einheiten sind schon die echten von heute, darum ohne Taper-Abschlag
+  const phaseTrainingFactor=(mainTaper&&seasonPhase!=="race_day"&&!sportData?.actualDay)?0.7:1;
   const phasePausesDeficit=["taper","race_week","race_day","recovery"].includes(seasonPhase);
   const phaseProtBoost=seasonPhase==="recovery"?0.2:0;
   // Renndauer eines Rennens in Stunden: Angabe beim Rennen > typische Renndauer der Sportart > Schätzung
@@ -6921,6 +6925,397 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 12.90", 
   );
 }
 
+// ── TRAININGSRECHNER «HEUTE» ─────────────────────────────────────────────────
+// Eingaben für genau einen Tag (oben im Plan-Reiter). Entwurf in UI_STATE.today, zusätzlich im localStorage
+// "treyn_today" ({date, rest, active, s:[Einheit, 2. Einheit]}). Gilt nur heute: an einem neuen Tag Standardwerte.
+const TODAY_KEY="treyn_today";
+const TODAY_INTENS=[{id:"low",l:"Leicht"},{id:"medium",l:"Mittel"},{id:"high",l:"Intensiv"},{id:"competition",l:"Wettkampf"}];
+const TODAY_TIMES=[{id:"morning",l:"Morgens"},{id:"midday",l:"Mittags"},{id:"afternoon",l:"Nachmittags"},{id:"evening",l:"Abends"}];
+const TODAY_T_ORDER=["morning","midday","afternoon","evening"];
+const todayDur=v=>{ const n=treynNum(v); return n==null?60:treynClamp(Math.round(n/15)*15,15,360); };
+// Sportarten der Person (Reihenfolge wie gewählt), sonst die Sportarten mit Trainingsangaben
+function todayUserSports(sportData,trainingData){
+  const ok=id=>SPORT_GROUPS.some(g=>g.id===id);
+  const sel=(Array.isArray(sportData?.selectedSports)?sportData.selectedSports:[]).filter(ok);
+  return sel.length?sel:Object.keys(trainingData||{}).filter(ok);
+}
+// Disziplinen einer Gruppe als eine Liste (Kind-Disziplin mit Namen der Unterdisziplin, z. B. "Strassenlauf Marathon")
+function todaySubOpts(gid){
+  const g=SPORT_GROUPS.find(x=>x.id===gid), out=[];
+  (g?.subs||[]).forEach(sb=>{
+    if(sb.children?.length) sb.children.forEach(ch=>out.push({id:ch.id,l:`${sb.label} ${ch.label}`,sub:sb.id,key:sb.id+"_"+ch.id}));
+    else out.push({id:sb.id,l:sb.label,sub:sb.id,key:null});
+  });
+  return out;
+}
+// Früheste Trainingszeit dieser Sportart, sonst der ersten Sportart mit Zeit, sonst Nachmittag
+function todayFirstTime(trainingData,sid){
+  const ofTd=d=>[...(Array.isArray(d?.trainingTimes)?d.trainingTimes:[])].filter(x=>TODAY_T_ORDER.includes(x)).sort((a,b)=>TODAY_T_ORDER.indexOf(a)-TODAY_T_ORDER.indexOf(b))[0]||(TODAY_T_ORDER.includes(d?.trainingTime)?d.trainingTime:null);
+  const td=trainingData||{};
+  return ofTd(td[sid])||Object.values(td).map(ofTd).find(Boolean)||"afternoon";
+}
+// Eine Einheit mit den üblichen Werten der Sportart (andere Sportart: 60 min, Mittel)
+function todaySession(sid,trainingData,time=null){
+  const d=(trainingData||{})[sid]||{};
+  return {sid, sub:"", dur:todayDur(d.duration||60), intens:TODAY_INTENS.some(o=>o.id===d.intensity)?d.intensity:"medium", time:time||todayFirstTime(trainingData,sid)};
+}
+function todayDefaults(ctx){
+  const us=ctx?.userSports||[];
+  const sid=(ctx?.primarySport&&us.includes(ctx.primarySport))?ctx.primarySport:(us[0]||SPORT_GROUPS[0].id);
+  return {date:todayISO(), rest:false, active:false, open:false, s:[todaySession(sid,ctx?.trainingData)]};
+}
+// Gespeicherten Stand prüfen (nur von heute, nur bekannte Werte)
+function todayClean(raw,ctx){
+  if(!raw||typeof raw!=="object"||raw.date!==todayISO()) return null;
+  const s=(Array.isArray(raw.s)?raw.s:[]).filter(x=>x&&SPORT_GROUPS.some(g=>g.id===x.sid)).slice(0,2).map(x=>({
+    sid:x.sid,
+    sub:todaySubOpts(x.sid).some(o=>o.id===x.sub)?x.sub:"",
+    dur:todayDur(x.dur),
+    intens:TODAY_INTENS.some(o=>o.id===x.intens)?x.intens:"medium",
+    time:TODAY_T_ORDER.includes(x.time)?x.time:todayFirstTime(ctx?.trainingData,x.sid),
+  }));
+  if(!s.length) return null;
+  return {date:raw.date, rest:!!raw.rest, active:!!raw.active, open:false, s};
+}
+function todayLoad(){
+  try{ const raw=window.localStorage.getItem(TODAY_KEY); return raw?JSON.parse(raw):null; }catch{ return null; }
+}
+function todaySave(st){
+  try{ window.localStorage.setItem(TODAY_KEY,JSON.stringify({date:st.date,rest:!!st.rest,active:!!st.active,s:st.s})); }catch{ /* Speicher gesperrt: gilt nur bis zum Neuladen */ }
+}
+// Stand für heute (UI_STATE.today). Neuer Tag oder nichts gespeichert: Standardwerte aus den Trainingsangaben
+function todayState(ctx){
+  const st=UI_STATE.today;
+  if(st&&st.date===todayISO()) return st;
+  const next=todayClean(todayLoad(),ctx)||todayDefaults(ctx);
+  UI_STATE.today=next;
+  return next;
+}
+// Name einer Einheit: eigene Sportart wie im Profil, andere Sportart mit gewählter Disziplin
+function todaySessionName(s,userSports,sportData){
+  if(!s) return "";
+  if((userSports||[]).includes(s.sid)) return sportDisplayName(s.sid,sportData)||s.sid;
+  const o=todaySubOpts(s.sid).find(x=>x.id===s.sub);
+  return o?o.l:(SPORT_GROUPS.find(g=>g.id===s.sid)?.label||s.sid);
+}
+function todaySummary(st,userSports,sportData){
+  if(!st) return "";
+  if(st.rest) return "Ruhetag";
+  return (st.s||[]).map(s=>[todaySessionName(s,userSports,sportData),fmtDurMin(s.dur),TODAY_INTENS.find(o=>o.id===s.intens)?.l||"Mittel",TODAY_TIMES.find(o=>o.id===s.time)?.l||""].filter(Boolean).join(" · ")).join(" + ");
+}
+// Ein Tag als trainingData: je Einheit days 1 und daysTotal 1, Dauer, Intensität und Uhrzeit von heute.
+// Gleiche Sportart zweimal: eine Einheit mit beiden Dauern und der höheren Intensität (für die Tageswerte).
+// Gemessene km/kJ nur bei gleicher Intensität wie üblich, auf diese Dauer umgerechnet (Tempo bleibt gleich).
+// Andere Sportart: gewählte Disziplin in eine Kopie von sportData (resolveSubId findet so ihren MET-Wert).
+function todayTraining(st,trainingData,sportData,userSports){
+  if(!st||typeof st!=="object") return null;
+  if(st.rest) return {rest:true};
+  const td=trainingData||{}, us=userSports||[];
+  const list=(Array.isArray(st.s)?st.s:[]).filter(s=>s&&SPORT_GROUPS.some(g=>g.id===s.sid)).slice(0,2);
+  if(!list.length) return null;
+  const sd={...(sportData||{}),subSel:{...(sportData?.subSel||{})},childSel:{...(sportData?.childSel||{})}};
+  const done=new Set();
+  list.forEach(s=>{
+    if(us.includes(s.sid)||done.has(s.sid)) return;
+    done.add(s.sid);
+    (SPORT_GROUPS.find(g=>g.id===s.sid)?.subs||[]).forEach(sb=>{ delete sd.subSel[sb.id]; (sb.children||[]).forEach(ch=>{ delete sd.childSel[sb.id+"_"+ch.id]; }); });
+    const o=todaySubOpts(s.sid).find(x=>x.id===s.sub);
+    if(o){ if(o.key) sd.childSel[o.key]=true; else sd.subSel[o.sub]=true; }
+  });
+  // Gemeinsame Angaben (Schwitztyp, Salzränder) der ersten Sportart für eine andere Sportart
+  const first=Object.values(td).find(d=>d&&typeof d==="object")||{};
+  const entryOf=(s,dur,intens)=>{
+    const own=td[s.sid]&&typeof td[s.sid]==="object"?td[s.sid]:null;
+    const base=own||{sweatRate:first.sweatRate,saltStains:first.saltStains,trainingTimes:first.trainingTimes};
+    const usualDays=treynNum(own?.days), usualDur=treynNum(own?.duration)||60;
+    const scale=(own&&(own.intensity||"medium")===intens&&usualDays>0)?dur/(usualDur*usualDays):0;
+    const km=treynNum(own?.weeklyKm), kj=treynNum(own?.weeklyKj);
+    return {...base, days:1, daysTotal:1, duration:dur, intensity:intens, trainingTimes:[s.time], longestMin:null,
+      weeklyKm:(km!=null&&scale)?km*scale:null, weeklyKj:(kj!=null&&scale)?kj*scale:null};
+  };
+  // Disziplin je Einheit: gewählte Unterdisziplin einer anderen Sportart, sonst die eigene (sd)
+  const subOf=(s)=>{
+    if(us.includes(s.sid)) return null;
+    const o=todaySubOpts(s.sid).find(x=>x.id===s.sub);
+    if(!o) return null;
+    const one={subSel:o.key?{}:{[o.sub]:true},childSel:o.key?{[o.key]:true}:{}};
+    const r=resolveSubId(s.sid,one);
+    return r&&r!==s.sid&&getSubProfile(r)?r:null;
+  };
+  const withSub=(e,s)=>{ const r=subOf(s); return r?{...e,subOverride:r}:e; };
+  const [a,b]=list;
+  const td1=withSub(entryOf(a,a.dur,a.intens),a);
+  const td2=b?withSub(entryOf(b,b.dur,b.intens),b):null;
+  const same=!!b&&b.sid===a.sid;
+  // Gleiche Sportart zweimal: zwei Einheiten mit eigener Dauer und Intensität (Schlüssel "sport~2"), nicht zusammengelegt
+  const dayTD=same?{[a.sid]:td1,[a.sid+"~2"]:td2}:b?{[a.sid]:td1,[b.sid]:td2}:{[a.sid]:td1};
+  return {rest:false, sid1:a.sid, sid2:b?b.sid:null, same, s1:a, s2:b||null, sd, td1, td2, dayTD};
+}
+// Rechnung für heute: day = Tageswerte aus allen Einheiten, c1/c2 = Werte pro Stunde je Einheit.
+// Saison (Phase, Defizit-Pause, Erholung) aus den Rennen aller Sportarten (raceData). actualDay: die eingegebene
+// Dauer ist die echte von heute, der Taper-Abschlag auf den üblichen Umfang (x0.7) gilt darum nicht noch einmal.
+function todayCalc(profilData,st,trainingData,sportData,userSports){
+  const tt=todayTraining(st,trainingData,sportData,userSports);
+  if(!tt||tt.rest) return tt;
+  const sdOf=sid=>({...tt.sd,healthOnly:false,primarySport:sid,raceData:trainingData||{},actualDay:true});
+  const day=calcPro(profilData,tt.dayTD,sdOf(tt.sid1));
+  const c1=tt.td2?calcPro(profilData,{[tt.sid1]:tt.td1},sdOf(tt.sid1)):day;
+  const c2=tt.td2?calcPro(profilData,{[tt.sid2]:tt.td2},sdOf(tt.sid2)):null;
+  return {...tt, day, c1, c2};
+}
+// Unterwegs mitnehmen: Kohlenhydrate nach Vorliebe (Gels ca. 25 g, Riegel ca. 40 g, Drink Mix 500 ml mit ca. 30 g),
+// Trinken in Flaschen à 500 ml, mit Elektrolyten nur wenn Natrium nötig ist (gleiche Regel wie im Tagesplan)
+function todayFuel(carbsH,durMin,naNeeded,flLo,flHi,form){
+  // Kohlenhydrate ab Minute 30 (wie im Tagesplan), Trinken ab Start
+  const h=Math.max(0,+durMin||0)/60, carbsTot=Math.max(0,+carbsH||0)*Math.max(0,(+durMin||0)-30)/60;
+  const fluidMl=Math.max(200,Math.round(((+flLo||0)+(+flHi||0))/2*h/50)*50);
+  const bottles=Math.max(1,Math.ceil(fluidMl/500));
+  const elyte=!!naNeeded;
+  const fl=n=>`${n} ${n===1?"Flasche (500 ml)":"Flaschen (je 500 ml)"}`;
+  const water=(n)=>`${fl(n)} ${elyte?"mit Elektrolyten":"Wasser"}`;
+  const cnt=(g,size)=>g>0?Math.max(1,Math.round(g/size)):0;
+  const parts=[];
+  if(carbsTot>0&&form==="drink"){
+    // Mehr Flaschen als Trinkmenge: Drink Mix stärker anrühren (höchstens ca. 60 g pro Flasche)
+    let per=30, d=cnt(carbsTot,30);
+    if(d>bottles){ per=Math.min(60,Math.ceil(carbsTot/bottles/5)*5); d=Math.min(bottles,cnt(carbsTot,per)); }
+    parts.push(`${fl(d)} Drink Mix${elyte?" mit Elektrolyten":""} (je ca. ${per} g)`);
+    const rest=carbsTot-d*per;
+    if(rest>=12){ const g=cnt(rest,25); parts.push(`${g} ${g===1?"Gel":"Gels"} (je ca. 25 g)`); }
+    if(bottles>d) parts.push(water(bottles-d));
+  } else {
+    if(carbsTot>0&&form==="riegel"){ const n=cnt(carbsTot,40); parts.push(`${n} Riegel (je ca. 40 g)`); }
+    else if(carbsTot>0){ const n=cnt(carbsTot,25); parts.push(`${n} ${n===1?"Gel":"Gels"} (je ca. 25 g)`); }
+    if(elyte||carbsTot>0||(+durMin||0)>60) parts.push(water(bottles));
+  }
+  const text=parts.length?parts.join(" und "):`ca. ${fluidMl} ml Wasser`;
+  return {text, carbsTot:Math.round(carbsTot), bottles, elyte, fluidMl};
+}
+
+// Eingabe-Karte «Heute trainiere ich» (Basic und PRO gleich). Ausserhalb von Results: Regler und Auswahl
+// werden beim Neuzeichnen nicht neu angelegt und verlieren den Fokus nicht.
+// onApply: "Plan für heute berechnen" · onChange: Änderung bei offenem Plan (PRO rechnet neu)
+// locked (Basic): nach dem Berechnen eine gesperrte Ergebnis-Karte, keine echten Werte im DOM
+function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=false,isMobile=false,onApply,onChange,onUpgrade,priceStr="CHF 12.90"}){
+  const ctx={userSports,trainingData,primarySport};
+  const st=todayState(ctx);
+  const [,setTick]=useState(0);
+  const ref=useRef(null);
+  const timerRef=useRef(null);
+  // Knopf "Was trainierst du heute?" in der Übersicht: Karte offen und sichtbar
+  if(UI_STATE.openToday){ UI_STATE.openToday=false; st.open=true; UI_STATE.todayScroll=true; }
+  useEffect(()=>{
+    if(!UI_STATE.todayScroll) return;
+    const t=setTimeout(()=>{ UI_STATE.todayScroll=false; try{ ref.current?.scrollIntoView({behavior:"smooth",block:"start"}); }catch{ /* ältere Browser */ } },80);
+    return ()=>clearTimeout(t);
+  },[]);
+  useEffect(()=>()=>clearTimeout(timerRef.current),[]);
+  // Änderung merken, Karte neu zeichnen; bei offenem Plan kurz danach neu rechnen (Regler ziehen bleibt flüssig)
+  const upd=(fn,{now=false}={})=>{
+    fn(st); st.date=todayISO(); todaySave(st); setTick(x=>x+1);
+    if(st.active&&typeof onChange==="function"){ clearTimeout(timerRef.current); if(now) onChange(); else timerRef.current=setTimeout(()=>onChange(),150); }
+  };
+  const setOpen=v=>{ st.open=!!v; setTick(x=>x+1); };
+  const otherGroups=SPORT_GROUPS.filter(g=>!userSports.includes(g.id));
+  const summary=todaySummary(st,userSports,sportData);
+  const lbl={fontSize:12,fontWeight:500,color:C.g500,marginBottom:6,fontFamily:"Inter,sans-serif"};
+  const sel={width:"100%",minHeight:44,padding:"10px 34px 10px 13px",border:`1.5px solid ${C.g200}`,borderRadius:10,fontSize:14,backgroundColor:C.white,color:C.black,fontFamily:"Inter,sans-serif",appearance:"none",WebkitAppearance:"none",cursor:"pointer",...SELECT_ARROW_STYLE};
+  const chip=(key,label,active,onClick)=>(
+    <button key={key} type="button" onClick={onClick} aria-pressed={!!active}
+      style={{minHeight:40,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:13,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",maxWidth:"100%",overflowWrap:"anywhere",textAlign:"left"}}>
+      {label}
+    </button>
+  );
+  const calcIcon=(sz=18)=>(<svg width={sz} height={sz} viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>);
+  const lockIcon=(<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#AAA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>);
+  const icBox={width:40,height:40,borderRadius:11,background:C.white,border:`1px solid ${C.g200}`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0};
+
+  // Felder einer Einheit (i = 0 oder 1), als Funktion (keine eigene Komponente)
+  const fields=i=>{
+    const s=st.s[i]; if(!s) return null;
+    const other=!userSports.includes(s.sid);
+    const subOpts=other?todaySubOpts(s.sid):[];
+    const setS=(patch,opt)=>upd(x=>{ x.s[i]={...x.s[i],...patch}; },opt);
+    // Neue Sportart: übliche Dauer und Intensität dieser Sportart, die Uhrzeit bleibt
+    const pickSport=sid=>upd(x=>{ x.rest=false; if(x.s[i]?.sid!==sid) x.s[i]=todaySession(sid,trainingData,x.s[i]?.time); },{now:true});
+    const showRest=i===0;
+    const rest=showRest&&st.rest;
+    const nr=i===1?" der 2. Einheit":""; // eindeutige Namen für Vorlesen
+    return (
+      <div style={{display:"flex",flexDirection:"column",gap:14}}>
+        <div>
+          <div style={lbl}>Sportart</div>
+          <div role="group" aria-label={`Sportart${nr}`} style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {userSports.map(id=>chip(id,sportDisplayName(id,sportData)||SPORT_GROUPS.find(g=>g.id===id)?.label||id,!rest&&s.sid===id,()=>pickSport(id)))}
+            {otherGroups.length>0&&chip("_other","Andere Sportart",!rest&&other,()=>{ if(rest||!other) pickSport(other?s.sid:otherGroups[0].id); })}
+            {showRest&&chip("_rest","Ruhetag",rest,()=>upd(x=>{ x.rest=true; },{now:true}))}
+          </div>
+          {!rest&&other&&(
+            <div style={{display:"grid",gridTemplateColumns:subOpts.length&&!isMobile?"repeat(2,minmax(0,1fr))":"minmax(0,1fr)",gap:8,marginTop:10}}>
+              <select value={s.sid} onChange={e=>pickSport(e.target.value)} aria-label={`Andere Sportart${nr} wählen`} style={sel}>
+                {otherGroups.map(g=><option key={g.id} value={g.id}>{g.label}</option>)}
+              </select>
+              {subOpts.length>0&&(
+                <select value={s.sub||""} onChange={e=>setS({sub:e.target.value},{now:true})} aria-label={`Disziplin${nr} wählen`} style={sel}>
+                  <option value="">Disziplin (optional)</option>
+                  {subOpts.map(o=><option key={o.id} value={o.id}>{o.l}</option>)}
+                </select>
+              )}
+            </div>
+          )}
+        </div>
+        {rest?(
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.55,background:C.g100,borderRadius:10,padding:"10px 12px"}}>Heute kein Training: du bekommst den Plan für deinen Ruhetag.</div>
+        ):(<>
+          <div>
+            <div style={{display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8}}>
+              <div style={lbl}>Dauer</div>
+              <div style={{fontSize:14,fontWeight:600,color:C.black}}>{fmtDurMin(s.dur)}</div>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              <button type="button" className="icon-btn" onClick={()=>setS({dur:todayDur(s.dur-15)})} disabled={s.dur<=15} aria-label="15 Minuten weniger"
+                style={{width:40,height:40,flexShrink:0,borderRadius:10,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:18,lineHeight:1,cursor:s.dur<=15?"default":"pointer",opacity:s.dur<=15?.4:1,fontFamily:"Inter,sans-serif"}}>-</button>
+              <input type="range" min="15" max="360" step="15" value={s.dur} onChange={e=>setS({dur:todayDur(e.target.value)})} aria-label={`Dauer${nr} in Minuten`} aria-valuetext={fmtDurMin(s.dur)}
+                style={{flex:1,minWidth:0,height:36,padding:"16px 0",backgroundClip:"content-box",cursor:"pointer"}}/>
+              <button type="button" className="icon-btn" onClick={()=>setS({dur:todayDur(s.dur+15)})} disabled={s.dur>=360} aria-label="15 Minuten mehr"
+                style={{width:40,height:40,flexShrink:0,borderRadius:10,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:18,lineHeight:1,cursor:s.dur>=360?"default":"pointer",opacity:s.dur>=360?.4:1,fontFamily:"Inter,sans-serif"}}>+</button>
+            </div>
+          </div>
+          <div>
+            <div style={lbl}>Intensität</div>
+            <div role="group" aria-label={`Intensität${nr}`} style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {TODAY_INTENS.map(o=>chip(o.id,o.l,s.intens===o.id,()=>setS({intens:o.id},{now:true})))}
+            </div>
+          </div>
+          <div>
+            <div style={lbl}>Uhrzeit</div>
+            <div role="group" aria-label={`Uhrzeit${nr}`} style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {TODAY_TIMES.map(o=>chip(o.id,o.l,s.time===o.id,()=>setS({time:o.id},{now:true})))}
+            </div>
+          </div>
+        </>)}
+      </div>
+    );
+  };
+
+  // Zweite Einheit: nächste eigene Sportart (sonst dieselbe), zu einer anderen Tageszeit
+  const addSecond=()=>upd(x=>{
+    const a=x.s[0];
+    const sid=userSports.find(id=>id!==a.sid)||a.sid;
+    x.s=[a,todaySession(sid,trainingData,["morning","midday"].includes(a.time)?"evening":"morning")];
+  },{now:true});
+  const removeSecond=()=>upd(x=>{ x.s=x.s.slice(0,1); },{now:true});
+  const apply=()=>{
+    clearTimeout(timerRef.current);
+    st.active=true; st.open=false; st.date=todayISO(); todaySave(st); setTick(x=>x+1);
+    if(typeof onApply==="function") onApply();
+    setTimeout(()=>{ try{ ref.current?.scrollIntoView({behavior:"smooth",block:"start"}); }catch{ /* ältere Browser */ } },60);
+  };
+
+  // Gesperrte Ergebnis-Karte (Basic): Platzhalter statt Werte
+  const lockedTiles=st.rest
+    ?[["Kalorien heute","0000","kcal"],["Protein","000-000","g"],["Trinken","0.0","L"],["Magnesium","000","mg"]]
+    :[["Kalorien heute","0000","kcal"],["Kohlenhydrate","000","g"],["Protein","000-000","g"],["Trinken","0.0","L"],["Natrium unterwegs","000","mg/h"]];
+  const lockedResult=locked&&st.active&&(
+    <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:16,marginTop:10}}>
+      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
+        <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.01em",lineHeight:1.3,minWidth:0}}>Dein Plan für heute ist bereit</div>
+        <span style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:10,fontWeight:600,color:C.g500,background:C.g100,borderRadius:100,padding:"2px 8px",flexShrink:0}}>{lockIcon}PRO</span>
+      </div>
+      <div style={{fontSize:12,color:C.g600,lineHeight:1.5,marginTop:3,overflowWrap:"anywhere"}}>{summary}</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:8,marginTop:12}}>
+        {lockedTiles.map(([l,ph,u])=>(
+          <div key={l} style={{background:C.white,border:"1px solid #E8E8E8",borderRadius:12,padding:"12px 14px",minWidth:0}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:6,marginBottom:6}}>
+              <span style={{fontSize:11,fontWeight:500,color:"#AAA",minWidth:0,overflowWrap:"anywhere"}}>{l}</span>{lockIcon}
+            </div>
+            <div style={{display:"flex",alignItems:"baseline",gap:3,lineHeight:1.1}}>
+              <span aria-hidden="true" style={{fontSize:20,fontWeight:300,color:C.black,filter:"blur(6px)",userSelect:"none"}}>{ph}</span>
+              <span style={{fontSize:12,color:"#AAA"}}>{u}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      {!st.rest&&(
+        <div style={{display:"flex",alignItems:"center",gap:8,background:C.g100,borderRadius:10,padding:"10px 12px",marginTop:8,minWidth:0}}>
+          <span style={{fontSize:11,fontWeight:600,color:C.g600,flexShrink:0}}>Unterwegs</span>
+          <span aria-hidden="true" style={{fontSize:12,color:C.black,filter:"blur(5px)",userSelect:"none",minWidth:0,overflow:"hidden",whiteSpace:"nowrap"}}>0 Gels (je ca. 00 g) und 0 Flasche (500 ml)</span>
+        </div>
+      )}
+      <div style={{fontSize:12,color:C.g600,lineHeight:1.55,marginTop:12}}>Mit PRO siehst du deine Werte für heute, was du unterwegs mitnimmst und den ganzen Tag mit Uhrzeiten.</div>
+      <button type="button" onClick={onUpgrade} style={{width:"100%",minHeight:44,marginTop:12,background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"10px 16px",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>{`PRO freischalten - ${priceStr}`}</button>
+    </div>
+  );
+
+  // Zu: Einladung bzw. kurze Zusammenfassung von heute
+  if(!st.open) return (
+    <div ref={ref} style={{marginBottom:16,scrollMarginTop:72}}>
+      <button type="button" onClick={()=>setOpen(true)} aria-expanded={false}
+        style={{display:"flex",alignItems:"center",gap:12,width:"100%",textAlign:"left",background:st.active?C.white:ONB_SEL,border:`1px solid ${st.active?C.g200:C.neonBorder}`,borderRadius:16,padding:"14px 16px",cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+        <span style={icBox}>{calcIcon()}</span>
+        <span style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2}}>
+          <span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>
+          <span style={{fontSize:15,fontWeight:600,lineHeight:1.3,overflowWrap:"anywhere"}}>{st.active?summary:"Was trainierst du heute?"}</span>
+          <span style={{fontSize:12,color:C.g600,lineHeight:1.4}}>{st.active?(locked?"Deine Angaben für heute":"Dein Plan für heute steht unten."):"Plan für genau diesen Tag"}</span>
+        </span>
+        {isMobile
+          ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          :<span style={{flexShrink:0,background:C.black,color:C.white,borderRadius:100,padding:"8px 14px",fontSize:12,fontWeight:600}}>{st.active?"Ändern":"Eingeben"}</span>}
+      </button>
+      {lockedResult}
+    </div>
+  );
+
+  return (
+    <div ref={ref} style={{marginBottom:16,scrollMarginTop:72}}>
+      <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:"16px 16px 18px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+          <span style={icBox}>{calcIcon()}</span>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</div>
+            <h3 style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.01em",margin:0,lineHeight:1.3}}>Heute trainiere ich</h3>
+          </div>
+          <button type="button" className="icon-btn" onClick={()=>setOpen(false)} aria-label="Schliessen"
+            style={{width:40,height:40,flexShrink:0,borderRadius:10,border:`1px solid ${C.g200}`,background:C.white,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        {fields(0)}
+        {!st.rest&&(st.s.length<2?(
+          <button type="button" onClick={addSecond}
+            style={{width:"100%",minHeight:44,marginTop:16,borderRadius:12,border:`1.5px dashed ${C.g300}`,background:C.white,color:C.g700,fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            + Zweite Einheit
+          </button>
+        ):(
+          <div style={{marginTop:18,paddingTop:16,borderTop:`1px solid ${C.g100}`}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:12}}>
+              <div style={{fontSize:14,fontWeight:600,color:C.black}}>2. Einheit</div>
+              <button type="button" onClick={removeSecond}
+                style={{minHeight:36,padding:"6px 12px",borderRadius:100,border:`1px solid ${C.g200}`,background:C.white,color:C.g600,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                Entfernen
+              </button>
+            </div>
+            {fields(1)}
+          </div>
+        ))}
+        {st.active?(<>
+          {!locked&&<div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:16,textAlign:"center"}}>Änderungen siehst du sofort im Plan unten.</div>}
+          <button type="button" onClick={()=>setOpen(false)}
+            style={{width:"100%",minHeight:46,marginTop:locked?18:8,borderRadius:12,border:`1.5px solid ${C.black}`,background:C.white,color:C.black,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Fertig
+          </button>
+        </>):(
+          <button type="button" onClick={apply}
+            style={{width:"100%",minHeight:46,marginTop:18,borderRadius:12,border:"none",background:C.black,color:C.white,fontSize:14,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Plan für heute berechnen
+          </button>
+        )}
+      </div>
+      {lockedResult}
+    </div>
+  );
+}
+
 // ── RESULTS-REITER ───────────────────────────────────────────────────────────
 // Vier Reiter fuer Basic und PRO gleich. Alte ids (aus aelteren Verlaufs-Eintraegen oder Knoepfen) werden umgelenkt.
 const RESULTS_TABS=["summary","plan","produkte","profil","aichat","kontakt"];
@@ -6981,6 +7376,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const healthOnly=sportData?.healthOnly;
   const primarySport=sportData?.primarySport;
   const sports=sportData?.selectedSports||[];
+  // Trainingsrechner «Heute»: eigene Sportarten für die Auswahl, Neuzeichnen nach Änderungen (Karte bleibt stehen)
+  const todaySports=todayUserSports(sportData,trainingData);
+  const refreshView=()=>{ if(resultsMountedRef.current) setViewTick(x=>x+1); };
 
   // Präferenzen aus praeferenzenData ableiten
   const {energieForm:_eF=[],suppForm:_sF=null}=praeferenzenData||{};
@@ -7738,6 +8136,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const td=(sid&&opts?.td)||longTD||baseTD;
     const raceData=(sid&&opts?.td)?{}:(trainingData||{});
     const calc=td?calcPro(profilData,{[sid]:td},{...(sportData||{}),primarySport:sid,raceData}):calcPro(profilData,trainingData,sportData);
+    return {...scValues(calc,td,sid),isLong};
+  };
+  // Werte pro Stunde aus einer Rechnung (Schweiss, Natrium, Dauer): Tagesplan, Wettkampf und «Heute» gleich
+  const scValues=(calc,td,sid)=>{
     const intens=td?.intensity||"medium";
     const sweatMult={low:0.6,medium:1.0,high:1.4,very_high:1.8}[td?.sweatRate||"medium"]||1.0;
     // Schweissrate aus calcPro (Sport-kcal/h), Rückfall nur ohne Wert
@@ -7747,7 +8149,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const naInH=Math.round(Number.isFinite(+calc?.natriumIntakePerHourMg)?+calc.natriumIntakePerHourMg:naH*0.6);
     const naNeeded=!!calc?.natriumIntakeNeeded;
     const durMin=(+td?.duration)||60;
-    return {calc,td,intens,rateLh,naH,naInH,naNeeded,durMin,isLong};
+    return {calc,td,intens,rateLh,naH,naInH,naNeeded,durMin};
   };
   // Trinkmenge pro Stunde: ca. 60-80% des Schweissverlusts, max. 1L/h
   const fluidRange=(rateLh)=>{
@@ -7765,19 +8167,26 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const allSports=(sports||[]);
     // Auswahl in UI_STATE merken (überlebt Handy drehen)
     const [sportSel,setSportSel]=useState(()=>UI_STATE.tagesplanSport||primarySport||allSports[0]);
-    const [isRestDay,setIsRestDayRaw]=useState(()=>!!UI_STATE.tagesplanRest);
+    const [isRestDaySel,setIsRestDayRaw]=useState(()=>!!UI_STATE.tagesplanRest);
     const [longOn,setLongOnRaw]=useState(()=>!!UI_STATE.tagesplanLong);
     const setActiveSport=s=>{UI_STATE.tagesplanSport=s;setSportSel(s);};
     const setIsRestDay=v=>{UI_STATE.tagesplanRest=v;setIsRestDayRaw(v);};
     const setLongOn=v=>{UI_STATE.tagesplanLong=v;setLongOnRaw(v);};
-    const activeSport=allSports.includes(sportSel)?sportSel:(primarySport||allSports[0]);
+    // «Heute» (Karte oben im Plan): ersetzt Umschalter und Zeitachse durch den Plan für genau diesen Tag
+    const todaySt=todayState({userSports:todaySports,trainingData,primarySport});
+    const tdy=(isPro&&todaySt.active)?todayCalc(profilData,todaySt,trainingData,sportData,todaySports):null;
+    const tdyT=tdy&&!tdy.rest?tdy:null;
+    const isRestDay=tdy?!!tdy.rest:isRestDaySel;
+    const activeSport=tdyT?tdyT.sid1:(allSports.includes(sportSel)?sportSel:(primarySport||allSports[0]));
     // calcAll: ganze Woche (Tages-Supplements, Ruhetag) · calc: nur die gewählte Sportart (Trainingstag)
     const calcAll=calcPro(profilData,trainingData,sportData);
     // Lange Einheit: eigener Tag mit der längsten Einheit (nur Ausdauer, wenn länger als die übliche Dauer)
-    const longTD=longTrainingOf(activeSport,(trainingData||{})[activeSport]);
+    const longTD=tdy?null:longTrainingOf(activeSport,(trainingData||{})[activeSport]);
     const isLongDay=!isRestDay&&longOn&&!!longTD;
-    const sc=sportCalc(activeSport,{long:isLongDay});
-    const {calc,td:activeTD}=sc;
+    // Heute: Werte pro Stunde aus der 1. Einheit, Tageswerte (kcal, Protein, KH, Wasser) aus allen Einheiten des Tages
+    const sc=tdyT?{...scValues(tdyT.c1,tdyT.td1,tdyT.sid1),isLong:false}:sportCalc(activeSport,{long:isLongDay});
+    const {td:activeTD}=sc;
+    const calc=tdyT?{...tdyT.day,carbsPerHour:tdyT.c1?.carbsPerHour}:sc.calc;
     // Hauptsportart: Werte der langen Einheit aus derselben Quelle wie die Übersicht (calcPro.longSession)
     const lsAll=calcAll?.longSession&&calcAll.longSession.sportId===activeSport?calcAll.longSession:null;
     const ls=isLongDay?lsAll:null;
@@ -7791,7 +8200,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const activeDuration=(isLongDay&&longMin)?longMin:((+activeTD?.duration)||60);
     const activeIntensity=activeTD?.intensity||"medium";
     // Ausdauer-Merkmal aus derselben Quelle wie calcPro (Skitouren, Langstrecke und Hyrox zählen mit)
-    const isEndurance=isEnduranceSport(activeSport,sportData);
+    const isEndurance=isEnduranceSport(activeSport,tdyT?tdyT.sd:sportData);
     const carbsH=Math.max(0,numOr(ls?.carbsPerHour,(+calc?.carbsPerHour)||0));
     const carbsDayG=numOr(ls?.carbsG,0)||calc?.carbsG||240;
 
@@ -7844,10 +8253,24 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const longMoved=isLongDay&&knownTime&&ts!==T_START[ptt];
     const te=ts+Math.max(15,Math.min(activeDuration,isLongDay?720:360));
     const isMorning=ts<9*60;
-    const wake=isMorning?ts-60:6*60+30;
     const preStart=isMorning?ts-45:ts-120;
     const postEnd=te+60;
     const overlapsTraining=(a,b)=>a<postEnd&&b>preStart;
+    // Heute mit 2. Einheit: eigener Block zu ihrer Zeit, überschneidet sie die 1. Einheit, dann 30 min nach deren Post-Workout
+    const s2In=tdyT?.s2||null;
+    let ts2=null, te2=null;
+    if(s2In){
+      const d2=Math.max(15,Math.min(+s2In.dur||60,360));
+      ts2=T_START[s2In.time]??17*60;
+      if(ts2<postEnd&&ts2+d2>preStart){
+        // Liegt sie vorher: so legen, dass sie 30 min vor dem Pre-Workout endet (nicht vor 05:00), sonst nach dem Post-Workout
+        const before=preStart-30-d2;
+        ts2=(ts2<ts&&before>=5*60)?before:postEnd+30;
+      }
+      te2=ts2+d2;
+    }
+    const overlaps2=(a,b)=>ts2!=null&&a<te2+30&&b>ts2-30;
+    const wake=Math.min(isMorning?ts-60:6*60+30,ts2!=null&&ts2<9*60?ts2-60:24*60);
 
     // Tages-Supplements (gleich für alle Trainingstage)
     // Vitamin D: Dosis aus calcPro (Jahreszeit, ohne Bluttest max 2000 IE). Bei Blutverdünnern reines D3 (K2 schwächt Marcoumar/Sintrom ab)
@@ -7898,6 +8321,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       const collides=overlapsTraining(m.s,m.e)||(isMorning&&m.key==="breakfast");
       if(collides&&!merged){merged=m;return;}
       if(collides){const len=m.e-m.s;m.s=postEnd+90;m.e=m.s+len;}
+      if(overlaps2(m.s,m.e)){const len=m.e-m.s;m.s=te2+30;m.e=m.s+len;}
       lastMealEnd=Math.max(lastMealEnd,m.e);
       const kc=Math.round(kcalDay*m.share);
       mealBlocks.push({s:m.s,time:span(m.s,m.e),phase:m.phase,items:[
@@ -7907,7 +8331,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     });
 
     // Schlafenszeit: frühestens 22:00, sonst nach Post-Workout bzw. letzter Mahlzeit
-    const bed=Math.max(22*60,postEnd+60,lastMealEnd+90);
+    const bed=Math.max(22*60,postEnd+60,lastMealEnd+90,te2!=null?te2+90:0);
 
     const preItems=[
       {label:"Mahlzeit / Snack",detail:isMorning?`${Math.round(w*0.5)}g Kohlenhydrate, 30-45 min vor Training - leicht verdaulich, z. B. Banane`:`${Math.round(carbsDayG*0.25)}g Kohlenhydrate, 1.5-2h vor Training`},
@@ -7927,21 +8351,58 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       kreatinItem,
     ];
 
+    // «Heute»: was unterwegs mit muss (Vorliebe Gels, Riegel oder Drink Mix), Kacheln und 2. Einheit
+    const fuelForm=["gel","riegel","drink"].find(f=>energieFormArr.includes(f))||"gel";
+    const name1=tdyT?todaySessionName(tdyT.s1,todaySports,sportData):"";
+    const carbs1=(isEndurance&&activeDuration>60)?carbsH:0;
+    const fuel1=tdyT?todayFuel(carbs1,activeDuration,naNeeded,flLo,flHi,fuelForm):null;
+    const sc2=(s2In&&tdyT?.c2)?scValues(tdyT.c2,tdyT.td2,tdyT.sid2):null;
+    const name2=sc2?todaySessionName(s2In,todaySports,sportData):"";
+    const dur2=sc2?te2-ts2:0;
+    const [fl2Lo,fl2Hi]=sc2?fluidRange(sc2.rateLh):[0,0];
+    const carbs2=(sc2&&isEnduranceSport(tdyT.sid2,tdyT.sd)&&dur2>60)?Math.max(0,+sc2.calc?.carbsPerHour||0):0;
+    const fuel2=sc2?todayFuel(carbs2,dur2,sc2.naNeeded,fl2Lo,fl2Hi,fuelForm):null;
+    const todayTiles=tdyT?[
+      {l:"Kalorien heute",v:`${Math.round(kcalDay).toLocaleString("de-CH")} kcal`,s:clKcalUp?"mit Carb-Loading":sc2?"mit beiden Einheiten":null},
+      {l:"Kohlenhydrate",v:clToday?`${clMin}-${clMax} g`:`${Math.round(+calc?.carbsG||0)} g`,s:clToday?"Carb-Loading":null},
+      {l:"Protein",v:`${pMin}-${pMax} g`},
+      {l:"Trinken",v:`${((+calc?.waterMl||0)/1000).toFixed(1)} L`,s:"über den Tag"},
+      naNeeded?{l:"Natrium unterwegs",v:`${naInH} mg/h`,s:sc2?name1:null}
+        :sc2?.naNeeded?{l:"Natrium unterwegs",v:`${sc2.naInH} mg/h`,s:`2. Einheit · ${name2}`}
+        :{l:"Natrium unterwegs",v:"nicht nötig",s:"Verlust gleicht das Essen aus"},
+    ]:[];
+    const fuelRows=tdyT?[
+      {k:"f1",t:sc2?`1. Einheit · ${name1}`:name1,f:fuel1,carbs:carbs1,lo:flLo,hi:flHi},
+      ...(sc2?[{k:"f2",t:`2. Einheit · ${name2}`,f:fuel2,carbs:carbs2,lo:fl2Lo,hi:fl2Hi}]:[]),
+    ]:[];
+    const backToWeek=()=>{ const st=UI_STATE.today; if(st){ st.active=false; todaySave(st); } refreshView(); window.scrollTo({top:0,behavior:"instant"}); };
+
     const PLAN=[
       {s:wake,time:hm(wake),phase:"Aufwachen",items:[
         {label:"Wasser",detail:"500ml direkt nach dem Aufstehen - Rehydration nach 7-8h Schlaf"},
       ]},
       ...mealBlocks,
       {s:preStart,time:span(preStart,ts),phase:"Pre-Workout",items:preItems},
-      {s:ts,time:span(ts,te),phase:"Training",hl:true,items:[
+      {s:ts,time:span(ts,te),phase:sc2?`1. Einheit · ${name1}`:"Training",hl:true,items:[
         {label:naNeeded?"Wasser + Elektrolyte":"Wasser",detail:`${flLo}-${flHi}ml/h - dein Schweissverlust liegt bei ca. ${rateLh.toFixed(1)}L/h`},
         // Natrium: Zufuhr und Verlust getrennt. Zufuhr erst ab mehr als 2 h oder mehr als 1.2 L Schweiss pro Stunde
         naNeeded
           ?{label:`Natrium-Zufuhr ca. ${naInH}mg/h`,detail:`Elektrolyt-Tab oder Drink Mix. Dein Verlust liegt bei ca. ${naH}mg/h - ersetzt wird etwas mehr als die Hälfte.`}
           :{label:"Natrium",detail:`Bei dieser Einheit keine Zufuhr nötig. Deinen Verlust (ca. ${naH}mg/h) gleicht das nächste Essen aus.`},
         ...(isEndurance&&activeDuration>60&&carbsH>0?[{label:"Kohlenhydrate",detail:`${carbsH}g/h ab Minute 30 - Gels oder Drink Mix`}]:[]),
+        ...(fuel1?[{label:"Mitnehmen",detail:fuel1.text}]:[]),
       ]},
       {s:te,time:span(te,postEnd),phase:merged?`Post-Workout & ${merged.meal}`:"Post-Workout",items:postItems.filter(Boolean)},
+      ...(sc2?[{s:ts2,time:span(ts2,te2),phase:`2. Einheit · ${name2}`,hl:true,items:[
+        {label:"Vorher",detail:"300-500ml Wasser, bei Bedarf ein kleiner Snack mit Kohlenhydraten (z. B. Banane)"},
+        {label:sc2.naNeeded?"Wasser + Elektrolyte":"Wasser",detail:`${fl2Lo}-${fl2Hi}ml/h - dein Schweissverlust liegt bei ca. ${sc2.rateLh.toFixed(1)}L/h`},
+        sc2.naNeeded
+          ?{label:`Natrium-Zufuhr ca. ${sc2.naInH}mg/h`,detail:`Elektrolyt-Tab oder Drink Mix. Dein Verlust liegt bei ca. ${sc2.naH}mg/h - ersetzt wird etwas mehr als die Hälfte.`}
+          :{label:"Natrium",detail:`Bei dieser Einheit keine Zufuhr nötig. Deinen Verlust (ca. ${sc2.naH}mg/h) gleicht das nächste Essen aus.`},
+        ...(carbs2>0?[{label:"Kohlenhydrate",detail:`${carbs2}g/h ab Minute 30 - Gels oder Drink Mix`}]:[]),
+        {label:"Mitnehmen",detail:fuel2.text},
+        {label:"Danach",detail:`${Math.round(pMin*0.25)}-${Math.round(pMax*0.25)}g Protein und 30-50g Kohlenhydrate innerhalb von 60 min`},
+      ]}]:[]),
       {s:bed-60,time:span(bed-60,bed),phase:"Vor dem Schlafen",items:[
         pregCare?null:{label:"Magnesium Bisglycinate",detail:`${mgDose}mg (Supplement-Dosis) - 1h vor dem Schlafen. Für deine Muskeln: Magnesium trägt zu einer normalen Muskelfunktion bei`},
         ashwaItem,
@@ -7966,8 +8427,37 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         )}
 
+        {/* «Heute»: Plan für genau diesen Tag statt Umschalter, die Zeitachse darunter wie gewohnt */}
+        {tdy&&(
+          <div id="treyn-today-plan" style={{marginBottom:16}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap",marginBottom:4}}>
+              <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.01em"}}>Dein Plan für heute</div>
+              <button type="button" onClick={backToWeek} style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap"}}>Zurück zum Wochenplan</button>
+            </div>
+            <div style={{fontSize:12,color:C.g600,lineHeight:1.6,overflowWrap:"anywhere"}}>{tdy.rest?(restClUp?"Ruhetag - Carb-Loading vor dem Rennen, darum mehr Kalorien.":"Ruhetag - weniger Kalorien, mehr Regeneration."):`${todaySummary(todaySt,todaySports,sportData)} · personalisiert auf ${w}kg`}</div>
+            {tdyT&&(<>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(130px,1fr))",gap:8,marginTop:12}}>
+                {todayTiles.map(t=>(
+                  <div key={t.l} style={{background:C.white,border:"1px solid #E8E8E8",borderRadius:12,padding:"12px 14px",minWidth:0}}>
+                    <div style={{fontSize:11,fontWeight:500,color:C.g400,marginBottom:4,overflowWrap:"anywhere"}}>{t.l}</div>
+                    <div style={{fontSize:18,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1.2,overflowWrap:"anywhere"}}>{t.v}</div>
+                    {t.s&&<div style={{fontSize:10,color:C.g400,marginTop:3,overflowWrap:"anywhere"}}>{t.s}</div>}
+                  </div>
+                ))}
+              </div>
+              {fuelRows.map(r=>(
+                <div key={r.k} style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"12px 14px",marginTop:8}}>
+                  <div style={{fontSize:11,fontWeight:600,color:"#4A7000",marginBottom:3,overflowWrap:"anywhere"}}>{`Unterwegs · ${r.t}`}</div>
+                  <div style={{fontSize:14,fontWeight:600,color:C.black,lineHeight:1.4,overflowWrap:"anywhere"}}>{r.f.text}</div>
+                  <div style={{fontSize:11,color:C.g600,lineHeight:1.55,marginTop:3}}>{r.carbs>0?`${r.carbs}g Kohlenhydrate pro Stunde ab Minute 30, dazu ${r.lo}-${r.hi}ml pro Stunde trinken.`:`${r.lo}-${r.hi}ml pro Stunde trinken. Kohlenhydrate brauchst du bei dieser Einheit unterwegs nicht.`}</div>
+                </div>
+              ))}
+            </>)}
+          </div>
+        )}
+
         {/* Sport + Lange Einheit + Ruhetag Switcher */}
-        <div style={{marginBottom:16}}>
+        {!tdy&&<div style={{marginBottom:16}}>
           <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
             {allSports.map(s=>{
               const label=SPORT_GROUPS.find(g=>g.id===s)?.label||s;
@@ -7998,7 +8488,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             {isRestDay?"Ruhetag · Regeneration & Ernährung":`${isLongDay?"Lange Einheit":"Tagesplan"} · ${sportLabel} · ${activeIntensity==="high"||activeIntensity==="competition"?"Intensiv":activeIntensity==="low"?"Leicht":"Mittel"} · ${isLongDay?fmtDurMin(activeDuration):`${activeDuration}min`}`}
           </div>
           <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?(restClUp?"Kein Training heute - Carb-Loading vor dem Rennen, darum mehr Kalorien.":"Weniger Kalorien, mehr Regeneration - kein Training heute."):`${isLongDay?"Dein Tag mit der längsten Einheit: Kohlenhydrate, Trinken und Kalorien sind auf diese Dauer gerechnet. ":""}${longMoved?`Personalisiert auf ${w}kg. Mit deinem ${TIME_LABEL} wärst du erst spät fertig - Beispiel mit Start um 08:00.`:knownTime?`Personalisiert auf ${w}kg, ${TIME_LABEL}.`:isLongDay?`Personalisiert auf ${w}kg. Keine feste Trainingszeit angegeben - Beispiel mit Start um 08:00.`:`Personalisiert auf ${w}kg. Keine feste Trainingszeit angegeben - Beispiel mit Training um 17:00.`}`}</div>
-        </div>
+        </div>}
 
         {/* Ruhetag Plan */}
         {isRestDay&&(
@@ -8105,8 +8595,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         </div>
         )}
 
-        {/* Daily summary - only on training day */}
-        {!isRestDay&&<div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginTop:8}}>
+        {/* Daily summary - only on training day (Heute: Kacheln oben) */}
+        {!isRestDay&&!tdy&&<div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"14px 16px",marginTop:8}}>
           <div style={{fontSize:12,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:10}}>Tagesziele</div>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:8}}>
             {[
@@ -8123,6 +8613,13 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
           {clKcalUp&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:10,textAlign:"center"}}>Heute liegen deine Kalorien höher: Carb-Loading vor dem Rennen.</div>}
         </div>}
+        {/* «Heute»: zurück zum gewohnten Wochenplan (Angaben bleiben für heute gespeichert) */}
+        {tdy&&(
+          <button type="button" onClick={backToWeek}
+            style={{width:"100%",minHeight:44,marginTop:16,borderRadius:12,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+            Zurück zum Wochenplan
+          </button>
+        )}
       </div>
     );
   };
@@ -9226,6 +9723,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           )}
           {deficitPauseHint&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:8}}>{deficitPauseHint}</div>}
         </div>
+
+        {/* ── TRAININGSRECHNER «HEUTE»: springt in den Plan-Reiter und öffnet die Karte ── */}
+        <button type="button" onClick={()=>{ UI_STATE.openToday=true; UI_STATE.activeSection="plan"; setTab("plan"); }}
+          style={{display:"flex",alignItems:"center",gap:12,width:"100%",textAlign:"left",background:C.black,color:C.white,border:"none",borderRadius:14,padding:"14px 16px",marginBottom:20,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          <span style={{width:40,height:40,borderRadius:11,background:C.neon,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>
+          </span>
+          <span style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2}}>
+            <span style={{fontSize:15,fontWeight:600,lineHeight:1.3}}>Was trainierst du heute?</span>
+            <span style={{fontSize:12,color:C.g300,lineHeight:1.4}}>Plan für genau diesen Tag</span>
+          </span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.neon} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
 
         {/* ── BASIC: 4 offene Basiswerte + eine Upgrade-Karte ── */}
         {!isPro&&(<>
@@ -11179,10 +11689,17 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {tab==="summary"&&<SummaryTab/>}
 
       {/* Plan: Tagesplan / Protokolle / Wettkampf. Basic sieht nur eine unscharfe Vorschau mit Platzhaltern (keine echten Werte im DOM) */}
-      {tab==="plan"&&(isPro?<TagesplanWrapper trainingData={trainingData}/>:(
+      {/* Ganz oben die Karte «Heute» (direkt hier, nicht in einem Reiter: Regler und Auswahl verlieren beim Neuzeichnen den Fokus nicht) */}
+      {tab==="plan"&&(isPro?(<>
+        <TodayCard userSports={todaySports} trainingData={trainingData} sportData={sportData} primarySport={primarySport} isMobile={isMobile}
+          onApply={()=>{ UI_STATE.activeSection="plan"; refreshView(); }} onChange={refreshView}/>
+        <TagesplanWrapper trainingData={trainingData}/>
+      </>):(
         <div>
           <h2 style={h2Style}>Plan</h2>
           <p style={introStyle}>{`Dein Tagesplan mit Supplement-Timing für Trainings- und Ruhetage${hasCompPlan?" und deine Race-Day Strategie":""}.`}</p>
+          <TodayCard userSports={todaySports} trainingData={trainingData} sportData={sportData} primarySport={primarySport} isMobile={isMobile}
+            locked onUpgrade={onUpgrade} priceStr={PRICE_STR}/>
           <BlurGate isPro={false} onUpgrade={onUpgrade} label="Tagesplan mit PRO" priceStr={PRICE_STR} maxHeight={isMobile?560:680}>
             <TagesplanTeaser/>
           </BlurGate>
@@ -11279,7 +11796,8 @@ const loadSavedState=()=>{
     return s&&typeof s==="object"&&!Array.isArray(s)?s:null;
   }catch{ return null; }
 };
-const clearSavedState=()=>{ try{ window.localStorage.removeItem(STATE_KEY); }catch{} };
+// Neu starten löscht auch die Angaben von «Heute» (treyn_today)
+const clearSavedState=()=>{ try{ window.localStorage.removeItem(STATE_KEY); window.localStorage.removeItem(TODAY_KEY); }catch{} };
 
 // ─── ERROR BOUNDARY ────────────────────────────────────────────────────────
 class ErrorBoundary extends React.Component {
