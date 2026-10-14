@@ -871,7 +871,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
   const cur=phases[ph]||{};
 
   const check=<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>;
-  const tile={borderRadius:14,padding:10,background:"rgba(255,255,255,.72)",display:"flex",flexDirection:"column",minWidth:0};
+  const tile={borderRadius:14,padding:10,background:C.white,display:"flex",flexDirection:"column",minWidth:0};
   const small={fontSize:11,color:"rgba(0,0,0,.6)",fontWeight:500};
   const val={fontSize:21,fontWeight:700,letterSpacing:"-.03em",fontVariantNumeric:"tabular-nums",lineHeight:1.2};
   const unit={fontSize:11,color:"rgba(0,0,0,.55)"};
@@ -897,7 +897,6 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Kopf: was TREYN+ ist und drei Schritte */}
         <div style={{display:"flex",flexDirection:"column",gap:12,paddingBottom:10}}>
           <h1 style={{fontSize:34,lineHeight:1.05,fontWeight:700,letterSpacing:"-.03em",margin:0}}>Das bekommst du.</h1>
-          <p style={{fontSize:15,fontWeight:600,lineHeight:1.4,margin:0}}>Was, Wie, Wo und Wann. Volles Verständnis über deine Supplementierung & Training.</p>
           <p style={{fontSize:16,lineHeight:1.5,margin:0}}>TREYN+ rechnet aus deinem Training, deinem Körper und deinem Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente und Sportnahrung, mit Menge und Uhrzeit.</p>
           <div className="dbd-steps" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6}}>
             {[["Angaben machen","Training, Körper, Alltag. Ca. 5 Minuten."],["TREYN+ rechnet","Mit Formeln aus der Sportwissenschaft."],["Dein Plan","Sofort sichtbar. Basic ist kostenlos."]].map(([h,d],i)=>(
@@ -916,12 +915,11 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Karte 1: Bedarf */}
         <article ref={refNeeds} className="dbd-card" style={{background:C.neon}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            <span className="dbd-eye" style={{color:"rgba(0,0,0,.62)"}}>Dein Bedarf</span>
             <h2 className="dbd-h2">Deine Zahlen statt Faustregeln.</h2>
             <p className="dbd-body" style={{color:"rgba(0,0,0,.72)"}}>Wie viel du an einem Trainingstag essen und trinken solltest, hängt von Sportart, Dauer, Intensität, Gewicht und Job ab. TREYN+ rechnet das für dich aus, getrennt für Trainings- und Ruhetage.</p>
           </div>
           <div className="dbd-needs" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6}}>
-            <div style={{gridColumn:"1/-1",borderRadius:14,padding:14,background:C.g100,color:C.black,display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8}}>
+            <div style={{gridColumn:"1/-1",borderRadius:14,padding:14,background:C.white,color:C.black,display:"flex",alignItems:"baseline",justifyContent:"space-between",gap:8}}>
               <span style={{fontSize:13,color:C.g600,fontWeight:500}}>Trainingstag</span>
               <span><span style={{...val,fontSize:34}}><DbdCount to={b.withTraining||0} sep run={vNeeds}/></span> <span style={{fontSize:13,color:C.g600}}>kcal</span></span>
             </div>
@@ -934,7 +932,6 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Karte 2: Tag */}
         <article ref={refDay} className="dbd-card" style={{background:C.g100}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            <span className="dbd-eye" style={{color:"#4A7000"}}>Dein Tag</span>
             <h2 className="dbd-h2">Was, wie viel und wann.</h2>
             <p className="dbd-body" style={{color:C.g600}}>Aus deiner Trainingszeit entsteht ein Tagesplan: wann du isst und trinkst und welche Supplemente du nimmst, jeweils mit Menge und Uhrzeit.</p>
           </div>
@@ -953,7 +950,6 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Karte 3: Lange Einheit */}
         <article ref={refRun} className="dbd-card" style={{background:ONB_SEL,border:"1px solid #E3F5B8"}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            <span className="dbd-eye" style={{color:"#4A7000"}}>Deine lange Einheit</span>
             <h2 className="dbd-h2">Was du unterwegs brauchst.</h2>
             <p className="dbd-body" style={{color:C.g600}}>Auf langen Einheiten und im Rennen zählt, was du unterwegs zu dir nimmst. TREYN+ rechnet für die echte Dauer, wie viele Gels, wie viel Trinken und wie viel Salz du brauchst.</p>
           </div>
@@ -985,7 +981,6 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Karte 4: Saison */}
         <article ref={refSeason} className="dbd-card" style={{background:C.g100}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
-            <span className="dbd-eye" style={{color:"#4A7000"}}>Deine Saison</span>
             <h2 className="dbd-h2">Die Werte gehen mit bis zum Rennen.</h2>
             <p className="dbd-body" style={{color:C.g600}}>Trag deine Rennen ein. TREYN+ erkennt, ob du im Aufbau, im Taper oder in der Rennwoche bist, und passt Kalorien, Kohlenhydrate und Protein automatisch an.</p>
           </div>
@@ -1028,7 +1023,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
 
         {/* Basic / PRO: eigene graue Karte */}
         <section className="dbd-card" style={{background:C.g100}}>
-        <h2 className="dbd-h2">Starte kostenlos. Mit PRO bekommst du alles.</h2>
+        <h2 className="dbd-h2">Starte kostenlos - du kannst jederzeit auf PRO upgraden.</h2>
         <div style={{border:`1px solid ${C.g200}`,borderRadius:18,overflow:"hidden",background:C.white}}>
           <table style={{width:"100%",borderCollapse:"collapse"}}>
             <thead><tr>
