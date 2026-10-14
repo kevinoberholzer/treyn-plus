@@ -786,7 +786,7 @@ function WhyTREYN({onNext}) {
         {/* Key Point 2 - Acid */}
         <div style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:isMobile?"12px 14px":"14px 18px",marginBottom:10}}>
           <div style={{fontSize:11,fontWeight:700,color:"#3A6000",letterSpacing:"-.01em",marginBottom:4}}>
-            Aus 22 Datenpunkten. 50+ Sportdisziplinen. 16 Berechnungsmodelle. MET-2024 Standard.
+            Aus 40+ Datenpunkten. 50+ Sportdisziplinen. 20+ Berechnungsmodelle. MET-2024 Standard.
           </div>
           <div style={{fontSize:12,color:C.g700,lineHeight:1.65}}>
             Erfahre alles über deinen Körper, deine Leistung und optimale Verbrauchswerte. Job-Aktivität, Sonnenlicht, Koffein-Toleranz, Zyklusphase, Schlafqualität - alles einberechnet. Präziser als jede andere Plattform.
@@ -865,7 +865,7 @@ function Intro({onNext, onDemo}) {
   // Zeilen einmal anlegen (gleiche Referenz bei jedem Neuzeichnen, sonst startet der TypeWriter-Takt neu)
   const [DE_LINES]=useState(()=>[
     {text:"Die präziseste Analyse für Vitamine, Supplemente & Sportnahrung. Berechnet aus deinen Daten.",size:27,weight:600,tracking:"-.03em",color:C.black,leading:1.2,mb:6,delay:180},
-    {text:"Die meisten Sportler raten. TREYN+ berechnet und erklärt dir jeden Wert. Aus 50+ Disziplinen · 22 Datenpunkten · 16 Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:1},
+    {text:"Die meisten Sportler raten. TREYN+ berechnet und erklärt dir jeden Wert. Aus 50+ Disziplinen · 40+ Datenpunkten · 20+ Berechnungsmodellen · MET-2024 Standard.",size:13,weight:400,color:C.g800,leading:1.6,mb:24,delay:1},
     {text:"56% aller Sportler haben zu wenig Vitamin D im Blut.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
     {text:"81% der Fussball- und Basketballspieler: Vitamin D-Mangel - obwohl sie regelmässig Sport treiben. (Frontiers in Nutrition, 2021)",size:13,weight:400,color:C.g600,leading:1.65,mb:18,delay:180},
     {text:"Nur 40% der Freizeitsportler supplementieren überhaupt.",size:13,weight:600,color:C.black,leading:1.4,mb:4,highlight:true,delay:220},
@@ -1194,9 +1194,9 @@ const TRANSLATIONS={
     hyd_science:"Wissenschaft",
 
     // COMMON
-    top_pick:"Top Pick",
+    top_pick:"Top Pick · Werbung",
     pro_locked:"PRO",
-    affiliate_badge:"Top Pick",
+    affiliate_badge:"Top Pick · Werbung",
     discover:"Entdecken ↗",
     buy:"Kaufen →",
     more_show:"weitere anzeigen",
@@ -1557,9 +1557,9 @@ const TRANSLATIONS={
     hyd_science:"Science",
 
     // COMMON
-    top_pick:"Top Pick",
+    top_pick:"Top Pick · Ad",
     pro_locked:"PRO",
-    affiliate_badge:"Top Pick",
+    affiliate_badge:"Top Pick · Ad",
     discover:"Discover ↗",
     buy:"Buy →",
     more_show:"show more",
@@ -2133,7 +2133,7 @@ const TRANSLATIONS={
       general_liter:"L",
       general_mg:"mg",
       general_beta:"Beta",
-      general_top_pick:"Top Pick",
+      general_top_pick:"Top Pick · Ad",
       general_recommended:"Recommended",
       general_mandatory:"Essential",
       general_optional:"Optional · useful",
@@ -2474,6 +2474,203 @@ function OnbNav({onBack,onNext,canNext=true,label="Weiter →",hint=null,onBlock
   );
 }
 
+// ─── DATUM, RENNEN & NEUE ANGABEN (gemeinsame Grundlage) ────────────────────
+// Datum immer als lokaler Kalendertag "JJJJ-MM-TT" (keine Verschiebung durch Zeitzonen)
+function isoFromDate(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+function todayISO(){ return isoFromDate(new Date()); }
+function parseISODate(s){
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s||""));
+  if(!m) return null;
+  // setFullYear statt new Date(J,M,T): sonst wird ein Zwischenstand wie "0002-12-20" (beim Tippen der Jahreszahl) zu 1902 und ungültig
+  const d=new Date(2000,0,1);
+  d.setFullYear(+m[1],+m[2]-1,+m[3]);
+  return (d.getFullYear()===+m[1]&&d.getMonth()===+m[2]-1&&d.getDate()===+m[3])?d:null;
+}
+// Ganze Kalendertage von a bis b (b später = positiv), null bei ungültigem Datum
+function daysBetweenISO(a,b){
+  const da=parseISODate(a), db=parseISODate(b);
+  if(!da||!db) return null;
+  return Math.round((Date.UTC(db.getFullYear(),db.getMonth(),db.getDate())-Date.UTC(da.getFullYear(),da.getMonth(),da.getDate()))/86400000);
+}
+function addDaysISO(iso,n){ const d=parseISODate(iso); if(!d) return null; d.setDate(d.getDate()+n); return isoFromDate(d); }
+// "14.02.2027", ohne Jahr "14.02.", mit Wochentag "Sa 14.02.2027"
+function fmtDateCH(iso,{weekday=false,year=true}={}){
+  const d=parseISODate(iso); if(!d) return "";
+  const wd=["So","Mo","Di","Mi","Do","Fr","Sa"][d.getDay()];
+  return `${weekday?wd+" ":""}${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}.${year?d.getFullYear():""}`;
+}
+// Minuten als "3 h 30 min", "4 h" oder "45 min"
+function fmtDurMin(min){
+  const m=Math.max(0,Math.round(+min||0)), h=Math.floor(m/60), r=m%60;
+  if(!h) return `${r} min`;
+  return r?`${h} h ${r} min`:`${h} h`;
+}
+
+// Neue Auswahl-Listen (gespeichert wird die id)
+// Salzränder auf Trikot, Kappe oder Helmriemen: Natrium pro Liter Schweiss x0.7 / x1 / x1.4 (grobe Einordnung, Baker 2017)
+const SALT_STAINS_OPTS=[{id:"never",l:"Nie"},{id:"sometimes",l:"Manchmal"},{id:"often",l:"Oft"},{id:"unknown",l:"Weiss nicht"}];
+const SALT_FACTOR={never:0.7,sometimes:1,often:1.4};
+const CYCLE_STATUS_OPTS=[
+  {id:"regular",   l:"Regelmässig"},
+  {id:"irregular", l:"Unregelmässig"},
+  {id:"absent",    l:"Periode bleibt aus", d:"seit 3 Monaten oder länger"},
+  {id:"pcos",      l:"PCOS",               d:"Polyzystisches Ovarsyndrom"},
+  {id:"menopause", l:"Wechseljahre oder danach"},
+];
+const CONTRACEPTION_OPTS=[
+  {id:"none",         l:"Keine hormonelle"},
+  {id:"pill",         l:"Pille, Ring oder Pflaster"},
+  {id:"hormonal_iud", l:"Hormonspirale, Implantat oder Spritze"},
+  {id:"copper_iud",   l:"Kupferspirale oder -kette"},
+];
+const HORMONAL_CONTRACEPTION=["pill","hormonal_iud"];
+const HEAVY_PERIOD_OPTS=[{id:"no",l:"Nein"},{id:"yes",l:"Ja",d:"z. B. alle 1-2 h wechseln oder länger als 7 Tage"}];
+// Tempo zum Zielgewicht in Anteil des Körpergewichts pro Woche (Garthe 2011: 0.7 % schont die Muskeln; Iraki 2019 für Aufbau)
+// Zielgewicht und aktuelles Gewicht: gleicher Bereich wie die Rechnung (sanitizeBody 35-200 kg)
+const TARGET_KG_MIN=35, TARGET_KG_MAX=200;
+const GOAL_PACE_RATE={weightloss:{slow:0.005,normal:0.007},muscle:{slow:0.0025,normal:0.005}};
+function goalPaceOpts(goal,weightKg){
+  const rates=GOAL_PACE_RATE[goal]; if(!rates) return [];
+  const w=treynNum(weightKg);
+  const kg=(r)=>w?`ca. ${(Math.round(w*r*10)/10).toLocaleString("de-CH")} kg pro Woche`:null;
+  return [{id:"slow",l:"Langsam",d:kg(rates.slow)},{id:"normal",l:"Normal",d:kg(rates.normal)}];
+}
+const BODYFAT_METHOD_OPTS=[{id:"dexa",l:"DEXA-Scan"},{id:"caliper",l:"Caliper (Hautfalten)"},{id:"scale",l:"Waage oder Bioimpedanz"}];
+const SEASON_PHASE_LABEL={base:"Aufbau",build:"Wettkampfvorbereitung",taper:"Taper",race_week:"Rennwoche",race_day:"Renntag",recovery:"Erholung"};
+
+// Zyklusphase aus dem ersten Tag der letzten Periode (Tag 1 = Periodenbeginn).
+// Eisprung ca. 14 Tage vor der nächsten Periode: Periode Tag 1-5, Follikelphase bis Tag L-15, Ovulation Tag L-14 bis L-12, danach Lutealphase.
+// Älter als 3 Zyklen: zu ungenau (stale), dann keine Phase.
+function cycleFromDate(periodStart, cycleLength, today=todayISO()){
+  const L=treynClamp(Math.round(treynNum(cycleLength)||28),21,45);
+  const diff=daysBetweenISO(periodStart,today);
+  if(diff==null||diff<0) return null;
+  if(diff>=3*L) return {stale:true,cycleLength:L,day:null,phase:null,nextPeriod:null};
+  const day=(diff%L)+1;
+  const phase=day<=5?"period":day<L-14?"follikel":day<=L-12?"ovulation":"luteal";
+  return {stale:false,cycleLength:L,day,phase,nextPeriod:addDaysISO(periodStart,(Math.floor(diff/L)+1)*L)};
+}
+
+// Rennen je Sportart: trainingData[sport].races = [{id, date:"JJJJ-MM-TT", name, main, duration}]
+// duration = id aus RACE_DURATION_OPTS oder null (dann gilt die typische Renndauer der Sportart). Höchstens ein Hauptrennen über alle Sportarten.
+const MAX_RACES_PER_SPORT=20;
+function newRaceId(){ return "r"+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+function cleanRaces(list){
+  return (Array.isArray(list)?list:[]).filter(r=>r&&typeof r==="object").slice(0,MAX_RACES_PER_SPORT).map(r=>({
+    id:String(r.id||newRaceId()),
+    date:parseISODate(r.date)?r.date:"",
+    name:String(r.name||"").slice(0,60),
+    main:!!r.main,
+    duration:RACE_DURATION_OPTS.some(o=>o.id===r.duration)?r.duration:null,
+  }));
+}
+// Alle Rennen aller Sportarten mit eingeschaltetem Wettkampf, mit gültigem Datum, nach Datum sortiert, mit daysUntil ab heute
+function allRaces(trainingData, today=todayISO()){
+  const out=[];
+  Object.entries(trainingData||{}).forEach(([sportId,d])=>{
+    if(!d||typeof d!=="object"||String(sportId).startsWith("_")||!d.hasCompetition) return;
+    cleanRaces(d.races).forEach(r=>{ if(r.date) out.push({...r,sportId,daysUntil:daysBetweenISO(today,r.date)}); });
+  });
+  return out.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+}
+// Hauptrennen eindeutig machen: main nur beim Rennen raceId (null = keines), in allen Sportarten
+function setMainRaceAll(trainingData, raceId){
+  const next={...(trainingData||{})}, today=todayISO();
+  Object.keys(next).forEach(id=>{
+    const d=next[id];
+    if(!d||typeof d!=="object"||!Array.isArray(d.races)) return;
+    next[id]={...d,races:d.races.map(r=>(r&&parseISODate(r.date)&&r.date<today&&r.id!==raceId)?r:({...r,main:!!raceId&&r.id===raceId}))};
+  });
+  return next;
+}
+// Zählt nur Hauptrennen, die die Rechnung auch nutzt: Wettkampf eingeschaltet, gültiges Datum, heute oder später
+function isLiveMainRace(d,r,today=todayISO()){ return !!(d&&d.hasCompetition&&r&&r.main&&parseISODate(r.date)&&r.date>=today); }
+function hasMainRace(trainingData){ return Object.values(trainingData||{}).some(d=>d&&Array.isArray(d.races)&&d.races.some(r=>isLiveMainRace(d,r))); }
+// Gibt es in einer ANDEREN Sportart schon ein (zählendes) Hauptrennen?
+function mainRaceElsewhere(trainingData, sportId){ return Object.entries(trainingData||{}).some(([id,d])=>id!==sportId&&d&&Array.isArray(d.races)&&d.races.some(r=>isLiveMainRace(d,r))); }
+// Kurzantwort für eine zugeklappte Zeile: "2 Rennen · Hauptrennen 14.02.2027"
+function raceSummary(races){
+  const list=cleanRaces(races).filter(r=>r.date);
+  if(!list.length) return null;
+  const main=list.find(r=>r.main);
+  return `${list.length} Rennen${main?` · Hauptrennen ${fmtDateCH(main.date)}`:""}`;
+}
+
+// Rennen mit Datum anlegen, ansehen, ändern und löschen (Onboarding, Profil und Wettkampf-Reiter).
+// races = Liste dieser Sportart, onChange(nextList). onMainSet(raceId|null): Eltern setzen das Hauptrennen über alle Sportarten
+// (setMainRaceAll) und nutzen dafür funktionale State-Updates, damit beide Aufrufe in der richtigen Reihenfolge ankommen.
+// mainElsewhere: in einer anderen Sportart ist schon ein Hauptrennen markiert (dann wird ein neues Rennen nicht automatisch Hauptrennen).
+function RaceListEditor({races=[],onChange,onMainSet=null,mainElsewhere=false,defaultDurationLabel=null}) {
+  const list=cleanRaces(races);
+  const today=todayISO();
+  const emit=(next)=>{ if(typeof onChange==="function") onChange(next); };
+  const upd=(rid,patch)=>emit(list.map(r=>r.id===rid?{...r,...patch}:r));
+  const add=()=>{
+    if(list.length>=MAX_RACES_PER_SPORT) return;
+    const makeMain=!mainElsewhere&&!list.some(r=>r.main);
+    const nr={id:newRaceId(),date:"",name:"",main:makeMain,duration:null};
+    emit([...list,nr]);
+    if(makeMain&&typeof onMainSet==="function") onMainSet(nr.id);
+  };
+  const remove=(r)=>{
+    let ok=false;
+    const what=r.name?`«${r.name}»`:r.date?`vom ${fmtDateCH(r.date)}`:"ohne Datum";
+    try{ ok=window.confirm(`Rennen ${what} entfernen? Der Rennplan dazu wird gelöscht.`); }catch{ ok=false; }
+    if(ok) emit(list.filter(x=>x.id!==r.id));
+  };
+  const toggleMain=(r)=>{
+    if(r.main){ emit(list.map(x=>({...x,main:false}))); if(typeof onMainSet==="function") onMainSet(null); return; }
+    emit(list.map(x=>({...x,main:x.id===r.id})));
+    if(typeof onMainSet==="function") onMainSet(r.id);
+  };
+  const lbl={fontSize:12,color:C.g600,fontWeight:500,marginBottom:6};
+  const field={width:"100%",minWidth:0,minHeight:44,padding:"10px 12px",border:`1.5px solid ${C.g200}`,borderRadius:10,fontSize:14,background:C.white,color:C.black,fontFamily:"Inter,sans-serif",boxSizing:"border-box"};
+  // Reihenfolge wie eingetragen (nicht nach Datum sortieren: sonst springt die Karte beim Tippen der Jahreszahl und verliert den Fokus)
+  const sorted=list;
+  return (
+    <div>
+      {sorted.length===0&&<div style={{fontSize:12,color:C.g500,lineHeight:1.5,marginBottom:10}}>Noch kein Rennen eingetragen.</div>}
+      {sorted.map(r=>{
+        const past=!!r.date&&r.date<today;
+        return (
+          <div key={r.id} style={{border:`1px solid ${r.main?C.neon:C.g200}`,background:r.main?ONB_SEL:C.white,borderRadius:12,padding:"12px",marginBottom:8}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(150px,1fr))",gap:8,marginBottom:10}}>
+              <label style={{display:"block",minWidth:0}}>
+                <div style={lbl}>Datum{past?<span style={{color:C.g400,fontWeight:400}}> · vorbei</span>:null}</div>
+                <input type="date" value={r.date} min={addDaysISO(today,-30)} max={addDaysISO(today,730)}
+                  onChange={e=>upd(r.id,{date:parseISODate(e.target.value)?e.target.value:""})} style={field} aria-label="Datum des Rennens"/>
+              </label>
+              <label style={{display:"block",minWidth:0}}>
+                <div style={lbl}>Name <span style={{color:C.g400,fontWeight:400}}>(optional)</span></div>
+                <input type="text" value={r.name} maxLength={60} placeholder="z. B. Engadin Skimarathon"
+                  onChange={e=>upd(r.id,{name:e.target.value})} style={field} aria-label="Name des Rennens"/>
+              </label>
+            </div>
+            <div style={lbl}>Dauer <span style={{color:C.g400,fontWeight:400}}>{defaultDurationLabel?`(optional · sonst ${defaultDurationLabel})`:"(optional)"}</span></div>
+            <div style={{marginBottom:10}}>
+              <OnbChips options={RACE_DURATION_OPTS} isOn={v=>r.duration===v} onPick={v=>upd(r.id,{duration:r.duration===v?null:v})}/>
+            </div>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
+              <OnbChip label="Hauptrennen" multi active={r.main} onClick={()=>toggleMain(r)}/>
+              <button type="button" onClick={()=>remove(r)}
+                style={{minHeight:36,padding:"0 12px",border:`1px solid ${C.g200}`,borderRadius:100,background:C.white,color:C.g600,fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                Entfernen
+              </button>
+            </div>
+          </div>
+        );
+      })}
+      {list.length<MAX_RACES_PER_SPORT&&(
+        <button type="button" onClick={add}
+          style={{width:"100%",minHeight:44,padding:"0 14px",border:`1.5px dashed ${C.g300}`,borderRadius:12,background:C.white,color:C.black,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          + Rennen hinzufügen
+        </button>
+      )}
+      <div style={{fontSize:11,color:C.g500,marginTop:8,lineHeight:1.5}}>Nach deinem Hauptrennen richtet sich die Saisonphase. Jedes Rennen bekommt einen eigenen Rennplan.</div>
+    </div>
+  );
+}
+
 // ─── STEP 1: SPORT ────────────────────────────────────────────────────────────
 
 function StepSport({onNext, initial}) {
@@ -2661,7 +2858,10 @@ function StepTraining({sportData,onNext,onBack,initial}) {
     // Gespeicherte Angaben übernehmen (z. B. nach "Zurück"); neue Sportarten erhalten Standardwerte
     const prev=initial||{};
     const firstPrev=sports.map(id=>prev[id]).find(Boolean)||Object.values(prev)[0]||{};
-    const shared={trainingTimes:Array.isArray(firstPrev.trainingTimes)?firstPrev.trainingTimes:[],sweatRate:firstPrev.sweatRate||"medium"};
+    // Gemeinsame Angaben (gelten für alle Sportarten): Trainingszeit, Schweissrate, Trainingstage insgesamt, Salzränder
+    const dt=treynNum(firstPrev.daysTotal);
+    const shared={trainingTimes:Array.isArray(firstPrev.trainingTimes)?firstPrev.trainingTimes:[],sweatRate:firstPrev.sweatRate||"medium",
+      daysTotal:dt!=null?Math.round(dt):null,saltStains:SALT_STAINS_OPTS.some(o=>o.id===firstPrev.saltStains)?firstPrev.saltStains:null};
     const init={};
     sports.forEach(id=>{init[id]={days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:5,compTypes:[],goal:"performance",...(prev[id]||{}),...shared};});
     return init;
@@ -2686,6 +2886,13 @@ function StepTraining({sportData,onNext,onBack,initial}) {
     return nd;
   });
   const setSweat=(sid)=>setData(d=>{const nd={...d};Object.keys(nd).forEach(id=>{nd[id]={...nd[id],sweatRate:sid}});return nd;});
+  // Gemeinsamer Wert in alle Sportarten schreiben (Trainingstage insgesamt, Salzränder)
+  const setShared=(field,val)=>setData(d=>{const nd={...d};Object.keys(nd).forEach(id=>{nd[id]={...nd[id],[field]:val}});return nd;});
+  // Ø-Dauer ändern: die längste Einheit ist nie kürzer als der Schnitt (sonst wieder "wie Ø")
+  const setDuration=(sportId,v)=>setData(d=>{
+    const cur=d[sportId]||{}; const lm=treynNum(cur.longestMin);
+    return {...d,[sportId]:{...cur,duration:v,...(lm!=null&&lm<=v?{longestMin:null}:{})}};
+  });
 
   const INTENSITY=[
     {id:"low",l:"Leicht",d:"Erholung, Basis"},
@@ -2703,8 +2910,44 @@ function StepTraining({sportData,onNext,onBack,initial}) {
   if(!first?.trainingTimes?.length)missing.push("Trainingszeit");
   if(!first?.sweatRate)missing.push("Schweissrate");
 
-  // Fragen-Zeilen: je Sportart Intensität + Wettkampf-Details + Renndauer, danach die gemeinsamen Fragen
-  const ORDER=[...sports.flatMap(id=>[`${id}-int`,`${id}-comp`,`${id}-race`]),"times","sweat"];
+  // Trainingstage insgesamt (nur bei mehreren Sportarten): von der grössten Einzel-Sportart bis zur Summe, höchstens 7.
+  // Ohne Angabe gilt die Summe (keine Doppeltage).
+  const dayList=sports.map(id=>treynClamp(Math.round(treynNum(data[id]?.days)||1),1,7));
+  const sessionsSum=dayList.reduce((a,b)=>a+b,0);
+  const daysMin=dayList.length?Math.max(...dayList):1;
+  const daysMax=Math.min(7,sessionsSum);
+  const showDays=sports.length>1&&daysMin<daysMax;
+  const rawDays=treynNum(first?.daysTotal);
+  const daysShown=rawDays!=null?treynClamp(Math.round(rawDays),daysMin,daysMax):daysMax;
+  const daysAnswer=(n)=>{ const r=7-n; return `${n} ${n===1?"Tag":"Tage"} · ${r===0?"kein Ruhetag":`${r} ${r===1?"Ruhetag":"Ruhetage"}`}`; };
+  const saltNow=SALT_STAINS_OPTS.some(o=>o.id===first?.saltStains)?first.saltStains:null;
+
+  // Beim Weiter: Werte bereinigen (Tage im gültigen Bereich, längste Einheit nur bei Ausdauer und länger als Ø, Rennen nur mit Datum, ein Hauptrennen)
+  // Rennen ohne gültiges Datum fallen weg. Jahr unter 1900 = Zwischenstand beim Tippen der Jahreszahl (z. B. "0202-12-20").
+  const raceDateOk=(s)=>{ const dd=parseISODate(s); return !!dd&&dd.getFullYear()>=1900&&dd.getFullYear()<=2100; };
+  const finalize=(src)=>{
+    const out={};
+    const daysTotal=showDays&&rawDays!=null&&daysShown<daysMax?daysShown:null;
+    const today=todayISO();
+    const raceMap={};
+    Object.keys(src).forEach(id=>{ raceMap[id]=cleanRaces(src[id]?.races).filter(r=>raceDateOk(r.date)); });
+    // Ein Hauptrennen: zuerst das zählende (Wettkampf an, heute oder später), sonst das erste kommende. Vergangene Hauptrennen bleiben (wie setMainRaceAll).
+    const allR=Object.keys(src).flatMap(id=>raceMap[id].map(r=>({r,d:src[id]})));
+    const keepMain=(allR.find(x=>isLiveMainRace(x.d,x.r,today))||allR.find(x=>x.r.main&&x.r.date>=today))?.r.id||null;
+    Object.keys(src).forEach(id=>{
+      const d=src[id]||{};
+      const dur=treynNum(d.duration)||60;
+      const lm=treynNum(d.longestMin);
+      const races=raceMap[id].map(r=>(r.main&&r.date>=today&&r.id!==keepMain)?{...r,main:false}:r);
+      out[id]={...d,daysTotal,saltStains:saltNow,
+        longestMin:isEnduranceSport(id,sportData)&&lm!=null&&lm>dur?Math.min(720,Math.round(lm)):null,
+        races};
+    });
+    return out;
+  };
+
+  // Fragen-Zeilen: je Sportart längste Einheit + Intensität + Wettkampf-Details + Renndauer + Rennen, danach die gemeinsamen Fragen
+  const ORDER=[...sports.flatMap(id=>[`${id}-long`,`${id}-int`,`${id}-comp`,`${id}-race`,`${id}-races`]),"daysTotal","times","sweat","salt"];
   const missingIds=ORDER.filter(q=>(q==="times"&&!first?.trainingTimes?.length)||(q==="sweat"&&!first?.sweatRate));
   const rows=useOnbRows(ORDER,missingIds);
   const [tried,setTried]=useState(false);
@@ -2730,6 +2973,11 @@ function StepTraining({sportData,onNext,onBack,initial}) {
         const compOpts=compTypes.map(t=>({id:t,l:t}));
         const selTypes=d.compTypes||[];
         const isLast=idx===sports.length-1;
+        const endurance=isEnduranceSport(id,sportData);
+        const lmRaw=treynNum(d.longestMin);
+        const longMin=lmRaw!=null&&lmRaw>d.duration?Math.round(lmRaw):null;
+        const isRace=compLabel.includes("Rennen");
+        const mainElsewhere=mainRaceElsewhere(data,id);
         return (
           <div key={id} style={{...ONB_CARD,marginBottom:10,paddingBottom:4}}>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
@@ -2757,11 +3005,29 @@ function StepTraining({sportData,onNext,onBack,initial}) {
                 <span style={rowLbl}>Durchschnittliche Einheitsdauer (Ø)</span>
                 <span style={{fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{d.duration} min</span>
               </div>
-              <input type="range" min="20" max="360" step="10" value={d.duration} onChange={e=>upd(id,"duration",+e.target.value)} aria-label={`Einheitsdauer ${s?.label||id}`}/>
+              <input type="range" min="20" max="360" step="10" value={d.duration} onChange={e=>setDuration(id,+e.target.value)} aria-label={`Einheitsdauer ${s?.label||id}`}/>
               <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
                 <span style={{fontSize:10,color:C.g400}}>20 min</span><span style={{fontSize:10,color:C.g400}}>6h</span>
               </div>
             </div>
+
+            {/* Längste Einheit pro Woche (nur Ausdauer, optional): Verpflegung auf langen Einheiten. Ohne Angabe gleich wie Ø. */}
+            {endurance&&(
+              <OnbRow {...row(`${id}-long`)} label="Längste Einheit pro Woche" optional
+                sub="Optional · für deine Verpflegung auf langen Einheiten."
+                answer={longMin?fmtDurMin(longMin):"wie Ø"} onDone={()=>rows.finish(`${id}-long`)}>
+                <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:8}}>
+                  <span style={rowLbl}>Längste Einheit</span>
+                  <span style={{fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{fmtDurMin(longMin??d.duration)}</span>
+                </div>
+                <input type="range" min={d.duration} max="600" step="15" value={longMin??d.duration}
+                  onChange={e=>{ rows.hold(); const v=+e.target.value; upd(id,"longestMin",v>d.duration?v:null); }} aria-label={`Längste Einheit pro Woche ${s?.label||id}`}/>
+                <div style={{display:"flex",justifyContent:"space-between",gap:10,marginTop:4,marginBottom:12}}>
+                  <span style={{fontSize:10,color:C.g400}}>{fmtDurMin(d.duration)}</span><span style={{fontSize:10,color:C.g400}}>10 h</span>
+                </div>
+                <OnbChip label="Gleich wie Ø" active={!longMin} onClick={()=>{ upd(id,"longestMin",null); rows.advance(`${id}-long`,false); }}/>
+              </OnbRow>
+            )}
 
             {/* Intensität (Einfachauswahl; springt nur bei der letzten Sportart weiter, damit keine Karte übersprungen wird) */}
             <OnbRow {...row(`${id}-int`)} label="Intensität" optional answer={onbSummary(INTENSITY,d.intensity)}>
@@ -2818,12 +3084,39 @@ function StepTraining({sportData,onNext,onBack,initial}) {
                   onPick={v=>{ upd(id,"raceDuration",d.raceDuration===v?null:v); rows.advance(`${id}-race`,isLast); }}/>
               </OnbRow>
             )}
+
+            {/* Rennen mit Datum (optional, mehrere): Grundlage für Saisonphase und Rennplan. Tippen in den Feldern schliesst die Zeile nicht. */}
+            {d.hasCompetition&&(
+              <OnbRow {...row(`${id}-races`)} label={isRace?"Deine Rennen mit Datum":"Deine Wettkämpfe mit Datum"} optional
+                sub="Optional · mehrere möglich. Daraus berechnen wir deine Saisonphase."
+                answer={raceSummary(d.races)} onDone={()=>rows.finish(`${id}-races`)}>
+                <RaceListEditor races={d.races} onChange={list=>{ rows.hold(); upd(id,"races",list); }}
+                  onMainSet={rid=>setData(dd=>setMainRaceAll(dd,rid))} mainElsewhere={mainElsewhere}
+                  defaultDurationLabel={RACE_DURATION_OPTS.find(o=>o.id===d.raceDuration)?.l||null}/>
+              </OnbRow>
+            )}
           </div>
         );
       })}
 
-      {/* Gemeinsame Fragen: Trainingszeit + Schweissrate */}
+      {/* Gemeinsame Fragen: Trainingstage insgesamt (mehrere Sportarten) + Trainingszeit + Schweissrate + Salzränder */}
       <OnbGroup title={sports.length>1?"Gilt für alle Sportarten":null}>
+        {showDays&&(
+          <OnbRow {...row("daysTotal")} label="Trainingstage insgesamt" optional
+            sub="An wie vielen Tagen pro Woche trainierst du? Zwei Einheiten am selben Tag zählen als ein Tag."
+            answer={daysAnswer(daysShown)} onDone={()=>rows.finish("daysTotal")}>
+            <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:8}}>
+              <span style={rowLbl}>Tage mit Training</span>
+              <span style={{fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{daysShown} {daysShown===1?"Tag":"Tage"}</span>
+            </div>
+            <input type="range" min={daysMin} max={daysMax} step="1" value={daysShown}
+              onChange={e=>{ rows.hold(); const v=+e.target.value; setShared("daysTotal",v>=daysMax?null:v); }} aria-label="Trainingstage insgesamt pro Woche"/>
+            <div style={{display:"flex",justifyContent:"space-between",gap:10,marginTop:4}}>
+              <span style={{fontSize:10,color:C.g400}}>{daysMin} {daysMin===1?"Tag":"Tage"}</span><span style={{fontSize:10,color:C.g400}}>{daysMax} Tage</span>
+            </div>
+            <div style={{fontSize:11,color:C.g500,marginTop:8,lineHeight:1.5}}>{sessionsSum} Einheiten an {daysShown} {daysShown===1?"Tag":"Tagen"} pro Woche.</div>
+          </OnbRow>
+        )}
         <OnbRow {...row("times")} first={sports.length<=1} label="Wann trainierst du meistens?" sub="Beeinflusst Supplement-Timing. Bis zu 2 Zeiten wählbar."
           answer={onbSummary(TIMES,currentTimes)} onDone={()=>rows.finish("times")}>
           <OnbChips options={TIMES} multi isOn={v=>currentTimes.includes(v)} onPick={v=>{ rows.hold(); toggleTime(v); }}/>
@@ -2832,10 +3125,16 @@ function StepTraining({sportData,onNext,onBack,initial}) {
           answer={onbSummary(SWEAT,first?.sweatRate)}>
           <OnbChips options={SWEAT} isOn={v=>first?.sweatRate===v} onPick={v=>{ setSweat(v); rows.advance("sweat"); }}/>
         </OnbRow>
+        {/* Salzränder (optional): Natrium pro Liter Schweiss. Nochmals tippen hebt die Wahl auf. */}
+        <OnbRow {...row("salt")} label="Weisse Salzränder nach dem Sport?" optional
+          sub="Auf Trikot, Kappe oder Helmriemen. Macht deinen Natriumbedarf genauer."
+          answer={onbSummary(SALT_STAINS_OPTS,saltNow)}>
+          <OnbChips options={SALT_STAINS_OPTS} isOn={v=>saltNow===v} onPick={v=>{ setShared("saltStains",saltNow===v?null:v); rows.advance("salt"); }}/>
+        </OnbRow>
       </OnbGroup>
 
       <OnbNav onBack={onBack} canNext={canNext}
-        onNext={()=>{ if(canNext) onNext(data); }}
+        onNext={()=>{ if(canNext) onNext(finalize(data)); }}
         onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }}
         hint={missing.length>0?`Noch ausfüllen: ${missing.join(", ")}`:null}/>
     </OnbShell>
@@ -3016,6 +3315,8 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
     // Gespeicherte Antworten übernehmen (z. B. nach "Zurück")
     const p=initial||{};
     const arr=(v)=>Array.isArray(v)?v:[];
+    const pick=(opts,v)=>opts.some(o=>o.id===v)?v:null;
+    const tw=treynNum(p.targetWeight);
     return {
       goal:p.goal||"",challenges:arr(p.challenges).slice(0,3),injuries:arr(p.injuries),
       stressLevel:p.stressLevel??null,dietQuality:p.dietQuality??null,altitude:p.altitude??null,
@@ -3023,9 +3324,109 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
       jobActivity:p.jobActivity??null,sleepHours:p.sleepHours!=null?String(p.sleepHours):null,
       waterIntake:p.waterIntake??null,sunExposure:p.sunExposure??null,caffeineDaily:p.caffeineDaily??null,
       cyclePhase:p.cyclePhase??null,bodyComposition:p.bodyComposition??null,
+      // Zyklus (alte Zyklusphase PCOS/Menopause wird nur vorgewählt, solange keine neuen Zyklus-Angaben da sind, wie im Profil)
+      cycleStatus:pick(CYCLE_STATUS_OPTS,p.cycleStatus)||(!p.contraception&&!p.periodStart&&!p.periodUnknown&&!p.heavyPeriod&&["pcos","menopause"].includes(p.cyclePhase)?p.cyclePhase:null),
+      contraception:pick(CONTRACEPTION_OPTS,p.contraception),
+      periodStart:parseISODate(p.periodStart)?p.periodStart:null,
+      periodUnknown:p.periodUnknown===true,
+      cycleLength:treynClamp(Math.round(treynNum(p.cycleLength)||28),21,45),
+      heavyPeriod:pick(HEAVY_PERIOD_OPTS,p.heavyPeriod),
+      // Zielgewicht als Text (Eingabe), beim Weiter als Zahl
+      targetWeight:tw!=null?String(tw):"",
+      goalPace:["slow","normal"].includes(p.goalPace)?p.goalPace:null,
     };
   });
   const set=(k,v)=>setForm(f=>({...f,[k]:v}));
+  const today=todayISO();
+
+  // Zyklus-Fragen nur bei Frauen und nie in Schwangerschaft oder Stillzeit
+  const preg=initial?.pregnancy;
+  const showCycle=gender==="f"&&preg!=="pregnant"&&preg!=="breastfeeding";
+  // Sichtbare Zyklus-Zeilen je nach Antworten (f = Formular-Stand)
+  const cycleRows=(f)=>{
+    if(!showCycle) return [];
+    const cs=f.cycleStatus??null;
+    const hormonal=cs!=="menopause"&&HORMONAL_CONTRACEPTION.includes(f.contraception);
+    const q=["cycleStatus"];
+    if(cs!=="menopause") q.push("contraception");
+    // Datum nur, wenn daraus eine Phase entsteht (bei PCOS rechnen wir ohne Phase, wie im Profil)
+    if([null,"regular","irregular"].includes(cs)&&!hormonal) q.push("periodStart");
+    if(cs!=="menopause"&&cs!=="absent") q.push("heavyPeriod");
+    return q;
+  };
+  const cycAnswered=(f,q)=>q==="periodStart"?(!!f.periodStart||!!f.periodUnknown):f[q]!=null;
+  const cycQ=cycleRows(form);
+  const cs=form.cycleStatus??null;
+  const hormonalNow=cs!=="menopause"&&HORMONAL_CONTRACEPTION.includes(form.contraception);
+  const showLength=cs==null||cs==="regular";
+  // Jahr unter 1900 = Zwischenstand beim Tippen der Jahreszahl (z. B. "0202-10-01"): bleibt im Feld, zählt aber noch nicht
+  const pDate=parseISODate(form.periodStart);
+  const periodReal=!!pDate&&pDate.getFullYear()>=1900;
+  const dateFuture=periodReal&&form.periodStart>today;
+  const sinceDays=periodReal&&!dateFuture?daysBetweenISO(form.periodStart,today):null;
+  const cycNow=periodReal&&!form.periodUnknown&&!dateFuture?cycleFromDate(form.periodStart,form.cycleLength,today):null;
+  const PHASE_LBL={period:"Periode",follikel:"Follikelphase",ovulation:"Eisprung",luteal:"Lutealphase"};
+  // Live-Zeile unter dem Datum (gleiche Regeln wie die Rechnung: unregelmässig nur bis 35 Tage)
+  const cycleLine=(()=>{
+    if(form.periodUnknown||!periodReal) return null;
+    if(dateFuture) return {warn:true,t:"Bitte wähl ein Datum bis heute."};
+    if(!cycNow) return null;
+    if(cycNow.stale||((cs==="irregular"||cs==="pcos")&&sinceDays>35)) return {warn:true,t:"Das Datum ist länger her. Trag am besten deine letzte Periode ein."};
+    if(cs==="pcos") return {t:`Heute: Tag ${sinceDays+1} seit Beginn deiner letzten Periode`};
+    return {t:`Heute: ${PHASE_LBL[cycNow.phase]||""}, Tag ${cycNow.day}`};
+  })();
+  const periodAnswer=form.periodUnknown?"Weiss ich nicht":dateFuture?`${fmtDateCH(form.periodStart)} · nicht berücksichtigt`:periodReal?`${fmtDateCH(form.periodStart)}${showLength?` · ${form.cycleLength} Tage`:""}`:"";
+
+  // Zielgewicht (nur bei Gewicht reduzieren / Muskelaufbau); Gewicht und Grösse kommen aus dem Schritt davor
+  const TARGET_GOALS=["weightloss","muscle"];
+  const showTarget=TARGET_GOALS.includes(form.goal);
+  // Gleicher Bereich wie Rechnung und Profil (35-200 kg); liegt das aktuelle Gewicht ausserhalb, rechnen wir ohne Zielgewicht
+  const wIn=treynNum(initial?.weight);
+  const wOut=wIn!=null&&(wIn<TARGET_KG_MIN||wIn>TARGET_KG_MAX);
+  const wCur=wIn!=null&&!wOut?wIn:null;
+  let hCm=treynNum(initial?.height); if(hCm!=null&&hCm>=1.2&&hCm<=2.3) hCm*=100;
+  const fmtKg=(n)=>(Math.round(n*10)/10).toLocaleString("de-CH");
+  const tNum=treynNum(form.targetWeight);
+  const tRange=tNum!=null&&tNum>=TARGET_KG_MIN&&tNum<=TARGET_KG_MAX;
+  const tDirOk=tRange&&wCur!=null&&(form.goal==="weightloss"?tNum<wCur:form.goal==="muscle"?tNum>wCur:false);
+  const tTooLow=tDirOk&&form.goal==="weightloss"&&hCm>=120&&hCm<=230&&tNum/((hCm/100)**2)<18.5;
+  const tUsable=tDirOk&&!tTooLow;
+  const paceNow=form.goalPace||"normal";
+  const tDigits=String(form.targetWeight||"").replace(/[^0-9]/g,"").length;
+  const tHint=(()=>{
+    if(tNum==null) return null;
+    if(!tRange) return (tNum>TARGET_KG_MAX||tDigits>=2)?`Bitte ein Gewicht von ${TARGET_KG_MIN}-${TARGET_KG_MAX} kg eingeben.`:null;
+    if(wCur==null) return "Ohne dein aktuelles Gewicht können wir das Ziel nicht berücksichtigen.";
+    if(form.goal==="weightloss"&&tNum>=wCur) return `Für «Gewicht reduzieren» muss das Ziel unter deinem aktuellen Gewicht liegen (${fmtKg(wCur)} kg).`;
+    if(form.goal==="muscle"&&tNum<=wCur) return `Für «Muskelaufbau» muss das Ziel über deinem aktuellen Gewicht liegen (${fmtKg(wCur)} kg).`;
+    if(tTooLow) return "Dieses Ziel liegt unter dem gesunden Bereich. Wir rechnen deshalb nicht damit.";
+    return null;
+  })();
+  const tAnswer=(tNum==null||wOut)?"":tUsable?`${fmtKg(tNum)} kg · ${paceNow==="slow"?"langsam":"normal"}`:`${fmtKg(tNum)} kg · nicht berücksichtigt`;
+  const inp=(ok,bad)=>({width:"100%",minWidth:0,minHeight:44,padding:"11px 13px",border:`1.5px solid ${bad?C.orange:ok?C.neon:C.g200}`,borderRadius:10,fontSize:14,background:ok&&!bad?ONB_SEL:C.white,color:C.black,fontFamily:"Inter,sans-serif",boxSizing:"border-box"});
+
+  // Beim Weiter: verdeckte oder ungültige Angaben leeren, damit nur sichtbare Antworten in die Rechnung gehen
+  const buildOut=()=>{
+    const out={...form};
+    if(showCycle){
+      const vis=cycleRows(form);
+      const dateOk=vis.includes("periodStart")&&!form.periodUnknown&&periodReal&&form.periodStart<=today;
+      out.contraception=vis.includes("contraception")?form.contraception:null;
+      out.periodStart=dateOk?form.periodStart:null;
+      out.periodUnknown=vis.includes("periodStart")&&form.periodUnknown?true:(dateOk?false:null);
+      out.heavyPeriod=vis.includes("heavyPeriod")?form.heavyPeriod:null;
+      out.cycleLength=treynClamp(Math.round(treynNum(form.cycleLength)||28),21,45);
+      // Alte Zyklusphase nur als Rückfall, solange keine neue Zyklus-Angabe gesetzt ist. PCOS und Wechseljahre stecken in «Dein Zyklus»:
+      // dort abgewählt, sind sie auch für die Rechnung weg.
+      const anyNew=!!out.cycleStatus||!!out.contraception||!!out.periodStart||out.periodUnknown===true||!!out.heavyPeriod;
+      out.cyclePhase=!anyNew&&form.cyclePhase&&!["pcos","menopause"].includes(form.cyclePhase)?form.cyclePhase:null;
+    } else {
+      Object.assign(out,{cycleStatus:null,contraception:null,periodStart:null,periodUnknown:null,cycleLength:null,heavyPeriod:null});
+    }
+    out.targetWeight=showTarget&&tDirOk?Math.round(tNum*10)/10:null;
+    out.goalPace=out.targetWeight!=null?paceNow:null;
+    return out;
+  };
 
   const valid=form.goal&&form.stressLevel&&form.dietQuality&&form.altitude&&form.recoveryStatus&&form.currentSupps.length>0&&form.medications.length>0&&form.jobActivity;
 
@@ -3073,14 +3474,6 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
   ];
   const SLEEP=[{id:"5",l:"≤ 5h"},{id:"6",l:"6h"},{id:"7",l:"7h"},{id:"8",l:"8h+"}];
   const RECOVERY=[{id:"excellent",l:"Top-Form"},{id:"good",l:"Normal"},{id:"tired",l:"Akkumulierte Müdigkeit"},{id:"recovery",l:"Verletzung / Pause"}];
-  const CYCLE=[
-    {id:"follikel",  l:"Follikelphase",    d:"Tag 6-13 - nach der Periode, mehr Energie"},
-    {id:"ovulation", l:"Ovulation",        d:"Tag 14-16 - Hochform, Peak-Performance"},
-    {id:"luteal",    l:"Lutealphase",      d:"Tag 17-28 - mehr Hunger, mehr Magnesium"},
-    {id:"period",    l:"Periode",          d:"Tag 1-5 - höchster Eisenverlust, mehr Bedarf"},
-    {id:"pcos",      l:"PCOS",             d:"Polyzystisches Ovarsyndrom"},
-    {id:"menopause", l:"Menopause / Post", d:"Andere Hormonlage"},
-  ];
   const DIET=[{id:"excellent",l:"Sehr ausgewogen"},{id:"good",l:"Gut"},{id:"average",l:"Durchschnittlich"},{id:"poor",l:"Verbesserungswürdig"}];
   const WATER=[{id:"low",l:"< 1L"},{id:"medium",l:"1-2L"},{id:"good",l:"2-3L"},{id:"high",l:"> 3L"}];
   const CAFFEINE=[{id:"none",l:"Kein Koffein"},{id:"low",l:"1-2 Tassen Kaffee"},{id:"medium",l:"3-4 Tassen"},{id:"high",l:"> 4 Tassen"}];
@@ -3088,8 +3481,8 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
   const SUPPS=[{id:"none",l:"Keine"},{id:"kreatin",l:"Kreatin"},{id:"protein",l:"Protein / Whey"},{id:"vitd",l:"Vitamin D"},{id:"omega3",l:"Omega-3"},{id:"magnesium",l:"Magnesium"},{id:"koffein",l:"Koffein / Pre-WO"},{id:"eisen",l:"Eisen"},{id:"zink",l:"Zink"},{id:"ashwa",l:"Ashwagandha"},{id:"collagen",l:"Kollagen"},{id:"beta_ala",l:"Beta-Alanin"}];
   const MEDS=[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"},{id:"niere",l:"Nierenerkrankung"}];
 
-  // Reihenfolge der Fragen-Zeilen (Zyklusphase nur bei Frauen) und welche davon Pflicht sind
-  const ORDER=["goal","challenges","job","stress","altitude","sun","body","sleep","recovery",...(gender==="f"?["cycle"]:[]),"diet","water","caffeine","injuries","supps","meds"];
+  // Reihenfolge der Fragen-Zeilen (Zielgewicht nur bei Abnehmen/Muskelaufbau, Zyklus nur bei Frauen) und welche davon Pflicht sind
+  const ORDER=["goal",...(showTarget?["target"]:[]),"challenges","job","stress","altitude","sun","body","sleep","recovery",...cycQ,"diet","water","caffeine","injuries","supps","meds"];
   const REQ_MISSING={
     goal:!form.goal, job:!form.jobActivity, stress:!form.stressLevel, altitude:!form.altitude,
     recovery:!form.recoveryStatus, diet:!form.dietQuality,
@@ -3099,6 +3492,53 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
   const missingIds=ORDER.filter(q=>REQ_MISSING[q]);
   const rows=useOnbRows(ORDER,missingIds);
   const [tried,setTried]=useState(false);
+
+  // Nach einer Wahl kurz zeigen, dann eine bestimmte Folgefrage öffnen (nx); ohne nx wie gewohnt zur nächsten Pflicht-Frage.
+  // Hat man inzwischen selbst eine andere Zeile geöffnet, passiert nichts.
+  const chainT=useRef(null);
+  const openRef=useRef(null);
+  useEffect(()=>{ openRef.current=rows.openId; });
+  useEffect(()=>()=>{ if(chainT.current) clearTimeout(chainT.current); },[]);
+  const stopChain=()=>{ if(chainT.current){ clearTimeout(chainT.current); chainT.current=null; } };
+  const goOn=(fromId,nx,now=false)=>{
+    stopChain();
+    if(!nx){ if(now) rows.finish(fromId); else rows.advance(fromId); return; }
+    if(now){ rows.reveal(nx); return; }
+    rows.hold();
+    chainT.current=setTimeout(()=>{ chainT.current=null; if(openRef.current===fromId) rows.reveal(nx); },180);
+  };
+  // Nächste noch offene Zyklus-Frage nach fromId (mit dem neuen Formular-Stand f)
+  const nextCycleQ=(fromId,f)=>{ const q=cycleRows(f); return q.slice(q.indexOf(fromId)+1).find(x=>!cycAnswered(f,x))||null; };
+  // Zyklus-Chips: Einfachauswahl, nochmal tippen wählt ab
+  const pickCycle=(qid,v)=>{
+    const nv=form[qid]===v?null:v;
+    const nf={...form,[qid]:nv};
+    set(qid,nv);
+    stopChain();
+    if(nv==null){ rows.hold(); return; }
+    // Periode bleibt aus (ohne hormonelle Verhütung): Zeile bleibt offen, damit der Hinweis sichtbar ist
+    if(qid==="cycleStatus"&&nv==="absent"&&!HORMONAL_CONTRACEPTION.includes(nf.contraception)){ rows.hold(); return; }
+    goOn(qid,nextCycleQ(qid,nf));
+  };
+  const cycleChips=(qid,list,label,sub,extra=null)=>(
+    <OnbRow qid={qid} label={label} sub={sub} optional
+      answer={onbSummary(list,form[qid])} open={rows.openId===qid} onToggle={()=>{ stopChain(); rows.toggle(qid); }}>
+      <OnbChips options={list} isOn={v=>form[qid]===v} onPick={v=>pickCycle(qid,v)}/>
+      {extra}
+    </OnbRow>
+  );
+  // Periodenbeginn: Datum wählen oder "Weiss ich nicht"
+  const setPeriodDate=(v)=>{
+    stopChain(); rows.hold();
+    const ok=!!parseISODate(v);
+    setForm(f=>({...f,periodStart:ok?v:null,periodUnknown:ok?false:f.periodUnknown}));
+  };
+  const togglePeriodUnknown=()=>{
+    if(form.periodUnknown){ set("periodUnknown",false); stopChain(); rows.hold(); return; }
+    const nf={...form,periodUnknown:true,periodStart:null};
+    setForm(f=>({...f,periodUnknown:true,periodStart:null}));
+    goOn("periodStart",nextCycleQ("periodStart",nf));
+  };
 
   // Einfachauswahl: speichern, kurz zeigen, dann zur nächsten offenen Pflicht-Frage
   const single=(qid,key,list,label,sub)=>(
@@ -3135,7 +3575,39 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
       <OnbTitle title="Dein Lebensstil." sub="Damit wir deine Empfehlungen wirklich präzise auf dich zuschneiden können."/>
 
       <OnbGroup title="Ziel und Alltag">
-        {single("goal","goal",GOALS,"Primäres Ziel")}
+        {/* Ziel: bei Abnehmen oder Muskelaufbau öffnet sich danach das Zielgewicht (optional) */}
+        <OnbRow qid="goal" label="Primäres Ziel" warn={tried}
+          answer={onbSummary(GOALS,form.goal)} open={rows.openId==="goal"} onToggle={()=>{ stopChain(); rows.toggle("goal"); }}>
+          <OnbChips options={GOALS} isOn={v=>form.goal!=null&&String(form.goal)===String(v)}
+            onPick={v=>{ set("goal",v); if(TARGET_GOALS.includes(v)&&treynNum(form.targetWeight)==null) goOn("goal","target"); else goOn("goal",null); }}/>
+        </OnbRow>
+
+        {/* Zielgewicht mit Tempo - blockiert "Weiter" nie. Gewicht ausserhalb 35-200 kg: nur ein Hinweis, kein Feld */}
+        {showTarget&&(
+          <OnbRow qid="target" label="Zielgewicht" optional
+            sub={wOut?null:form.goal==="muscle"?"Optional · daraus berechnen wir deinen Kalorienüberschuss.":"Optional · daraus berechnen wir dein Kaloriendefizit."}
+            answer={tAnswer} open={rows.openId==="target"} onToggle={()=>{ stopChain(); rows.toggle("target"); }} onDone={()=>rows.finish("target")}>
+            {wOut?(
+              <div style={{fontSize:12,color:C.g600,lineHeight:1.45}}>Für dieses Gewicht rechnen wir ohne Zielgewicht.</div>
+            ):(<>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              <input type="number" inputMode="decimal" min={TARGET_KG_MIN} max={TARGET_KG_MAX} step="0.1" value={form.targetWeight}
+                onChange={e=>{ stopChain(); rows.hold(); set("targetWeight",e.target.value); }}
+                onKeyDown={e=>{ if(e.key==="Enter"){ e.preventDefault(); rows.finish("target"); } }}
+                placeholder={wCur!=null?`z. B. ${Math.round(form.goal==="muscle"?wCur+3:wCur-5)}`:"z. B. 70"}
+                aria-label="Zielgewicht in Kilogramm" style={{...inp(tUsable,!!tHint),flex:"0 1 160px"}}/>
+              <span style={{fontSize:13,fontWeight:500,color:C.g600}}>kg</span>
+            </div>
+            {tHint&&<div style={{fontSize:11,color:C.orange,marginTop:6,lineHeight:1.45}}>{tHint}</div>}
+            {tUsable&&(
+              <div style={{marginTop:12}}>
+                <div style={{fontSize:12,color:C.g600,fontWeight:500,marginBottom:6}}>Tempo</div>
+                <OnbChips options={goalPaceOpts(form.goal,wCur)} isOn={v=>paceNow===v} onPick={v=>{ stopChain(); rows.hold(); set("goalPace",v); }}/>
+              </div>
+            )}
+            </>)}
+          </OnbRow>
+        )}
 
         {/* Grösste Herausforderung (optional, max 3) */}
         <OnbRow qid="challenges" label="Grösste Herausforderung" optional
@@ -3164,9 +3636,47 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
         {single("body","bodyComposition",BODY,"Körperbau","Selbsteinschätzung - beeinflusst Proteinbedarf")}
         {single("sleep","sleepHours",SLEEP,"Schlafdauer","Durchschnittliche Stunden pro Nacht")}
         {single("recovery","recoveryStatus",RECOVERY,"Aktueller Erholungsstatus","Beeinflusst Recovery-Priorität und Magnesiumbedarf.")}
-        {/* ZYKLUS - nur bei Frauen */}
-        {gender==="f"&&single("cycle","cyclePhase",CYCLE,"Aktuelle Zyklusphase","Beeinflusst Eisen-, Magnesium- und Kalorienbedarf stark - kann jederzeit im Profil angepasst werden")}
       </OnbGroup>
+
+      {/* ZYKLUS - nur bei Frauen, nie in Schwangerschaft/Stillzeit; alle Fragen optional, Folgefragen je nach Antwort */}
+      {showCycle&&(
+        <OnbGroup title="Zyklus">
+          {cycleChips("cycleStatus",CYCLE_STATUS_OPTS,"Dein Zyklus","Macht Kalorien, Eisen und Magnesium genauer.",
+            cs==="absent"&&!hormonalNow?(
+              <div style={{marginTop:10,padding:"10px 12px",background:C.off,borderRadius:10,fontSize:12,color:C.g700,lineHeight:1.5}}>
+                Bleibt deine Periode länger aus, kann das ein Zeichen für zu wenig Energie sein. Sprich bitte mit deiner Ärztin oder deinem Arzt.
+              </div>
+            ):null)}
+          {cycQ.includes("contraception")&&cycleChips("contraception",CONTRACEPTION_OPTS,"Verhütung","Mit Pille oder Hormonspirale rechnen wir ohne Zyklus-Zuschläge.")}
+          {cycQ.includes("periodStart")&&(
+            <OnbRow qid="periodStart" label="Erster Tag deiner letzten Periode" sub="Daraus berechnen wir deine Zyklusphase jeden Tag neu." optional
+              answer={periodAnswer} open={rows.openId==="periodStart"} onToggle={()=>{ stopChain(); rows.toggle("periodStart"); }}
+              onDone={()=>goOn("periodStart",nextCycleQ("periodStart",form),true)}>
+              <div style={{display:"flex",flexWrap:"wrap",alignItems:"center",gap:8}}>
+                <input type="date" value={form.periodStart||""} min={addDaysISO(today,-90)} max={today}
+                  onChange={e=>setPeriodDate(e.target.value)} aria-label="Erster Tag deiner letzten Periode"
+                  style={{...inp(periodReal&&!cycleLine?.warn,!!cycleLine?.warn),flex:"1 1 170px",width:"auto",display:"block"}}/>
+                <OnbChip label="Weiss ich nicht" active={!!form.periodUnknown} onClick={togglePeriodUnknown}/>
+              </div>
+              {showLength&&!form.periodUnknown&&(
+                <div style={{marginTop:14}}>
+                  <div style={{display:"flex",justifyContent:"space-between",gap:10,marginBottom:8}}>
+                    <span style={{fontSize:12,color:C.g600,fontWeight:500}}>Zykluslänge ca.</span>
+                    <span style={{fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{form.cycleLength} Tage</span>
+                  </div>
+                  <input type="range" min="21" max="45" step="1" value={form.cycleLength}
+                    onChange={e=>{ stopChain(); rows.hold(); set("cycleLength",treynClamp(Math.round(+e.target.value||28),21,45)); }} aria-label="Zykluslänge in Tagen"/>
+                  <div style={{display:"flex",justifyContent:"space-between",marginTop:4}}>
+                    <span style={{fontSize:10,color:C.g400}}>21 Tage</span><span style={{fontSize:10,color:C.g400}}>45 Tage</span>
+                  </div>
+                </div>
+              )}
+              {cycleLine&&<div style={{fontSize:12,fontWeight:cycleLine.warn?400:500,color:cycleLine.warn?C.orange:"#3A6000",marginTop:10,lineHeight:1.45}}>{cycleLine.t}</div>}
+            </OnbRow>
+          )}
+          {cycQ.includes("heavyPeriod")&&cycleChips("heavyPeriod",HEAVY_PERIOD_OPTS,"Starke Periode?","Wichtig für deinen Eisenbedarf.")}
+        </OnbGroup>
+      )}
 
       <OnbGroup title="Essen und Trinken">
         {single("diet","dietQuality",DIET,"Ernährung","Wie ausgewogen isst du im Alltag?")}
@@ -3186,7 +3696,7 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
       </OnbGroup>
 
       <OnbNav onBack={onBack} canNext={!!valid}
-        onNext={()=>{ if(valid) onNext(form); }}
+        onNext={()=>{ if(valid){ stopChain(); onNext(buildOut()); } }}
         onBlocked={()=>{ setTried(true); rows.reveal(missingIds[0]); }}
         hint={!valid&&missingLs.length>0?`Noch ausfüllen: ${missingLs.join(" · ")}`:null}/>
     </OnbShell>
@@ -3476,6 +3986,26 @@ function getSportMetTable(parentId, sportDataRef){
   return sub?.met || SPORT_MET[parentId] || SPORT_MET.football;
 }
 
+// Lange Einheit als eigener Tag (Tagesplan): Kopie einer Sportart mit Dauer = längste Einheit und 1 Tag.
+// null ohne längere Einheit oder (mit sportId) wenn die Sportart keine Ausdauer ist.
+// Gemessene Wochenwerte (km, kJ) werden auf diese eine Einheit umgerechnet, das Tempo bleibt gleich.
+// Aufruf: calcPro(profilData, {[sid]:longSessionTraining(td, sid, sportData)}, {...sportData, primarySport:sid, raceData:trainingData})
+function longSessionTraining(td, sportId=null, sportDataRef=null){
+  if(!td||typeof td!=="object") return null;
+  if(sportId&&!isEnduranceSport(sportId, sportDataRef)) return null;
+  const dur=treynClamp(treynNum(td.duration)||60,10,720);
+  const lm=treynNum(td.longestMin);
+  if(lm==null) return null;
+  const longMin=treynClamp(Math.round(lm),dur,720);
+  if(longMin<=dur) return null;
+  const daysRaw=treynNum(td.days);
+  const days=daysRaw==null?3:treynClamp(Math.round(daysRaw),0,7);
+  const scale=days>0?longMin/(dur*days):0;
+  const km=treynNum(td.weeklyKm), kj=treynNum(td.weeklyKj);
+  return {...td, duration:longMin, days:1, longestMin:null,
+    weeklyKm:(km!=null&&scale)?km*scale:null, weeklyKj:(kj!=null&&scale)?kj*scale:null};
+}
+
 // Basic = PRO: Grundumsatz und Trainingstag kommen direkt aus calcPro, Basic zeigt nur weniger Werte.
 // Aufruf: calcBasic(profilData, trainingData, healthOnly, sportData). sportData (Unterdisziplin) ist optional,
 // ohne sportData rechnet calcPro mit den MET-Werten der Gruppe. Ein Objekt als 3. Wert gilt als sportData.
@@ -3488,6 +4018,9 @@ function calcBasic(profilData, trainingData, healthOnly, sportData) {
   return {bmr:pro.bmr, withTraining:pro.withTraining, trainingExtra:pro.trainingExtra, waterMl, sessionsPerYear:(+pro.sessionsPerWeek||0)*52};
 }
 
+// sportData: {primarySport, healthOnly, subSel, childSel, raceData}. raceData (Objekt wie trainingData) = Quelle der Rennen für die Saison:
+// Einzelrechnung einer Sportart (Tagesplan) gibt das ganze trainingData mit, damit Phase, Taper und Defizit-Pause gleich bleiben.
+// raceData:{} = ohne Saison (Rennplan im Wettkampf-Reiter). Ohne raceData gelten die Rennen aus trainingData.
 function calcPro(profilData, trainingData, sportData) {
   const healthOnly=!!sportData?.healthOnly;
   const {gender,w,h,age}=sanitizeBody(profilData);
@@ -3519,11 +4052,54 @@ function calcPro(profilData, trainingData, sportData) {
   const caffeineDaily=profilData?.caffeineDaily||"low";
   const bodyComposition=profilData?.bodyComposition||"athletic";
   const cyclePhaseInput=isFemale?(profilData?.cyclePhase||null):null;
+  const today=todayISO();
+  // Zyklus aus Status, Verhütung und erstem Tag der letzten Periode. Ohne diese Angaben gilt die alte Phase (cyclePhase).
+  const cycStatus=CYCLE_STATUS_OPTS.some(o=>o.id===profilData?.cycleStatus)?profilData.cycleStatus:null;
+  const contraception=CONTRACEPTION_OPTS.some(o=>o.id===profilData?.contraception)?profilData.contraception:null;
+  const periodStartOk=!!parseISODate(profilData?.periodStart);
+  const cycleNew=isFemale&&(!!cycStatus||!!contraception||periodStartOk||profilData?.periodUnknown===true||profilData?.heavyPeriod==="yes"||profilData?.heavyPeriod==="no");
   // In Schwangerschaft und Stillzeit gibt es keinen normalen Zyklus
-  const cyclePhase=pregnancyCare?null:cyclePhaseInput;
-  const isMenopause=cyclePhaseInput==="menopause";
+  const hormonalContraception=isFemale&&!pregnancyCare&&HORMONAL_CONTRACEPTION.includes(contraception);
+  let cyclePhase=null, cycleDay=null, cycleLengthUsed=null, cycleNextPeriod=null, cycleSource=null, cycleDateStale=false;
+  let isMenopause=cyclePhaseInput==="menopause";
+  if(cycleNew){
+    isMenopause=cycStatus==="menopause";
+    if(!pregnancyCare){
+      // Reihenfolge: Wechseljahre > hormonelle Verhütung (kein eigener Zyklus) > Periode bleibt aus > PCOS > Datum
+      if(cycStatus==="menopause") cyclePhase="menopause";
+      else if(hormonalContraception) cyclePhase="hormonal";
+      else if(cycStatus==="absent") cyclePhase="absent";
+      else if(cycStatus==="pcos") cyclePhase="pcos";
+      else if(periodStartOk){
+        const cy=cycleFromDate(profilData.periodStart, profilData?.cycleLength, today);
+        if(cy){
+          cycleLengthUsed=cy.cycleLength;
+          // Unregelmässig: Datum nur bis 35 Tage zurück verwenden
+          if(cy.stale||(cycStatus==="irregular"&&daysBetweenISO(profilData.periodStart,today)>35)) cycleDateStale=true;
+          else { cyclePhase=cy.phase; cycleDay=cy.day; cycleNextPeriod=cy.nextPeriod; cycleSource="date"; }
+        }
+      }
+    }
+  } else {
+    cyclePhase=pregnancyCare?null:cyclePhaseInput;
+    cycleSource=cyclePhase?"legacy":null;
+  }
+  // Periode bleibt aus ohne hormonelle Verhütung: mögliches Zeichen für Energiemangel (RED-S), dann kein Abnehm-Defizit
+  const amenorrhea=cyclePhase==="absent";
+  // Starke Periode (oder Kupferspirale): mehr Eisenverlust
+  const heavyPeriod=isFemale&&!pregnancyCare&&!isMenopause&&!amenorrhea&&(profilData?.heavyPeriod==="yes"||contraception==="copper_iud");
+  const heavyPeriodNote=heavyPeriod?"Bei starker Periode verlierst du mehr Eisen. Lass deinen Ferritin-Wert prüfen, bevor du Eisen nimmst.":null;
 
-  const bmr=Math.round(calcBMRfn(gender,w,h,age));
+  // Gemessener Körperfettanteil (DEXA oder Caliper): fettfreie Masse genau, Grundumsatz nach Cunningham 500 + 22 x FFM
+  // (Cunningham 1980, für Sportler am genausten nach Jagim 2018). Waage und Bioimpedanz sind zu ungenau und zählen nicht.
+  const bfPct=treynNum(profilData?.bodyFatPct);
+  const bfMethod=BODYFAT_METHOD_OPTS.some(o=>o.id===profilData?.bodyFatMethod)?profilData.bodyFatMethod:null;
+  const bodyFatMeasured=bfPct!=null&&bfPct>=3&&bfPct<=60&&(bfMethod==="dexa"||bfMethod==="caliper");
+  const bodyFatScaleIgnored=bfMethod==="scale";
+  const ffmMeasured=bodyFatMeasured?w*(1-bfPct/100):null;
+  const bmrMethod=bodyFatMeasured?"cunningham":"mifflin";
+
+  const bmr=Math.round(bodyFatMeasured?500+22*ffmMeasured:calcBMRfn(gender,w,h,age));
 
   // Alltag: Ruhetag = Grundumsatz x PAL je Job (inkl. Nahrungsthermogenese, DACH/FAO)
   const palFactor={sedentary:1.4,light:1.55,moderate:1.7,very_active:1.9}[jobActivity]||1.4;
@@ -3568,14 +4144,14 @@ function calcPro(profilData, trainingData, sportData) {
   const isLean=bodyComposition==="lean";
   const BF_EST={lean:[0.12,0.18],athletic:[0.15,0.22],average:[0.20,0.28],higher_bf:[0.27,0.35]};
   const bodyFatEst=(BF_EST[bodyComposition]||BF_EST.athletic)[isFemale?1:0];
-  const ffmKg=Math.round(w*(1-bodyFatEst)*10)/10; // fettfreie Masse (Schätzung)
+  const ffmKg=Math.round((bodyFatMeasured?ffmMeasured:w*(1-bodyFatEst))*10)/10; // fettfreie Masse (gemessen oder Schätzung)
 
   // Cycle (women only). Lutealphase: Ruheumsatz ca. +3 % (max 100 kcal); Periode: kein kcal-Zuschlag (Benton 2020)
   const isLuteal=cyclePhase==="luteal";
   const isPeriod=cyclePhase==="period";
   const isPCOS=cyclePhase==="pcos";
   const cycleMgBonus=isFemale?(isLuteal?80:isPeriod?60:isPCOS?40:0):0;
-  const cycleIronBoost=isFemale&&(isPeriod||isPCOS);
+  const cycleIronBoost=isFemale&&(isPeriod||isPCOS||heavyPeriod);
   const cycleKcalBonus=isLuteal?Math.min(100,Math.round(bmr*0.03)):0;
 
   // ── SPORTARTEN ───────────────────────────────────────────────────────────
@@ -3593,20 +4169,29 @@ function calcPro(profilData, trainingData, sportData) {
   const sweatOf=(met,liftF,typeF)=>treynClamp(met*w*0.0009*liftF*typeF,0.1,2.0);
   const entries=healthOnly?[]:Object.entries(trainingData||{}).filter(([id,d])=>d&&typeof d==="object"&&!String(id).startsWith("_"));
   const primarySport=healthOnly?null:((sportData?.primarySport&&entries.some(([id])=>id===sportData.primarySport))?sportData.primarySport:(entries[0]?.[0]||sportData?.primarySport||null));
+  // Gemeinsame Angaben stehen auf jeder Sportart: es gilt die erste Sportart mit Wert
+  const sharedVal=(key)=>{ const e=entries.find(([,d])=>d[key]!=null&&d[key]!==""); return e?e[1][key]:null; };
+  // Salzränder: Natrium pro Liter Schweiss x0.7 / x1 / x1.4 (Weiss nicht = x1), begrenzt 300-2000 mg/L
+  const saltStainsIn=sharedVal("saltStains");
+  const saltStains=SALT_STAINS_OPTS.some(o=>o.id===saltStainsIn)?saltStainsIn:null;
+  const saltFactor=SALT_FACTOR[saltStains]||1;
 
   let weekKcal=0, weekSweatL=0, weekNa=0, weekMg=0, compKcalDay=0, weekHours=0, weekCarbF=0;
   // Eisen: Frauen ab Start (Menstruation), nicht nach der Menopause
-  let maxProt=0, ironRisk=isFemale&&!isMenopause, totalDays=0;
+  let maxProt=0, ironRisk=isFemale&&!isMenopause, totalDays=0, maxSingleDays=0;
   let primaryTrainingTime="mixed", primaryTimeSet=false;
   let prim=null;
-  const sportBreakdown=[];
+  const sportBreakdown=[], measuredSports=[];
 
   entries.forEach(([id,d])=>{
     const intens=INTENS_OK.includes(d.intensity)?d.intensity:"medium";
     const daysRaw=treynNum(d.days);
     const days=daysRaw==null?3:treynClamp(Math.round(daysRaw),0,7);
-    const durationMin=treynClamp(treynNum(d.duration)||60,10,600);
+    const durationMin=treynClamp(treynNum(d.duration)||60,10,720);
     const durH=durationMin/60;
+    // Längste Einheit (nur Ausdauer, siehe longSession): mindestens die normale Dauer, höchstens 12 h
+    const longestRaw=treynNum(d.longestMin);
+    const longestMin=longestRaw==null?null:treynClamp(Math.round(longestRaw),durationMin,720);
 
     // Resolve to sub-sport if available
     const resolvedId = resolveSubId(id, sportData);
@@ -3614,22 +4199,35 @@ function calcPro(profilData, trainingData, sportData) {
 
     // MET: sub-profile > parent SPORT_MET > fallback (lange harte Einheiten etwas tiefer)
     const metTable = sub?.met || SPORT_MET[id] || SPORT_MET.football;
-    const met = effMet(metTable,intens,durH);
+    let met = effMet(metTable,intens,durH);
+    // Gemessene Wochenwerte ersetzen die MET-Schätzung (eine Stelle für kcal und Schweiss):
+    // Laufen netto km x kg x 0.95 kcal (di Prampero), Rad kJ = ca. kcal brutto (Wirkungsgrad ca. 24 %) minus Ruheumsatz 1 kcal/kg/h
+    let measured=null;
+    if(days>0){
+      const km=id==="running"?treynNum(d.weeklyKm):null, kj=id==="cycling"?treynNum(d.weeklyKj):null;
+      const net=(km!=null&&km>=1&&km<=400)?{source:"km",kcal:km*w*0.95}
+        :(kj!=null&&kj>=100&&kj<=40000)?{source:"kj",kcal:Math.max(0,kj-w*durH*days*1.0)}:null;
+      if(net){
+        met=treynClamp(net.kcal/(w*durH*days)+1,1.5,18);
+        measured=net.source;
+        measuredSports.push({id, source:net.source, weekKcal:Math.round((met-1)*w*durH*days)});
+      }
+    }
 
     // Schweissrate aus Sport-kcal/h, Schwitztyp und Sportart
     const liftF=(LIFT_SPORTS.includes(resolvedId)||(!sub&&id==="fitness"))?0.5:1;
     const typeF=SWEAT_TYPE_F[d.sweatRate||"medium"]||1.0;
     const sweatLh=sweatOf(met,liftF,typeF);
 
-    // Sodium: sub-profile > SODIUM_PER_L > fallback
-    const naPerL = sub?.sodiumPerL ?? (SODIUM_PER_L[id]||900);
+    // Sodium: sub-profile > SODIUM_PER_L > fallback, mal Salzränder-Faktor
+    const naPerL = treynClamp((sub?.sodiumPerL ?? (SODIUM_PER_L[id]||900))*saltFactor,300,2000);
 
     // Sport netto: (MET-1) x kg x h, der Ruheumsatz während des Trainings steckt schon im Grundumsatz
     const kcalS=Math.max(0,met-1)*w*durH, sweatS=sweatLh*durH, naS=sweatS*naPerL, mgS=sweatS*MG_PER_L_SWEAT;
     if(d.hasCompetition) compKcalDay+=(treynClamp(treynNum(d.compCount)||0,0,100))*kcalS*0.3/365;
     weekKcal+=kcalS*days; weekSweatL+=sweatS*days; weekNa+=naS*days; weekMg+=mgS*days;
     weekHours+=durH*days; weekCarbF+=durH*days*(CARB_INTENS_F[intens]||1);
-    totalDays+=days;
+    totalDays+=days; if(days>maxSingleDays) maxSingleDays=days;
 
     // Protein type: sub-profile > SPORT_TYPE_MAP > endurance
     const st = sub?.protType || SPORT_TYPE_MAP[id] || "endurance";
@@ -3638,7 +4236,7 @@ function calcPro(profilData, trainingData, sportData) {
 
     const kcalPerSession=Math.round(kcalS);
     sportBreakdown.push({id, subId:resolvedId, days, durationMin, intensity:intens, met:Math.round(met*10)/10, kcalPerSession, endurance});
-    if(id===primarySport) prim={id, subId:resolvedId, metTable, intens, durationMin, durH, sweatLh, sweatS, naPerL, naS, kcalPerSession, liftF, typeF, protType:st, endurance, raceDuration:d.raceDuration||null};
+    if(id===primarySport) prim={id, subId:resolvedId, metTable, intens, durationMin, durH, sweatLh, sweatS, naPerL, naS, kcalPerSession, liftF, typeF, protType:st, endurance, raceDuration:d.raceDuration||null, met, measured, longestMin};
 
     // Training time: Hauptsportart zuerst, sonst erste Angabe
     const times=Array.isArray(d.trainingTimes)?d.trainingTimes:[];
@@ -3655,6 +4253,53 @@ function calcPro(profilData, trainingData, sportData) {
   });
   if(!maxProt) maxProt=healthOnly?1.2:PROTEIN_NEED.endurance.medium;
 
+  // Trainingstage pro Woche über alle Sportarten (Doppeltage möglich): Angabe daysTotal,
+  // begrenzt auf [grösste einzelne Sportart, min(7, Summe)]. Ohne Angabe min(7, Summe).
+  const daysCap=Math.min(totalDays,7);
+  const daysTotalIn=treynNum(sharedVal("daysTotal"));
+  const daysPerWeek=daysTotalIn==null?daysCap:treynClamp(Math.round(daysTotalIn),Math.min(maxSingleDays,daysCap),daysCap);
+
+  // ── SAISON (Rennen mit Datum) ────────────────────────────────────────────
+  // Nach dem nächsten Hauptrennen: Aufbau über 8 Wochen, Wettkampfvorbereitung 2-8 Wochen, Taper 7-13 Tage.
+  // Jedes Rennen: Rennwoche 1-6 Tage, Renntag. Erholung bis 14 Tage nach dem Hauptrennen, 3 Tage nach anderen Rennen.
+  // Rennen aus sportData.raceData (alle Sportarten, auch bei der Einzelrechnung), sonst aus trainingData
+  const raceSrc=(sportData?.raceData&&typeof sportData.raceData==="object")?sportData.raceData:trainingData;
+  const races=healthOnly?[]:allRaces(raceSrc,today);
+  const raceOut=r=>r?{id:r.id,date:r.date,name:r.name,sportId:r.sportId,daysUntil:r.daysUntil,main:r.main,duration:r.duration}:null;
+  const upcoming=races.filter(r=>r.daysUntil>=0);
+  const nextRaceR=upcoming[0]||null;
+  const mainRaceR=upcoming.find(r=>r.main)||null;
+  const raceTodayR=upcoming.find(r=>r.daysUntil===0)||null;
+  const raceWeekR=upcoming.find(r=>r.daysUntil>=1&&r.daysUntil<=6)||null;
+  // Erholung: 14 Tage nach einem Hauptrennen, 3 Tage nach anderen Rennen. Ein aktives Hauptrennen-Fenster hat Vorrang,
+  // die Pause gilt bis zum spätesten Ende aller aktiven Fenster.
+  const recActive=races.filter(r=>r.daysUntil<0&&r.daysUntil>=(r.main?-14:-3));
+  const recentR=[...recActive].reverse().find(r=>r.main)||recActive[recActive.length-1]||null;
+  const recoveryEnd=recActive.map(r=>addDaysISO(r.date,r.main?14:3)).filter(Boolean).sort().pop()||null;
+  let seasonPhase=null, phaseRace=null;
+  if(raceTodayR){ seasonPhase="race_day"; phaseRace=raceTodayR; }
+  else if(raceWeekR){ seasonPhase="race_week"; phaseRace=(mainRaceR&&mainRaceR.daysUntil<=6)?mainRaceR:raceWeekR; }
+  else if(recentR){ seasonPhase="recovery"; phaseRace=recentR; }
+  else if(mainRaceR){ seasonPhase=mainRaceR.daysUntil<=13?"taper":mainRaceR.daysUntil<=56?"build":"base"; phaseRace=mainRaceR; }
+  // Taper bis zum Hauptrennen (1-13 Tage): Umfang -30 % bei gleicher Intensität (Bosquet 2007: -41-60 % Umfang).
+  // Gilt auch, wenn davor die Rennwoche oder Erholung eines kleineren Rennens angezeigt wird, nie am Renntag.
+  const mainTaper=!!mainRaceR&&mainRaceR.daysUntil>=1&&mainRaceR.daysUntil<=13;
+  const phaseTrainingFactor=(mainTaper&&seasonPhase!=="race_day")?0.7:1;
+  const phasePausesDeficit=["taper","race_week","race_day","recovery"].includes(seasonPhase);
+  const phaseProtBoost=seasonPhase==="recovery"?0.2:0;
+  // Renndauer eines Rennens in Stunden: Angabe beim Rennen > typische Renndauer der Sportart > Schätzung
+  const raceHoursOf=(r)=>{
+    const sid=r?.sportId, td=raceSrc?.[sid]||{};
+    const opt=RACE_DURATION_OPTS.find(o=>o.id===r?.duration)||RACE_DURATION_OPTS.find(o=>o.id===td.raceDuration);
+    if(opt) return opt.h;
+    return RACE_HOURS_EST[resolveSubId(sid,sportData)]??RACE_HOURS_EST[sid]??Math.max(0.5,treynClamp(treynNum(td.duration)||60,10,720)/60);
+  };
+  // Carb-Loading an den 2 Tagen vor jedem Rennen in den nächsten 7 Tagen (36-48 h, ACSM 2016), nur Ausdauer ab ca. 90 min
+  const clDatesOf=r=>[addDaysISO(r.date,-2),addDaysISO(r.date,-1)].filter(x=>x&&x>=today);
+  const clList=upcoming.filter(r=>r.daysUntil>=1&&r.daysUntil<=7&&isEnduranceSport(r.sportId,sportData)&&raceHoursOf(r)>=1.5);
+  const carbLoadRaces=clList.map(r=>({id:r.id,name:r.name,date:r.date,dates:clDatesOf(r)}));
+  const carbLoadDates=[...new Set(carbLoadRaces.flatMap(x=>x.dates))].sort();
+
   // Goal-based adjustments to macros (Ausdauer-Ziel ohne kcal-Zuschlag, Muskelaufbau nicht automatisch am Maximum)
   const goalAdj={
     performance: {protMult:1.0, carbMult:1.0, kcalMult:1.0},
@@ -3664,9 +4309,38 @@ function calcPro(profilData, trainingData, sportData) {
     health:      {protMult:0.9, carbMult:1.0, kcalMult:1.0},
     recovery:    {protMult:1.1, carbMult:1.0, kcalMult:1.0},  // more protein for repair
   }[goal]||{protMult:1.0,carbMult:1.0,kcalMult:1.0};
-  // In der Schwangerschaft kein Kaloriendefizit
-  const kcalMult=pregnancy==="pregnant"?Math.max(1,goalAdj.kcalMult):goalAdj.kcalMult;
-  const isDeficit=kcalMult<1;
+  // Zielgewicht (Abnehmen darunter, Muskelaufbau darüber): Tempo als Anteil des Körpergewichts pro Woche, 7700 kcal pro kg.
+  // Ersetzt den kcal-Faktor des Ziels. Ein Abnehmziel unter BMI 18.5 zählt nicht, dann gilt der alte Faktor.
+  const twIn=treynNum(profilData?.targetWeight);
+  const targetAsked=twIn!=null&&twIn>0&&(goal==="weightloss"||goal==="muscle");
+  // Gewicht (wie eingegeben, nicht begrenzt) oder Ziel ausserhalb 35-200 kg: ohne Zielgewicht rechnen
+  const wRawIn=treynNum(profilData?.weight);
+  const targetRangeOk=targetAsked&&twIn>=TARGET_KG_MIN&&twIn<=TARGET_KG_MAX&&wRawIn!=null&&wRawIn>=TARGET_KG_MIN&&wRawIn<=TARGET_KG_MAX;
+  const targetDirOk=targetRangeOk&&(goal==="weightloss"?twIn<w:twIn>w);
+  const targetTooLow=targetDirOk&&goal==="weightloss"&&twIn/((h/100)**2)<18.5;
+  const targetWeightUsed=(targetDirOk&&!targetTooLow)?twIn:null;
+  const targetNote=(targetAsked&&!targetRangeOk)?"Für dieses Gewicht rechnen wir ohne Zielgewicht."
+    :targetTooLow?"Dein Zielgewicht liegt unter einem BMI von 18.5. Das ist für Sport zu tief, darum rechnen wir nicht mit diesem Ziel. Sprich mit deiner Ärztin oder deinem Arzt, bevor du so weit abnimmst."
+    :(targetRangeOk&&!targetDirOk)?(goal==="weightloss"?"Dein Zielgewicht liegt nicht unter deinem Gewicht, darum rechnen wir ohne Zielgewicht.":"Dein Zielgewicht liegt nicht über deinem Gewicht, darum rechnen wir ohne Zielgewicht.")
+    :null;
+  let goalPaceUsed=null, goalDeltaKcal=0, goalWeeks=null;
+  if(targetWeightUsed!=null){
+    // In der Wettkampfvorbereitung höchstens langsam abnehmen
+    goalPaceUsed=(profilData?.goalPace==="slow"||(goal==="weightloss"&&seasonPhase==="build"))?"slow":"normal";
+    const rate=GOAL_PACE_RATE[goal][goalPaceUsed];
+    goalDeltaKcal=Math.round((goal==="weightloss"?-1:1)*rate*w*7700/7);
+    goalWeeks=Math.ceil(Math.abs(targetWeightUsed-w)/(rate*w));
+  }
+  // Kein Defizit: Schwangerschaft, ausbleibende Periode (RED-S) und Taper bis Erholung (pausiert)
+  const baseKcalMult=targetWeightUsed!=null?1:goalAdj.kcalMult;
+  const wantsDeficit=baseKcalMult<1||goalDeltaKcal<0;
+  const blockDeficit=pregnancy==="pregnant"||amenorrhea||phasePausesDeficit;
+  const kcalMult=blockDeficit?Math.max(1,baseKcalMult):baseKcalMult;
+  if(blockDeficit&&goalDeltaKcal<0) goalDeltaKcal=0;
+  // Ohne Defizit auf unbestimmte Zeit (Schwangerschaft, Periode bleibt aus) gibt es keine Wochen bis zum Ziel
+  if(goal==="weightloss"&&(pregnancy==="pregnant"||amenorrhea)) goalWeeks=null;
+  const deficitPaused=phasePausesDeficit&&wantsDeficit&&pregnancy!=="pregnant";
+  const isDeficit=kcalMult<1||goalDeltaKcal<0;
 
   // Altitude: Grundumsatz steigt belegbar erst über ca. 2500 m; Trinkmenge und Eisen bleiben erhöht
   const altitudeMult={low:1.0, medium:1.0, high:1.0, alpine:1.05}[altitude]||1.0;
@@ -3676,26 +4350,37 @@ function calcPro(profilData, trainingData, sportData) {
 
   // ── ENERGIE ──────────────────────────────────────────────────────────────
   // Ruhetag = Grundumsatz x PAL. Trainingstag = Ruhetag + Sport netto an einem echten Trainingstag
-  // (Wochenverbrauch / Anzahl Trainingstage). avgDayKcal = Wochenschnitt.
-  const daysPerWeek=Math.min(totalDays,7);
-  const sportDayKcal=daysPerWeek>0?weekKcal/daysPerWeek:0;
+  // (Wochenverbrauch / Anzahl Trainingstage). avgDayKcal = Wochenschnitt. Taper: Sport-kcal x phaseTrainingFactor.
+  const weekSportKcal=weekKcal*phaseTrainingFactor;
+  const sportDayKcal=daysPerWeek>0?weekSportKcal/daysPerWeek:0;
   const restBase=bmr*palFactor;
-  const toTarget=(burn,mult)=>Math.max(bmr,Math.round(burn*altitudeMult*mult+cycleKcalBonus));
+  // Zielgewicht: fester Zu- oder Abschlag pro Tag (goalDeltaKcal) statt Faktor
+  const toTarget=(burn,mult,delta=0)=>Math.max(bmr,Math.round(burn*altitudeMult*mult+cycleKcalBonus+delta));
   // Energieverfügbarkeit: nach Abzug des Sports mind. 30 kcal pro kg fettfreie Masse (IOC REDs 2023).
   // Ein Abnehm-Defizit wird so weit begrenzt, dass diese Grenze bleibt.
   const EA_MIN=30;
   let redsLimited=false;
-  const guarded=(burn,sportKcal)=>{
-    const t=toTarget(burn,kcalMult);
+  const guarded=(burn,sportKcal,track=true)=>{
+    const t=toTarget(burn,kcalMult,goalDeltaKcal);
     if(!isDeficit) return t;
     const floor=Math.round(ffmKg*EA_MIN+sportKcal);
     if(t>=floor) return t;
-    redsLimited=true;
+    if(track) redsLimited=true;
     return Math.min(toTarget(burn,1),floor);
   };
   const restDay=guarded(restBase,0);
   const withTraining=daysPerWeek>0?guarded(restBase+sportDayKcal,sportDayKcal):restDay;
-  const avgDayKcal=guarded(restBase+weekKcal/7+compKcalDay,weekKcal/7+compKcalDay);
+  const avgDayKcal=guarded(restBase+weekSportKcal/7+compKcalDay,weekSportKcal/7+compKcalDay);
+  // Abnehmen mit Zielgewicht: wirklich angewendetes Defizit = Wochenschnitt ohne Ziel minus mit Ziel (nach RED-S-Grenze und Pause).
+  // Daraus Defizit und Wochen bis zum Ziel. goalLimited: die Grenze kürzt das geplante Defizit um mehr als 10 %.
+  let goalDeltaOut=goalDeltaKcal, goalLimited=false;
+  if(targetWeightUsed!=null&&goal==="weightloss"){
+    const plan=Math.max(0,-goalDeltaKcal);
+    const applied=Math.max(0,toTarget(restBase+weekSportKcal/7+compKcalDay,1,0)-avgDayKcal);
+    goalLimited=plan>0&&applied<plan*0.9;
+    if(applied<=0){ goalDeltaOut=0; goalWeeks=null; }
+    else if(applied<plan-1){ goalDeltaOut=-applied; goalWeeks=Math.ceil(Math.abs(targetWeightUsed-w)*7700/(applied*7)); }
+  }
   const trainingExtra=Math.round(sportDayKcal);
   const energyAvailability=ffmKg>0?Math.round((withTraining-sportDayKcal)/ffmKg):null;
 
@@ -3736,8 +4421,9 @@ function calcPro(profilData, trainingData, sportData) {
   // ── PROTEIN (Obergrenze 2.2 g/kg; mehr nur bei Defizit + schlank, Helms 2014) ──
   // Recovery status → protein boost
   const recoveryProtBoost = {excellent:0, good:0, tired:0.1, recovery:0.15}[recoveryStatus]||0;
-  const protGkg=(maxProt+recoveryProtBoost)*goalAdj.protMult*bodyCompProtMult;
-  const protGkgMax=(maxProt+recoveryProtBoost+0.3)*goalAdj.protMult*bodyCompProtMult;
+  // Erholung nach dem Rennen: +0.2 g/kg (Obergrenzen bleiben)
+  const protGkg=(maxProt+recoveryProtBoost+phaseProtBoost)*goalAdj.protMult*bodyCompProtMult;
+  const protGkgMax=(maxProt+recoveryProtBoost+phaseProtBoost+0.3)*goalAdj.protMult*bodyCompProtMult;
   const protHighCap=isDeficit&&isLean;
   const proteinMin=Math.round(w*Math.min(protGkg,protHighCap?2.3:2.0));
   const proteinMax=Math.max(proteinMin,Math.round(w*Math.min(protGkgMax,protHighCap?2.6:2.2)));
@@ -3749,30 +4435,51 @@ function calcPro(profilData, trainingData, sportData) {
   // So ergeben Protein + Kohlenhydrate + Fett den Trainingstag.
   const hoursPerTrainingDay=daysPerWeek>0?weekHours/daysPerWeek:0;
   const carbIntensF=weekHours>0?weekCarbF/weekHours:1;
-  const carbHoursBase=3+2.5*Math.min(hoursPerTrainingDay,3)+(hoursPerTrainingDay>3?(Math.min(hoursPerTrainingDay,5)-3)*0.75:0);
-  const carbGuideGkg=treynClamp(carbHoursBase*carbIntensF*goalAdj.carbMult,3,12);
   const proteinMid=(proteinMin+proteinMax)/2;
-  const fatMaxG=withTraining*0.35/9;
-  const carbRoomGkg=Math.max(0,(withTraining*0.75-proteinMid*4)/4/w);
-  let carbsGkg=Math.max(2.5,Math.min(carbGuideGkg,carbRoomGkg));
-  const fatRestG=(withTraining-proteinMid*4-w*carbsGkg*4)/9;
-  if(fatRestG>fatMaxG) carbsGkg=Math.min(12,carbsGkg+(fatRestG-fatMaxG)*9/4/w);
-  const carbsG=Math.round(w*carbsGkg);
-  const fatG=Math.max(Math.round(w*0.5),Math.round((withTraining-proteinMid*4-carbsG*4)/9));
+  // Gleiche Rechnung für den normalen Trainingstag und den Tag der langen Einheit
+  const carbsFor=(dayKcal,hoursDay,intensF)=>{
+    const carbHoursBase=3+2.5*Math.min(hoursDay,3)+(hoursDay>3?(Math.min(hoursDay,5)-3)*0.75:0);
+    const carbGuideGkg=treynClamp(carbHoursBase*intensF*goalAdj.carbMult,3,12);
+    const fatMaxG=dayKcal*0.35/9;
+    const carbRoomGkg=Math.max(0,(dayKcal*0.75-proteinMid*4)/4/w);
+    let carbsGkg=Math.max(2.5,Math.min(carbGuideGkg,carbRoomGkg));
+    const fatRestG=(dayKcal-proteinMid*4-w*carbsGkg*4)/9;
+    if(fatRestG>fatMaxG) carbsGkg=Math.min(12,carbsGkg+(fatRestG-fatMaxG)*9/4/w);
+    const cG=Math.round(w*carbsGkg);
+    return {carbsG:cG, fatG:Math.max(Math.round(w*0.5),Math.round((dayKcal-proteinMid*4-cG*4)/9))};
+  };
+  const {carbsG,fatG}=carbsFor(withTraining,hoursPerTrainingDay,carbIntensF);
   const fatPct=withTraining>0?Math.round(fatG*9/withTraining*100):0;
-  // KH pro Trainingsstunde der Hauptsportart (unter 45 min nicht noetig), max 90 g/h
-  const carbsPerHour=(()=>{
-    if(!prim) return 0;
-    const dm=prim.durationMin;
+  // KH pro Trainingsstunde nach Einheitsdauer (unter 45 min nicht noetig), max 90 g/h
+  const carbsPerHourFor=(dm,intens)=>{
     if(dm<45) return 0;
     const base=dm<75?20:dm<=150?30+(dm-75)/75*30:Math.min(90,60+(dm-150)/90*30);
-    const f={low:0.7,medium:0.9,high:1.0,competition:1.0}[prim.intens]||0.9;
+    const f={low:0.7,medium:0.9,high:1.0,competition:1.0}[intens]||0.9;
     return Math.min(90,Math.round(base*f/5)*5);
-  })();
+  };
+  const carbsPerHour=prim?carbsPerHourFor(prim.durationMin,prim.intens):0;
+
+  // ── LANGE EINHEIT (Hauptsportart, nur Ausdauer) ─────────────────────────
+  // Gleiche Formeln wie die normale Einheit, nur mit der längsten Dauer; Tageswerte für genau diesen einen Tag.
+  let longSession=null;
+  if(prim&&prim.endurance&&prim.longestMin!=null&&prim.longestMin>prim.durationMin){
+    const lMin=prim.longestMin, lH=lMin/60;
+    // Gemessene Werte gelten auch für die lange Einheit, sonst MET-Tabelle über die lange Dauer
+    const lMet=prim.measured?prim.met:effMet(prim.metTable,prim.intens,lH);
+    const lSweat=sweatOf(lMet,prim.liftF,prim.typeF);
+    const lNaH=Math.round(lSweat*prim.naPerL);
+    const [lLo,lHi]=fluidRangeOf(lSweat);
+    const lKcal=Math.max(0,lMet-1)*w*lH*phaseTrainingFactor;
+    const dayKcal=guarded(restBase+lKcal,lKcal,false);
+    longSession={sportId:prim.id, min:lMin, carbsPerHour:carbsPerHourFor(lMin,prim.intens),
+      natriumIntakeNeeded:lH>2||lSweat>1.2, natriumIntakePerHourMg:naIntakeOf(lNaH,(lLo+lHi)/2), natriumPerHourMg:lNaH,
+      fluidLoMl:lLo, fluidHiMl:lHi, sweatRateLh:+lSweat.toFixed(2), dayKcal, carbsG:carbsFor(dayKcal,lH,CARB_INTENS_F[prim.intens]||1).carbsG};
+  }
 
   // ── WETTKAMPF (Hauptsportart) ────────────────────────────────────────────
-  // Renndauer aus der Angabe im Trainings-Schritt, sonst Schätzung aus der Unterdisziplin
-  const raceOpt=prim?(RACE_DURATION_OPTS.find(o=>o.id===prim.raceDuration)||null):null;
+  // Renndauer: Angabe beim nächsten Rennen dieser Sportart, sonst Angabe im Trainings-Schritt, sonst Schätzung aus der Unterdisziplin
+  const primNextRace=prim?(upcoming.find(r=>r.sportId===prim.id)||null):null;
+  const raceOpt=prim?(RACE_DURATION_OPTS.find(o=>o.id===primNextRace?.duration)||RACE_DURATION_OPTS.find(o=>o.id===prim.raceDuration)||null):null;
   const raceHoursEst=prim?(RACE_HOURS_EST[prim.subId]??RACE_HOURS_EST[prim.id]??Math.max(0.5,prim.durH)):1;
   const raceHours=raceOpt?raceOpt.h:raceHoursEst;
   const raceDurationEstimated=!raceOpt;
@@ -3850,9 +4557,11 @@ function calcPro(profilData, trainingData, sportData) {
 
   // RED-S: Abnehmziel bei schlankem Körperbau, hohem Umfang oder zu grossem Defizit
   const highVolume=weekHours>=(isFemale?6:8);
-  const redsRisk=goal==="weightloss"&&pregnancy!=="pregnant"&&(redsLimited||isLean||highVolume);
+  // Ausbleibende Periode (ohne hormonelle Verhütung) zählt immer als RED-S-Zeichen
+  const redsRisk=(goal==="weightloss"&&pregnancy!=="pregnant"&&(redsLimited||isLean||highVolume))||amenorrhea;
   const redsPeriodTip=isFemale&&!isMenopause?" Bleibt deine Periode aus oder wird sie unregelmässig, sprich mit deiner Ärztin oder deinem Arzt.":"";
   const redsNote=!redsRisk?null
+    :amenorrhea?`Deine Periode bleibt aus. Das kann ein Zeichen sein, dass deinem Körper Energie fehlt (RED-S), gerade bei viel Training.${wantsDeficit?" Wir rechnen darum ohne Abnehm-Defizit.":""} Sprich mit deiner Ärztin oder deinem Arzt darüber.`
     :redsLimited?`Dein Abnehmziel und dein Training passen kaum zusammen: Es bliebe zu wenig Energie für Hormone, Knochen und Regeneration. Wir haben das Defizit deshalb begrenzt. Nimm lieber langsam ab, am besten ausserhalb der Wettkampfsaison.${redsPeriodTip}`
     :isLean?`Du schätzt dich als sehr schlank ein und möchtest trotzdem abnehmen. Das erhöht das Risiko für Energiemangel (RED-S): weniger Leistung, schwächere Knochen, mehr Verletzungen. Iss an Trainingstagen genug und prüf das Ziel noch einmal.${redsPeriodTip}`
     :`Viel Training und Abnehmen zugleich erhöhen das Risiko für Energiemangel (RED-S). Iss an Trainingstagen genug und nimm lieber langsam ab, am besten ausserhalb der Wettkampfsaison.${redsPeriodTip}`;
@@ -3888,8 +4597,49 @@ function calcPro(profilData, trainingData, sportData) {
   // Budget → priority threshold
   const budgetPriorityMax = {low:1, medium:2, high:3, max:99}[monthlyBudget]||2;
 
+  // Saison-Hinweis (1-2 Sätze)
+  const phaseNote=(()=>{
+    const r=phaseRace; if(!seasonPhase||!r) return null;
+    const nm=r.name?` «${r.name}»`:"";
+    const ref=`${r.main?"deinem Hauptrennen":"deinem Rennen"}${nm}`, refNom=`${r.main?"dein Hauptrennen":"dein Rennen"}${nm}`;
+    const d=r.daysUntil, wk=Math.max(1,Math.round(d/7));
+    // Datum ohne Jahr endet schon mit Punkt ("Mi 14.10."). Carb-Loading (Rennwoche, Renntag) für dieses Rennen, sonst mit Namen des anderen Rennens
+    const clTxt=x=>clDatesOf(x).map(v=>fmtDateCH(v,{weekday:true,year:false})).join(" und ");
+    const clOther=clList.includes(r)?null:(clList[0]||null);
+    const load=clList.includes(r)?` Carb-Loading: ${clTxt(r)}`
+      :clOther?` Carb-Loading für ${clOther.name?`«${clOther.name}»`:`dein Rennen am ${fmtDateCH(clOther.date,{weekday:true,year:false})}`}: ${clTxt(clOther)}`:"";
+    // Kleineres Rennen in der Taper-Zeit des Hauptrennens: der Taper gilt weiter
+    const mr=mainRaceR, taperTxt=(mainTaper&&mr&&mr!==r)?` Dein Hauptrennen${mr.name?` «${mr.name}»`:""} ist in ${mr.daysUntil} Tagen: darum weniger Umfang, gleiche Intensität.`:"";
+    if(seasonPhase==="base") return `Noch ${wk} Wochen bis zu ${ref}. Du bist im Aufbau: viel Grundlage, die Werte gelten wie gewohnt.`;
+    if(seasonPhase==="build") return `Noch ${wk} Wochen bis zu ${ref}. Jetzt zählen die harten Einheiten: iss an diesen Tagen genug Kohlenhydrate.${goalPaceUsed==="slow"&&goal==="weightloss"&&profilData?.goalPace!=="slow"?" Abnehmen darum nur noch langsam.":""}`;
+    if(seasonPhase==="taper") return `Noch ${d} Tage bis zu ${ref}: weniger Umfang, gleiche Intensität. Dein Trainingstag ist darum etwas tiefer.${deficitPaused?" Dein Defizit pausiert bis nach dem Rennen.":""}`;
+    if(seasonPhase==="race_week") return `${d===1?`Morgen ist ${refNom}.`:`Noch ${d} Tage bis zu ${ref}.`}${r.main?" Weniger Umfang, gleiche Intensität.":taperTxt}${load}`;
+    if(seasonPhase==="race_day") return `Heute ist ${refNom}. Halte dich an deinen Rennplan.${load}`;
+    if(seasonPhase==="recovery") return `Erholung nach ${ref}: Wir rechnen mit etwas mehr Protein.${taperTxt}${deficitPaused?(taperTxt?" Dein Defizit pausiert bis nach dem Hauptrennen.":` Dein Defizit pausiert bis zum ${fmtDateCH(recoveryEnd,{year:false})}`):""}`;
+    return null;
+  })();
+
   return {
     bmr, totalDays:daysPerWeek, sessionsPerWeek:totalDays,
+    // Trainingstage über alle Sportarten (daysTotal), Ruhetage und Doppeltage pro Woche
+    restDaysPerWeek:7-daysPerWeek, doubleDays:Math.max(0,totalDays-daysPerWeek),
+    // Lange Einheit der Hauptsportart (Ausdauer) oder null
+    longSession,
+    // Salzränder und gemessene Wochenwerte (km Laufen, kJ Rad)
+    saltStains, saltFactor, measuredSports,
+    // Körperfett: gemessen (DEXA, Caliper) = Cunningham, Waage zählt nicht
+    bodyFatMeasured, bodyFatScaleIgnored, bmrMethod,
+    // Zyklus (cyclePhase unten, abgeleitet): Quelle "date" | "legacy" | null
+    cycleDay, cycleLengthUsed, cycleNextPeriod, cycleSource, cycleDateStale,
+    amenorrhea, heavyPeriod, heavyPeriodNote, hormonalContraception,
+    // Zielgewicht: goalDeltaKcal = angewendeter Zu-/Abschlag pro Tag (negativ = Defizit, nach RED-S-Grenze und Pause),
+    // goalWeeks daraus (null ohne Defizit), goalLimited = Defizit durch die RED-S-Grenze um mehr als 10 % gekürzt
+    targetWeightUsed, goalPaceUsed, goalDeltaKcal:goalDeltaOut, goalWeeks, goalLimited, targetTooLow, targetNote, deficitPaused,
+    // Saison nach den Rennen mit Datum. phaseRace = Rennen, auf das sich die Phase bezieht.
+    // carbLoadRaces = Rennen in 1-7 Tagen mit Carb-Loading [{id,name,date,dates}], carbLoadDates = alle diese Tage
+    seasonPhase, seasonPhaseLabel:SEASON_PHASE_LABEL[seasonPhase]||null,
+    nextRace:raceOut(nextRaceR), mainRace:raceOut(mainRaceR), phaseRace:raceOut(phaseRace), upcomingRaces:upcoming.map(raceOut),
+    carbLoadDates, carbLoadRaces, phaseNote, phaseTrainingFactor,
     // Energie: withTraining = ein Trainingstag, avgDayKcal = Wochenschnitt, restDay = Ruhetag (Grundumsatz x PAL)
     withTraining, trainingDay:withTraining, avgDayKcal, restDay, trainingExtra, palFactor, jobExtraKcal,
     // Energieverfügbarkeit und RED-S-Hinweis
@@ -4646,7 +5396,8 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
   const hasSynergy=interactions.some(i=>i.type==="synergy");
   if(compact) {
     const shopInfo=localizeShop(s,cardCountry);
-    return (
+    // Werbe-Hinweis einmal pro Liste: an der ersten Karte, im Raster ganz unten über die volle Breite (order)
+    return (<>
     <div style={{border:`1px solid ${hasMediWarn?mediBorder:isPrimary&&!bluttest?C.g400:C.g200}`,borderRadius:12,padding:"12px 14px",background:C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0,display:"flex",flexDirection:"column",gap:6,minWidth:0}}>
       <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
         {s.alreadyTaking
@@ -4696,7 +5447,8 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
         </button>
       </div>
     </div>
-    );
+    {index===0&&<AffiliateNote style={{gridColumn:"1 / -1",order:999,marginTop:2}}/>}
+    </>);
   }
   return (
     <div style={{border:`1px solid ${hasMediWarn?mediBorder:hasAllergen?"rgba(255,59,48,.35)":s.alreadyTaking?"rgba(52,199,89,.35)":isPrimary?C.g400:C.g200}`,borderRadius:14,padding:"16px 18px",marginBottom:9,background:hasMediWarn?(mediSevere?"rgba(255,59,48,.03)":"rgba(255,149,0,.03)"):hasAllergen?"rgba(255,59,48,.02)":s.alreadyTaking?"rgba(52,199,89,.03)":C.white,animation:`fadeUp .35s ${index*0.05}s ease forwards`,opacity:0}}>
@@ -4792,6 +5544,8 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
           </div>
         );
       })()}
+      {/* Werbe-Hinweis einmal pro Liste (erste Karte) */}
+      {index===0&&<AffiliateNote style={{marginBottom:10}}/>}
 
       {s.tags&&<div style={{display:"flex",flexWrap:"wrap",gap:4,marginBottom:8}}>{(s.tags||[]).map(t=><span key={t} className="chip">{t}</span>)}</div>}
 
@@ -4865,6 +5619,45 @@ function ProductCard({s,index,isPrimary,interactions=[],allergenWarnings=[],comp
       {owned&&!locked&&<div style={{marginTop:6,fontSize:10,color:"#4A7000",textAlign:"center",lineHeight:1.5}}>Findest du im Reiter <strong>Einkauf</strong>.</div>}
     </div>
   );
+}
+
+// Werbe-Hinweis zu den Shop-Links: einmal pro Produktliste, nicht pro Karte (kleiner grauer Text)
+const AFFILIATE_NOTE_TEXT="Shop-Links sind Affiliate-Links (Werbung): Kaufst du dort ein, erhält TREYN+ eine Provision. Dein Preis bleibt gleich.";
+function AffiliateNote({style}) {
+  return <div style={{fontSize:11,color:C.g500,lineHeight:1.5,fontFamily:"Inter,sans-serif",overflowWrap:"anywhere",...(style||{})}}>{AFFILIATE_NOTE_TEXT}</div>;
+}
+
+// Übersicht: Kopf-Schilder (nur PRO) aus den calcPro-Werten - Saisonphase, Zyklus, Zielgewicht
+function raceWhenText(d){ return d===0?"heute":d===1?"morgen":`in ${d} Tagen`; }
+function seasonTagText(calc){
+  const ph=calc?.seasonPhase;
+  const label=calc?.seasonPhaseLabel||SEASON_PHASE_LABEL[ph];
+  if(!ph||!label) return null;
+  const nameOf=r=>{ const n=String(r?.name||"").trim(); return n?(n.length>28?n.slice(0,27)+"…":n):"Rennen"; };
+  const withRace=r=>{ const d=Math.round(+r?.daysUntil); return r&&Number.isFinite(d)&&d>=0?`${label} · ${nameOf(r)} ${raceWhenText(d)}`:label; };
+  // Rennen der Phase aus calcPro (phaseRace, z. B. Hauptrennen in der Rennwoche), sonst das nächste Rennen
+  const pr=calc?.phaseRace&&+calc.phaseRace.daysUntil>=0?calc.phaseRace:null;
+  if(ph==="race_day"){ const r=pr||calc?.nextRace; return r&&String(r.name||"").trim()&&+r.daysUntil===0?`${label} · ${nameOf(r)}`:label; }
+  if(ph==="race_week") return withRace(pr||calc?.nextRace);
+  if(ph==="taper"||ph==="build"){ const m=calc?.mainRace; return withRace(pr||(m&&+m.daysUntil>=0?m:calc?.nextRace)); }
+  return label; // Aufbau, Erholung
+}
+function cycleTagText(calc){
+  if(calc?.pregnancy==="pregnant") return "Schwangerschaft";
+  if(calc?.pregnancy==="breastfeeding") return "Stillzeit";
+  const ph=calc?.cyclePhase;
+  const base={follikel:"Follikelphase",ovulation:"Eisprung",luteal:"Lutealphase",period:"Periode",pcos:"PCOS",menopause:"Menopause",hormonal:"Hormonelle Verhütung"}[ph];
+  if(!base) return null;
+  const parts=[base];
+  const day=Math.round(+calc?.cycleDay);
+  if(["follikel","ovulation","luteal","period"].includes(ph)&&Number.isFinite(day)&&day>0) parts.push(`Tag ${day}`);
+  if(ph==="luteal"&&+calc?.cycleKcalBonus>0) parts.push(`+${Math.round(+calc.cycleKcalBonus)} kcal`);
+  return parts.join(" · ");
+}
+function goalTagText(calc){
+  const t=+calc?.targetWeightUsed, wk=Math.round(+calc?.goalWeeks);
+  if(!Number.isFinite(t)||t<=0||!Number.isFinite(wk)||wk<=0) return null;
+  return `Ziel ${(Math.round(t*10)/10).toLocaleString("de-CH")} kg in ca. ${wk} ${wk===1?"Woche":"Wochen"}${calc?.goalLimited?" · Tempo durch Energie-Schutz begrenzt":""}`;
 }
 
 function SectionHeader({label,count,color}) {
@@ -5199,10 +5992,10 @@ Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
           </p>
         )}
 
-        {/* cerascreen CTA */}
-        <div style={{background:C.g100,borderRadius:11,padding:"12px 14px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+        {/* cerascreen CTA (Werbung, Hinweis direkt darunter) */}
+        <div style={{background:C.g100,borderRadius:11,padding:"12px 14px",marginBottom:6,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
           <div>
-            <div style={{fontSize:11,fontWeight:600,color:C.black,marginBottom:3}}>cerascreen® - Empfohlener Testpartner</div>
+            <div style={{fontSize:11,fontWeight:600,color:C.black,marginBottom:3}}>cerascreen® - Empfohlener Testpartner · Werbung</div>
             <div style={{fontSize:11,color:C.g600}}>19 europäische Länder · CH, DE, AT · Ergebnis in 2-3 Werktagen als PDF</div>
             <div style={{display:"flex",flexWrap:"wrap",gap:4,marginTop:6}}>
               {["Vitamin D","Eisen","Magnesium","Omega-3","B12","Zink","Testosteron"].map(t=>(
@@ -5215,6 +6008,7 @@ Wenn ein Wert nicht eindeutig lesbar ist, weglassen. Keine Schätzungen.`,
             Test bestellen ↗
           </a>
         </div>
+        <AffiliateNote style={{marginBottom:16}}/>
 
         {/* Einwilligung vor dem ersten Upload */}
         {stage==="idle"&&!pdfConsent&&(
@@ -6218,7 +7012,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const WEARABLES=[
     {
       name:"Ultrahuman Ring PRO",
-      badge:"Top Pick · Kein Abo · 15 Tage Akku", // Affiliate-Provision (20%) nur intern, nie im sichtbaren Text
+      badge:"Top Pick · Werbung · Kein Abo · 15 Tage Akku", // Affiliate-Provision (20%) nur intern, nie im sichtbaren Text
       affiliate:true,
       category:"Sleep & Recovery",
       why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo - einmalig kaufen, fertig.",
@@ -6228,7 +7022,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     },
     {
       name:"Garmin Forerunner 965",
-      badge:"GPS · HRV · VO₂max · Top Pick",
+      badge:"GPS · HRV · VO₂max · Top Pick · Werbung",
       affiliate:true,
       category:"Multisport",
       why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand.",
@@ -6283,7 +7077,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // WEARABLES defined in Results scope above
     const _dummy_=[{
         name:"Ultrahuman Ring PRO_SKIP",
-        badge:"Top Pick · Kein Abo · 15 Tage Akku",
+        badge:"Top Pick · Werbung · Kein Abo · 15 Tage Akku",
         affiliate:true,
         category:"Sleep & Recovery",
         why:"Der beste Ring ohne Abo. 15 Tage Akku, On-Device AI, kein Monatsabo - einmalig kaufen, fertig.",
@@ -6358,6 +7152,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           );
         })}
         </div>
+        <AffiliateNote style={{marginTop:12}}/>
       </div>
     );
   };
@@ -6376,7 +7171,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         img:"https://www.more-nutrition.de/cdn/shop/products/MORE_Sirup_Mango-Maracuja_500ml.jpg",
       },      {
         name:"Garmin Forerunner 965",
-        badge:"GPS · HRV · VO₂max · Top Pick",
+        badge:"GPS · HRV · VO₂max · Top Pick · Werbung",
         affiliate:true,
         category:"Multisport",
         why:"Das beste Multisport-GPS für Ausdauersportler. Misst VO₂max, HRV, Training Readiness und Körperbatteriestand - alles was TREYN+ für präzisere Berechnungen nutzen kann.",
@@ -6473,15 +7268,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const AFTER=[
       {
         name:"Erdinger Alkoholfrei",
-        badge:"Isotonisch · Polyphenole · Bestseller",
+        badge:"Alkoholfrei · Isotonisch",
         affiliate:false,
-        why:"Das bekannteste Recovery-Getränk der Sportwelt. Schmeckt nach Bier, enthält aber alles was dein Körper nach dem Training braucht.",
-        science:"FC Bayern München Studie: Sportler die Erdinger AF tranken hatten 3× weniger Infekte in der Saison. Isotonisch, B-Vitamine, Polyphenole, 0% Alkohol.",
-        tags:["Recovery","Isotonisch","Polyphenole"],
+        why:"Alkoholfreies Weissbier für nach dem Training. Schmeckt nach Bier und liefert Flüssigkeit und Kohlenhydrate.",
+        science:"Alkoholfreies Weissbier (unter 0.5 % Alkohol). Isotonisch und mit Kohlenhydraten - beliebt als Getränk nach dem Training.",
+        scienceLabel:"Info", // Produktbeschreibung, keine Studie: Kasten heisst «Info» statt «Wissenschaft»
+        tags:["Nach dem Training","Isotonisch","Alkoholfrei"],
         link:AFF.erdinger(),
         shop:"Erdinger",
         img:"https://www.erdinger.de/typo3temp/assets/_processed_/1/6/csm_ERDINGER_Weissbier_alkoholfrei_Flasche_2020_RGB_300dpi_3db53a2b78.jpg",
-        highlight:true,
+        highlight:false, // kein «Wissenschaftlich belegt»-Schild (keine Studien- oder Gesundheitsaussage)
       },
       {
         name:"Athletic Brewing Co.",
@@ -6521,20 +7317,22 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const ProductCard=({p})=>(
       <div style={{background:C.white,border:`1px solid ${p.highlight?C.neon:C.g200}`,borderRadius:12,padding:"14px 16px",marginBottom:8,position:"relative"}}>
         {p.affiliate&&(
-          <div style={{position:"absolute",top:12,right:12,fontSize:9,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"Inter,sans-serif",fontWeight:600}}>Top Pick</div>
+          <div style={{position:"absolute",top:12,right:12,fontSize:9,padding:"2px 7px",borderRadius:4,background:C.neon,color:C.black,fontFamily:"Inter,sans-serif",fontWeight:600}}>Top Pick · Werbung</div>
         )}
         {p.highlight&&(
           <div style={{marginBottom:8,display:"inline-flex",alignItems:"center",gap:5,padding:"3px 10px",background:C.neon,borderRadius:100}}>
             <span style={{fontSize:10,fontWeight:600,color:C.black}}>Wissenschaftlich belegt</span>
           </div>
         )}
-        <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,paddingRight:p.affiliate?60:0}}>{p.name}</div>
+        <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:2,paddingRight:p.affiliate?112:0,overflowWrap:"anywhere"}}>{p.name}</div>
         <div style={{fontSize:10,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:8}}>{p.badge}</div>
         <div style={{fontSize:11,color:C.g600,lineHeight:1.6,marginBottom:8}}>{p.why}</div>
-        <div style={{padding:"8px 12px",background:C.g100,borderRadius:8,marginBottom:10}}>
-          <div style={{fontSize:10,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:3}}>{"Wissenschaft"}</div>
-          <div style={{fontSize:11,color:C.g600,lineHeight:1.5}}>{p.science}</div>
-        </div>
+        {p.science&&(
+          <div style={{padding:"8px 12px",background:C.g100,borderRadius:8,marginBottom:10}}>
+            <div style={{fontSize:10,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:3}}>{p.scienceLabel||"Wissenschaft"}</div>
+            <div style={{fontSize:11,color:C.g600,lineHeight:1.5}}>{p.science}</div>
+          </div>
+        )}
         <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
           {(p.tags||[]).map(t=><span key={t} style={{fontSize:10,padding:"2px 8px",borderRadius:100,background:C.g100,color:C.g600}}>{t}</span>)}
         </div>
@@ -6554,7 +7352,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{fontSize:12,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:10,marginTop:20}}>{"Nach dem Training"}</div>
         <div style={{fontSize:12,color:C.g600,marginBottom:14,lineHeight:1.6}}>{"Recovery-Drinks die wirklich funktionieren."}</div>
         {AFTER.map((p,i)=><ProductCard key={i} p={p}/>)}
-
+        <AffiliateNote style={{marginTop:12}}/>
 
       </div>
     );
@@ -6563,7 +7361,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const FertiggerichteContent=()=>(
     <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10}}>
       {[
-        {name:"Löwenanteil",badge:"Bio · High Protein · Top Pick",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30-42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
+        {name:"Löwenanteil",badge:"Bio · High Protein · Top Pick · Werbung",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar. Ideal für Sportler.",products:[{l:"Protein",v:"30-42g"},{l:"Zubereitung",v:"3 Min."},{l:"Preis",v:"ab CHF 7.90"}],link:"https://www.loewenanteil.com?ref=TREYN",img:"https://www.loewenanteil.com/cdn/shop/files/LÖW_Produktfoto_Rindfleisch-Eintopf.jpg"},
         {name:"HelloFresh",badge:"Meal Kit · Flexible Lieferung",desc:"Wochentliche Meal Kits mit ausgewogenen Mahlzeiten - einfach zu kochen, sportlergerecht.",products:[{l:"Kalorien",v:"500-800 kcal"},{l:"Protein",v:"25-40g"},{l:"Preis",v:"ab CHF 8.90"}],link:"https://www.hellofresh.ch",img:"https://img.hellofresh.com/hellofresh_s3/image/5f7c6b2f3e36d0000c4e4b1a.jpg"},
       ].map((b,i)=>(
         <div key={i} style={{borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,overflow:"hidden",display:"flex",flexDirection:"column"}}>
@@ -6581,6 +7379,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         </div>
       ))}
+      <AffiliateNote style={{gridColumn:"1 / -1",marginTop:2}}/>
     </div>
   );
 
@@ -6607,6 +7406,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         </div>
       ))}
+      <AffiliateNote style={{gridColumn:"1 / -1",marginTop:2}}/>
     </div>
   );
 
@@ -6651,11 +7451,66 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
   };
 
+  // ── TAGESPLAN VORSCHAU (Basic, unscharf unter BlurGate) ──
+  // Feste Platzhalter statt echter Werte: nichts aus den Angaben, keine PRO-Zahl im DOM. inert sperrt Tastatur und Vorlesen.
+  const TAGESPLAN_TEASER=[
+    {phase:"Aufwachen",time:"00:00",items:[{label:"Wasser",detail:"000 ml direkt nach dem Aufstehen"}]},
+    {phase:"Pre-Workout",time:"00:00-00:00",items:[{label:"Mahlzeit / Snack",detail:"00 g Kohlenhydrate"},{label:"Wasser",detail:"000 ml in der Stunde vor dem Training"}]},
+    {phase:"Training",time:"00:00-00:00",hl:true,items:[{label:"Wasser + Elektrolyte",detail:"000-000 ml/h"},{label:"Kohlenhydrate",detail:"00 g/h"}]},
+    {phase:"Post-Workout",time:"00:00-00:00",items:[{label:"Protein",detail:"00-00 g"},{label:"Kohlenhydrate",detail:"00 g"}]},
+    {phase:"Mittag",time:"00:00-00:00",items:[{label:"Hauptmahlzeit",detail:"000 kcal, 00 g Protein"}]},
+    {phase:"Abend",time:"00:00-00:00",items:[{label:"Abendmahlzeit",detail:"000 kcal, 00 g Protein"}]},
+    {phase:"Vor dem Schlafen",time:"00:00-00:00",items:[{label:"Schlaf",detail:"Ziel 0-0 h"}]},
+  ];
+  const TagesplanTeaser=()=>(
+    <div inert aria-hidden="true">
+      <div style={{marginBottom:20}}>
+        <div style={{fontSize:18,fontWeight:600,color:C.black,marginBottom:4,letterSpacing:"-.02em"}}>Tagesplan</div>
+        <div style={{fontSize:13,color:C.g600,marginBottom:14,lineHeight:1.6}}>Tagesplan, Supplement-Timing & Race-Day Strategie</div>
+        <div style={{display:"flex",gap:6,borderBottom:`1px solid ${C.g200}`,overflow:"hidden"}}>
+          {["Tagesplan","Protokolle","Wettkampf"].map((l,i)=>(
+            <span key={l} style={{padding:"8px 14px",borderBottom:`2px solid ${i===0?C.black:"transparent"}`,color:i===0?C.black:C.g400,fontSize:13,fontWeight:i===0?700:400,marginBottom:-1,whiteSpace:"nowrap",flexShrink:0}}>{l}</span>
+          ))}
+        </div>
+      </div>
+      {TAGESPLAN_TEASER.map((block,i)=>(
+        <div key={block.phase} style={{display:"flex",gap:12,marginBottom:16}}>
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:44,flexShrink:0}}>
+            <div style={{width:10,height:10,borderRadius:"50%",background:block.hl?C.neon:C.g200,flexShrink:0,marginTop:4}}/>
+            {i<TAGESPLAN_TEASER.length-1&&<div style={{width:1,flex:1,background:C.g100,margin:"4px 0"}}/>}
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{display:"flex",alignItems:"center",flexWrap:"wrap",columnGap:8,rowGap:2,marginBottom:6}}>
+              <div style={{fontSize:11,fontWeight:700,color:C.black}}>{block.phase}</div>
+              <div style={{fontSize:10,color:C.g400}}>{block.time}</div>
+            </div>
+            <div style={{background:block.hl?C.neonDim:C.white,border:`0.5px solid ${block.hl?C.neon:C.g200}`,borderRadius:10,padding:"10px 12px",display:"flex",flexDirection:"column",gap:8}}>
+              {block.items.map(item=>(
+                <div key={item.label} style={{minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:600,color:C.black}}>{item.label}</div>
+                  <div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:1}}>{item.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   // ── Gemeinsame Helfer für Tagesplan und Wettkampf ──
+  // Lange Einheit (Ausdauer): dieselbe Regel wie die Rechnung (longSessionTraining, gemessene km/kJ auf die Einheit umgerechnet)
+  const longTrainingOf=(sid,td)=>(sid&&td)?longSessionTraining(td,sid,sportData):null;
   // Werte für genau EINE Sportart (Umschalter im Tagesplan, Wettkampf-Sportart)
-  const sportCalc=(sid)=>{
-    const td=sid?(trainingData||{})[sid]:null;
-    const calc=td?calcPro(profilData,{[sid]:td},{...(sportData||{}),primarySport:sid}):calcPro(profilData,trainingData,sportData);
+  // opts.long: lange Einheit statt der üblichen · opts.td: eigene Angaben für diese Rechnung (z. B. ein bestimmtes Rennen)
+  // Saison (Taper, Defizit-Pause, Erholung) immer aus den Rennen ALLER Sportarten (raceData), im Rennplan (opts.td) ohne Saison
+  const sportCalc=(sid,opts={})=>{
+    const baseTD=sid?(trainingData||{})[sid]:null;
+    const longTD=opts?.long?longTrainingOf(sid,baseTD):null;
+    const isLong=!!longTD;
+    const td=(sid&&opts?.td)||longTD||baseTD;
+    const raceData=(sid&&opts?.td)?{}:(trainingData||{});
+    const calc=td?calcPro(profilData,{[sid]:td},{...(sportData||{}),primarySport:sid,raceData}):calcPro(profilData,trainingData,sportData);
     const intens=td?.intensity||"medium";
     const sweatMult={low:0.6,medium:1.0,high:1.4,very_high:1.8}[td?.sweatRate||"medium"]||1.0;
     // Schweissrate aus calcPro (Sport-kcal/h), Rückfall nur ohne Wert
@@ -6665,7 +7520,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const naInH=Math.round(Number.isFinite(+calc?.natriumIntakePerHourMg)?+calc.natriumIntakePerHourMg:naH*0.6);
     const naNeeded=!!calc?.natriumIntakeNeeded;
     const durMin=(+td?.duration)||60;
-    return {calc,td,intens,rateLh,naH,naInH,naNeeded,durMin};
+    return {calc,td,intens,rateLh,naH,naInH,naNeeded,durMin,isLong};
   };
   // Trinkmenge pro Stunde: ca. 60-80% des Schweissverlusts, max. 1L/h
   const fluidRange=(rateLh)=>{
@@ -6674,6 +7529,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const hi=Math.max(lo+100,r50(Math.min(1000,rateLh*800)));
     return [lo,hi];
   };
+  // Countdown und Name eines Rennens (Tagesplan und Wettkampf gleich)
+  const raceDaysLeft=(r,today=todayISO())=>daysBetweenISO(today,r?.date);
+  const raceCountdown=d=>d===0?"heute":d===1?"morgen":`in ${d} Tagen`;
 
   const TagesplanTab=()=>{
     const isMobile=useWindowWidth()<=768;
@@ -6681,18 +7539,62 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Auswahl in UI_STATE merken (überlebt Handy drehen)
     const [sportSel,setSportSel]=useState(()=>UI_STATE.tagesplanSport||primarySport||allSports[0]);
     const [isRestDay,setIsRestDayRaw]=useState(()=>!!UI_STATE.tagesplanRest);
+    const [longOn,setLongOnRaw]=useState(()=>!!UI_STATE.tagesplanLong);
     const setActiveSport=s=>{UI_STATE.tagesplanSport=s;setSportSel(s);};
     const setIsRestDay=v=>{UI_STATE.tagesplanRest=v;setIsRestDayRaw(v);};
+    const setLongOn=v=>{UI_STATE.tagesplanLong=v;setLongOnRaw(v);};
     const activeSport=allSports.includes(sportSel)?sportSel:(primarySport||allSports[0]);
     // calcAll: ganze Woche (Tages-Supplements, Ruhetag) · calc: nur die gewählte Sportart (Trainingstag)
     const calcAll=calcPro(profilData,trainingData,sportData);
-    const {calc,td:activeTD,rateLh,naH,naInH,naNeeded}=sportCalc(activeSport);
+    // Lange Einheit: eigener Tag mit der längsten Einheit (nur Ausdauer, wenn länger als die übliche Dauer)
+    const longTD=longTrainingOf(activeSport,(trainingData||{})[activeSport]);
+    const isLongDay=!isRestDay&&longOn&&!!longTD;
+    const sc=sportCalc(activeSport,{long:isLongDay});
+    const {calc,td:activeTD}=sc;
+    // Hauptsportart: Werte der langen Einheit aus derselben Quelle wie die Übersicht (calcPro.longSession)
+    const lsAll=calcAll?.longSession&&calcAll.longSession.sportId===activeSport?calcAll.longSession:null;
+    const ls=isLongDay?lsAll:null;
+    const numOr=(v,fb)=>(v!=null&&v!==""&&Number.isFinite(+v))?+v:fb;
+    const longMin=Math.round(numOr(lsAll?.min,0)||(+longTD?.duration)||0);
+    const rateLh=Math.max(0.2,numOr(ls?.sweatRateLh,sc.rateLh));
+    const naH=Math.round(numOr(ls?.natriumPerHourMg,sc.naH));
+    const naInH=Math.round(numOr(ls?.natriumIntakePerHourMg,sc.naInH));
+    const naNeeded=ls&&ls.natriumIntakeNeeded!=null?!!ls.natriumIntakeNeeded:sc.naNeeded;
     const w=(+calc?.w)||(+profilData?.weight)||75;
-    const activeDuration=(+activeTD?.duration)||60;
+    const activeDuration=(isLongDay&&longMin)?longMin:((+activeTD?.duration)||60);
     const activeIntensity=activeTD?.intensity||"medium";
     // Ausdauer-Merkmal aus derselben Quelle wie calcPro (Skitouren, Langstrecke und Hyrox zählen mit)
     const isEndurance=isEnduranceSport(activeSport,sportData);
-    const carbsH=Math.max(0,(+calc?.carbsPerHour)||0);
+    const carbsH=Math.max(0,numOr(ls?.carbsPerHour,(+calc?.carbsPerHour)||0));
+    const carbsDayG=numOr(ls?.carbsG,0)||calc?.carbsG||240;
+
+    // Saison (nur PRO): Phase, Countdown zum Rennen und Carb-Loading-Tage aus calcPro, sonst aus den Rennen selbst
+    const today=todayISO();
+    const upcomingAll=allRaces(trainingData,today).filter(r=>r.daysUntil>=0);
+    const phase=calcAll?.seasonPhase||null;
+    const phaseLabel=phase?(calcAll?.seasonPhaseLabel||SEASON_PHASE_LABEL[phase]||null):null;
+    const nextR=calcAll?.nextRace||upcomingAll[0]||null;
+    const mainR=calcAll?.mainRace||upcomingAll.find(r=>r.main)||null;
+    // Rennen zur Phase aus calcPro (gleich wie der Satz darunter), ohne diese Angabe wie bisher: Hauptrennen bzw. nächstes Rennen
+    const phaseRace=calcAll?.phaseRace||(["base","build","taper"].includes(phase)||(phase==="race_week"&&mainR&&raceDaysLeft(mainR,today)<=6)?(mainR||nextR):nextR);
+    const phaseD=phaseRace?raceDaysLeft(phaseRace,today):null;
+    const phaseRaceTxt=phaseRace&&phaseD!=null&&phaseD>=0
+      ?(phaseD===0?`heute: ${phaseRace.name?`«${phaseRace.name}»`:"dein Rennen"}`
+        :phaseD===1?`morgen: ${phaseRace.name?`«${phaseRace.name}»`:"dein Rennen"}`
+        :`noch ${phaseD} Tage bis ${phaseRace.name?`«${phaseRace.name}»`:`zum Rennen am ${fmtDateCH(phaseRace.date,{year:false})}`}`)
+      :(phaseRace&&phaseD!=null&&phaseD<0)?`nach ${phaseRace.name?`«${phaseRace.name}»`:`dem Rennen vom ${fmtDateCH(phaseRace.date,{year:false})}`}`
+      :null;
+    const seasonLine=(phaseLabel||phaseRaceTxt)?[phaseLabel||"Nächstes Rennen",phaseRaceTxt].filter(Boolean).join(" · "):null;
+    const clDates=Array.isArray(calcAll?.carbLoadDates)?calcAll.carbLoadDates:[];
+    const clToday=clDates.includes(today);
+    const clW=(+calcAll?.w)||w;
+    const clMin=(+calcAll?.carbLoadG)||Math.round(clW*10), clMax=(+calcAll?.carbLoadMaxG)||Math.round(clW*12);
+    // Rennen, für das heute geladen wird (calcPro.carbLoadRaces, sonst das nächste Rennen): 1 oder 2 Tage vor dem Start
+    const clCands=Array.isArray(calcAll?.carbLoadRaces)?calcAll.carbLoadRaces.filter(Boolean):[nextR].filter(Boolean);
+    const clRace=clToday?(clCands.find(r=>Array.isArray(r.dates)?r.dates.includes(today):[1,2].includes(raceDaysLeft(r,today)))||clCands[0]||null):null;
+    const clOther=!!clRace&&!!phaseRace&&clRace.id!==phaseRace.id;
+    const clName=r=>r?.name?`«${r.name}»`:`dein Rennen (${SPORT_GROUPS.find(g=>g.id===r?.sportId)?.label||"Sport"})`;
+    const raceTomorrow=clRace?clRace.date===addDaysISO(today,1):(!!nextR&&nextR.date===addDaysISO(today,1));
     const sportLabel=SPORT_GROUPS.find(s=>s.id===activeSport)?.label||activeSport||"Sport";
     // Schwangerschaft / Stillzeit: keine Supplement-Dosierungen, stattdessen ein Hinweis
     const pregCare=!!calcAll?.pregnancyCare;
@@ -6710,8 +7612,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Zeitachse: Uhrzeiten in Minuten, alles zweistellig
     const hm=m=>{const x=((Math.round(m)%1440)+1440)%1440;return `${String(Math.floor(x/60)).padStart(2,"0")}:${String(x%60).padStart(2,"0")}`;};
     const span=(a,b)=>`${hm(a)}-${hm(b)}`;
-    const ts=knownTime?T_START[ptt]:17*60;
-    const te=ts+Math.max(15,Math.min(activeDuration,360));
+    // Ohne feste Zeit: Beispiel um 17:00. Lange Einheit zur üblichen Zeit nur, wenn sie bis ca. 20:00 fertig ist, sonst ab 08:00
+    const ts=isLongDay?(knownTime&&T_START[ptt]+activeDuration<=20*60?T_START[ptt]:8*60):(knownTime?T_START[ptt]:17*60);
+    const longMoved=isLongDay&&knownTime&&ts!==T_START[ptt];
+    const te=ts+Math.max(15,Math.min(activeDuration,isLongDay?720:360));
     const isMorning=ts<9*60;
     const wake=isMorning?ts-60:6*60+30;
     const preStart=isMorning?ts-45:ts-120;
@@ -6741,7 +7645,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     // Mahlzeiten: kollidiert eine mit dem Training, wird sie mit dem Post-Workout zusammengelegt
     const pMin=calc?.proteinMin||140, pMax=calc?.proteinMax||180;
-    const kcalDay=calc?.withTraining||2500;
+    const kcalPlan=numOr(ls?.dayKcal,0)||calc?.withTraining||2500;
+    // Carb-Loading-Tag: das Tagesziel muss die Kohlenhydrate tragen (Protein + 10 g/kg KH + ca. 0.8 g/kg Fett), ohne Defizit
+    const clKcal=(isPro&&clToday)?Math.round(pMin*4+clMin*4+w*0.8*9):0;
+    const kcalDay=clKcal?Math.max(kcalPlan-Math.min(0,+calc?.goalDeltaKcal||0),clKcal):kcalPlan;
+    const clKcalUp=clKcal>0&&kcalDay>kcalPlan;
+    // Ruhetag am Carb-Loading-Tag: dieselbe Untergrenze (mit dem Protein des Ruhetags)
+    const restKcalBase=calcAll?.restDay||1800;
+    const restCl=(isPro&&clToday)?Math.round((calcAll?.proteinMin||140)*0.85*4+clMin*4+w*0.8*9):0;
+    const restKcal=Math.max(restKcalBase,restCl);
+    const restClUp=restKcal>restKcalBase;
     const MEALS=[
       {key:"breakfast",phase:"Frühstück",meal:"Frühstück",s:wake+30,e:wake+75,share:0.20,
         detail:k=>`${k} kcal, ${Math.round(pMin*0.25)}g Protein - z. B. Haferflocken, Eier, Skyr`},
@@ -6770,12 +7683,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const bed=Math.max(22*60,postEnd+60,lastMealEnd+90);
 
     const preItems=[
-      {label:"Mahlzeit / Snack",detail:isMorning?`${Math.round(w*0.5)}g Kohlenhydrate, 30-45 min vor Training - leicht verdaulich, z. B. Banane`:`${Math.round((calc?.carbsG||240)*0.25)}g Kohlenhydrate, 1.5-2h vor Training`},
+      {label:"Mahlzeit / Snack",detail:isMorning?`${Math.round(w*0.5)}g Kohlenhydrate, 30-45 min vor Training - leicht verdaulich, z. B. Banane`:`${Math.round(carbsDayG*0.25)}g Kohlenhydrate, 1.5-2h vor Training`},
       cafItem,
       {label:"Wasser",detail:"400-600ml in der Stunde vor dem Training"},
       ...(calcAll?.needsCollagen&&!pregCare?[{label:"Kollagen + Vit C",detail:"10-15g, 30-60 min vor dem Training - Sehnen & Gelenke"}]:[]),
     ].filter(Boolean);
-    const [flLo,flHi]=fluidRange(rateLh);
+    const [flLo,flHi]=(ls&&+ls.fluidLoMl>0&&+ls.fluidHiMl>0)?[Math.round(+ls.fluidLoMl),Math.round(+ls.fluidHiMl)]:fluidRange(rateLh);
     const postItems=merged?[
       {label:merged.item||merged.meal,detail:`${Math.round(kcalDay*merged.share)} kcal innerhalb 30-60 min nach dem Training - mit Kohlenhydraten für die Glykogen-Wiederauffüllung`},
       {label:"Protein",detail:`${Math.round(pMin*0.25)}-${Math.round(pMax*0.25)}g mit dieser Mahlzeit - anaboles Fenster`},
@@ -6812,28 +7725,52 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     return (
       <div>
-        {/* Sport + Ruhetag Switcher */}
+        {/* Saison (nur PRO): Phase und Countdown, am Carb-Loading-Tag ein Hinweis */}
+        {isPro&&seasonLine&&(
+          <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"9px 12px",marginBottom:clToday?8:14}}>
+            <div style={{fontSize:12,fontWeight:600,color:C.black,lineHeight:1.45,overflowWrap:"anywhere"}}>{seasonLine}</div>
+            {calcAll?.phaseNote&&<div style={{fontSize:11,color:C.g600,lineHeight:1.55,marginTop:2}}>{calcAll.phaseNote}</div>}
+          </div>
+        )}
+        {isPro&&clToday&&(
+          <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+            <div style={{fontSize:13,fontWeight:700,color:C.black,lineHeight:1.4}}>{`Heute Carb-Loading: ${clMin}-${clMax} g Kohlenhydrate`}</div>
+            <div style={{fontSize:11,color:"#4A7000",lineHeight:1.55,marginTop:3}}>{`Über den Tag verteilt (10-12 g pro kg), dazu weniger Fett und Ballaststoffe. ${clOther?(raceTomorrow?`Morgen ist ${clName(clRace)}.`:`Morgen nochmals gleich viel, übermorgen ist ${clName(clRace)}.`):(raceTomorrow?"Morgen ist dein Rennen.":"Morgen nochmals gleich viel.")}`}</div>
+          </div>
+        )}
+
+        {/* Sport + Lange Einheit + Ruhetag Switcher */}
         <div style={{marginBottom:16}}>
           <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
             {allSports.map(s=>{
               const label=SPORT_GROUPS.find(g=>g.id===s)?.label||s;
-              const active=activeSport===s&&!isRestDay;
+              const active=activeSport===s&&!isRestDay&&!isLongDay;
+              const longActive=activeSport===s&&isLongDay;
               return (
-                <button key={s} onClick={()=>{setActiveSport(s);setIsRestDay(false);}}
-                  style={{padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
-                  {label}
-                </button>
+                <React.Fragment key={s}>
+                  <button onClick={()=>{setActiveSport(s);setIsRestDay(false);setLongOn(false);}}
+                    style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                    {label}
+                  </button>
+                  {/* Lange Einheit nur bei der gewählten Sportart, wenn sie eine hat */}
+                  {s===activeSport&&longTD&&longMin>0&&(
+                    <button onClick={()=>{setIsRestDay(false);setLongOn(true);}} aria-pressed={longActive}
+                      style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${longActive?C.black:C.g200}`,background:longActive?C.neon:C.white,color:C.black,fontSize:12,fontWeight:longActive?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
+                      {`Lange Einheit · ${fmtDurMin(longMin)}`}
+                    </button>
+                  )}
+                </React.Fragment>
               );
             })}
-            <button onClick={()=>setIsRestDay(true)}
-              style={{padding:"6px 14px",borderRadius:100,border:`1.5px solid ${isRestDay?C.black:C.g200}`,background:isRestDay?"#F0F0F0":C.white,color:C.black,fontSize:12,fontWeight:isRestDay?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+            <button onClick={()=>{setIsRestDay(true);setLongOn(false);}}
+              style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${isRestDay?C.black:C.g200}`,background:isRestDay?"#F0F0F0":C.white,color:C.black,fontSize:12,fontWeight:isRestDay?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
               Ruhetag
             </button>
           </div>
           <div style={{fontSize:12,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:4,overflowWrap:"anywhere"}}>
-            {isRestDay?"Ruhetag · Regeneration & Ernährung":`Tagesplan · ${sportLabel} · ${activeIntensity==="high"||activeIntensity==="competition"?"Intensiv":activeIntensity==="low"?"Leicht":"Mittel"} · ${activeDuration}min`}
+            {isRestDay?"Ruhetag · Regeneration & Ernährung":`${isLongDay?"Lange Einheit":"Tagesplan"} · ${sportLabel} · ${activeIntensity==="high"||activeIntensity==="competition"?"Intensiv":activeIntensity==="low"?"Leicht":"Mittel"} · ${isLongDay?fmtDurMin(activeDuration):`${activeDuration}min`}`}
           </div>
-          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?"Weniger Kalorien, mehr Regeneration - kein Training heute.":knownTime?`Personalisiert auf ${w}kg, ${TIME_LABEL}.`:`Personalisiert auf ${w}kg. Keine feste Trainingszeit angegeben - Beispiel mit Training um 17:00.`}</div>
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.6}}>{isRestDay?(restClUp?"Kein Training heute - Carb-Loading vor dem Rennen, darum mehr Kalorien.":"Weniger Kalorien, mehr Regeneration - kein Training heute."):`${isLongDay?"Dein Tag mit der längsten Einheit: Kohlenhydrate, Trinken und Kalorien sind auf diese Dauer gerechnet. ":""}${longMoved?`Personalisiert auf ${w}kg. Mit deinem ${TIME_LABEL} wärst du erst spät fertig - Beispiel mit Start um 08:00.`:knownTime?`Personalisiert auf ${w}kg, ${TIME_LABEL}.`:isLongDay?`Personalisiert auf ${w}kg. Keine feste Trainingszeit angegeben - Beispiel mit Start um 08:00.`:`Personalisiert auf ${w}kg. Keine feste Trainingszeit angegeben - Beispiel mit Training um 17:00.`}`}</div>
         </div>
 
         {/* Ruhetag Plan */}
@@ -6846,8 +7783,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 ...(vitDItem?[vitDItem]:[]),
                 ...(pregItem?[pregItem]:[]),
               ]},
-              {time:"12:00-13:00",phase:"Mittag - leichter",items:[
-                {label:"Leichtere Mahlzeit",detail:`${Math.round((calcAll?.restDay||1800)*0.35)} kcal - weniger Carbs als Trainingstag`},
+              {time:"12:00-13:00",phase:restClUp?"Mittag":"Mittag - leichter",items:[
+                restClUp?{label:"Mahlzeit",detail:`${Math.round(restKcal*0.35)} kcal - viele Kohlenhydrate, wenig Fett und Ballaststoffe`}
+                  :{label:"Leichtere Mahlzeit",detail:`${Math.round(restKcal*0.35)} kcal - weniger Carbs als Trainingstag`},
                 ...((pregCare||calcAll?.suppressKreatin)?[]:[{label:"Kreatin",detail:"5g täglich - auch an Ruhetagen"}]),
                 ...((pregCare||calcAll?.suppressOmega3)?[]:[{label:"Omega-3",detail:`2-3g EPA/DHA${calcAll?.MEDI_WARNINGS?.omega3?` · ${calcAll.MEDI_WARNINGS.omega3}`:""}`}]),
               ]},
@@ -6856,7 +7794,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 {label:"Dehnen / Mobility",detail:"10-15 min - Schwerpunkt auf beanspruchte Muskelgruppen"},
               ]},
               {time:"18:00-19:00",phase:"Abendessen",items:[
-                {label:"Hauptmahlzeit",detail:`${Math.round((calcAll?.restDay||1800)*0.35)} kcal, proteinreich`},
+                {label:"Hauptmahlzeit",detail:`${Math.round(restKcal*0.35)} kcal, proteinreich`},
                 ...(pregCare?[]:[{label:"Magnesium",detail:`${mgDose}mg (Supplement-Dosis) - Ruhetag ideal für Supplementierung`}]),
                 ...(!pregCare&&(calcAll?.stressAshwaNeeded||calcAll?.recoveryAshwaNeeded)?[{label:"Ashwagandha",detail:`600mg - Cortisol abbauen${calcAll?.MEDI_WARNINGS?.ashwa?` · ${calcAll.MEDI_WARNINGS.ashwa}`:""}`}]:[]),
               ]},
@@ -6893,7 +7831,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               <div style={{fontSize:12,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:8}}>Ruhetag-Ziele</div>
               <div style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:8,textAlign:"center"}}>
                 {[
-                  {l:"Kalorien",v:`${calcAll?.restDay?.toLocaleString("de-CH")||"-"} kcal`,s:`~${Math.round((calcAll?.withTraining||2500)-(calcAll?.restDay||1800))} kcal unter Trainingstag`},
+                  {l:"Kalorien",v:`${restClUp?restKcal.toLocaleString("de-CH"):(calcAll?.restDay?.toLocaleString("de-CH")||"-")} kcal`,s:restClUp?"Carb-Loading vor dem Rennen":`~${Math.round((calcAll?.withTraining||2500)-(calcAll?.restDay||1800))} kcal unter Trainingstag`},
                   {l:"Protein",v:`${Math.round((calcAll?.proteinMin||140)*0.85)}-${Math.round((calcAll?.proteinMax||180)*0.85)}g`,s:"leicht reduziert"},
                   {l:"Wasser",v:`${(Math.max(Math.round(w*35),(+calcAll?.waterRestMl)||0)/1000).toFixed(1)}L`,s:"ohne Schweissverlust"},
                 ].map(({l,v,s},i)=>(
@@ -6945,7 +7883,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div style={{fontSize:12,color:C.g400,fontFamily:"Inter,sans-serif",fontWeight:500,marginBottom:10}}>Tagesziele</div>
           <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(4,minmax(0,1fr))",gap:8}}>
             {[
-              {l:"Kalorien",v:`${(calc?.withTraining||2500).toLocaleString("de-CH")} kcal`},
+              {l:"Kalorien",v:`${Math.round(kcalDay).toLocaleString("de-CH")} kcal`},
               {l:"Protein",v:`${calc?.proteinMin||140}-${calc?.proteinMax||180}g`},
               {l:"Wasser",v:`${((calc?.waterMl||2500)/1000).toFixed(1)}L`},
               {l:"Schlaf",v:"7-9h"},
@@ -6956,6 +7894,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               </div>
             ))}
           </div>
+          {clKcalUp&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:10,textAlign:"center"}}>Heute liegen deine Kalorien höher: Carb-Loading vor dem Rennen.</div>}
         </div>}
       </div>
     );
@@ -7034,13 +7973,84 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Wettkampf-Sportart = Sportart mit hasCompetition (Hauptsportart zuerst)
     const compSports=Object.keys(trainingData||{}).filter(id=>trainingData?.[id]?.hasCompetition).sort((a,b)=>(b===primarySport)-(a===primarySport));
     const [compSel,setCompSel]=useState(()=>UI_STATE.wettkampfSport||compSports[0]);
-    const compSport=compSports.includes(compSel)?compSel:compSports[0];
+    const compSportTyp=compSports.includes(compSel)?compSel:compSports[0];
     const setCompSport=s=>{UI_STATE.wettkampfSport=s;setCompSel(s);};
     const hasComp=compSports.length>0;
+    const sportLbl=sid=>SPORT_GROUPS.find(g=>g.id===sid)?.label||sid||"Sport";
+    // Deine Rennen: alle Rennen mit Datum ab heute (alle Wettkampf-Sportarten). Gewählt ist UI_STATE.wettkampfRace
+    // (id, "typ" = ohne Datum mit typischer Dauer), sonst das nächste Rennen.
+    const today=todayISO();
+    const upcoming=allRaces(trainingData,today).filter(r=>r.daysUntil>=0&&compSports.includes(r.sportId));
+    const [raceSelRaw,setRaceSelRaw]=useState(()=>UI_STATE.wettkampfRace||null);
+    const setRaceSel=v=>{UI_STATE.wettkampfRace=v;setRaceSelRaw(v);};
+    const selRace=raceSelRaw==="typ"?null:(upcoming.find(r=>r.id===raceSelRaw)||upcoming[0]||null);
+    const compSport=selRace?selRace.sportId:compSportTyp;
+    const [showAllRaces,setShowAllRacesRaw]=useState(()=>!!UI_STATE.wettkampfAllRaces);
+    const setShowAllRaces=v=>{UI_STATE.wettkampfAllRaces=v;setShowAllRacesRaw(v);};
+
+    // Rennen bearbeiten: Entwurf hier im Reiter, an App erst bei "Speichern", beim Zuklappen und beim Verlassen.
+    // Grund: jede Änderung an App zeichnet den Reiter neu, beim Tippen würde der Fokus wegspringen.
+    const [editOpen,setEditOpenRaw]=useState(()=>!!UI_STATE.wettkampfEdit);
+    const [draft,setDraftRaw]=useState(()=>{ const o={}; compSports.forEach(sid=>{ o[sid]=cleanRaces(trainingData?.[sid]?.races); }); return o; });
+    const [dirty,setDirty]=useState(false);
+    const draftRef=useRef(draft); draftRef.current=draft;
+    const dirtyRef=useRef(false);
+    const mainRef=useRef(undefined); // undefined = Hauptrennen nicht geändert, null = keines
+    const onChangeRef=useRef(onTrainingChange); onChangeRef.current=onTrainingChange;
+    const markDirty=()=>{ dirtyRef.current=true; setDirty(true); };
+    const editRaces=(sid,list)=>{ markDirty(); setDraftRaw(prev=>({...prev,[sid]:list})); };
+    const setMainDraft=rid=>{
+      markDirty(); mainRef.current=rid||null;
+      // Vergangene Rennen bleiben wie sie sind (gleich wie setMainRaceAll, sonst endet die Erholung nach dem Hauptrennen zu früh)
+      setDraftRaw(prev=>{ const n={}; Object.keys(prev||{}).forEach(sid=>{ n[sid]=(prev[sid]||[]).map(r=>(parseISODate(r.date)&&r.date<today&&r.id!==rid)?r:({...r,main:!!rid&&r.id===rid})); }); return n; });
+    };
+    // Übernehmen mit funktionalen Updates: zuerst die Listen, dann das Hauptrennen über alle Sportarten
+    const commitRaces=()=>{
+      if(!dirtyRef.current) return;
+      dirtyRef.current=false; setDirty(false);
+      const fn=onChangeRef.current; if(typeof fn!=="function") return;
+      const d=draftRef.current||{};
+      // Hauptrennen: geändert (auch "keines") oder das markierte aus dem Entwurf, damit es über alle Sportarten eindeutig bleibt
+      // Kommendes Hauptrennen zuerst: ein vergangenes (Erholung) darf das kommende nicht verdrängen
+      const draftAll=Object.values(d).flat();
+      const draftMain=draftAll.find(r=>r&&r.main&&parseISODate(r.date)&&r.date>=today)||draftAll.find(r=>r&&r.main);
+      const mainId=mainRef.current!==undefined?mainRef.current:(draftMain?draftMain.id:undefined);
+      mainRef.current=undefined;
+      fn(prev=>{ const next={...(prev||{})}; Object.entries(d).forEach(([sid,list])=>{ if(next[sid]&&typeof next[sid]==="object") next[sid]={...next[sid],races:cleanRaces(list)}; }); return next; });
+      if(mainId!==undefined) fn(prev=>setMainRaceAll(prev,mainId));
+      UI_STATE.wettkampfSavedAt=Date.now();
+    };
+    React.useEffect(()=>()=>{ if(resultsMountedRef.current) commitRaces(); },[]);
+    const toggleEdit=()=>{
+      const next=!editOpen;
+      UI_STATE.wettkampfEdit=next; setEditOpenRaw(next);
+      if(!next) commitRaces();
+    };
+    const justSaved=!dirty&&(+UI_STATE.wettkampfSavedAt||0)>Date.now()-8000;
+    // Hauptrennen anderswo: nur zählende (Wettkampf an, gültiges Datum, heute oder später), mit den Rennen aus dem Entwurf
+    const draftTD={...(trainingData||{})};
+    Object.keys(draft||{}).forEach(o=>{ draftTD[o]={...(draftTD[o]||{}),races:draft[o]||[]}; });
+    const mainElsewhereOf=sid=>mainRaceElsewhere(draftTD,sid);
+    const fmtRaceH=h=>h<1?`ca. ${Math.max(5,Math.round(h*60/5)*5)} min`:`ca. ${Math.round(h*2)/2} h`;
+    // "sonst ..." im Editor: typische Renndauer der Sportart, sonst die Schätzung aus der Disziplin
+    const typDurLabel=sid=>{
+      const t=(trainingData||{})[sid]||{};
+      const o=RACE_DURATION_OPTS.find(x=>x.id===t.raceDuration);
+      if(o) return o.l;
+      const h=+sportCalc(sid,{td:{...t,races:[]}}).calc?.raceHours;
+      return h>0?fmtRaceH(h):null;
+    };
+    const editSummary=raceSummary(compSports.flatMap(sid=>cleanRaces(trainingData?.[sid]?.races)))||"Rennen mit Datum eintragen, ändern oder löschen";
+
     // calcAll: Tagesdosen (Magnesium, Koffein-Profil) · calc: nur die Wettkampf-Sportart (Renndauer, KH, Natrium)
+    // Renndauer: Dauer beim gewählten Rennen, sonst die typische Renndauer der Sportart, sonst Schätzung.
+    // Gerechnet ohne die Renndaten, damit genau diese Dauer gilt (Saison-Effekte ändern die Rennwerte nicht).
     const calcAll=calcPro(profilData,trainingData,sportData);
-    const {calc,td:compTD}=sportCalc(compSport);
-    const compLabel=SPORT_GROUPS.find(s=>s.id===compSport)?.label||compSport||"Sport";
+    const baseCompTD=(trainingData||{})[compSport]||null;
+    const typRaceDur=baseCompTD?.raceDuration||null;
+    const usedRaceDur=selRace?.duration||typRaceDur;
+    const {calc}=sportCalc(compSport,baseCompTD?{td:{...baseCompTD,raceDuration:usedRaceDur,races:[]}}:{});
+    const compLabel=sportLbl(compSport);
     const isEndurance=isEnduranceSport(compSport,sportData);
     const w=(+calc?.w)||(+profilData?.weight)||75;
     const pregCare=!!calcAll?.pregnancyCare;
@@ -7051,20 +8061,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const cafSensitive=!!calcAll?.caffeineSensitive;
     const cafDose=(+calcAll?.caffeinePreWorkoutDose)||150;
 
-    // Renndauer: Angabe aus dem Trainings-Schritt (raceDuration), sonst Schätzung aus der Disziplin
+    // Renndauer: Angabe beim Rennen, sonst aus dem Trainings-Schritt (raceDuration), sonst Schätzung aus der Disziplin
     const raceH=Math.max(0.1,(+calc?.raceHours)||1);
-    const raceEst=calc?.raceDurationEstimated!==false;
-    const raceSel=compTD?.raceDuration||null;
-    const raceOpt=RACE_DURATION_OPTS.find(o=>o.id===raceSel)||null;
-    const raceTxt=raceOpt?raceOpt.l:(raceH<1?`ca. ${Math.max(5,Math.round(raceH*60/5)*5)} min`:`ca. ${Math.round(raceH*2)/2} h`);
+    const raceSel=typRaceDur; // Chips zeigen und ändern die typische Renndauer der Sportart
+    const raceOpt=RACE_DURATION_OPTS.find(o=>o.id===usedRaceDur)||null;
+    const raceTxt=raceOpt?raceOpt.l:fmtRaceH(raceH);
+    const raceSrc=selRace?.duration?" (Angabe beim Rennen)":typRaceDur?" (deine Angabe)":" (geschätzt aus deiner Disziplin)";
     const shortRace=raceH<1;
     // Rennsportarten sagen "Renndauer", Spiele und andere Wettkämpfe "Wettkampfdauer"
     const durWord=(COMPETITION_LABEL[compSport]||"").includes("Rennen")?"Renndauer":"Wettkampfdauer";
     // Renndauer direkt hier ändern: gilt für die ganze Analyse (gleiche Daten wie im Trainings-Schritt)
     const setRaceDuration=(v)=>{
       if(typeof onTrainingChange!=="function"||!compSport) return;
-      const cur=(trainingData||{})[compSport]||{};
-      onTrainingChange({...(trainingData||{}),[compSport]:{...cur,raceDuration:cur.raceDuration===v?null:v}});
+      onTrainingChange(prev=>{ const cur=(prev||{})[compSport]||{}; return {...(prev||{}),[compSport]:{...cur,raceDuration:cur.raceDuration===v?null:v}}; });
     };
 
     // Werte aus calcPro (eine Quelle)
@@ -7082,6 +8091,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const sweatLoss=(+calc?.raceSweatLossL)||0;
     const rehydL=(+calc?.raceRehydL)||0.5;
     const pregItem={title:"Supplemente",detail:"Schwangerschaft und Stillzeit: Supplemente nur nach Rücksprache mit deiner Ärztin oder deinem Arzt."};
+    // Gewähltes Rennen: Countdown und die konkreten Carb-Loading-Tage (2 Tage vorher, nur was noch kommt)
+    const raceD=selRace?raceDaysLeft(selRace,today):null;
+    const dayWord=iso=>iso===today?"heute":iso===addDaysISO(today,1)?"morgen":fmtDateCH(iso,{weekday:true,year:false});
+    const clDays=(selRace&&carbLoadOn&&raceD>=1)?[addDaysISO(selRace.date,-2),addDaysISO(selRace.date,-1)].filter(d=>d&&d>=today):[];
+    const clDaysTxt=clDays.map(dayWord).join(" und ");
 
     if(!hasComp) return (
       <div style={{padding:"20px 0",textAlign:"center"}}>
@@ -7093,7 +8107,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const longFuel=isEndurance&&raceH>=1.5;
     const PHASES=[
       {
-        label:carbLoadOn?"2 Tage vorher":"Die Tage davor",
+        label:carbLoadOn?(clDays.length===2?`2 Tage vorher · ${clDaysTxt}`:"2 Tage vorher"):"Die Tage davor",
         items:[
           carbLoadOn
             ?{title:"Carb-Loading",detail:`36-48 h vor dem Start ${clMin}-${clMax}g Kohlenhydrate pro Tag (10-12 g/kg) - Glykogenspeicher füllen. Weniger Fett und Ballaststoffe, damit alles Platz hat.`,bold:true}
@@ -7106,7 +8120,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ].filter(Boolean)
       },
       {
-        label:"Tag vorher",
+        label:selRace&&raceD>=1?`Tag vorher · ${dayWord(addDaysISO(selRace.date,-1))}`:"Tag vorher",
         items:[
           {title:"Pasta-/Reis-Mahlzeit Abend",detail:longFuel?`${Math.round(w*2)}-${Math.round(w*3)}g Kohlenhydrate (2-3g/kg), wenig Fett - leicht verdaulich, kein Risiko`:`${Math.round(w*1)}-${Math.round(w*2)}g Kohlenhydrate (1-2g/kg), wenig Fett - leicht verdaulich, kein Risiko`,bold:true},
           pregCare?pregItem:{title:"Magnesium + Salz",detail:`${mgDose}mg Magnesium (Supplement-Dosis), zusätzliches Natrium im Essen - für eine normale Muskelfunktion`},
@@ -7115,7 +8129,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         ]
       },
       {
-        label:"Race Morning",
+        label:selRace?`Race Morning · ${dayWord(selRace.date)}`:"Race Morning",
         items:[
           {title:`${longFuel?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${longFuel?`${Math.round(w*2)}-${Math.round(w*3)}`:`${Math.round(w*1)}-${Math.round(w*2)}`}g Kohlenhydrate, ${Math.round(w*0.3)}g Protein - Hafer, Brot, Banane`,bold:true},
           ...((cafNone||pregCare)?[]:[{title:"45 min vor Start: Koffein",detail:hasBlutdruck?"Blutdruckmedikamente: Koffein kann den Blutdruck erhöhen - nur nach Rücksprache mit deinem Arzt":cafSensitive?"Bei dir lieber weglassen - am Wettkampftag nichts Neues ausprobieren":`${cafDose}mg Koffein (ca. 3 mg/kg) für maximale Wirkung beim Start`}]),
@@ -7150,17 +8164,94 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     ];
 
     const sumParts=[`${w}kg`,rc>0?`${rc}g Kohlenhydrate/h`:"ohne Kohlenhydrate unterwegs",...(naNeeded?[`${naInH}mg Natrium/h`]:[])];
+    // Viele Rennen: zuerst 4 zeigen (das gewählte immer), Rest auf Antippen
+    const manyRaces=upcoming.length>5;
+    const shownRaces=(!manyRaces||showAllRaces)?upcoming:[...upcoming.slice(0,4),...(selRace&&upcoming.indexOf(selRace)>=4?[selRace]:[])];
+    const typDurWord=(COMPETITION_LABEL[compSportTyp]||"").includes("Rennen")?"Renndauer":"Wettkampfdauer";
+    const raceCard=(on)=>({display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,width:"100%",minHeight:52,padding:"10px 12px",borderRadius:12,border:`1.5px solid ${on?C.black:C.g200}`,background:on?C.neonDim:C.white,color:C.black,textAlign:"left",cursor:"pointer",fontFamily:"Inter,sans-serif",boxSizing:"border-box"});
 
     return (
       <div>
-        {compSports.length>1&&(
+        {/* Deine Rennen: Antippen zeigt den Plan für dieses Rennen */}
+        <div style={{marginBottom:10}}>
+          <div style={{fontSize:13,fontWeight:700,color:C.black,marginBottom:8}}>Deine Rennen</div>
+          {upcoming.length===0?(
+            <div style={{fontSize:12,color:C.g600,lineHeight:1.6,background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"10px 12px"}}>Noch kein Rennen mit Datum. Trag deine Rennen unter «Rennen bearbeiten» ein, dann bekommst du für jedes Rennen einen Countdown und die Carb-Loading-Tage.</div>
+          ):(
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {shownRaces.map(r=>{
+                const on=!!selRace&&selRace.id===r.id;
+                return (
+                  <button key={r.id} type="button" aria-pressed={on} onClick={()=>setRaceSel(r.id)} style={raceCard(on)}>
+                    <span style={{minWidth:0,flex:1}}>
+                      <span style={{display:"block",fontSize:13,fontWeight:600,overflowWrap:"anywhere"}}>{r.name||`Rennen · ${sportLbl(r.sportId)}`}</span>
+                      <span style={{display:"block",fontSize:11,color:C.g500,marginTop:2,overflowWrap:"anywhere"}}>{`${fmtDateCH(r.date,{weekday:true})}${r.name&&compSports.length>1?` · ${sportLbl(r.sportId)}`:""}`}</span>
+                    </span>
+                    <span style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:4,flexShrink:0}}>
+                      <span style={{fontSize:12,fontWeight:700,whiteSpace:"nowrap"}}>{raceCountdown(raceDaysLeft(r,today))}</span>
+                      {r.main&&<span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:100,background:C.neon,color:C.black,whiteSpace:"nowrap"}}>Hauptrennen</span>}
+                    </span>
+                  </button>
+                );
+              })}
+              {manyRaces&&(
+                <button type="button" onClick={()=>setShowAllRaces(!showAllRaces)}
+                  style={{minHeight:40,padding:"0 12px",border:"none",background:"transparent",color:C.g600,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",textDecoration:"underline"}}>
+                  {showAllRaces?"Weniger zeigen":`Alle ${upcoming.length} Rennen zeigen`}
+                </button>
+              )}
+              <button type="button" aria-pressed={!selRace} onClick={()=>setRaceSel("typ")} style={{...raceCard(!selRace),minHeight:44}}>
+                <span style={{minWidth:0,flex:1}}>
+                  <span style={{display:"block",fontSize:13,fontWeight:600}}>Ohne Datum</span>
+                  <span style={{display:"block",fontSize:11,color:C.g500,marginTop:2}}>{`Plan mit deiner typischen ${typDurWord}`}</span>
+                </span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Rennen bearbeiten: anlegen, ändern, löschen, Hauptrennen setzen (je Wettkampf-Sportart) */}
+        <div style={{border:`1px solid ${C.g200}`,borderRadius:12,background:C.white,marginBottom:16}}>
+          <button type="button" aria-expanded={editOpen} onClick={toggleEdit}
+            style={{width:"100%",minHeight:48,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,padding:"12px 14px",background:"transparent",border:"none",cursor:"pointer",fontFamily:"Inter,sans-serif",textAlign:"left",color:C.black}}>
+            <span style={{minWidth:0}}>
+              <span style={{display:"block",fontSize:13,fontWeight:600}}>Rennen bearbeiten</span>
+              <span style={{display:"block",fontSize:11,color:C.g500,marginTop:2,overflowWrap:"anywhere"}}>{editSummary}</span>
+            </span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g400} strokeWidth="2" strokeLinecap="round" style={{transform:editOpen?"rotate(180deg)":"none",transition:"transform .2s",flexShrink:0}}><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          {editOpen&&(
+            <div style={{padding:"0 14px 14px"}}>
+              {compSports.map(sid=>(
+                <div key={sid} style={{paddingTop:12,borderTop:`0.5px solid ${C.g100}`,marginBottom:4}}>
+                  {compSports.length>1&&<div style={{fontSize:12,fontWeight:600,color:C.g600,marginBottom:8}}>{sportLbl(sid)}</div>}
+                  <RaceListEditor races={draft?.[sid]||[]} onChange={list=>editRaces(sid,list)} onMainSet={setMainDraft}
+                    mainElsewhere={mainElsewhereOf(sid)} defaultDurationLabel={typDurLabel(sid)}/>
+                </div>
+              ))}
+              {dirty?(
+                <div style={{marginTop:12}}>
+                  <button type="button" onClick={commitRaces}
+                    style={{width:"100%",minHeight:44,borderRadius:10,border:"none",background:C.neon,color:C.black,fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                    Änderungen speichern
+                  </button>
+                  <div style={{fontSize:11,color:C.g500,marginTop:6,lineHeight:1.5,textAlign:"center"}}>Der Plan rechnet nach dem Speichern mit deinen Rennen.</div>
+                </div>
+              ):justSaved?(
+                <div style={{fontSize:12,color:"#4A7000",fontWeight:600,marginTop:12,textAlign:"center"}}>Gespeichert. Der Plan rechnet jetzt mit deinen Rennen.</div>
+              ):null}
+            </div>
+          )}
+        </div>
+
+        {!selRace&&compSports.length>1&&(
           <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
             {compSports.map(s=>{
               const label=SPORT_GROUPS.find(g=>g.id===s)?.label||s;
               const active=compSport===s;
               return (
                 <button key={s} onClick={()=>setCompSport(s)}
-                  style={{padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                  style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
                   {label}
                 </button>
               );
@@ -7168,11 +8259,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         )}
         <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"13px 16px",marginBottom:20}}>
-          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4,overflowWrap:"anywhere"}}>Race-Day Strategie · {compLabel}</div>
-          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.65}}>Personalisiert auf {sumParts.join(", ")}. Gerechnet mit {raceTxt} {durWord}{raceEst?" (geschätzt aus deiner Disziplin)":" (deine Angabe)"}. Alle Angaben basieren auf deinen Trainingsdaten und MET-2024 Berechnungen.</div>
+          <div style={{fontSize:12,fontWeight:600,color:C.black,marginBottom:4,overflowWrap:"anywhere"}}>Race-Day Strategie · {selRace?.name||compLabel}</div>
+          {selRace&&(
+            <div style={{fontSize:12,color:C.black,lineHeight:1.55,marginBottom:6,overflowWrap:"anywhere"}}>
+              <div>{`${fmtDateCH(selRace.date,{weekday:true})} · ${raceCountdown(raceD)}${selRace.main?" · Hauptrennen":""}${selRace.name&&compSports.length>1?` · ${compLabel}`:""}`}</div>
+              {clDays.length>0&&(
+                <div style={{fontWeight:600,marginTop:2}}>{`Carb-Loading: ${clDaysTxt}, ${clDays.length>1?"je ":""}`}{isPro?`${clMin}-${clMax} g Kohlenhydrate`:<ProLock w={90}/>}</div>
+              )}
+            </div>
+          )}
+          <div style={{fontSize:11,color:"#4A7000",lineHeight:1.65}}>Personalisiert auf {sumParts.join(", ")}. Gerechnet mit {raceTxt} {durWord}{raceSrc}. Alle Angaben basieren auf deinen Trainingsdaten und MET-2024 Berechnungen.</div>
           {/* Renndauer anpassen: nochmals tippen hebt die Wahl auf (dann wieder Schätzung) */}
           <div style={{marginTop:10}}>
-            <div style={{fontSize:11,fontWeight:500,color:C.black,marginBottom:6}}>{`Typische ${durWord}`}</div>
+            <div style={{fontSize:11,fontWeight:500,color:C.black,marginBottom:6}}>{`Typische ${durWord}${selRace?.duration?" · gilt für Rennen ohne eigene Dauer":""}`}</div>
             <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
               {RACE_DURATION_OPTS.map(o=>{
                 const on=raceSel===o.id;
@@ -7244,9 +8343,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const carbsH=Number.isFinite(calc?.carbsPerHour)?calc.carbsPerHour:60;
     const raceCarbs=Number.isFinite(calc?.raceCarbsPerHour)?calc.raceCarbsPerHour:Math.min(120,Math.round(_snW*0.9));
     const hasCompSn=!!primaryTraining?.hasCompetition;
+    // Lange Einheit der Hauptsportart (calcPro longSession), nur wenn ihr g/h-Wert vom Schnitt abweicht
+    const longSn=calc?.longSession;
+    const longCarbsSn=longSn&&+longSn.min>0&&Number.isFinite(+longSn.carbsPerHour)?Math.max(0,Math.round(+longSn.carbsPerHour)):0;
+    const longPartSn=longCarbsSn>0&&longCarbsSn!==carbsH?`, auf langen Einheiten (${fmtDurMin(longSn.min)}) ${longCarbsSn}g pro Stunde`:"";
     const energyLine=(carbsH>0?`${carbsH}g Kohlenhydrate pro Trainingsstunde`:"Bei deinen Einheiten brauchst du unterwegs kaum Kohlenhydrate")
+      +longPartSn
       +(hasCompSn&&raceCarbs>0?`, im Wettkampf bis ${raceCarbs}g pro Stunde`:"")
-      +((carbsH>0||hasCompSn)?". Starte ab Minute 30 - nie warten, bis Hunger kommt.":".");
+      +((carbsH>0||hasCompSn||longPartSn)?". Starte ab Minute 30 - nie warten, bis Hunger kommt.":".");
     const prefEnergy=Array.isArray(_nEF)?_nEF:(_nEF?[_nEF]:["egal"]);
     const prefProtein=Array.isArray(_nPF)?_nPF:(_nPF?[_nPF]:["egal"]);
     const prefRecovery=Array.isArray(_nRF)?_nRF:(_nRF?[_nRF]:["egal"]);
@@ -7438,6 +8542,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             <div>
               <span style={{fontSize:11,color:C.g600,lineHeight:1.6}}>Wir empfehlen alle verfügbaren Produkte für deine Performance - unabhängig von Listung oder Verlinkung.</span>
             </div>
+            <div style={{height:1,background:C.g100}}/>
+            <AffiliateNote style={{color:C.g600,lineHeight:1.6}}/>
           </div>
         </div>
 
@@ -7544,7 +8650,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {name:"Koffein 100-200mg",dose:"30-45 min vor Wettkampf",shop:"iHerb",price:"~CHF 0.15",link:AFF.iherb("caffeine 100mg"),desc:"Kognitive Leistung + Ausdauer",tags:["Pre-Race","Koffein"],affiliate:true},
     ];
     const FERTIG=[
-      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","Top Pick"],affiliate:true},
+      {name:"Löwenanteil",desc:"Bio-Fertiggerichte im Glas - 30-42g Protein, 1 Jahr ungekühlt haltbar",price:"ab CHF 7.90 / Glas",link:"https://www.loewenanteil.com?ref=TREYN",tags:["Bio","High Protein","Top Pick · Werbung"],affiliate:true},
       {name:"Huel",desc:"Vollwertige Mahlzeiten & Shakes - alle 26 Vitamine & Mineralien",price:"ab CHF 2.50 / Mahlzeit",link:AFF.huel("collections/all"),tags:["Vegan","Vollwertig"],affiliate:true},
       {name:"Foodspring",desc:"Sport-Nutrition Mahlzeiten - Protein-Porridge, Recovery Shakes",price:"ab CHF 4.90 / Portion",link:AFF.foodspring("collections/all"),tags:["Sport","CH/DE/AT"],affiliate:true},
       {name:"Saturo",desc:"Flüssige Vollmahlzeiten - sofort trinkfertig, 0 Min. Zubereitung",price:"ab CHF 3.50 / Flasche",link:"https://saturo.com/de?ref=TREYN",tags:["Vegan","Sofort"],affiliate:false},
@@ -7573,7 +8679,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                   {p.dose&&<div style={{fontSize:11,color:"#888",fontFamily:"Inter,sans-serif",marginBottom:4}}>{p.dose}</div>}
                   <div style={{fontSize:11,color:"#666",lineHeight:1.5,marginBottom:8}}>{p.desc}</div>
                   <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
-                    {(p.tags||[]).map(t=><span key={t} style={{fontSize:10,padding:"2px 7px",borderRadius:8,background:t==="Top Pick"?C.neonDim:"#F5F5F5",color:t==="Top Pick"?"#4A7000":"#666",fontFamily:"Inter,sans-serif",fontWeight:t==="Top Pick"?600:500,border:t==="Top Pick"?`1px solid ${C.neon}`:"none"}}>{t}</span>)}
+                    {(p.tags||[]).map(t=><span key={t} style={{fontSize:10,padding:"2px 7px",borderRadius:8,background:t==="Top Pick · Werbung"?C.neonDim:"#F5F5F5",color:t==="Top Pick · Werbung"?"#4A7000":"#666",fontFamily:"Inter,sans-serif",fontWeight:t==="Top Pick · Werbung"?600:500,border:t==="Top Pick · Werbung"?`1px solid ${C.neon}`:"none"}}>{t}</span>)}
                   </div>
                 </div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,paddingTop:10,borderTop:"1px solid #F5F5F5"}}>
@@ -7587,6 +8693,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             );
           })}
         </div>
+        <AffiliateNote style={{marginTop:14}}/>
         <div style={{marginTop:16,fontSize:10,color:"#AAA",lineHeight:1.6,textAlign:"center"}}>Alle Preise sind Richtwerte und können beim Anbieter variieren.</div>
       </div>
     );
@@ -7657,7 +8764,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const sweatRateLh=Math.round(safeNum(calc?.sweatRateLh,0)*10)/10;
     const totalDays=trainingEntries.reduce((s,[,d])=>s+(d?.days||0),0);
     const totalMin=trainingEntries.reduce((s,[,d])=>s+(d?.days||0)*(d?.duration||60),0);
-    const trainingDays=Math.min(totalDays,7);
+    // Trainingstage aus calcPro (beachtet "an wie vielen Tagen insgesamt"), Doppeltage = Einheiten minus Tage
+    const trainingDays=safeNum(calc?.totalDays,Math.min(totalDays,7));
+    const doubleDays=safeNum(calc?.doubleDays,0);
     // kcal pro Einheit: aus calcPro (sportBreakdown), sonst gleiche Herleitung wie calcPro (Unterdisziplin-MET)
     const breakdown=Array.isArray(calc?.sportBreakdown)?calc.sportBreakdown:[];
     const kcalPerSession=(id,d)=>{
@@ -7666,8 +8775,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       const met=(sportMetTable(id,sportData)||{})[d?.intensity||"medium"]||5;
       return Math.round(Math.max(0,met-1)*w*(d?.duration||60)/60); // netto, wie calcPro
     };
-    // Reiner Trainingsverbrauch (ohne Job/NEAT, Ziel-, Hoehen- oder Zyklus-Faktor)
-    const weekTrainingKcal=trainingEntries.reduce((s,[id,d])=>s+kcalPerSession(id,d)*(d?.days||0),0);
+    // Reiner Trainingsverbrauch (ohne Job/NEAT, Ziel-, Hoehen- oder Zyklus-Faktor).
+    // Taper / Rennwoche: weniger Umfang (calcPro phaseTrainingFactor), gleich wie Mehrverbrauch und Trainingstag
+    const phaseF=safeNum(calc?.phaseTrainingFactor,1)||1;
+    const weekTrainingKcal=trainingEntries.reduce((s,[id,d])=>s+kcalPerSession(id,d)*(d?.days||0),0)*phaseF;
     const monthTrainingKcal=Math.round(weekTrainingKcal*4.33);
     const extraPerTrainingDay=breakdown.length&&calc?.trainingExtra!=null&&!isNaN(+calc.trainingExtra)
       ? Math.round(+calc.trainingExtra)
@@ -7688,27 +8799,43 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const localSports=(sportData?.selectedSports||sports||[]).length?(sportData?.selectedSports||sports||[]):trainingEntries.map(([id])=>id);
     const sportTags=localSports.slice(0,4).map(s=>sportDisplayName(s,sportData)||"Sport");
     if(!sportTags.length&&sportData?.healthOnly) sportTags.push("Gesundheit");
-    const cycleLabel=!isPro?null
-      :calc?.pregnancy==="pregnant"?"Schwangerschaft"
-      :calc?.pregnancy==="breastfeeding"?"Stillzeit"
-      :calc?.cyclePhase?{follikel:"Follikelphase",ovulation:"Ovulation",luteal:calc?.cycleKcalBonus>0?`Luteal +${calc.cycleKcalBonus} kcal`:"Lutealphase",period:"Periode",pcos:"PCOS",menopause:"Menopause"}[calc.cyclePhase]:null;
+    // Saisonphase ("Taper · Engadin in 10 Tagen"), Zyklus mit Tag ("Lutealphase · Tag 20 · +80 kcal"), Zielgewicht
+    const seasonTag=isPro?seasonTagText(calc):null;
+    const cycleLabel=isPro?cycleTagText(calc):null;
+    const goalTag=isPro?goalTagText(calc):null;
     // Job-Tag: Mehrverbrauch gegenüber einem sitzenden Job
     const neatTag=isPro&&calc?.jobActivity&&calc.jobActivity!=="sedentary"&&safeNum(calc?.jobExtraKcal,0)>0?`Job +${calc.jobExtraKcal} kcal`:null;
-    const contextTags=[...(cycleLabel?[cycleLabel]:[]),...(neatTag?[neatTag]:[])];
+    const contextTags=[seasonTag,cycleLabel,goalTag,neatTag].filter(Boolean);
+    // Abnehm-Defizit pausiert rund ums Rennen (Taper, Rennwoche, Renntag, Erholung)
+    const deficitPauseHint=isPro&&calc?.deficitPaused&&calc?.goal==="weightloss"
+      ?(calc?.seasonPhase==="recovery"?"Dein Defizit ist in der Erholung nach dem Rennen pausiert.":"Dein Defizit ist bis nach dem Rennen pausiert.")
+      :null;
 
     // Hinweise (farbige Box als Signal)
     const STRESS_LABEL={1:"sehr niedrig",2:"niedrig",3:"mittel",4:"hoch",5:"sehr hoch"}[calc.stressLevel]||"mittel";
     const sleepH=+(calc?.sleepHours??calc?.sleep)||7;
     const WARNINGS=[];
+    // Texte aus calcPro und Rennnamen (eigene Eingabe) für die HTML-Box maskieren
+    const escH=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[ch]);
     // Schwangerschaft / Stillzeit und Energiemangel (RED-S): ruhige gelbe Box, für Basic und PRO
     if(calc?.pregnancyCare) WARNINGS.push(`<strong>Schwangerschaft und Stillzeit:</strong> Werte sind Richtwerte. Supplemente nur nach Rücksprache mit deiner Ärztin oder deinem Arzt.`);
     if(calc?.redsRisk&&calc?.redsNote) WARNINGS.push(`<strong>Energiemangel vermeiden.</strong> ${calc.redsNote}`);
+    // Zielgewicht zu tief (BMI unter 18.5) und veraltetes Periodendatum: Sicherheit, darum auch in Basic
+    if(calc?.targetNote) WARNINGS.push(`<strong>Zielgewicht.</strong> ${escH(calc.targetNote)}`);
+    if(calc?.cycleDateStale&&calc?.isFemale&&!calc?.pregnancyCare) WARNINGS.push(`<strong>Zyklusphase.</strong> Trag im Profil das Datum deiner letzten Periode neu ein, damit deine Zyklusphase stimmt.`);
+    // Saisonphase (nur PRO): kurze Erklärung, was sich rund ums Rennen ändert
+    if(isPro&&calc?.phaseNote) WARNINGS.push(`${calc?.seasonPhaseLabel?`<strong>${escH(calc.seasonPhaseLabel)}.</strong> `:""}${escH(calc.phaseNote)}`);
     if(calc.stressLevel>=4) WARNINGS.push(`<strong>Stresslevel ${STRESS_LABEL} erkannt.</strong> Cortisol hemmt aktiv deine Regeneration und Muskelproteinsynthese. Das bremst dich mehr als jedes fehlende Supplement - Ashwagandha und erhöhtes Magnesium sind für dich jetzt besonders relevant.`);
     if(calc.needsCollagen&&(calc.injuries||[]).some(x=>x!=="none")) WARNINGS.push(isPro
       ?`<strong>Gelenke & Sehnen.</strong> Bei deinen Beschwerden ist Kollagen + Vitamin C direkt vor dem Training wissenschaftlich belegt wirksam. 10-15g, 30 min vor der Einheit.`
       :`<strong>Gelenke & Sehnen.</strong> Bei deinen Beschwerden lohnt sich gezielte Unterstützung für Sehnen und Gelenke. Was, wie viel und wann, siehst du mit PRO.`);
+    // Starke Periode oder Kupferspirale: eigener Eisen-Hinweis (ersetzt den allgemeinen für Sportlerinnen)
+    const heavyNote=calc?.heavyPeriodNote&&!calc?.pregnancyCare?calc.heavyPeriodNote:null;
+    if(heavyNote&&!(calc.ironRisk&&calc.isFemale)) WARNINGS.push(`<strong>Eisenbedarf erhöht.</strong> ${escH(heavyNote)}`);
     if(calc.ironRisk&&calc.isFemale) WARNINGS.push(calc?.pregnancyCare
       ?`<strong>Eisenbedarf erhöht.</strong> In Schwangerschaft und Stillzeit braucht dein Körper mehr Eisen. Ferritin mit deiner Ärztin oder deinem Arzt prüfen.`
+      :heavyNote
+      ?`<strong>Eisenbedarf erhöht.</strong> ${escH(heavyNote)}`
       :calc?.isMenopause
       ?`<strong>Eisen im Blick behalten.</strong> Intensiver Ausdauersport, Höhe oder eine einseitige Ernährung erhöhen den Eisenbedarf. Ferritin testen, bevor du Eisen einnimmst.`
       :`<strong>Eisenbedarf erhöht.</strong> Sportlerinnen haben durch Menstruationsverlust und Sport-Hämolyse ein erhöhtes Risiko. Ferritin regelmässig testen - Zielwert: >50 µg/L.`);
@@ -7761,11 +8888,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     // Werte-Gruppen: PRO offen, Basic gesperrt (ohne echte Werte)
     const energieCards=isPro?[
-      {label:"Grundumsatz",value:fmt(bmr),unit:"kcal",sub:"täglich, ohne Training",desc:"Kalorien die dein Körper in Ruhe verbraucht - Atmung, Herzschlag, Organe. Basis für alle Berechnungen."},
+      {label:"Grundumsatz",value:fmt(bmr),unit:"kcal",sub:calc?.bmrMethod==="cunningham"?"täglich · aus deiner fettfreien Masse":"täglich, ohne Training",desc:"Kalorien die dein Körper in Ruhe verbraucht - Atmung, Herzschlag, Organe. Basis für alle Berechnungen."},
       {label:"Trainingstag",value:fmt(withTraining),unit:"kcal",sub:"MET-basiert · exakt",desc:"Gesamtbedarf an einem Trainingstag - dein Ruhetag plus der Verbrauch durch Sport.",accent:true},
       {label:"Ruhetag",value:fmt(restDayKcal),unit:"kcal",sub:`Alltagsfaktor ${palFactor} · ohne Sport`,desc:"Grundumsatz mal Alltagsfaktor je nach Job (sitzend 1.4, leicht aktiv 1.55, mässig 1.7, sehr aktiv 1.9), inklusive Verdauung."},
       {label:"Mehrverbrauch durch Training",value:fmt(extraPerTrainingDay),unit:"kcal",sub:"pro Trainingstag",desc:"Zusätzliche Kalorien, die du an einem Trainingstag durch Sport verbrennst (ohne den Grundumsatz, der schon zählt). Die solltest du an diesen Tagen zusätzlich essen."},
-      {label:"Training / Woche",value:totalDays,unit:"×",sub:`${Math.round(totalMin/60)}h total`,desc:"Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."},
+      {label:"Training / Woche",value:totalDays,unit:"×",sub:doubleDays>0?`an ${trainingDays} ${trainingDays===1?"Tag":"Tagen"} · ${Math.round(totalMin/60)}h total`:`${Math.round(totalMin/60)}h total`,desc:"Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."},
       {label:"Kcal / Monat (Training)",value:fmt(monthTrainingKcal),unit:"kcal",desc:"Hochgerechneter Kalorienverbrauch nur durch Training pro Monat (Woche × 4.33)."},
     ]:[
       {label:"Ruhetag",unit:"kcal",locked:true},
@@ -7781,6 +8908,40 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {label:"Kohlenhydrate / Tag",unit:"g",locked:true,ph:"000"},
       {label:"Fett / Tag",unit:"g",locked:true,ph:"00"},
     ];
+    // Lange Einheit der Hauptsportart (calcPro longSession): KH pro Stunde und Bedarf an diesem Tag. Basic gesperrt
+    const longS=calc?.longSession&&safeNum(calc.longSession.min,0)>0?calc.longSession:null;
+    const longSportId=longS?(longS.sportId||primId):null;
+    const longSportName=longS?(sportDisplayName(longSportId,sportData)||primName):"";
+    const longDur=longS?fmtDurMin(longS.min):"";
+    const longCards=!longS?[]:isPro?[
+      {label:"KH lange Einheit",value:Math.round(safeNum(longS.carbsPerHour,0)),unit:"g/h",sub:`${longDur} ${longSportName}`,desc:"Kohlenhydrate pro Stunde auf deiner längsten Einheit. Je länger die Einheit, desto mehr brauchst du unterwegs."},
+      {label:"Langer Tag",value:safeNum(longS.dayKcal,0)>0?fmt(longS.dayKcal):"-",unit:"kcal",sub:`Tag mit ${longDur} ${longSportName}`,desc:"Gesamtbedarf an dem Tag mit deiner längsten Einheit (nur diese Einheit).",accent:true},
+    ]:[
+      {label:"KH lange Einheit",unit:"g/h",locked:true,ph:"00"},
+      {label:"Langer Tag",unit:"kcal",locked:true},
+    ];
+    // Kohlenhydrate im Training: eine Zeile je Sportart, direkt nach der Hauptsportart ihre lange Einheit.
+    // g/h: Hauptsportart aus calcPro (carbsPerHour bzw. longSession.carbsPerHour, gleicher Wert wie in den anderen Reitern),
+    // weitere Sportarten als Richtwert nach Dauer und Intensitaet
+    const carbPerHourOf=(id,d)=>{
+      const dur=d?.duration||60, intens=d?.intensity||"medium";
+      if(id===primId&&calc?.carbsPerHour!=null&&!isNaN(+calc.carbsPerHour)) return Math.max(0,Math.min(90,Math.round(+calc.carbsPerHour)));
+      if(dur<60) return 0;
+      if(dur<=90&&intens==="low") return 20;
+      if(dur<=90) return 45;
+      if(dur<=150) return 60;
+      return 80;
+    };
+    const longRow=longS?{key:`${longSportId}_lang`,label:`${longSportName} · lange Einheit (${longDur})`,dur:safeNum(longS.min,60),carbPerH:Math.max(0,Math.min(90,Math.round(safeNum(longS.carbsPerHour,0))))}:null;
+    const carbRows=[], carbRowsBasic=[]; // Basic: nur Namen, keine Werte
+    trainingEntries.forEach(([id,d])=>{
+      const label=sportDisplayName(id,sportData)||"Sport";
+      const carbPerH=carbPerHourOf(id,d);
+      if(!(carbPerH===0&&(d?.intensity||"medium")==="low")) carbRows.push({key:id,label,dur:d?.duration||60,carbPerH});
+      carbRowsBasic.push({key:id,label});
+      if(longRow&&id===longSportId){ carbRows.push(longRow); carbRowsBasic.push({key:longRow.key,label:longRow.label}); }
+    });
+    if(longRow&&!carbRows.includes(longRow)){ carbRows.push(longRow); carbRowsBasic.push({key:longRow.key,label:longRow.label}); }
     const elektrolytCards=isPro?[
       {label:"Natrium-Verlust / Einheit",value:fmt(natriumMg),unit:"mg",sub:natriumPerHourMg?`Verlust ${fmt(natriumPerHourMg)} mg pro Stunde · ${primName}`:`Hauptsportart: ${primName}`,desc:"So viel Natrium verlierst du über den Schweiss. Ersetzen musst du davon nur einen Teil."},
       {label:"Natrium-Zufuhr / Stunde",value:fmt(natriumIntakePerHourMg),unit:"mg",sub:natriumIntakeNeeded?`im Training · ${primName}`:"nötig erst ab ca. 2 h oder viel Schweiss",desc:"Empfohlene Zufuhr unterwegs: etwas mehr als die Hälfte des Verlusts, höchstens ca. 1000 mg pro Stunde (Elektrolyt-Tab oder Drink Mix)."},
@@ -7833,9 +8994,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           {(sportTags.length>0||contextTags.length>0)&&(
             <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:12}}>
               {sportTags.map((s,i)=><span key={`s${i}`} style={{display:"inline-flex",padding:"4px 11px",borderRadius:100,background:C.neon,color:C.black,fontSize:11,fontWeight:600}}>{s}</span>)}
-              {contextTags.map((s,i)=><span key={`c${i}`} style={{display:"inline-flex",padding:"4px 11px",borderRadius:100,background:C.g100,color:C.g600,fontSize:11,fontWeight:500}}>{s}</span>)}
+              {contextTags.map((s,i)=><span key={`c${i}`} style={{display:"inline-flex",padding:"4px 11px",borderRadius:100,background:C.g100,color:C.g600,fontSize:11,fontWeight:500,maxWidth:"100%",overflowWrap:"anywhere"}}>{s}</span>)}
             </div>
           )}
+          {deficitPauseHint&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:8}}>{deficitPauseHint}</div>}
         </div>
 
         {/* ── BASIC: 4 offene Basiswerte + eine Upgrade-Karte ── */}
@@ -7889,7 +9051,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:showEditor?10:0}}>
                   <div style={{minWidth:0}}>
                     <span style={{fontSize:14,fontWeight:500,color:"#0A0A0A",marginRight:10}}>{sportDisplayName(id,sportData)||"Sport"}</span>
-                    <span style={{fontSize:11,color:grayText,display:"inline-block"}}>{INTENS_LABEL[d?.intensity]||"Mittel"} · {d?.days||0}× / Woche{isPro?` · ~${kcalPerSession(id,d)} kcal pro Einheit`:""}</span>
+                    <span style={{fontSize:11,color:grayText,display:"inline-block"}}>{INTENS_LABEL[d?.intensity]||"Mittel"} · {d?.days||0}× / Woche{isPro?` · ~${Math.round(kcalPerSession(id,d)*phaseF)} kcal pro Einheit`:""}</span>
                   </div>
                   <span style={{fontSize:13,fontWeight:400,color:"#0A0A0A",flexShrink:0}}>{d?.duration||60} min</span>
                 </div>
@@ -7938,6 +9100,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {groupLabel("Makronährstoffe",!isPro)}
         {cardGrid(makroCards,grid3)}
 
+        {/* ── LANGE EINHEIT (nur mit längster Einheit über der Ø Dauer) ── */}
+        {longCards.length>0&&(<>
+          {groupLabel("Lange Einheit",!isPro)}
+          {cardGrid(longCards,"repeat(2,minmax(0,1fr))")}
+        </>)}
+
         {/* ── ELEKTROLYTE & FLÜSSIGKEIT ── */}
         {groupLabel("Elektrolyte & Flüssigkeit",!isPro)}
         {cardGrid(elektrolytCards,"repeat(2,minmax(0,1fr))",8)}
@@ -7953,18 +9121,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           {groupLabel("Kohlenhydrate im Training",!isPro)}
           {isPro?(
             <div style={{borderRadius:12,border:"1px solid #EBEBEB",overflow:"hidden",marginBottom:24,background:"#fff"}}>
-              {trainingEntries.map(([id,d],i,arr)=>{
-                const dur=d?.duration||60;
-                const intens=d?.intensity||"medium";
-                // g/h: Hauptsportart aus calcPro (carbsPerHour, gleicher Wert wie in den anderen Reitern),
-                // weitere Sportarten als Richtwert nach Dauer und Intensitaet
-                let carbPerH=0;
-                if(id===primId&&calc?.carbsPerHour!=null&&!isNaN(+calc.carbsPerHour)) carbPerH=Math.max(0,Math.min(90,Math.round(+calc.carbsPerHour)));
-                else if(dur<60) carbPerH=0;
-                else if(dur<=90&&intens==="low") carbPerH=20;
-                else if(dur<=90) carbPerH=45;
-                else if(dur<=150) carbPerH=60;
-                else carbPerH=80;
+              {carbRows.map((r,i,arr)=>{
+                const {carbPerH,dur}=r;
                 // Strategie passend zum g/h-Wert
                 let strategy="", method="", note="";
                 if(carbPerH<=0){
@@ -7984,11 +9142,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                   note="Über 60g/h: Glukose+Fruktose 2:1 für max. 90g/h Aufnahme. Maurten Drink Mix oder ähnlich.";
                 }
                 const totalCarbTraining=Math.round(carbPerH*(dur/60));
-                if(carbPerH===0&&intens==="low") return null;
                 return (
-                  <div key={id} style={{padding:"14px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none"}}>
+                  <div key={r.key} style={{padding:"14px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none"}}>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,marginBottom:8}}>
-                      <span style={{fontSize:13,fontWeight:500,color:"#0A0A0A",minWidth:0}}>{sportDisplayName(id,sportData)||"Sport"}</span>
+                      <span style={{fontSize:13,fontWeight:500,color:"#0A0A0A",minWidth:0,overflowWrap:"anywhere"}}>{r.label}</span>
                       <div style={{textAlign:"right",flexShrink:0}}>
                         <div style={{fontSize:16,fontWeight:300,color:carbPerH>60?"#4A7000":"#0A0A0A",letterSpacing:"-.02em"}}>{totalCarbTraining}g</div>
                         <div style={{fontSize:10,color:grayText}}>pro Session</div>
@@ -8017,9 +9174,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           ):(
             <button type="button" onClick={onUpgrade} aria-label="Kohlenhydrate im Training: mit PRO freischalten"
               style={{display:"block",width:"100%",textAlign:"left",borderRadius:12,border:"1px solid #EBEBEB",overflow:"hidden",marginBottom:24,background:"#fff",padding:0,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-              {trainingEntries.map(([id],i,arr)=>(
-                <div key={id} style={{padding:"12px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
-                  <span style={{fontSize:13,fontWeight:500,color:"#0A0A0A",minWidth:0,overflowWrap:"anywhere"}}>{sportDisplayName(id,sportData)||"Sport"}</span>
+              {carbRowsBasic.map((r,i,arr)=>(
+                <div key={r.key} style={{padding:"12px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
+                  <span style={{fontSize:13,fontWeight:500,color:"#0A0A0A",minWidth:0,overflowWrap:"anywhere"}}>{r.label}</span>
                   <span style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
                     <ProLock w={56}/>
                     <span style={{fontSize:10,color:grayText}}>g pro Session</span>
@@ -8205,6 +9362,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             );
           })}
         </div>
+        <AffiliateNote style={{marginTop:12}}/>
 
         {/* Clear button */}
         <div style={{marginTop:16,textAlign:"center"}}>
@@ -8524,7 +9682,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     ];
     const OPT_CYCLE=[
       {id:"follikel",  l:"Follikelphase",     d:"Tag 1-14 - nach Periode, mehr Energie"},
-      {id:"ovulation", l:"Ovulation",         d:"Tag 14-16 - Hochform, Peak-Performance"},
+      {id:"ovulation", l:"Eisprung",          d:"Tag 14-16 - Hochform, Peak-Performance"},
       {id:"luteal",    l:"Lutealphase",       d:"Tag 15-28 - mehr Hunger, mehr Magnesium"},
       {id:"period",    l:"Periode",           d:"Höchster Eisenverlust, mehr Bedarf"},
       {id:"pcos",      l:"PCOS",              d:"Polyzystisches Ovarsyndrom"},
@@ -8537,6 +9695,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       {id:"high",l:"Hart",d:"Strukturiert, hart"},
       {id:"competition",l:"Wettkampf",d:"Rennen & Spiele"},
     ];
+    // Gemeinsame Trainings-Fragen wie im Onboarding (StepTraining)
+    const OPT_SWEAT=[{id:"low",l:"Wenig"},{id:"medium",l:"Normal"},{id:"high",l:"Stark"},{id:"very_high",l:"Sehr stark"}];
+    const OPT_TIMES=[{id:"morning",l:"Morgens",d:"vor 10h"},{id:"midday",l:"Mittags"},{id:"afternoon",l:"Nachmittags"},{id:"evening",l:"Abends",d:"nach 18h"}];
     const SUPP_LABELS={none:"Keine",kreatin:"Kreatin",protein:"Protein/Whey",vitd:"Vit. D",omega3:"Omega-3",magnesium:"Magnesium",koffein:"Koffein",eisen:"Eisen",zink:"Zink",ashwa:"Ashwagandha",collagen:"Kollagen",beta_ala:"Beta-Alanin"};
     const MED_LABELS={none:"Keine",blutverd:"Blutverdünner",schilddruese:"Schilddrüse",blutdruck:"Blutdruck",niere:"Nierenerkrankung"};
     const OPT_MEDS=[{id:"none",l:"Keine"},{id:"blutverd",l:"Blutverdünner"},{id:"schilddruese",l:"Schilddrüse"},{id:"blutdruck",l:"Blutdruck"},{id:"niere",l:"Nierenerkrankung"}];
@@ -8544,13 +9705,58 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const sportName=(id)=>SPORT_GROUPS.find(g=>g.id===id)?.label||id;
     // Schlaf: eine Quelle (sleepHours als Kachel). Alte Zahl (sleep) wird auf die Kachel abgebildet.
     const sleepToTile=(v)=>{ const n=parseFloat(String(v??"").replace(",",".")); if(!n) return ""; return String(Math.min(8,Math.max(5,Math.round(n)))); };
+    // Gemeinsame Angaben stehen bei jeder Sportart gleich: erster Eintrag mit Wert
+    const sharedVal=(src,k)=>{
+      for(const id of (profSports||[])){ const v=src?.[id]?.[k]; if(Array.isArray(v)?v.length>0:(v!=null&&v!=="")) return v; }
+      return null;
+    };
+    // Trainingstage insgesamt: gültig von der grössten Einzelzahl bis min(7, Summe aller Einheiten)
+    const daysRange=(tr)=>{
+      const ds=(profSports||[]).map(id=>treynClamp(Math.round(+tr?.[id]?.days||3),1,7));
+      return {min:ds.length?Math.max(...ds):1,max:Math.min(7,ds.reduce((a,b)=>a+b,0))};
+    };
+    const daysTotalUsed=(tr,raw)=>{ const r=daysRange(tr); const n=Math.round(treynNum(raw)); return n>0?treynClamp(n,r.min,r.max):r.max; };
+    // Zyklus-Fragen: welche gelten (gleiche Regeln wie im Onboarding)
+    const cycleRules=(f)=>{
+      const st=f?.cycleStatus||null;
+      const askContra=st!=="menopause";
+      const hormonal=askContra&&HORMONAL_CONTRACEPTION.includes(f?.contraception);
+      return {askContra,hormonal,askDate:!hormonal&&(st==null||st==="regular"||st==="irregular"),askHeavy:st!=="menopause"&&st!=="absent",absentNote:st==="absent"&&!hormonal};
+    };
+    const cleanCycle=(f)=>{
+      const r=cycleRules(f);
+      const ps=r.askDate&&parseISODate(f?.periodStart)&&daysBetweenISO(f.periodStart,todayISO())>=0?f.periodStart:null;
+      const L=Math.round(treynNum(f?.cycleLength));
+      return {
+        cycleStatus:CYCLE_STATUS_OPTS.some(o=>o.id===f?.cycleStatus)?f.cycleStatus:null,
+        contraception:r.askContra&&CONTRACEPTION_OPTS.some(o=>o.id===f?.contraception)?f.contraception:null,
+        periodStart:ps,
+        periodUnknown:r.askDate&&!ps&&f?.periodUnknown?true:null,
+        cycleLength:r.askDate&&L>=21&&L<=45?L:null,
+        heavyPeriod:r.askHeavy&&HEAVY_PERIOD_OPTS.some(o=>o.id===f?.heavyPeriod)?f.heavyPeriod:null,
+      };
+    };
+    // Zielgewicht prüfen: nur bei Gewicht reduzieren (unter dem Gewicht) oder Muskelaufbau (über dem Gewicht)
+    const targetCheck=(goal,raw,weightRaw,heightRaw)=>{
+      if(!GOAL_PACE_RATE[goal]||String(raw??"").trim()==="") return {value:null,msg:null,bad:false};
+      const t=treynNum(raw), w=treynNum(weightRaw), h=treynNum(heightRaw);
+      if(t==null||t<TARGET_KG_MIN||t>TARGET_KG_MAX) return {value:null,msg:`Bitte ein Gewicht von ${TARGET_KG_MIN}-${TARGET_KG_MAX} kg eingeben.`,bad:true};
+      if(w&&goal==="weightloss"&&t>=w) return {value:null,msg:"Zum Abnehmen muss das Ziel unter deinem Gewicht liegen.",bad:true};
+      if(w&&goal==="muscle"&&t<=w) return {value:null,msg:"Für Muskelaufbau muss das Ziel über deinem Gewicht liegen.",bad:true};
+      const bmiLow=goal==="weightloss"&&h>=120&&h<=230&&t/((h/100)**2)<18.5;
+      return {value:Math.round(t*10)/10,msg:bmiLow?"Dieses Ziel liegt unter einem BMI von 18.5. Wir rechnen dann ohne Zielgewicht.":null,bad:false};
+    };
+    const kgStr=(n)=>(Math.round(+n*10)/10).toLocaleString("de-CH");
 
     const freshForm=()=>{
       const tr={};
       (profSports||[]).forEach(id=>{
         const d=trainingData?.[id]||{};
-        tr[id]={days:+d.days||3,duration:+d.duration||60,intensity:d.intensity||"medium",hasCompetition:!!d.hasCompetition,compCount:+d.compCount||5,compTypes:Array.isArray(d.compTypes)?d.compTypes:[]};
+        tr[id]={days:+d.days||3,duration:+d.duration||60,intensity:d.intensity||"medium",hasCompetition:!!d.hasCompetition,compCount:+d.compCount||5,compTypes:Array.isArray(d.compTypes)?d.compTypes:[],
+          longestMin:+d.longestMin||null,races:Array.isArray(d.races)?d.races:[]};
       });
+      const dt=Math.round(treynNum(sharedVal(trainingData,"daysTotal")));
+      const times=sharedVal(trainingData,"trainingTimes");
       return {
         weight: profilData?.weight||"",
         height: profilData?.height||"",
@@ -8570,18 +9776,40 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         caffeineDaily:  profilData?.caffeineDaily||null,
         bodyComposition:profilData?.bodyComposition||null,
         cyclePhase:     profilData?.cyclePhase||null,
+        // Alte Angabe PCOS / Menopause als Zyklus-Status vorbelegen (nur ohne neue Zyklus-Angaben)
+        cycleStatus:    profilData?.cycleStatus||(!profilData?.contraception&&!profilData?.periodStart&&!profilData?.periodUnknown&&!profilData?.heavyPeriod&&["pcos","menopause"].includes(profilData?.cyclePhase)?profilData.cyclePhase:null),
+        contraception:  profilData?.contraception||null,
+        periodStart:    parseISODate(profilData?.periodStart)?profilData.periodStart:"",
+        periodUnknown:  !!profilData?.periodUnknown,
+        cycleLength:    Math.round(treynNum(profilData?.cycleLength))||null,
+        heavyPeriod:    profilData?.heavyPeriod||null,
+        targetWeight:   treynNum(profilData?.targetWeight)?String(profilData.targetWeight):"",
+        goalPace:       profilData?.goalPace||null,
         pregnancy:      ["pregnant","breastfeeding"].includes(profilData?.pregnancy)?profilData.pregnancy:"none",
         injuries:       profilData?.injuries||[],
         training:       tr,
+        // Gilt für alle Sportarten (wird beim Speichern in jede Sportart geschrieben)
+        shared:{
+          daysTotal:   dt>0?dt:null,
+          sweatRate:   sharedVal(trainingData,"sweatRate")||null,
+          saltStains:  sharedVal(trainingData,"saltStains")||null,
+          trainingTimes:(Array.isArray(times)?times:[]).filter(x=>OPT_TIMES.some(o=>o.id===x)).slice(0,2),
+        },
       };
     };
 
     // Gedächtnis (PROFIL_UI): Entwurf nur behalten, solange die Daten dieselben sind
     if(!PROFIL_UI.base||PROFIL_UI.base[0]!==profilData||PROFIL_UI.base[1]!==trainingData){
       PROFIL_UI.base=[profilData,trainingData];
-      PROFIL_UI.edit=false;
-      PROFIL_UI.form=null;
-      if(Date.now()-(PROFIL_UI.savedAt||0)>5000) PROFIL_UI.open=false;
+      // Eigenes Speichern in "Genauer rechnen" lässt einen offenen Entwurf in "Deine Angaben" stehen (und umgekehrt)
+      const ownPrecise=Date.now()-(PROFIL_UI.preciseSavedAt||0)<5000;
+      const ownProfil=Date.now()-(PROFIL_UI.savedAt||0)<5000;
+      if(!ownPrecise){
+        PROFIL_UI.edit=false;
+        PROFIL_UI.form=null;
+        if(!ownProfil) PROFIL_UI.open=false;
+      }
+      if(!ownPrecise&&!ownProfil){ PROFIL_UI.preciseEdit=false; PROFIL_UI.precise=null; }
     }
     const [showPersonal,setShowPersonal]=useState(()=>!!PROFIL_UI.open);
     const [editMode,setEditMode]=useState(()=>!!PROFIL_UI.edit&&!!PROFIL_UI.form);
@@ -8613,10 +9841,18 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       const next=cur.includes(type)?cur.filter(t=>t!==type):[...cur,type];
       return {...f,training:{...tr,[id]:{...(tr[id]||{}),compTypes:next}}};
     });
+    const setSH=(k,v)=>setEditForm(f=>({...f,shared:{...(f.shared||{}),[k]:v}}));
+    // Trainingszeit: max. 2, die älteste fällt weg (wie im Onboarding)
+    const toggleTimeSH=(tid)=>setEditForm(f=>{
+      const sh=f.shared||{};
+      const times=Array.isArray(sh.trainingTimes)?sh.trainingTimes:[];
+      const next=times.includes(tid)?times.filter(x=>x!==tid):times.length>=2?[times[1],tid]:[...times,tid];
+      return {...f,shared:{...sh,trainingTimes:next}};
+    });
 
     const numOr=(v,old)=>{ const n=parseFloat(String(v??"").replace(",",".")); return n>0?String(n):(old??""); };
     const saveEdit=()=>{
-      const {training,...prof}=editForm;
+      const {training,shared,...prof}=editForm;
       const patch={...prof,
         weight:numOr(prof.weight,profilData?.weight),
         height:numOr(prof.height,profilData?.height),
@@ -8627,13 +9863,53 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       const tileFromSleep=sleepToTile(profilData?.sleep);
       if(!patch.sleepHours||(!profilData?.sleepHours&&patch.sleepHours===tileFromSleep)) delete patch.sleepHours;
       else if(tileFromSleep!==patch.sleepHours) patch.sleep=patch.sleepHours;
-      if(!isFemale) delete patch.cyclePhase;
+      const CYCLE_KEYS=["cycleStatus","contraception","periodStart","periodUnknown","cycleLength","heavyPeriod"];
+      if(!isFemale){ delete patch.cyclePhase; CYCLE_KEYS.forEach(k=>delete patch[k]); }
+      else {
+        Object.assign(patch,cleanCycle(prof));
+        // Alte Zyklusphase (wie im Onboarding): gilt nur weiter, solange keine neue Zyklus-Angabe da ist.
+        // PCOS / Menopause stehen schon als Zyklus-Status im Formular: abgewählt = weg.
+        const cycNew=!!(patch.cycleStatus||patch.contraception||patch.periodStart||patch.periodUnknown||patch.heavyPeriod);
+        const legacy=profilData?.cyclePhase||null;
+        patch.cyclePhase=!cycNew&&legacy&&!["pcos","menopause"].includes(legacy)?legacy:null;
+      }
+      // Zielgewicht nur bei Gewicht reduzieren / Muskelaufbau und in der richtigen Richtung.
+      // Ein gespeichertes Ziel, das ungültig ist, aber mit demselben Ziel (goal) nicht geändert wurde, bleibt stehen.
+      const tc=targetCheck(prof.goal,prof.targetWeight,patch.weight,patch.height);
+      const twOld=treynNum(profilData?.targetWeight);
+      const twKeep=tc.bad&&twOld!=null&&prof.goal===profilData?.goal&&treynNum(prof.targetWeight)===twOld;
+      const tw=tc.value;
+      patch.targetWeight=twKeep?profilData.targetWeight:tw;
+      patch.goalPace=twKeep?(profilData?.goalPace??null):tw!=null?(prof.goalPace==="slow"?"slow":"normal"):null;
+      // Neue Felder ohne Wert, die es vorher nicht gab: weglassen statt null schreiben
+      [...CYCLE_KEYS,"targetWeight","goalPace"].forEach(k=>{ if(k in patch&&patch[k]==null&&profilData?.[k]==null) delete patch[k]; });
       // Schwangerschaft/Stillzeit nur bei Frauen, sonst immer "none"
       patch.pregnancy=isFemale&&["pregnant","breastfeeding"].includes(patch.pregnancy)?patch.pregnancy:"none";
       if(typeof onProfilChange==="function") onProfilChange(patch);
       if(typeof onTrainingChange==="function"&&Object.keys(training||{}).length){
         const nextTD={...(trainingData||{})};
-        Object.entries(training||{}).forEach(([id,t])=>{ nextTD[id]={...(trainingData?.[id]||{}),...(t||{})}; });
+        // Gemeinsame Angaben in jede Sportart, Trainingstage insgesamt nur bei mehreren Sportarten (im gültigen Bereich)
+        const common={};
+        if(shared&&typeof shared==="object"){
+          const multi=Object.keys(training||{}).length>1;
+          const dtRaw=Math.round(treynNum(shared.daysTotal));
+          common.daysTotal=multi&&dtRaw>0?daysTotalUsed(training,dtRaw):null;
+          common.saltStains=SALT_STAINS_OPTS.some(o=>o.id===shared.saltStains)?shared.saltStains:null;
+          common.trainingTimes=(Array.isArray(shared.trainingTimes)?shared.trainingTimes:[]).slice(-2);
+          if(OPT_SWEAT.some(o=>o.id===shared.sweatRate)) common.sweatRate=shared.sweatRate;
+        }
+        Object.entries(training||{}).forEach(([id,t])=>{
+          const prev=trainingData?.[id]||{};
+          const next={...prev,...(t||{}),...common};
+          // Längste Einheit nur bei Ausdauer und länger als der Durchschnitt
+          const dur=+next.duration||60, lm=Math.round(+next.longestMin||0);
+          next.longestMin=isEnduranceSport(id,sportData)&&lm>dur?Math.min(720,lm):null;
+          next.races=Array.isArray(next.races)?next.races:[];
+          // Neue Felder ohne Wert, die es vorher nicht gab: weglassen
+          ["daysTotal","saltStains","longestMin"].forEach(k=>{ if(next[k]==null&&prev[k]==null) delete next[k]; });
+          if(!next.races.length&&!Array.isArray(prev.races)) delete next.races;
+          nextTD[id]=next;
+        });
         onTrainingChange(nextTD);
       }
       const now=Date.now();
@@ -8641,6 +9917,62 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       setSavedAt(now); setShowPersonal(true); setEditMode(false);
     };
     const justSaved=!editMode&&savedAt>0&&Date.now()-savedAt<15000;
+
+    // "Genauer rechnen": Messwerte ersetzen die Schätzung (Entwurf in PROFIL_UI.precise, wie oben)
+    const hasRun=(profSports||[]).includes("running");
+    const hasBike=(profSports||[]).includes("cycling");
+    const PRECISE_RANGE={weeklyKm:[1,400],weeklyKj:[100,40000],bodyFatPct:[3,60]};
+    const PRECISE_MSG={weeklyKm:"Bitte einen Wert von 1-400 km eingeben.",weeklyKj:"Bitte einen Wert von 100-40'000 kJ eingeben.",bodyFatPct:"Bitte einen Wert von 3-60 % eingeben."};
+    // Leeres Feld = entfernen (null); ausserhalb des Bereichs = ungültig
+    const preciseVal=(k,raw)=>{
+      if(String(raw??"").trim()==="") return {v:null,ok:true};
+      const n=treynNum(raw), [lo,hi]=PRECISE_RANGE[k];
+      if(n==null||n<lo||n>hi) return {v:null,ok:false};
+      return {v:k==="weeklyKj"?Math.round(n):Math.round(n*10)/10,ok:true};
+    };
+    const savedNum=(v,k)=>{ const n=treynNum(v); return n!=null&&preciseVal(k,n).ok?n:null; };
+    const savedKm=hasRun?savedNum(trainingData?.running?.weeklyKm,"weeklyKm"):null;
+    const savedKj=hasBike?savedNum(trainingData?.cycling?.weeklyKj,"weeklyKj"):null;
+    const savedBf=savedNum(profilData?.bodyFatPct,"bodyFatPct");
+    const savedBfMethod=BODYFAT_METHOD_OPTS.some(o=>o.id===profilData?.bodyFatMethod)?profilData.bodyFatMethod:null;
+    const freshPrecise=()=>({
+      weeklyKm:savedKm!=null?String(savedKm):"",
+      weeklyKj:savedKj!=null?String(savedKj):"",
+      bodyFatPct:savedBf!=null?String(savedBf):"",
+      bodyFatMethod:savedBfMethod,
+    });
+    const [preciseEdit,setPreciseEdit]=useState(()=>!!PROFIL_UI.preciseEdit&&!!PROFIL_UI.precise);
+    const [preciseForm,setPreciseForm]=useState(()=>PROFIL_UI.preciseEdit&&PROFIL_UI.precise?PROFIL_UI.precise:freshPrecise());
+    const [preciseSavedAt,setPreciseSavedAt]=useState(()=>PROFIL_UI.preciseSavedAt||0);
+    useEffect(()=>{ if(preciseEdit) PROFIL_UI.precise=preciseForm; },[preciseForm,preciseEdit]);
+    const setPF=(k,v)=>setPreciseForm(f=>({...f,[k]:v}));
+    const startPrecise=()=>{
+      const f=freshPrecise();
+      PROFIL_UI.preciseEdit=true; PROFIL_UI.precise=f; PROFIL_UI.preciseSavedAt=0;
+      setPreciseForm(f); setPreciseSavedAt(0); setPreciseEdit(true);
+    };
+    const cancelPrecise=()=>{ PROFIL_UI.preciseEdit=false; PROFIL_UI.precise=null; setPreciseEdit(false); };
+    const pKm=preciseVal("weeklyKm",preciseForm.weeklyKm);
+    const pKj=preciseVal("weeklyKj",preciseForm.weeklyKj);
+    const pBf=preciseVal("bodyFatPct",preciseForm.bodyFatPct);
+    const pBfMethodMissing=pBf.v!=null&&!BODYFAT_METHOD_OPTS.some(o=>o.id===preciseForm.bodyFatMethod);
+    const preciseValid=(!hasRun||pKm.ok)&&(!hasBike||pKj.ok)&&pBf.ok&&!pBfMethodMissing;
+    const savePrecise=()=>{
+      if(!preciseValid) return;
+      const nextTD={...(trainingData||{})};
+      let tdChanged=false;
+      if(hasRun&&savedKm!==pKm.v){ nextTD.running={...(trainingData?.running||{}),weeklyKm:pKm.v}; tdChanged=true; }
+      if(hasBike&&savedKj!==pKj.v){ nextTD.cycling={...(trainingData?.cycling||{}),weeklyKj:pKj.v}; tdChanged=true; }
+      const bfPatch={bodyFatPct:pBf.v,bodyFatMethod:pBf.v!=null?preciseForm.bodyFatMethod:null};
+      const pfChanged=savedBf!==bfPatch.bodyFatPct||savedBfMethod!==bfPatch.bodyFatMethod;
+      const now=Date.now();
+      PROFIL_UI.preciseEdit=false; PROFIL_UI.precise=null; PROFIL_UI.preciseSavedAt=now;
+      setPreciseSavedAt(now); setPreciseEdit(false);
+      if(pfChanged&&typeof onProfilChange==="function") onProfilChange(bfPatch);
+      if(tdChanged&&typeof onTrainingChange==="function") onTrainingChange(nextTD);
+    };
+    const justSavedPrecise=!preciseEdit&&preciseSavedAt>0&&Date.now()-preciseSavedAt<15000;
+    const anyPrecise=savedKm!=null||savedKj!=null||savedBf!=null;
 
     const TIERS=[
       {min:0,  max:9,   id:"none",     label:null,       color:C.g400},
@@ -8657,13 +9989,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Kleine Bausteine für das Formular (als Funktionen, nicht als Komponenten: Eingaben verlieren so nicht den Fokus)
     const secTitle=(t,first=false)=>(<div style={{fontSize:12,fontWeight:500,color:C.g400,fontFamily:"Inter,sans-serif",margin:first?"0 0 10px":"18px 0 10px",paddingTop:first?0:12,borderTop:first?"none":`1px solid ${C.g100}`}}>{t}</div>);
     const fLabel=(t,sub)=>(<div style={{fontSize:11,color:C.g600,marginBottom:6,lineHeight:1.4}}>{t}{sub&&<span style={{color:C.g400}}>{` · ${sub}`}</span>}</div>);
-    const optTiles=(k,opts,cols=2)=>(
+    // Kacheln: isOn(id) und onPick(id) frei wählbar (auch Mehrfachauswahl)
+    const pickTiles=(opts,isOn,onPick,cols=2)=>(
       <div style={{display:"grid",gridTemplateColumns:`repeat(${cols},minmax(0,1fr))`,gap:6}}>
         {(opts||[]).map(o=>{
-          const on=editForm[k]===o.id;
+          const on=!!isOn(o.id);
           return (
-            <button key={o.id} type="button" onClick={()=>setEF(k,o.id)}
-              style={{minWidth:0,padding:"8px 10px",borderRadius:9,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?"#F5FFE0":C.white,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"left",display:"flex",flexDirection:"column",justifyContent:"center"}}>
+            <button key={o.id} type="button" aria-pressed={on} onClick={()=>onPick(o.id)}
+              style={{minWidth:0,minHeight:40,padding:"8px 10px",borderRadius:9,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?"#F5FFE0":C.white,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,textAlign:"left",display:"flex",flexDirection:"column",justifyContent:"center"}}>
               <span style={{fontSize:11,fontWeight:on?700:600,lineHeight:1.3,overflowWrap:"anywhere"}}>{o.l}</span>
               {o.d&&<span style={{fontSize:10,color:on?"#555":C.g400,marginTop:2,lineHeight:1.35,overflowWrap:"anywhere"}}>{o.d}</span>}
             </button>
@@ -8671,6 +10004,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         })}
       </div>
     );
+    const optTiles=(k,opts,cols=2)=>pickTiles(opts,v=>editForm[k]===v,v=>setEF(k,v),cols);
+    // Optionale Einfachauswahl: nochmals tippen hebt die Wahl auf
+    const optTilesToggle=(k,opts,cols=2)=>pickTiles(opts,v=>editForm[k]===v,v=>setEF(k,editForm[k]===v?null:v),cols);
+    // Chip mit genug Fläche zum Tippen (z. B. "Gleich wie Ø", "Weiss ich nicht")
+    const tapChip=(label,on,onClick)=>(
+      <button type="button" aria-pressed={!!on} onClick={onClick}
+        style={{minHeight:36,padding:"0 12px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,flexShrink:0,whiteSpace:"nowrap"}}>
+        {label}
+      </button>
+    );
+    const hintLine=(t,color=C.g400)=>(<div style={{fontSize:10,color,marginTop:5,lineHeight:1.45}}>{t}</div>);
+    const warnLine=(t)=>(<div style={{fontSize:11,color:C.orange,marginTop:5,lineHeight:1.4}}>{t}</div>);
+    const fieldStyle=(filled,bad=false)=>({width:"100%",minWidth:0,minHeight:40,padding:"9px 11px",border:`1.5px solid ${bad?C.orange:filled?C.neon:C.g200}`,borderRadius:9,fontSize:13,fontFamily:"Inter,sans-serif",background:filled&&!bad?C.neonDim:C.white,color:C.black,boxSizing:"border-box"});
     const chip=(key,label,on,onClick)=>(
       <button key={key} type="button" onClick={onClick}
         style={{padding:"4px 10px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
@@ -8696,6 +10042,31 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <span style={{fontSize:12,fontWeight:500,color:C.black,textAlign:"right",maxWidth:"60%",minWidth:0,overflowWrap:"anywhere"}}>{r.v}</span>
       </div>
     ));
+    // Lesen: neue Angaben (Training gemeinsam, Zyklus, Zielgewicht)
+    const readTimes=(()=>{ const t=sharedVal(trainingData,"trainingTimes"); return (Array.isArray(t)?t:[]).map(x=>lbl(OPT_TIMES,x)).filter(Boolean).join(", "); })();
+    const readDaysTotal=(()=>{ const d=daysTotalUsed(trainingData,sharedVal(trainingData,"daysTotal")); return `${d} von 7 Tagen`; })();
+    const readPregnant=["pregnant","breastfeeding"].includes(profilData?.pregnancy);
+    const readCycleRules=cycleRules(profilData);
+    const readCycle=(()=>{
+      const p=profilData||{};
+      const isNew=["cycleStatus","contraception","periodStart","heavyPeriod"].some(k=>p[k]!=null&&p[k]!=="")||p.periodUnknown===true;
+      if(!isNew) return lbl(OPT_CYCLE,p.cyclePhase)||"-";
+      const parts=[lbl(CYCLE_STATUS_OPTS,p.cycleStatus)];
+      if(readCycleRules.askContra&&p.contraception) parts.push(p.contraception==="none"?"Keine hormonelle Verhütung":lbl(CONTRACEPTION_OPTS,p.contraception));
+      if(readCycleRules.askDate){
+        if(parseISODate(p.periodStart)) parts.push(`letzte Periode ${fmtDateCH(p.periodStart)}`);
+        else if(p.periodUnknown) parts.push("letzte Periode: weiss ich nicht");
+        const L=Math.round(treynNum(p.cycleLength));
+        if(parseISODate(p.periodStart)&&L>=21&&L<=45&&L!==28) parts.push(`Zyklus ${L} Tage`);
+      }
+      return parts.filter(Boolean).join(" · ")||"-";
+    })();
+    const GOAL_READ={performance:"Leistung",muscle:"Muskelaufbau",endurance:"Ausdauer",weightloss:"Gewicht",health:"Gesundheit",recovery:"Regeneration"};
+    const readGoal=(()=>{
+      const g=profilData?.goal, tw=treynNum(profilData?.targetWeight);
+      if(GOAL_PACE_RATE[g]&&tw) return `${g==="weightloss"?"Gewicht reduzieren":"Muskelaufbau"} · Ziel ${kgStr(tw)} kg (${profilData?.goalPace==="slow"?"langsam":"normal"})`;
+      return GOAL_READ[g]||"-";
+    })();
     const [showLoyalty,setShowLoyaltyRaw]=useState(()=>!!PROFIL_UI.loyalty);
     const toggleLoyalty=()=>{ const v=!showLoyalty; PROFIL_UI.loyalty=v; setShowLoyaltyRaw(v); };
     const RESET_MSG="Alle Angaben löschen? Dein Profil, dein Training, deine Allergien und Präferenzen sowie dein PRO-Zugang werden auf diesem Gerät gelöscht. Das kann nicht rückgängig gemacht werden.";
@@ -8711,6 +10082,180 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       if(!ok) return;
       revokeAiConsent();
       setConsentTick(x=>x+1);
+    };
+
+    // ── Neue Formular-Teile (Funktionen, keine Komponenten: Eingaben behalten den Fokus) ──
+    // Zielgewicht und Tempo, nur bei Gewicht reduzieren / Muskelaufbau
+    const targetEdit=()=>{
+      const g=editForm.goal;
+      const tc=targetCheck(g,editForm.targetWeight,editForm.weight,editForm.height);
+      const filled=String(editForm.targetWeight??"").trim()!=="";
+      const w=treynNum(editForm.weight);
+      const pace=editForm.goalPace==="slow"?"slow":"normal";
+      return (
+        <div style={{marginBottom:10,padding:"10px 12px",background:C.g100,borderRadius:10}}>
+          {fLabel("Zielgewicht (kg)",g==="weightloss"?"optional · macht dein Kaloriendefizit genauer":"optional · macht deinen Kalorienüberschuss genauer")}
+          <input type="number" inputMode="decimal" value={editForm.targetWeight??""} onChange={e=>setEF("targetWeight",e.target.value)}
+            placeholder={w?String(Math.round(w+(g==="weightloss"?-5:3))):"70"} aria-label="Zielgewicht in kg"
+            style={{...fieldStyle(filled,tc.bad),maxWidth:180}}/>
+          {tc.msg&&warnLine(tc.msg)}
+          {filled&&!tc.bad&&(
+            <div style={{marginTop:10}}>
+              {fLabel("Tempo","wie schnell du dein Ziel erreichen willst")}
+              {pickTiles(goalPaceOpts(g,editForm.weight),v=>pace===v,v=>setEF("goalPace",v),2)}
+            </div>
+          )}
+        </div>
+      );
+    };
+    // Zyklus: Status, Verhütung, letzte Periode, Zykluslänge, starke Periode
+    const cycleEdit=()=>{
+      const r=cycleRules(editForm);
+      const today=todayISO();
+      const L=treynClamp(Math.round(treynNum(editForm.cycleLength)||28),21,45);
+      return (
+        <div>
+          <div style={{marginBottom:10}}>
+            {fLabel("Dein Zyklus","macht Eisen-, Magnesium- und Kalorienbedarf genauer")}
+            {optTilesToggle("cycleStatus",CYCLE_STATUS_OPTS,2)}
+            {r.absentNote&&(
+              <div style={{marginTop:8,padding:"8px 10px",background:"#FFF8E1",borderRadius:8,border:"1px solid #FFE082",fontSize:11,color:"#856404",lineHeight:1.5}}>
+                Bleibt die Periode aus, kann das ein Zeichen für zu wenig Energie sein. Sprich darüber mit deiner Ärztin oder deinem Arzt. Wir rechnen für dich ohne Kaloriendefizit.
+              </div>
+            )}
+          </div>
+          {r.askContra&&(
+            <div style={{marginBottom:10}}>
+              {fLabel("Verhütung","hormonelle Verhütung verändert die Zyklusphasen")}
+              {optTilesToggle("contraception",CONTRACEPTION_OPTS,2)}
+              {r.hormonal&&hintLine("Mit hormoneller Verhütung rechnen wir ohne Zyklusphasen.")}
+            </div>
+          )}
+          {r.askDate&&(
+            <div style={{marginBottom:10}}>
+              {fLabel("Erster Tag deiner letzten Periode","daraus berechnen wir deine aktuelle Zyklusphase")}
+              <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+                <input type="date" value={editForm.periodStart||""} min={addDaysISO(today,-180)} max={today}
+                  onChange={e=>{ const v=e.target.value; setEditForm(f=>({...f,periodStart:parseISODate(v)?v:"",periodUnknown:parseISODate(v)?false:f.periodUnknown})); }}
+                  aria-label="Erster Tag der letzten Periode"
+                  style={{...fieldStyle(!!editForm.periodStart),flex:"1 1 150px",width:"auto",display:"block"}}/>
+                {tapChip("Weiss ich nicht",!!editForm.periodUnknown,()=>setEditForm(f=>({...f,periodUnknown:!f.periodUnknown,periodStart:f.periodUnknown?f.periodStart:""})))}
+              </div>
+              {editForm.cycleStatus==="irregular"&&hintLine("Bei unregelmässigem Zyklus nutzen wir das Datum, solange es höchstens 35 Tage zurückliegt.")}
+            </div>
+          )}
+          {r.askDate&&!editForm.periodUnknown&&(
+            <div style={{marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",gap:8,marginBottom:6}}>
+                <span style={{fontSize:11,color:C.g600,lineHeight:1.4}}>Zykluslänge<span style={{color:C.g400}}> · vom ersten Periodentag bis zum nächsten</span></span>
+                <span style={{fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>{L} Tage</span>
+              </div>
+              <input type="range" min="21" max="45" step="1" value={L} onChange={e=>setEF("cycleLength",+e.target.value)} style={{width:"100%"}} aria-label="Zykluslänge in Tagen"/>
+            </div>
+          )}
+          {r.askHeavy&&(
+            <div style={{marginBottom:10}}>
+              {fLabel("Starke Periode?","macht deinen Eisenbedarf genauer")}
+              {optTilesToggle("heavyPeriod",HEAVY_PERIOD_OPTS,2)}
+            </div>
+          )}
+        </div>
+      );
+    };
+    // Längste Einheit pro Woche (nur Ausdauer): ab der Ø-Dauer bis 10 h, "Gleich wie Ø" = keine Angabe
+    const longestEdit=(id,t)=>{
+      const dur=+t.duration||60;
+      const set=+t.longestMin>dur;
+      const val=set?Math.min(600,+t.longestMin):dur;
+      return (
+        <div style={{marginBottom:12}}>
+          <div style={{display:"flex",justifyContent:"space-between",gap:8,marginBottom:6}}>
+            <span style={{fontSize:11,color:C.g600}}>Längste Einheit pro Woche</span>
+            <span style={{fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>{set?fmtDurMin(val):"Gleich wie Ø"}</span>
+          </div>
+          <input type="range" min={dur} max="600" step="15" value={val} onChange={e=>{ const v=+e.target.value; setTR(id,"longestMin",v>dur?v:null); }} style={{width:"100%"}} aria-label={`Längste Einheit pro Woche ${sportName(id)}`}/>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginTop:6,flexWrap:"wrap"}}>
+            <span style={{flex:"1 1 150px",minWidth:0,fontSize:10,color:C.g400,lineHeight:1.45}}>Macht Kohlenhydrate, Natrium und Trinken für deine lange Einheit genauer.</span>
+            {tapChip("Gleich wie Ø",!set,()=>setTR(id,"longestMin",null))}
+          </div>
+        </div>
+      );
+    };
+    // Rennen mit Datum (im Wettkampf-Kasten): Hauptrennen gilt über alle Sportarten
+    // "sonst ..." wie im Wettkampf-Reiter: typische Renndauer der Sportart, sonst raceHours aus calcPro (ohne Renndaten)
+    const fmtRaceH=h=>h<1?`ca. ${Math.max(5,Math.round(h*60/5)*5)} min`:`ca. ${Math.round(h*2)/2} h`;
+    const raceDefaultLabel=(id,t)=>{
+      const td={...(trainingData?.[id]||{}),...(t||{}),races:[]};
+      const sel=RACE_DURATION_OPTS.find(o=>o.id===td.raceDuration);
+      if(sel) return sel.l;
+      const h=+calcPro(profilData,{[id]:td},{...(sportData||{}),primarySport:id,raceData:{}})?.raceHours;
+      return h>0?fmtRaceH(h):null;
+    };
+    const racesEdit=(id,t)=>{
+      // Nur zählende Hauptrennen anderer Sportarten (Wettkampf ein, gültiges Datum, ab heute)
+      const mainElsewhere=mainRaceElsewhere(editForm.training,id);
+      const isRace=(COMPETITION_LABEL[id]||"").includes("Rennen");
+      return (
+        <div style={{marginTop:12,paddingTop:10,borderTop:`1px solid ${C.g200}`}}>
+          <div style={{fontSize:11,fontWeight:500,color:C.black}}>{isRace?"Deine Rennen mit Datum":"Deine Wettkämpfe mit Datum"}</div>
+          <div style={{fontSize:10,color:C.g500,margin:"2px 0 8px",lineHeight:1.45}}>optional · macht Saisonphase, Taper und Carb-Loading genauer</div>
+          <RaceListEditor races={Array.isArray(t.races)?t.races:[]} mainElsewhere={mainElsewhere} defaultDurationLabel={raceDefaultLabel(id,t)}
+            onChange={list=>setTR(id,"races",list)}
+            onMainSet={rid=>setEditForm(f=>({...f,training:setMainRaceAll(f.training,rid)}))}/>
+        </div>
+      );
+    };
+    // Gemeinsame Angaben für alle Sportarten
+    const sharedEdit=()=>{
+      const sh=editForm.shared||{};
+      const multi=(profSports||[]).length>1;
+      const rg=daysRange(editForm.training);
+      const dt=daysTotalUsed(editForm.training,sh.daysTotal);
+      const times=Array.isArray(sh.trainingTimes)?sh.trainingTimes:[];
+      return (
+        <div style={{border:`1px solid ${C.g200}`,borderRadius:11,padding:"12px 12px",marginBottom:10}}>
+          <div style={{fontSize:13,fontWeight:600,color:C.black,marginBottom:10}}>{multi?"Gilt für alle Sportarten":"Schweiss und Trainingszeit"}</div>
+          {multi&&(
+            <div style={{marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",gap:8,marginBottom:6}}>
+                <span style={{fontSize:11,color:C.g600}}>Trainingstage insgesamt</span>
+                <span style={{fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>{`${dt} von 7 Tagen`}</span>
+              </div>
+              {rg.max>rg.min&&<input type="range" min={rg.min} max={rg.max} step="1" value={dt} onChange={e=>setSH("daysTotal",+e.target.value)} style={{width:"100%"}} aria-label="Trainingstage pro Woche insgesamt"/>}
+              {hintLine(rg.max>rg.min?"Zwei Einheiten am selben Tag zählen als ein Tag. Macht deine Ruhetage und den Bedarf pro Trainingstag genauer.":"Ergibt sich aus deinen Einheiten pro Woche.")}
+            </div>
+          )}
+          <div style={{marginBottom:10}}>
+            {fLabel("Wie stark schwitzt du beim Sport?","bestimmt deinen Elektrolyt- und Flüssigkeitsbedarf")}
+            {pickTiles(OPT_SWEAT,v=>sh.sweatRate===v,v=>setSH("sweatRate",v),2)}
+          </div>
+          <div style={{marginBottom:10}}>
+            {fLabel("Weisse Salzränder nach dem Sport?","Auf Trikot, Kappe oder Helmriemen. Macht deinen Natriumbedarf genauer.")}
+            {pickTiles(SALT_STAINS_OPTS,v=>sh.saltStains===v,v=>setSH("saltStains",sh.saltStains===v?null:v),2)}
+          </div>
+          <div>
+            {fLabel("Wann trainierst du meistens?","bis zu 2 Zeiten · beeinflusst das Supplement-Timing")}
+            {pickTiles(OPT_TIMES,v=>times.includes(v),v=>toggleTimeSH(v),2)}
+          </div>
+        </div>
+      );
+    };
+    // Messwert-Feld in "Genauer rechnen"
+    const preciseField=(k,label,unit,ph,hint,inputMode="decimal")=>{
+      const raw=preciseForm[k]??"";
+      const bad=!preciseVal(k,raw).ok;
+      return (
+        <div style={{marginBottom:12}}>
+          {fLabel(label)}
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <input type="number" inputMode={inputMode} value={raw} onChange={e=>setPF(k,e.target.value)} placeholder={ph} aria-label={label}
+              style={{...fieldStyle(String(raw).trim()!=="",bad),flex:"1 1 auto",maxWidth:200}}/>
+            <span style={{fontSize:12,color:C.g600,flexShrink:0}}>{unit}</span>
+          </div>
+          {bad&&warnLine(PRECISE_MSG[k])}
+          {hint&&hintLine(hint)}
+        </div>
+      );
     };
 
     return (
@@ -8782,7 +10327,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                     {l:"Grösse",v:profilData?.height?`${profilData.height} cm`:"-"},
                     {l:"Ruhepuls",v:profilData?.rhr?`${profilData.rhr} bpm`:"-"},
                     {l:"Schlaf",v:sleepRead},
-                    {l:"Ziel",v:{performance:"Leistung",muscle:"Muskelaufbau",endurance:"Ausdauer",weightloss:"Gewicht",health:"Gesundheit",recovery:"Regeneration"}[profilData?.goal]||"-"},
+                    {l:"Ziel",v:readGoal},
                     {l:"Stresslevel",v:{1:"Sehr niedrig",2:"Niedrig",3:"Mittel",4:"Hoch",5:"Sehr hoch"}[profilData?.stressLevel]||"-"},
                     {l:"Ernährung",v:{excellent:"Sehr ausgewogen",good:"Gut",average:"Durchschnittlich",poor:"Verbesserungswürdig"}[profilData?.dietQuality]||"-"},
                     {l:"Erholungsstatus",v:{excellent:"Top-Form",good:"Normal",tired:"Müde / überlastet",recovery:"Verletzung / Pause"}[profilData?.recoveryStatus]||"-"},
@@ -8797,8 +10342,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                     {l:"Sonnenlicht",v:lbl(OPT_SUN,profilData?.sunExposure)||"-"},
                     {l:"Koffein",v:lbl(OPT_CAFF,profilData?.caffeineDaily)||"-"},
                     {l:"Körperbau",v:lbl(OPT_BODY,profilData?.bodyComposition)||"-"},
-                    ...(isFemale?[{l:"Zyklusphase",v:lbl(OPT_CYCLE,profilData?.cyclePhase)||"-"}]:[]),
                     ...(isFemale?[{l:"Schwanger / Stillzeit",v:lbl(PREGNANCY_OPTS,profilData?.pregnancy||"none")||"Nein"}]:[]),
+                    ...(isFemale&&!readPregnant?[{l:"Zyklus",v:readCycle}]:[]),
+                    ...(isFemale&&!readPregnant&&readCycleRules.askHeavy?[{l:"Starke Periode",v:lbl(HEAVY_PERIOD_OPTS,profilData?.heavyPeriod)||"-"}]:[]),
                     {l:"Verletzungen",v:injRead.length?injRead.map(x=>lbl(OPT_INJ,x)||x).join(", "):"Keine"},
                   ])}
 
@@ -8809,9 +10355,17 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                       {readRows((profSports||[]).map(id=>{
                         const d=trainingData?.[id]||{};
                         const parts=[`${+d.days||3}× pro Woche`,`${+d.duration||60} min`,lbl(OPT_INT,d.intensity||"medium")||"Mittel"];
+                        if(isEnduranceSport(id,sportData)&&+d.longestMin>(+d.duration||60)) parts.push(`längste ${fmtDurMin(+d.longestMin)}`);
                         if(d.hasCompetition) parts.push(`${+d.compCount||0} ${(COMPETITION_LABEL[id]||"Wettkämpfe").split(" / ")[0]}/Jahr`);
+                        const races=d.hasCompetition?raceSummary(d.races):null;
+                        if(races) parts.push(races);
                         return {l:sportName(id),v:parts.join(" · ")};
-                      }))}
+                      }).concat([
+                        ...((profSports||[]).length>1?[{l:"Trainingstage insgesamt",v:readDaysTotal}]:[]),
+                        {l:"Schweiss",v:lbl(OPT_SWEAT,sharedVal(trainingData,"sweatRate"))||"-"},
+                        {l:"Salzränder",v:lbl(SALT_STAINS_OPTS,sharedVal(trainingData,"saltStains"))||"-"},
+                        {l:"Trainingszeit",v:readTimes||"-"},
+                      ]))}
                     </div>
                   )}
 
@@ -8859,6 +10413,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                       ))}
                     </div>
                   </div>
+                  {GOAL_PACE_RATE[editForm.goal]&&targetEdit()}
 
                   {/* Stresslevel */}
                   <div style={{marginBottom:10}}>
@@ -8949,16 +10504,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                   </div>
                   {isFemale&&(
                     <div style={{marginBottom:10}}>
-                      {fLabel("Aktuelle Zyklusphase","beeinflusst Eisen-, Magnesium- und Kalorienbedarf")}
-                      {optTiles("cyclePhase",OPT_CYCLE,2)}
-                    </div>
-                  )}
-                  {isFemale&&(
-                    <div style={{marginBottom:10}}>
                       {fLabel("Schwanger oder in der Stillzeit?","dann keine Supplement-Dosierungen")}
                       {optTiles("pregnancy",PREGNANCY_OPTS,3)}
                     </div>
                   )}
+                  {/* Zyklus: gleiche Fragen wie im Onboarding, nicht in Schwangerschaft und Stillzeit */}
+                  {isFemale&&!["pregnant","breastfeeding"].includes(editForm.pregnancy)&&cycleEdit()}
                   <div style={{marginBottom:10}}>
                     {fLabel("Verletzungen / Beschwerden","mehrere möglich")}
                     <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
@@ -8994,6 +10545,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                           </div>
                           <input type="range" min="20" max="360" step="10" value={t.duration} onChange={e=>setTR(id,"duration",+e.target.value)} style={{width:"100%"}} aria-label={`Dauer ${sportName(id)}`}/>
                         </div>
+                        {isEnduranceSport(id,sportData)&&longestEdit(id,t)}
                         <div style={{marginBottom:10}}>
                           <div style={{fontSize:11,color:C.g600,marginBottom:6}}>Intensität</div>
                           <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:6}}>
@@ -9030,12 +10582,14 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                                   {compTypes.map(type=>chip(type,type,(t.compTypes||[]).includes(type),()=>toggleCompType(id,type)))}
                                 </div>
                               )}
+                              {racesEdit(id,t)}
                             </div>
                           )}
                         </div>
                       </div>
                     );
                   })}
+                  {(profSports||[]).length>0&&sharedEdit()}
 
                   {/* Aktuelle Supplements */}
                   {secTitle("Supplements, Medikamente & Erkrankungen")}
@@ -9072,6 +10626,58 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               )}
             </div>
           )}
+        </div>
+
+        {/* 2b. Genauer rechnen: eigene Messwerte statt Schätzung (auch für Basic) */}
+        <div style={{border:`1px solid ${preciseEdit?C.neon:C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:16,background:C.white}}>
+          <div style={{display:"flex",alignItems:"flex-start",gap:10,padding:"14px 16px",background:preciseEdit?C.neonDim:C.white}}>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:14,fontWeight:600,color:C.black}}>Genauer rechnen</div>
+              <div style={{fontSize:11,color:C.g600,marginTop:3,lineHeight:1.5}}>Optional. Hast du Messwerte, ersetzen sie unsere Schätzung.</div>
+            </div>
+            {!preciseEdit&&<button type="button" onClick={startPrecise}
+              style={{fontSize:12,padding:"6px 12px",minHeight:32,borderRadius:8,background:C.white,color:C.black,border:`1px solid ${C.g200}`,cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:500,flexShrink:0}}>{anyPrecise?"Ändern":"Eintragen"}</button>}
+          </div>
+          <div style={{padding:"2px 16px 16px",borderTop:`1px solid ${C.g100}`}}>
+            {justSavedPrecise&&(
+              <div style={{marginTop:12,padding:"9px 12px",borderRadius:9,background:"#F5FFE0",border:`1px solid ${C.neonBorder}`,fontSize:11,color:C.g800,lineHeight:1.5}}>
+                ✓ Gespeichert. Deine Werte wurden mit den Messwerten neu berechnet.
+              </div>
+            )}
+            {!preciseEdit?(
+              <div style={{marginTop:4}}>
+                {readRows([
+                  ...(hasRun?[{l:"Kilometer pro Woche (Laufen)",v:savedKm!=null?`${kgStr(savedKm)} km`:"nicht eingetragen"}]:[]),
+                  ...(hasBike?[{l:"Arbeit pro Woche (Wattmesser)",v:savedKj!=null?`${Math.round(savedKj).toLocaleString("de-CH")} kJ`:"nicht eingetragen"}]:[]),
+                  {l:"Körperfett",v:savedBf!=null?`${kgStr(savedBf)} %${savedBfMethod?` · ${lbl(BODYFAT_METHOD_OPTS,savedBfMethod)}`:""}`:"nicht eingetragen"},
+                ])}
+                {savedBf!=null&&savedBfMethod==="scale"&&hintLine("Waagen schwanken zu stark, darum ändert dieser Wert die Rechnung nicht. Mit DEXA oder Caliper zählt er.")}
+                {savedBf!=null&&!savedBfMethod&&hintLine("Ohne Messart zählt dieser Wert nicht. Tippe auf «Ändern» und wähle, wie gemessen wurde.")}
+              </div>
+            ):(
+              <div style={{marginTop:14}}>
+                {hasRun&&preciseField("weeklyKm","Kilometer pro Woche (Laufen)","km","40","Macht deinen Kalorienverbrauch beim Laufen genauer.")}
+                {hasBike&&preciseField("weeklyKj","Arbeit pro Woche in kJ (Wattmesser)","kJ","6000","Steht in Garmin, Wahoo oder Zwift als «Arbeit» in kJ. Macht deinen Kalorienverbrauch beim Radfahren genauer.","numeric")}
+                {preciseField("bodyFatPct","Körperfett in %","%","15",null)}
+                <div style={{marginBottom:14}}>
+                  {fLabel("Messart")}
+                  {pickTiles(BODYFAT_METHOD_OPTS,v=>preciseForm.bodyFatMethod===v,v=>setPF("bodyFatMethod",preciseForm.bodyFatMethod===v?null:v),isMobile?1:3)}
+                  {pBfMethodMissing&&warnLine("Wähle noch, wie gemessen wurde.")}
+                  {hintLine("Nur DEXA- und Caliper-Messungen ändern die Rechnung, Waagen schwanken zu stark. Mit Messung rechnen wir deinen Grundumsatz aus der fettfreien Masse.")}
+                </div>
+                <div style={{display:"flex",gap:8}}>
+                  <button type="button" onClick={cancelPrecise}
+                    style={{flex:1,minHeight:40,padding:"10px",borderRadius:9,border:`1px solid ${C.g200}`,background:C.white,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.g600}}>
+                    Abbrechen
+                  </button>
+                  <button type="button" onClick={savePrecise} aria-disabled={!preciseValid}
+                    style={{flex:2,minHeight:40,padding:"10px",borderRadius:9,border:"none",background:C.black,color:C.neon,fontSize:12,fontWeight:700,cursor:preciseValid?"pointer":"default",opacity:preciseValid?1:.5,fontFamily:"Inter,sans-serif"}}>
+                    Speichern & neu berechnen
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* 3. Mehr: AI Chat (PRO), Kontakt & Impressum, Loyalty (zugeklappt) */}
@@ -9206,8 +10812,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         </div>
 
-        {/* cerascreen Partnership */}
-        <div style={{border:`1.5px solid ${C.neonBorder}`,borderRadius:12,overflow:"hidden",marginBottom:16,background:C.neonDim}}>
+        {/* cerascreen Partnership (Werbung, Hinweis direkt darunter) */}
+        <div style={{border:`1.5px solid ${C.neonBorder}`,borderRadius:12,overflow:"hidden",marginBottom:6,background:C.neonDim}}>
           <div style={{padding:"14px 16px"}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
               <div>
@@ -9245,6 +10851,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             )}
           </div>
         </div>
+        <AffiliateNote style={{marginBottom:16}}/>
 
         {/* PDF Upload - kostenlos, für alle */}
         <div style={{marginBottom:4}}>
@@ -9344,13 +10951,13 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     <>
       {tab==="summary"&&<SummaryTab/>}
 
-      {/* Plan: Tagesplan / Protokolle / Wettkampf. Basic sieht ihn unscharf */}
+      {/* Plan: Tagesplan / Protokolle / Wettkampf. Basic sieht nur eine unscharfe Vorschau mit Platzhaltern (keine echten Werte im DOM) */}
       {tab==="plan"&&(isPro?<TagesplanWrapper trainingData={trainingData}/>:(
         <div>
           <h2 style={h2Style}>Plan</h2>
           <p style={introStyle}>{`Dein Tagesplan mit Supplement-Timing für Trainings- und Ruhetage${hasCompPlan?" und deine Race-Day Strategie":""}.`}</p>
           <BlurGate isPro={false} onUpgrade={onUpgrade} label="Tagesplan mit PRO" priceStr={PRICE_STR} maxHeight={isMobile?560:680}>
-            <TagesplanWrapper trainingData={trainingData}/>
+            <TagesplanTeaser/>
           </BlurGate>
         </div>
       ))}
