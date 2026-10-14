@@ -1050,6 +1050,7 @@ function WhyTREYN({onNext, priceStr="CHF 14.90"}) {
         </section>
 
         <button className="btn btn-neon" type="button" onClick={onNext} style={{width:"100%",minHeight:54,fontSize:16,fontWeight:600,marginTop:4}}>Analyse starten →</button>
+        <p style={{fontSize:12,color:C.g600,lineHeight:1.5,margin:0,textAlign:"center"}}>Deine Angaben bleiben lokal in deinem Browser gespeichert.</p>
         <p style={{fontSize:11,color:C.g500,lineHeight:1.5,margin:0}}>Beispielwerte, gerechnet mit der TREYN+ Formel: Läuferin, 30 Jahre, 168 cm, 62 kg, sitzender Job, 4× Trail pro Woche à 75 Minuten, längste Einheit 4 Stunden, Hauptrennen in 9 Wochen. Deine Werte rechnet TREYN+ aus deinen eigenen Angaben.</p>
       </div>
     </div>
@@ -12014,7 +12015,8 @@ function App() {
         </div>
       )}
       {phase==="intro"      && <Intro           onNext={()=>setPhase("why")} onDemo={startDemo} onProfile={sportData&&trainingData&&profilData?()=>setPhase("results"):null}/>}
-      {phase==="why"        && <WhyTREYN         onNext={()=>setPhase("demo")} priceStr={PRICE_GLOBAL}/>}
+      {/* «Deine Analyse in 5 Schritten» entfällt: von «Das bekommst du» direkt zu den Sportarten */}
+      {phase==="why"        && <WhyTREYN         onNext={()=>{exitDemo();setPhase("sport");}} priceStr={PRICE_GLOBAL}/>}
       {phase==="demo"       && <Demo            onNext={()=>{exitDemo();setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       initial={sportData} onNext={v=>{setSportData(v);setPhase("training");}}/>}
       {phase==="training"   && <StepTraining    initial={trainingData} sportData={sportData} onBack={()=>goBack("sport")} onNext={v=>{setTrainingData(v);setPhase("profil");}}/>}
