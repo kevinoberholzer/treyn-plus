@@ -829,7 +829,7 @@ function dbdCss(){ return `
   @media (max-width:360px){ .dbd-needs{grid-template-columns:repeat(2,minmax(0,1fr)) !important;} .dbd-steps,.dbd-grid{grid-template-columns:1fr !important;} .dbd-h2{font-size:22px;} }
 `; }
 
-function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
+function WhyTREYN({onNext, priceStr="CHF 14.90"}) {
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[]);
   const [ex]=useState(()=>{ try{ return dbdExample(); }catch{ return null; } });
   const reduce=dbdReducedMotion();
@@ -897,7 +897,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Kopf: was TREYN+ ist und drei Schritte */}
         <div style={{display:"flex",flexDirection:"column",gap:12,paddingBottom:10}}>
           <h1 style={{fontSize:34,lineHeight:1.05,fontWeight:700,letterSpacing:"-.03em",margin:0}}>Das bekommst du.</h1>
-          <p style={{fontSize:16,lineHeight:1.5,margin:0}}>TREYN+ rechnet aus deinem Training, deinem Körper und deinem Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente und Sportnahrung, mit Menge und Uhrzeit.</p>
+          <p style={{fontSize:16,lineHeight:1.5,margin:0}}>TREYN+ rechnet aus deinem Training, Körper und Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente & Sportnahrung, mit Menge & Uhrzeit.</p>
           <div className="dbd-steps" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6}}>
             {[["Angaben machen","Training, Körper, Alltag. Ca. 5 Minuten."],["TREYN+ rechnet","Mit Formeln aus der Sportwissenschaft."],["Dein Plan","Sofort sichtbar. Basic ist kostenlos."]].map(([h,d],i)=>(
               <div key={h} style={{border:`1px solid ${C.g200}`,borderRadius:14,padding:10,display:"flex",flexDirection:"column",gap:4,minWidth:0}}>
@@ -933,7 +933,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         <article ref={refDay} className="dbd-card" style={{background:C.g100}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
             <h2 className="dbd-h2">Was, wie viel und wann.</h2>
-            <p className="dbd-body" style={{color:C.g600}}>Aus deiner Trainingszeit entsteht ein Tagesplan: wann du isst und trinkst und welche Supplemente du nimmst, jeweils mit Menge und Uhrzeit.</p>
+            <p className="dbd-body" style={{color:C.g600}}>Aus deiner Trainingszeit entsteht ein Tagesplan: wann du isst und trinkst und welche Supplemente du zu dir nimmst.</p>
           </div>
           <div style={{background:C.white,borderRadius:18,padding:8,display:"flex",flexDirection:"column",gap:1}}>
             {SLOTS.map((s,i)=>(
@@ -951,7 +951,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         <article ref={refRun} className="dbd-card" style={{background:ONB_SEL,border:"1px solid #E3F5B8"}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
             <h2 className="dbd-h2">Was du unterwegs brauchst.</h2>
-            <p className="dbd-body" style={{color:C.g600}}>Auf langen Einheiten und im Rennen zählt, was du unterwegs zu dir nimmst. TREYN+ rechnet für die echte Dauer, wie viele Gels, wie viel Trinken und wie viel Salz du brauchst.</p>
+            <p className="dbd-body" style={{color:C.g600}}>Auf langen Einheiten und im Rennen zählt, was du unterwegs zu dir nimmst. TREYN+ rechnet für die echte Dauer, wie viele Gels, wie viel Flüssigkeit und wie viel Salz du brauchst.</p>
           </div>
           <div style={{background:C.white,borderRadius:18,padding:14,display:"flex",flexDirection:"column",gap:8}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",gap:8}}>
@@ -982,7 +982,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         <article ref={refSeason} className="dbd-card" style={{background:C.g100}}>
           <div style={{display:"flex",flexDirection:"column",gap:6}}>
             <h2 className="dbd-h2">Die Werte gehen mit bis zum Rennen.</h2>
-            <p className="dbd-body" style={{color:C.g600}}>Trag deine Rennen ein. TREYN+ erkennt, ob du im Aufbau, im Taper oder in der Rennwoche bist, und passt Kalorien, Kohlenhydrate und Protein automatisch an.</p>
+            <p className="dbd-body" style={{color:C.g600}}>Trag deine Wettkämpfe ein. TREYN+ erkennt, ob du im Aufbau, im Taper oder in der Rennwoche bist, und passt Kalorien, Kohlenhydrate und Protein automatisch an.</p>
           </div>
           <div>
             <div role="group" aria-label="Saisonphasen" style={{display:"grid",gridTemplateColumns:"repeat(6,minmax(0,1fr))",gap:3}}>
@@ -1005,9 +1005,9 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
         {/* Kleine Karten */}
         <div className="dbd-grid" style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:10}}>
           {[
-            {h:"Supplemente",p:"Welche du brauchst, mit Dosis, Zeitpunkt und Begründung. Was du schon nimmst, lassen wir weg.",ic:<path d="M7 8h10a4 4 0 010 8H7a4 4 0 010-8zM12 8v8"/>},
+            {h:"Supplemente",p:"Welche du brauchst, mit Dosis, Zeitpunkt und Begründung. Was du schon nimmst, bauen wir mit ein.",ic:<path d="M7 8h10a4 4 0 010 8H7a4 4 0 010-8zM12 8v8"/>},
             {h:"Passende Produkte",p:"Gels, Drinks und Supplemente aus Shops in der Schweiz, Deutschland und Österreich.",ic:<><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M6 6L5 3H2"/></>},
-            {h:"Trainingsrechner «Heute»",p:"Gib ein, was du heute trainierst, und du bekommst den Plan für genau diesen Tag.",pro:true,ic:<><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></>},
+            {h:"Trainingsrechner «Heute»",p:"Gib ein, was du heute trainierst, und du bekommst den Plan für deinen Tag.",pro:true,ic:<><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></>},
             {h:"Sicher eingestellt",p:"Hinweise bei Medikamenten, Allergien und in der Schwangerschaft. Keine Dosis über den empfohlenen Grenzen.",ic:<><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></>},
           ].map(c=>(
             <div key={c.h} style={sCard}>
@@ -1023,7 +1023,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
 
         {/* Basic / PRO: eigene graue Karte */}
         <section className="dbd-card" style={{background:C.g100}}>
-        <h2 className="dbd-h2">Starte kostenlos - du kannst jederzeit auf PRO upgraden.</h2>
+        <h2 className="dbd-h2">Starte jetzt kostenlos. Du kannst jederzeit auf PRO upgraden.</h2>
         <div style={{border:`1px solid ${C.g200}`,borderRadius:18,overflow:"hidden",background:C.white}}>
           <table style={{width:"100%",borderCollapse:"collapse"}}>
             <thead><tr>
@@ -1045,7 +1045,7 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
             </tbody>
           </table>
         </div>
-        <p style={{fontSize:13,color:C.g600,margin:0}}>{`PRO: ${priceStr} für 6 Monate, einmal bezahlt, kein Abo.`}</p>
+        <p style={{fontSize:13,color:C.g600,margin:0}}>{`PRO: Ab ${priceStr} für 6 Monate.`}</p>
         </section>
 
         <button className="btn btn-neon" type="button" onClick={onNext} style={{width:"100%",minHeight:54,fontSize:16,fontWeight:600,marginTop:4}}>Analyse starten →</button>
@@ -1358,7 +1358,7 @@ const TRANSLATIONS={
     summary_progress_pct:"30% sichtbar",
     summary_locked:"Vollständige Analyse - gesperrt",
     summary_upgrade_title:"Alles was du brauchst. Einmalig. Für 6 Monate.",
-    summary_upgrade_price:"CHF 12.90",
+    summary_upgrade_price:"CHF 14.90",
     summary_upgrade_period:"/ 6 Monate · CHF 2.15/Mt.",
     summary_upgrade_cta:"Jetzt PRO freischalten →",
     summary_free_cta:"Kostenlos weiter",
@@ -1663,7 +1663,7 @@ const TRANSLATIONS={
 
     // ANALYSE PREVIEW
     preview_title:"Deine Analyse ist bereit.",
-    preview_upgrade:"PRO freischalten - CHF 12.90 / 6 Mt.",
+    preview_upgrade:"PRO freischalten - CHF 14.90 / 6 Mt.",
     preview_free:"Kostenlos weiter",
     preview_features_title:"Was du mit PRO bekommst:",
     preview_no_sub:"Kein Abo · Einmalig · Jederzeit erneuerbar",
@@ -1721,7 +1721,7 @@ const TRANSLATIONS={
     summary_progress_pct:"30% visible",
     summary_locked:"Full analysis - locked",
     summary_upgrade_title:"Everything you need. Once. For 6 months.",
-    summary_upgrade_price:"CHF 12.90",
+    summary_upgrade_price:"CHF 14.90",
     summary_upgrade_period:"/ 6 months · CHF 2.15/mo.",
     summary_upgrade_cta:"Unlock PRO now →",
     summary_free_cta:"Continue free",
@@ -2043,7 +2043,7 @@ const TRANSLATIONS={
 
     // ANALYSE PREVIEW
     preview_title:"Your analysis is ready.",
-    preview_upgrade:"Unlock PRO - CHF 12.90 / 6 mo.",
+    preview_upgrade:"Unlock PRO - CHF 14.90 / 6 mo.",
     preview_free:"Continue free",
     preview_features_title:"What you get with PRO:",
     preview_no_sub:"No subscription · One-time · Renew anytime",
@@ -2215,7 +2215,7 @@ const TRANSLATIONS={
       tab_profil:"Profile",
       summary_upgrade_title:"Unlock PRO",
       summary_upgrade_desc:"Your analysis is ready. All values precisely calculated for you.",
-      summary_upgrade_price:"CHF 12.90",
+      summary_upgrade_price:"CHF 14.90",
       summary_upgrade_period:"/ 6 months · CHF 2.15/mo.",
       summary_upgrade_cta:"Unlock PRO Now →",
       zahlen_bmr:"Basal Metabolic Rate",
@@ -6316,7 +6316,7 @@ const ALLERGEN_GROUPS = [
   {id:"glutenfrei",    label:"Glutenfrei (Präferenz)",  ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"], category:"diet"},
 ];
 
-function StepWillkommen({onNext, priceStr="CHF 12.90"}) {
+function StepWillkommen({onNext, priceStr="CHF 14.90"}) {
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const items=[
     {title:"Basicdaten sofort sichtbar", desc:"4 Werte sofort: Energieverbrauch, Grundumsatz, Wasser & Trainingseinheiten/Jahr."},
@@ -6566,7 +6566,7 @@ function StepAllergien({onNext, onBack, initial}) {
   );
 }
 
-function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,priceStr="CHF 12.90"}) {
+function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,priceStr="CHF 14.90"}) {
 
   const [loadPro,setLoadPro]=useState(false);
   const healthOnly=sportData?.healthOnly;
@@ -6863,7 +6863,7 @@ function AnalysingScreen({onDone, profilData, sportData}) {
 }
 
 // maxHeight (optional): zeigt bei langen Inhalten (z. B. Tagesplan) nur einen Ausschnitt, damit die Karte im Blick bleibt
-function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 12.90", maxHeight=null, children}) {
+function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 14.90", maxHeight=null, children}) {
   // C is already the global constant
   if(isPro) return children;
   return (
@@ -7059,7 +7059,7 @@ function todayFuel(carbsH,durMin,naNeeded,flLo,flHi,form){
 // werden beim Neuzeichnen nicht neu angelegt und verlieren den Fokus nicht.
 // onApply: "Plan für heute berechnen" · onChange: Änderung bei offenem Plan (PRO rechnet neu)
 // locked (Basic): nach dem Berechnen eine gesperrte Ergebnis-Karte, keine echten Werte im DOM
-function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=false,isMobile=false,onApply,onChange,onUpgrade,priceStr="CHF 12.90"}){
+function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=false,isMobile=false,onApply,onChange,onUpgrade,priceStr="CHF 14.90"}){
   const ctx={userSports,trainingData,primarySport};
   const st=todayState(ctx);
   const [,setTick]=useState(0);
@@ -7315,7 +7315,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   useEffect(()=>{window.__TREYN_PROFIL__=profilData;},[profilData]);
   const userCountry=profilData?.country||"Schweiz";
   const isEUR=["Deutschland","Österreich"].includes(userCountry);
-  const PRICE_STR=isEUR?"EUR 9.90":"CHF 12.90";
+  const PRICE_STR=isEUR?"EUR 9.90":"CHF 14.90";
   const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
   const PRICE_MONTH=isEUR?"EUR 1.65":"CHF 2.15";
   const ProUnlockBanner=({text})=>(
@@ -11860,7 +11860,7 @@ function App() {
   const [profilData,setProfilData]=useState(()=>saved?.profilData??null);
   const [selectedCountry,setSelectedCountry]=useState(()=>saved?.profilData?.country||"Schweiz");
   const isEUR_global=["Deutschland","Österreich"].includes(selectedCountry);
-  const PRICE_GLOBAL=isEUR_global?"EUR 9.90":"CHF 12.90";
+  const PRICE_GLOBAL=isEUR_global?"EUR 9.90":"CHF 14.90";
   const PERIOD_GLOBAL=isEUR_global?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
   const [allergenData,setAllergenData]=useState(()=>saved?.allergenData??null);
   const [praeferenzenData,setPraeferenzenData]=useState(()=>saved?.praeferenzenData??null);
@@ -11946,10 +11946,10 @@ function App() {
   },[]);
 
   const openStripePayment=(sd,td,pd,ad,pf)=>{
-    // CH → CHF 12.90 | DE/AT → EUR 9.90
+    // CH → CHF 14.90 | DE/AT → EUR 9.90
     const country=pd?.country||"Schweiz";
     const isEUR=["Deutschland","Österreich"].includes(country);
-    const STRIPE_CHF="https://buy.stripe.com/DEIN_PAYMENT_LINK_CHF"; // CHF 12.90
+    const STRIPE_CHF="https://buy.stripe.com/DEIN_PAYMENT_LINK_CHF"; // CHF 14.90
     const STRIPE_EUR="https://buy.stripe.com/DEIN_PAYMENT_LINK_EUR"; // EUR 9.90
     const STRIPE_LINK=isEUR?STRIPE_EUR:STRIPE_CHF;
     const isPlaceholder=STRIPE_LINK.includes("DEIN_PAYMENT_LINK");
