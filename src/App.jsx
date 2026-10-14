@@ -1061,33 +1061,26 @@ function WhyTREYN({onNext, priceStr="CHF 12.90"}) {
 }
 
 
-function Intro({onNext, onDemo}) {
+function Intro({onNext, onDemo, onProfile=null}) {
   const isMobile=useWindowWidth()<=768;
   const [logoVisible,setLogoVisible]=useState(false);
   const [typing,setTyping]=useState(false);
-  // Knopf «Analyse starten» steht sofort unter Headline und Unterzeile; der Rest tippt danach weiter
+  // Knopf «Analyse starten» erscheint erst am Schluss, wenn der ganze Text getippt ist
   const [headDone,setHeadDone]=useState(false);
   const [allDone,setAllDone]=useState(false);
-  const [endCta,setEndCta]=useState(false); // zweiter Knopf am Textende, wenn der obere nicht mehr im Bild ist
-  const [showCountries,setShowCountries]=useState(false);
-  const topBtnRef=useRef(null);
   const btnRef=useRef(null);
+  // «Schon ein Profil? Anmelden»: mit gespeicherter Analyse direkt ins Dashboard, sonst Hinweis (Login folgt)
+  const [loginHint,setLoginHint]=useState(false);
   useEffect(()=>{
-    if(!endCta||!TW_FOLLOW.on) return;
+    if(!allDone||!TW_FOLLOW.on) return;
     const t=setTimeout(()=>{ btnRef.current?.scrollIntoView({behavior:"smooth",block:"end"}); },350);
     return ()=>clearTimeout(t);
-  },[endCta]);
+  },[allDone]);
   useEffect(()=>{
     const t1=setTimeout(()=>setLogoVisible(true),300);
     const t2=setTimeout(()=>setTyping(true),800);
     return()=>{clearTimeout(t1);clearTimeout(t2);};
   },[]);
-
-  const COUNTRIES_LIST=[
-    {name:"Schweiz"},
-    {name:"Deutschland"},
-    {name:"Österreich"},
-  ];
 
   // Zeilen einmal anlegen (gleiche Referenz bei jedem Neuzeichnen, sonst startet der TypeWriter-Takt neu)
   const [DE_LINES]=useState(()=>[
@@ -1111,13 +1104,7 @@ function Intro({onNext, onDemo}) {
       ))}
     </div>
   );
-  const onAllDone=()=>{
-    setAllDone(true);
-    // Am Handy scrollt der Text mit, der obere Knopf ist dann weg: unten nochmals anbieten
-    let hidden=isMobile;
-    try{ const r=topBtnRef.current?.getBoundingClientRect(); if(r&&(r.bottom<0||r.top>window.innerHeight)) hidden=true; }catch{}
-    setEndCta(hidden);
-  };
+  const onAllDone=()=>setAllDone(true);
   const cta=(ref,anim)=>(
     <div ref={ref} style={{...(anim?{animation:anim,opacity:0}:{}),scrollMarginBottom:24}}>
       <div style={{display:"flex",alignItems:"center",gap:12,flexWrap:"wrap"}}>
@@ -1141,19 +1128,28 @@ function Intro({onNext, onDemo}) {
           {ghost(HEAD_LINES)}
           <div className="tw-live">{typing&&<TypeWriter lines={HEAD_LINES} speed={13} onDone={()=>setHeadDone(true)}/>}</div>
         </div>
-        <div style={{marginBottom:isMobile?28:32}}>{cta(topBtnRef,"fadeUp .45s .35s ease forwards")}</div>
         <div className="tw-stack">
           {ghost(REST_LINES)}
-          <div className="tw-live">{headDone&&<TypeWriter lines={REST_LINES} speed={13} onDone={onAllDone} onCountryClick={()=>setShowCountries(true)}/>}</div>
+          <div className="tw-live">{headDone&&<TypeWriter lines={REST_LINES} speed={13} onDone={onAllDone}/>}</div>
         </div>
         {allDone&&(
           <>
-            {endCta&&(
-              <div style={{marginTop:24}}>
-                <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
-                {cta(btnRef,"fadeUp .5s .1s ease forwards")}
+            <div style={{marginTop:24}}>
+              <div style={{width:1,height:28,background:C.g200,margin:"0 0 22px 1px"}}/>
+              {cta(btnRef,"fadeUp .5s .1s ease forwards")}
+              <div style={{marginTop:14,fontSize:13,color:C.g600,textAlign:isMobile?"center":"left",animation:"fadeUp .5s .25s ease forwards",opacity:0}}>
+                {"Schon ein Profil? "}
+                <button type="button" onClick={()=>{ if(typeof onProfile==="function") onProfile(); else setLoginHint(v=>!v); }}
+                  style={{background:"none",border:"none",padding:"8px 2px",minHeight:36,font:"inherit",fontSize:13,fontWeight:600,color:C.black,textDecoration:"underline",textUnderlineOffset:3,cursor:"pointer"}}>
+                  Anmelden
+                </button>
               </div>
-            )}
+              {loginHint&&(
+                <div style={{marginTop:6,padding:"10px 12px",borderRadius:10,background:C.g100,fontSize:12,color:C.g700,lineHeight:1.5}}>
+                  Das Login mit E-Mail kommt bald. Bis dahin ist deine Analyse auf dem Gerät gespeichert, auf dem du sie gemacht hast. Öffne TREYN+ dort, dann kommst du direkt in dein Profil.
+                </div>
+              )}
+            </div>
             {REVIEW_SUMMARY&&(
               <div style={{marginTop:20,paddingTop:16,borderTop:`0.5px solid ${C.g100}`,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                 <div style={{display:"flex",alignItems:"center",gap:6}}>
@@ -1167,34 +1163,6 @@ function Intro({onNext, onDemo}) {
         )}
       </div>
 
-      {/* Countries modal */}
-      {showCountries&&(
-        <div style={{position:"fixed",inset:0,zIndex:9999,display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}} onClick={()=>setShowCountries(false)}>
-          <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.5)"}}/>
-          <div style={{position:"relative",background:C.white,borderRadius:18,padding:"22px",maxWidth:400,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,.2)"}} onClick={e=>e.stopPropagation()}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-              <div>
-                <div style={{fontSize:14,fontWeight:700,color:C.black}}>Verfügbare Länder</div>
-                <div style={{fontSize:11,color:C.g400,marginTop:2}}>CH · DE · AT</div>
-              </div>
-              <button className="icon-btn" aria-label="Schliessen" onClick={()=>setShowCountries(false)} style={{width:26,height:26,borderRadius:"50%",border:`1px solid ${C.g200}`,background:C.g100,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"Inter,sans-serif"}}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2.5" strokeLinecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-              </button>
-            </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:6}}>
-              {COUNTRIES_LIST.map((c,i)=>(
-                <div key={i} style={{display:"flex",alignItems:"center",padding:"7px 10px",borderRadius:8,background:i===0?C.neonDim:C.g100,border:i===0?`1px solid ${C.neonBorder}`:"none"}}>
-                  <span style={{fontSize:12,fontWeight:i===0?700:400,color:C.black}}>{c.name}</span>
-                </div>
-              ))}
-            </div>
-            <button onClick={()=>setShowCountries(false)}
-              style={{width:"100%",background:C.black,color:C.white,border:"none",borderRadius:10,padding:"11px",fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",marginTop:16}}>
-              Schliessen
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -12049,7 +12017,7 @@ function App() {
           ))}
         </div>
       )}
-      {phase==="intro"      && <Intro           onNext={()=>setPhase("why")} onDemo={startDemo}/>}
+      {phase==="intro"      && <Intro           onNext={()=>setPhase("why")} onDemo={startDemo} onProfile={sportData&&trainingData&&profilData?()=>setPhase("results"):null}/>}
       {phase==="why"        && <WhyTREYN         onNext={()=>setPhase("demo")} priceStr={PRICE_GLOBAL}/>}
       {phase==="demo"       && <Demo            onNext={()=>{exitDemo();setPhase("sport");}} onDemo={launchDemo}/>}
       {phase==="sport"      && <StepSport       initial={sportData} onNext={v=>{setSportData(v);setPhase("training");}}/>}
