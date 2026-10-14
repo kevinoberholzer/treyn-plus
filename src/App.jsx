@@ -809,10 +809,10 @@ function DbdCount({to,dec=0,sep=false,run}){
 
 // Als Funktion: ONB_SEL wird weiter unten definiert und darf nicht schon beim Laden gelesen werden
 function dbdCss(){ return `
-  .dbd-card{border-radius:26px;padding:22px 18px 18px;display:flex;flex-direction:column;gap:16px;overflow:hidden;}
+  .dbd-card{border-radius:18px;padding:20px 18px;display:flex;flex-direction:column;gap:14px;overflow:hidden;}
   .dbd-eye{font-size:12px;font-weight:600;}
-  .dbd-h2{font-size:25px;font-weight:700;line-height:1.12;letter-spacing:-.03em;margin:0;text-wrap:balance;}
-  .dbd-body{font-size:15px;line-height:1.5;margin:0;}
+  .dbd-h2{font-size:18px;font-weight:600;line-height:1.3;letter-spacing:-.02em;margin:0;text-wrap:balance;}
+  .dbd-body{font-size:14px;line-height:1.65;margin:0;}
   .dbd-note{font-size:12px;line-height:1.45;margin:0;}
   .dbd-slot{display:grid;grid-template-columns:44px 12px minmax(0,1fr);align-items:center;gap:8px;padding:8px;border-radius:12px;transition:background .3s;font-size:13px;}
   .dbd-dot{width:10px;height:10px;border-radius:50%;border:2px solid ${C.g200};background:${C.white};transition:all .3s;}
@@ -826,11 +826,12 @@ function dbdCss(){ return `
   .dbd-ph[aria-pressed="true"]{background:${C.black};color:${C.neon};}
   .dbd-ph[aria-pressed="true"] .b2{background:${C.neon};}
   @media (prefers-reduced-motion: reduce){ .dbd-slot,.dbd-dot,.dbd-mark{transition:none;} }
-  @media (max-width:360px){ .dbd-needs{grid-template-columns:repeat(2,minmax(0,1fr)) !important;} .dbd-steps,.dbd-grid{grid-template-columns:1fr !important;} .dbd-h2{font-size:22px;} }
+  @media (max-width:360px){ .dbd-needs{grid-template-columns:repeat(2,minmax(0,1fr)) !important;} .dbd-steps,.dbd-grid{grid-template-columns:1fr !important;} .dbd-h2{font-size:17px;} }
 `; }
 
 function WhyTREYN({onNext, priceStr="CHF 14.90"}) {
   useEffect(()=>{window.scrollTo({top:0,behavior:"instant"});},[]);
+  const isMobile=useWindowWidth()<=768;
   const [ex]=useState(()=>{ try{ return dbdExample(); }catch{ return null; } });
   const reduce=dbdReducedMotion();
   const refNeeds=useRef(null), refDay=useRef(null), refRun=useRef(null), refSeason=useRef(null);
@@ -889,21 +890,21 @@ function WhyTREYN({onNext, priceStr="CHF 14.90"}) {
   ];
 
   return (
-    <div style={{minHeight:"100vh",background:C.white,padding:"0 16px 40px",fontFamily:"Inter,sans-serif"}}>
+    <div style={{minHeight:"100vh",background:C.white,padding:isMobile?"32px 20px 40px":"40px 24px",fontFamily:"Inter,sans-serif"}}>
       <style>{dbdCss()}</style>
-      <div style={{width:"100%",maxWidth:520,margin:"0 auto",display:"flex",flexDirection:"column",gap:14}}>
-        <div style={{padding:"24px 0 6px"}}><Logo size="lg"/></div>
+      <div style={{width:"100%",maxWidth:520,margin:"0 auto",display:"flex",flexDirection:"column",gap:12}}>
+        <div style={{marginBottom:isMobile?16:28}}><Logo size="lg"/></div>
 
         {/* Kopf: was TREYN+ ist und drei Schritte */}
-        <div style={{display:"flex",flexDirection:"column",gap:12,paddingBottom:10}}>
-          <h1 style={{fontSize:34,lineHeight:1.05,fontWeight:700,letterSpacing:"-.03em",margin:0}}>Das bekommst du.</h1>
-          <p style={{fontSize:16,lineHeight:1.5,margin:0}}>TREYN+ rechnet aus deinem Training, Körper und Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente & Sportnahrung, mit Menge & Uhrzeit.</p>
-          <div className="dbd-steps" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6}}>
+        <div style={{display:"flex",flexDirection:"column",gap:0,paddingBottom:16}}>
+          <h1 style={{fontSize:23,lineHeight:1.2,fontWeight:600,letterSpacing:"-.03em",margin:"0 0 6px",color:C.black}}>Das bekommst du.</h1>
+          <p style={{fontSize:14,lineHeight:1.65,color:C.g600,margin:"0 0 20px"}}>TREYN+ rechnet aus deinem Training, Körper und Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente & Sportnahrung, mit Menge & Uhrzeit.</p>
+          <div className="dbd-steps" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6,marginBottom:16}}>
             {[["Angaben machen","Training, Körper, Alltag. Ca. 5 Minuten."],["TREYN+ rechnet","Mit Formeln aus der Sportwissenschaft."],["Dein Plan","Sofort sichtbar. Basic ist kostenlos."]].map(([h,d],i)=>(
-              <div key={h} style={{border:`1px solid ${C.g200}`,borderRadius:14,padding:10,display:"flex",flexDirection:"column",gap:4,minWidth:0}}>
-                <span style={{width:22,height:22,borderRadius:"50%",background:C.black,color:C.neon,fontSize:12,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>{i+1}</span>
-                <b style={{fontSize:13,lineHeight:1.3}}>{h}</b>
-                <small style={{fontSize:11,color:C.g600,lineHeight:1.35}}>{d}</small>
+              <div key={h} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"12px 10px",display:"flex",flexDirection:"column",gap:0,minWidth:0}}>
+                <span style={{width:20,height:20,borderRadius:6,background:C.black,color:C.neon,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10}}>{i+1}</span>
+                <b style={{fontSize:11,fontWeight:500,lineHeight:1.3,marginBottom:4}}>{h}</b>
+                <small style={{fontSize:10,color:C.g600,lineHeight:1.4}}>{d}</small>
               </div>
             ))}
           </div>
@@ -2411,17 +2412,17 @@ function Progress({step=1,total=6,done=false}) {
 
 // ─── ONBOARDING-BAUSTEINE (Vorbild: "Dein Lebensstil") ───────────────────────
 
-const ONB_CARD={background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:"18px 18px"};
+const ONB_CARD={background:C.off,border:`1px solid ${C.g100}`,borderRadius:16,padding:"18px 18px"};
 const ONB_SEL="#F5FFE0";
 
-// Seitenrahmen: hellgrauer Hintergrund, fester Kopf. Füllt der Inhalt die Seite nicht,
+// Seitenrahmen: weisser Hintergrund (Karten hellgrau), fester Kopf. Füllt der Inhalt die Seite nicht,
 // steht er senkrecht mittig zwischen Kopf und unterem Rand; ist er länger, beginnt er oben.
 function OnbShell({step=1,total=6,done=false,children}) {
   const isMobile=useWindowWidth()<=768;
   const gutter=isMobile?16:24;
   const padY=isMobile?28:40;
   return (
-    <div className="onb-shell" style={{display:"flex",flexDirection:"column",background:C.off,fontFamily:"Inter,sans-serif",color:C.black}}>
+    <div className="onb-shell" style={{display:"flex",flexDirection:"column",background:C.white,fontFamily:"Inter,sans-serif",color:C.black}}>
       {/* Fokussierte Felder nicht unter den festen Kopf scrollen; Höhe = sichtbarer Bildschirm (auch mit Safari-Leisten) */}
       <style>{`html{scroll-padding-top:80px;} .onb-shell{min-height:100vh;min-height:100dvh;}`}</style>
       <Progress step={step} total={total} done={done}/>
@@ -2607,7 +2608,7 @@ function OnbRow({qid,label,sub,answer,optional=false,warn=false,open=false,onTog
   const btnId=`onbb-${qid}`, panelId=`onbp-${qid}`;
   const late=!has&&!optional&&warn;
   return (
-    <div id={onbRowDomId(qid)} style={{borderTop:first?"none":`1px solid ${C.g100}`}}>
+    <div id={onbRowDomId(qid)} style={{borderTop:first?"none":`1px solid ${C.g200}`}}>
       <button type="button" id={btnId} onClick={onToggle} aria-expanded={!!open} aria-controls={open?panelId:undefined}
         style={{width:"100%",minHeight:56,display:"flex",alignItems:"center",gap:12,padding:"11px 0",background:"none",border:"none",borderRadius:8,cursor:"pointer",textAlign:"left",fontFamily:"Inter,sans-serif",color:C.black}}>
         <span style={{display:"block",flex:1,minWidth:0}}>
@@ -3467,7 +3468,7 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
           <div style={{minWidth:0}}><div style={lbl}>Gewicht (kg) *</div><input type="number" inputMode="decimal" value={form.weight} onChange={e=>set("weight",e.target.value)} placeholder="75" min="30" max="250" style={inp(wOk,!!form.weight&&!wOk)}/>
             {!!form.weight&&!wOk&&hint("Bitte in Kilogramm angeben (30-250).")}</div>
         </div>
-        <div style={{padding:"12px 13px",background:C.off,borderRadius:11}}>
+        <div style={{padding:"12px 13px",background:C.white,borderRadius:11}}>
           <div style={{fontSize:11,color:C.g500,marginBottom:10,lineHeight:1.4}}>Optional - für genauere VO₂max & Erholungs-Berechnungen</div>
           <div><div style={lbl}>Ruhepuls (bpm)</div><input type="number" inputMode="numeric" value={form.rhr||""} onChange={e=>set("rhr",e.target.value)} placeholder="52" min="30" max="100" style={inp(!!form.rhr,false)}/></div>
         </div>
@@ -3833,7 +3834,7 @@ function StepLebensstil({onNext, onBack, gender="", initial}) {
         <OnbGroup title="Zyklus">
           {cycleChips("cycleStatus",CYCLE_STATUS_OPTS,"Dein Zyklus","Macht Kalorien, Eisen und Magnesium genauer.",
             cs==="absent"&&!hormonalNow?(
-              <div style={{marginTop:10,padding:"10px 12px",background:C.off,borderRadius:10,fontSize:12,color:C.g700,lineHeight:1.5}}>
+              <div style={{marginTop:10,padding:"10px 12px",background:C.white,borderRadius:10,fontSize:12,color:C.g700,lineHeight:1.5}}>
                 Bleibt deine Periode länger aus, kann das ein Zeichen für zu wenig Energie sein. Sprich bitte mit deiner Ärztin oder deinem Arzt.
               </div>
             ):null)}
@@ -6595,7 +6596,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
   ];
 
   return (
-    <div style={{minHeight:"100vh",background:C.off,display:"flex",justifyContent:"center",alignItems:"flex-start",padding:isMobile?"32px 16px 64px":"40px 24px 80px"}}>
+    <div style={{minHeight:"100vh",background:C.white,display:"flex",justifyContent:"center",alignItems:"flex-start",padding:isMobile?"32px 16px 64px":"40px 24px 80px"}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:28}}><Logo/></div>
 
@@ -11692,7 +11693,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   );
 
   return (
-    <div style={{minHeight:"100vh",background:C.off,fontFamily:"Inter,sans-serif"}}>
+    <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
       {/* Top bar */}
       <div style={{background:C.white,borderBottom:`1px solid ${C.g200}`,padding:isMobile?"10px 16px":"12px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <Logo/>
