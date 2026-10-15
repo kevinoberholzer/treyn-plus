@@ -659,7 +659,9 @@ const NATRON_SUPP = {id:"natron", name:"Natron (Natriumbicarbonat)", dose:"0.2-0
 // Speerwurf die HYROX-Karten), zeigt die Karte einen neutralen Text. Die eigene Sportart der Karte behält ihren Text.
 // GUEST_OWN: eigene Sportart je Kartenfamilie, g = Gruppe (alle Unterdisziplinen), s = Unterdisziplin (auch deren Kinder).
 // Tennis & Padel nur über s: die Gruppe «tennis» enthält auch Badminton, Squash und Tischtennis.
-const GUEST_OWN={fb:{g:["football"],s:["fussball"]}, fit:{g:["fitness"],s:["hyrox","crossfit_d","kraft"]}, ten:{s:["tennis","padel"]}, run:{g:["running","triathlon"],s:["la_mittel","la_lang"]}};
+// sp = Sprint-Sportnahrung (la_sprint, auch Stab und Speer), ski = Ski-Liste (auch Snowboard), st = Skitouren-Liste (auch Bergsteigen)
+const GUEST_OWN={fb:{g:["football"],s:["fussball"]}, fit:{g:["fitness"],s:["hyrox","crossfit_d","kraft"]}, ten:{s:["tennis","padel"]}, run:{g:["running","triathlon"],s:["la_mittel","la_lang"]},
+  sp:{s:["la_sprint","la_huerden"]}, ski:{s:["ski_alpin","ski_freeride"]}, st:{s:["ski_touring"]}};
 const KOLL_GUEST_WHY="Für deine Knorpel: Vitamin C trägt zu einer normalen Kollagenbildung für eine normale Funktion der Knorpel bei. Sehnen und Gelenke tragen jede Einheit mit - in jedem Sport.";
 // txt = Felder der Karte, protocol = Felder im Protokoll. Eisen (eisen_run) und Kollagen (koll_fit) sind zugleich die neutralen
 // Ersatzkarten für Sportarten ohne eigene Karte («Nimmst du schon», Beschwerden).
@@ -671,7 +673,7 @@ const GUEST_TXT={
   krea_fit:{own:"fit",txt:{why:"Für Sprints, Sprünge, Würfe und den Kraftraum: Kreatin erhöht die körperliche Leistung bei Schnellkrafttraining im Rahmen kurzzeitiger intensiver körperlicher Betätigung."}},
   whey_fit:{own:"fit",txt:{when:"Direkt nach dem Training",why:"Für deine Muskeln: Protein trägt zu einer Zunahme an Muskelmasse und zur Erhaltung von Muskelmasse bei. Der Standard-Shake nach jeder harten Einheit.",tags:["Post-Training","Protein"]},
     protocol:{timing:"Innerhalb 30 min nach dem Training, mit 30-50 g Kohlenhydraten"}},
-  beta_fit:{own:"fit",txt:{why:"Fester Bestandteil im Stack vieler Athleten für harte Belastungen von 1-4 Minuten"},
+  beta_fit:{own:"fit",txt:{why:"Fester Bestandteil im Stack vieler Athleten für harte Belastungen von 1-4 Minuten",tags:["Täglich","Intervall"]},
     protocol:{hinweis:"Im Fokus der Studien: Belastungen von 1-4 Minuten. Eine Kur, kein Quick-Fix: täglich über 8-10 Wochen."}},
   koll_fit:{own:"fit",txt:{why:KOLL_GUEST_WHY}},
   elek_ten:{own:"ten",txt:{why:"Turniertage mit mehreren Matches: Mit dem Schweiss geht vor allem Natrium verloren, Kalium und Magnesium deckt dein Essen."},
@@ -679,8 +681,18 @@ const GUEST_TXT={
   koll_ten:{own:"ten",txt:{why:"Für deine Knorpel: Vitamin C trägt zu einer normalen Kollagenbildung für eine normale Funktion der Knorpel bei. Ausfallschritte, Richtungswechsel und schnelle Schläge: Knie, Schulter und Handgelenk arbeiten in jedem Match mit."}},
   sn_banana_ten:{own:"ten",txt:{when:"Satzpausen / Spielpausen",why:"Der Klassiker in der Pause: eine Banane bringt rund 25 g Kohlenhydrate."}},
   sn_elek_ten2:{own:"ten",txt:{why:"Lange Matches und Turniertage: Mit dem Schweiss geht vor allem Natrium verloren."}},
-  mau_160:{own:"run",txt:{why:"Ideal für lange Distanzen zu Fuss - weniger dicht als 320, für Trainings und Rennen."},
+  mau_160:{own:"run",txt:{why:"Ideal für lange Einheiten - weniger dicht als 320, für Trainings und Rennen."},
     protocol:{hinweis:"GI-Test im Training notwendig - der Darm muss Kohlenhydrate im Renntempo erst lernen."}},
+  mn_gel:{own:"run",txt:{why:"Gel aus natürlichen Zutaten, auch bei Profiteams im Einsatz - für harte Einheiten und Rennen."}},
+  tart_run:{own:"run",txt:{why:"Der Geheimtipp vieler Ausdauersportler rund um Rennen: Sauerkirsch-Extrakt, morgens und abends"}},
+  sn_mau_gel_r:{own:"run",txt:{why:"Das Gel vieler Profis: 25 g Kohlenhydrate pro Gel, mit Hydrogel-Technologie."}},
+  // Sportnahrung Kraft (fitness_str) bei Sprung und Wurf, Sprint-Sportnahrung (la_sprint) bei Stab und Speer
+  sn_krea_sn:{own:"fit",txt:{why:"Die Basis für Sprints, Sprünge und Würfe. Für harte, kurze Belastungen: Kreatin erhöht die körperliche Leistung bei Schnellkrafttraining im Rahmen kurzzeitiger intensiver körperlicher Betätigung (ab 3 g pro Tag)."}},
+  sn_elek_str:{own:"fit",txt:{why:"Auch kurze, explosive Einheiten erzeugen Schweiss - Hydration nicht vernachlässigen."}},
+  sn_koff_sp:{own:"sp",txt:{why:"Der Klassiker vor explosiven Kurzbelastungen: Koffein, 45 min vor dem Start (max. 400 mg pro Tag)."}},
+  // Snowboard (Ski-Liste) und Bergsteigen (Skitouren-Liste)
+  koll_ski:{own:"ski",txt:{why:"Knöchel, Knie und Sehnen sind auf der Piste stark belastet."}},
+  koll_st:{own:"st",protocol:{dauer:"Ganzjährig bei intensiven Touren"}},
   eisen_run:{own:"run",txt:{why:"Für dein Blut: Eisen trägt zur normalen Bildung von roten Blutkörperchen und Hämoglobin bei. Den Ferritin-Wert sollte jeder Sportler kennen: erst testen, dann nehmen."},
     protocol:{hinweis:`${IRON_FERRITIN_TXT} Die Menge legt deine Ärztin oder dein Arzt fest.`}},
   // Dauer wie die neutrale Kollagen-Karte (koll_fit), statt «bei intensivem Lauftraining»
@@ -4457,7 +4469,10 @@ const SUB_SPORT_PROFILE = {
   tennis:         {met:{low:4.0,medium:6.5,high:8.0, competition:8.5}, protType:"skill",     suppKey:"tennis",       nutritionKey:"tennis",       sodiumPerL:800, ironRisk:false},
   padel:          {met:{low:3.5,medium:6.0,high:7.5, competition:8.0}, protType:"skill",     suppKey:"tennis",       nutritionKey:"tennis",       sodiumPerL:750, ironRisk:false},
   // ─── LEICHTATHLETIK ─────────────────────────────────────────────────────────
-  la_sprint:      {met:{low:5.0,medium:9.0,high:13.0,competition:16.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
+  // Sprint und Hürden (Entscheid 15.10.2026): Werte für eine ganze Trainingseinheit mit Einlaufen und langen Pausen, nicht für den Lauf selbst.
+  // Compendium 2024: 15734 Leichtathletik Hindernis/Hürden 10.0, 12180 Bahntraining im Team 10.0 = Wettkampf, Intensiv eine Stufe tiefer (9.0),
+  // Leicht und Mittel geschätzt (12010 Jog-Walk 6.0, 12020 Joggen 7.5). Sprünge 15733 6.0, Würfe 15732 4.0 (la_sprung, la_wurf).
+  la_sprint:      {met:{low:5.0,medium:7.0,high:9.0, competition:10.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
   la_mittel:      {met:{low:5.5,medium:9.5,high:13.0,competition:16.0}, protType:"endurance",  suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
   la_lang:        {met:{low:5.5,medium:9.0,high:12.5,competition:15.5}, protType:"endurance", suppKey:"running",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
   la_wurf:        {met:{low:3.0,medium:4.0,high:5.0, competition:6.0},  protType:"strength",  suppKey:"fitness",      nutritionKey:"fitness_str",  sodiumPerL:700, ironRisk:false},
@@ -4477,11 +4492,12 @@ const SUB_SPORT_PROFILE = {
   beachvolley:    {met:{low:5.0,medium:7.5,high:8.0, competition:9.0}, protType:"team",      suppKey:"fussball",     nutritionKey:"team_sport",   sodiumPerL:950, ironRisk:false},
   // ─── LEICHTATHLETIK: Disziplinen ────────────────────────────────────────────
   // Kind-Disziplinen ohne eigenen Eintrag erben das Profil ihrer Unterdisziplin (getSubProfile), z. B. 100 m wie Sprint.
-  // Hürden wie Sprint (Training mit Antritten und langen Pausen)
-  la_huerden:     {met:{low:5.0,medium:9.0,high:13.0,competition:16.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
-  // 400 m und 400 m Hürden: Sprint mit viel Laktat und mehr Umfang (Tempoläufe), MET wie Mittelstrecke
-  la_sprint_400:  {met:{low:5.5,medium:9.5,high:13.0,competition:16.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
-  la_huerden_400: {met:{low:5.5,medium:9.5,high:13.0,competition:16.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
+  // Hürden wie Sprint (Training mit Antritten und langen Pausen, Compendium 2024 15734 Hürden 10.0)
+  la_huerden:     {met:{low:5.0,medium:7.0,high:9.0, competition:10.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
+  // 400 m und 400 m Hürden: Sprint mit viel Laktat und mehr Umfang (Tempoläufe, kürzere Pausen): Intensiv wie Bahntraining
+  // (Compendium 2024 12180 10.0), die anderen Stufen eine halbe bis ganze Stufe über dem Sprint (geschätzt)
+  la_sprint_400:  {met:{low:5.5,medium:7.5,high:10.0,competition:11.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
+  la_huerden_400: {met:{low:5.5,medium:7.5,high:10.0,competition:11.0}, protType:"strength",  suppKey:"fitness",      nutritionKey:"la_sprint",    sodiumPerL:850, ironRisk:false},
   // 800 m: Training wie Mittelstrecke, viel Laktat im Rennen: Supplemente wie Sprint (Beta-Alanin bei 1-4 min, Trexler 2015)
   la_mittel_800:  {met:{low:5.5,medium:9.5,high:13.0,competition:16.0}, protType:"endurance", suppKey:"fitness",      nutritionKey:"running",      sodiumPerL:900, ironRisk:true},
   // Gehen: Compendium 2024 Gehen 8.8 km/h 8.5 (17231), Race Walking 11.2 km/h 10.3, 13.3 km/h 13.8, 14.4 km/h 15.5 (15525-15528).
