@@ -2509,7 +2509,7 @@ function OnbChip({label,desc,active,onClick,multi=false,disabled=false}) {
     <button type="button" onClick={disabled?undefined:onClick} disabled={disabled} aria-disabled={disabled||undefined} aria-pressed={!!active} style={{
       display:"inline-flex",alignItems:"center",gap:7,
       minHeight:36,maxWidth:"100%",minWidth:0,
-      padding:desc?"6px 14px":"0 14px",borderRadius:desc?12:100,
+      padding:desc?"6px 14px":"0 14px",borderRadius:12,
       border:`1.5px solid ${active?C.neon:C.g200}`,
       background:active?ONB_SEL:C.white,
       color:C.black,fontSize:13,fontWeight:500,lineHeight:1.3,
@@ -2630,7 +2630,7 @@ function OnbRow({qid,label,sub,answer,optional=false,warn=false,open=false,onTog
           {onDone&&(
             <div style={{display:"flex",justifyContent:"flex-end",marginTop:10}}>
               <button type="button" onClick={onDone}
-                style={{minHeight:34,padding:"0 16px",borderRadius:100,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                style={{minHeight:34,padding:"0 16px",borderRadius:12,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:13,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
                 Fertig
               </button>
             </div>
@@ -2845,7 +2845,7 @@ function RaceListEditor({races=[],onChange,onMainSet=null,mainElsewhere=false,de
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap"}}>
               <OnbChip label="Hauptrennen" multi active={r.main} onClick={()=>toggleMain(r)}/>
               <button type="button" onClick={()=>remove(r)}
-                style={{minHeight:36,padding:"0 12px",border:`1px solid ${C.g200}`,borderRadius:100,background:C.white,color:C.g600,fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                style={{minHeight:36,padding:"0 12px",border:`1px solid ${C.g200}`,borderRadius:12,background:C.white,color:C.g600,fontSize:12,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
                 Entfernen
               </button>
             </div>
@@ -2990,7 +2990,7 @@ function StepSport({onNext, initial}) {
                         const isSubEx=subExp===sb.id;
                         return (
                           <button type="button" key={sb.id} onClick={e=>toggleSub(e,s.id,sb)} aria-pressed={!!on} aria-expanded={sb.children?isSubEx:undefined}
-                            style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 13px",borderRadius:100,cursor:"pointer",fontSize:12,fontWeight:on?600:500,transition:"all .13s",background:on?ONB_SEL:C.white,color:C.black,border:`1.5px solid ${on?C.neon:C.g200}`,fontFamily:"Inter,sans-serif"}}>
+                            style={{display:"inline-flex",alignItems:"center",gap:6,padding:"6px 13px",borderRadius:12,cursor:"pointer",fontSize:12,fontWeight:on?600:500,transition:"all .13s",background:on?ONB_SEL:C.white,color:C.black,border:`1.5px solid ${on?C.neon:C.g200}`,fontFamily:"Inter,sans-serif"}}>
                             {sb.label}
                             {sb.children&&<OnbChevron open={isSubEx} size={10}/>}
                             {on&&!sb.children&&<span style={{fontSize:10,color:C.black}}>✓</span>}
@@ -3005,7 +3005,7 @@ function StepSport({onNext, initial}) {
                           <span style={{fontSize:11,fontWeight:500,color:C.g500,width:"100%"}}>{sb.label}</span>
                           {sb.children.map(ch=>{const ck=sb.id+"_"+ch.id;const con=!!childSel[ck];return(
                             <button type="button" key={ch.id} onClick={e=>toggleChild(e,sb.id,ch.id)} aria-pressed={con}
-                              style={{padding:"5px 12px",borderRadius:100,cursor:"pointer",fontSize:11,fontWeight:con?600:500,transition:"all .13s",background:con?ONB_SEL:C.white,color:C.black,border:`1.5px solid ${con?C.neon:C.g200}`,fontFamily:"Inter,sans-serif"}}>
+                              style={{padding:"5px 12px",borderRadius:10,cursor:"pointer",fontSize:11,fontWeight:con?600:500,transition:"all .13s",background:con?ONB_SEL:C.white,color:C.black,border:`1.5px solid ${con?C.neon:C.g200}`,fontFamily:"Inter,sans-serif"}}>
                               {ch.label}{con&&" ✓"}
                             </button>
                           );})}
@@ -6032,7 +6032,7 @@ Pro-Berechnungen: kcal Ruhetag ${pd.restDay} / Trainingstag ${pd.trainingDay??pd
       {consent&&!isLimited&&messages.length===0&&<div style={{padding:"14px 16px",background:C.g100}}>
         <div style={{fontSize:12,color:C.g600,marginBottom:10}}>Schnellfragen:</div>
         <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
-          {SUGG.map(q=><button key={q} onClick={()=>setInput(q)} style={{fontSize:11,padding:"5px 11px",borderRadius:100,border:`1px solid ${C.g200}`,background:C.white,cursor:"pointer",color:C.g800,fontFamily:"Inter,sans-serif"}}>{q}</button>)}
+          {SUGG.map(q=><button key={q} onClick={()=>setInput(q)} style={{fontSize:11,padding:"5px 11px",borderRadius:10,border:`1px solid ${C.g200}`,background:C.white,cursor:"pointer",color:C.g800,fontFamily:"Inter,sans-serif"}}>{q}</button>)}
         </div>
       </div>}
 
@@ -6542,7 +6542,7 @@ function StepAllergien({onNext, onBack, initial}) {
             {customTags.length>0&&(
               <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
                 {customTags.map(tag=>(
-                  <span key={tag} style={{display:"inline-flex",alignItems:"center",gap:2,minHeight:34,padding:"0 0 0 12px",borderRadius:100,background:ONB_SEL,border:`1.5px solid ${C.neon}`,fontSize:13,color:C.black,maxWidth:"100%",overflowWrap:"anywhere"}}>
+                  <span key={tag} style={{display:"inline-flex",alignItems:"center",gap:2,minHeight:34,padding:"0 0 0 12px",borderRadius:12,background:ONB_SEL,border:`1.5px solid ${C.neon}`,fontSize:13,color:C.black,maxWidth:"100%",overflowWrap:"anywhere"}}>
                     {tag}
                     <button type="button" className="icon-btn" aria-label={`${tag} entfernen`} onClick={()=>setCustomTags(prev=>prev.filter(x=>x!==tag))}
                       style={{width:34,height:34,minHeight:34,display:"inline-flex",alignItems:"center",justifyContent:"center",background:"none",border:"none",cursor:"pointer",fontSize:16,color:"#888",padding:0,lineHeight:1,flexShrink:0}}>×</button>
@@ -7087,7 +7087,7 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
   const sel={width:"100%",minHeight:44,padding:"10px 34px 10px 13px",border:`1.5px solid ${C.g200}`,borderRadius:10,fontSize:14,backgroundColor:C.white,color:C.black,fontFamily:"Inter,sans-serif",appearance:"none",WebkitAppearance:"none",cursor:"pointer",...SELECT_ARROW_STYLE};
   const chip=(key,label,active,onClick)=>(
     <button key={key} type="button" onClick={onClick} aria-pressed={!!active}
-      style={{minHeight:40,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:13,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",maxWidth:"100%",overflowWrap:"anywhere",textAlign:"left"}}>
+      style={{minHeight:40,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:13,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",maxWidth:"100%",overflowWrap:"anywhere",textAlign:"left"}}>
       {label}
     </button>
   );
@@ -7225,7 +7225,7 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
         </span>
         {isMobile
           ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-          :<span style={{flexShrink:0,background:C.black,color:C.white,borderRadius:100,padding:"8px 14px",fontSize:12,fontWeight:600}}>{st.active?"Ändern":"Eingeben"}</span>}
+          :<span style={{flexShrink:0,background:C.black,color:C.white,borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:600}}>{st.active?"Ändern":"Eingeben"}</span>}
       </button>
       {lockedResult}
     </div>
@@ -7256,7 +7256,7 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:12}}>
               <div style={{fontSize:14,fontWeight:600,color:C.black}}>2. Einheit</div>
               <button type="button" onClick={removeSecond}
-                style={{minHeight:36,padding:"6px 12px",borderRadius:100,border:`1px solid ${C.g200}`,background:C.white,color:C.g600,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+                style={{minHeight:36,padding:"6px 12px",borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,color:C.g600,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
                 Entfernen
               </button>
             </div>
@@ -8397,7 +8397,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <div id="treyn-today-plan" style={{marginBottom:16}}>
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap",marginBottom:4}}>
               <div style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.01em"}}>Dein Plan für heute</div>
-              <button type="button" onClick={backToWeek} style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap"}}>Zurück zum Wochenplan</button>
+              <button type="button" onClick={backToWeek} style={{minHeight:36,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:12,cursor:"pointer",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap"}}>Zurück zum Wochenplan</button>
             </div>
             <div style={{fontSize:12,color:C.g600,lineHeight:1.6,overflowWrap:"anywhere"}}>{tdy.rest?(restClUp?"Ruhetag - Carb-Loading vor dem Rennen, darum mehr Kalorien.":"Ruhetag - weniger Kalorien, mehr Regeneration."):`${todaySummary(todaySt,todaySports,sportData)} · personalisiert auf ${w}kg`}</div>
             {tdyT&&(<>
@@ -8431,13 +8431,13 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               return (
                 <React.Fragment key={s}>
                   <button onClick={()=>{setActiveSport(s);setIsRestDay(false);setLongOn(false);}}
-                    style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                    style={{minHeight:36,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
                     {label}
                   </button>
                   {/* Lange Einheit nur bei der gewählten Sportart, wenn sie eine hat */}
                   {s===activeSport&&longTD&&longMin>0&&(
                     <button onClick={()=>{setIsRestDay(false);setLongOn(true);}} aria-pressed={longActive}
-                      style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${longActive?C.black:C.g200}`,background:longActive?C.neon:C.white,color:C.black,fontSize:12,fontWeight:longActive?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
+                      style={{minHeight:36,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${longActive?C.black:C.g200}`,background:longActive?C.neon:C.white,color:C.black,fontSize:12,fontWeight:longActive?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
                       {`Lange Einheit · ${fmtDurMin(longMin)}`}
                     </button>
                   )}
@@ -8445,7 +8445,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               );
             })}
             <button onClick={()=>{setIsRestDay(true);setLongOn(false);}}
-              style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${isRestDay?C.black:C.g200}`,background:isRestDay?"#F0F0F0":C.white,color:C.black,fontSize:12,fontWeight:isRestDay?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+              style={{minHeight:36,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${isRestDay?C.black:C.g200}`,background:isRestDay?"#F0F0F0":C.white,color:C.black,fontSize:12,fontWeight:isRestDay?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
               Ruhetag
             </button>
           </div>
@@ -8940,7 +8940,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               const active=compSport===s;
               return (
                 <button key={s} onClick={()=>setCompSport(s)}
-                  style={{minHeight:36,padding:"6px 14px",borderRadius:100,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+                  style={{minHeight:36,padding:"6px 14px",borderRadius:12,border:`1.5px solid ${active?C.black:C.g200}`,background:active?C.neon:C.white,color:C.black,fontSize:12,fontWeight:active?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
                   {label}
                 </button>
               );
@@ -8966,7 +8966,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 const on=raceSel===o.id;
                 return (
                   <button key={o.id} type="button" aria-pressed={on} onClick={()=>setRaceDuration(o.id)}
-                    style={{minHeight:32,padding:"5px 12px",borderRadius:100,border:`1.5px solid ${on?C.black:C.neonBorder}`,background:on?C.neon:C.white,color:C.black,fontSize:12,fontWeight:on?600:500,cursor:"pointer",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap"}}>
+                    style={{minHeight:32,padding:"5px 12px",borderRadius:12,border:`1.5px solid ${on?C.black:C.neonBorder}`,background:on?C.neon:C.white,color:C.black,fontSize:12,fontWeight:on?600:500,cursor:"pointer",fontFamily:"Inter,sans-serif",whiteSpace:"nowrap"}}>
                     {o.l}
                   </button>
                 );
@@ -9353,7 +9353,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {CATS.map(c=>(
             <button key={c.id} onClick={()=>setShopCat(c.id)}
-              style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${shopCat===c.id?C.black:C.g200}`,background:shopCat===c.id?C.neon:"transparent",color:shopCat===c.id?C.black:C.g600,fontSize:12,fontWeight:shopCat===c.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
+              style={{padding:"6px 14px",borderRadius:12,border:`1px solid ${shopCat===c.id?C.black:C.g200}`,background:shopCat===c.id?C.neon:"transparent",color:shopCat===c.id?C.black:C.g600,fontSize:12,fontWeight:shopCat===c.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s"}}>
               {c.label}
             </button>
           ))}
@@ -9546,7 +9546,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     );
 
     const Pill=({label,active,onClick})=>(
-      <button onClick={onClick} style={{padding:"4px 10px",borderRadius:20,border:`1px solid ${active?C.black:C.g200}`,background:active?C.neon:"transparent",color:active?C.black:C.g600,fontSize:11,fontWeight:active?500:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
+      <button onClick={onClick} style={{padding:"4px 10px",borderRadius:10,border:`1px solid ${active?C.black:C.g200}`,background:active?C.neon:"transparent",color:active?C.black:C.g600,fontSize:11,fontWeight:active?500:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .12s",whiteSpace:"nowrap"}}>
         {label}
       </button>
     );
@@ -9743,7 +9743,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         {trainingEntries.length>0&&(<>
           <div style={{marginBottom:8,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
             <div style={{fontSize:12,fontWeight:500,color:grayText,fontFamily:"Inter,sans-serif"}}>Deine Sportarten</div>
-            <button onClick={()=>{ if(showEditor){ setShowEditor(false); commitTraining(); } else setShowEditor(true); }} style={{fontSize:11,color:showEditor?"#0A0A0A":"#888",background:showEditor?C.neonDim:"#F5F5F5",border:`1px solid ${showEditor?C.neon:"#E8E8E8"}`,borderRadius:20,padding:"3px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:showEditor?600:400,transition:"all .12s"}}>
+            <button onClick={()=>{ if(showEditor){ setShowEditor(false); commitTraining(); } else setShowEditor(true); }} style={{fontSize:11,color:showEditor?"#0A0A0A":"#888",background:showEditor?C.neonDim:"#F5F5F5",border:`1px solid ${showEditor?C.neon:"#E8E8E8"}`,borderRadius:12,padding:"3px 12px",cursor:"pointer",fontFamily:"Inter,sans-serif",fontWeight:showEditor?600:400,transition:"all .12s"}}>
               {showEditor?"✓ Fertig":"Anpassen"}
             </button>
           </div>
@@ -10712,7 +10712,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     // Chip mit genug Fläche zum Tippen (z. B. "Gleich wie Ø", "Weiss ich nicht")
     const tapChip=(label,on,onClick)=>(
       <button type="button" aria-pressed={!!on} onClick={onClick}
-        style={{minHeight:36,padding:"0 12px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,flexShrink:0,whiteSpace:"nowrap"}}>
+        style={{minHeight:36,padding:"0 12px",borderRadius:12,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black,flexShrink:0,whiteSpace:"nowrap"}}>
         {label}
       </button>
     );
@@ -10721,7 +10721,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const fieldStyle=(filled,bad=false)=>({width:"100%",minWidth:0,minHeight:40,padding:"9px 11px",border:`1.5px solid ${bad?C.orange:filled?C.neon:C.g200}`,borderRadius:9,fontSize:13,fontFamily:"Inter,sans-serif",background:filled&&!bad?C.neonDim:C.white,color:C.black,boxSizing:"border-box"});
     const chip=(key,label,on,onClick)=>(
       <button key={key} type="button" onClick={onClick}
-        style={{padding:"4px 10px",borderRadius:20,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+        style={{padding:"4px 10px",borderRadius:10,border:`1.5px solid ${on?C.neon:C.g200}`,background:on?C.neonDim:C.white,fontSize:11,fontWeight:on?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
         {label}
       </button>
     );
@@ -11109,7 +11109,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                     <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
                       {[{id:"performance",l:"Leistung"},{id:"muscle",l:"Muskel"},{id:"endurance",l:"Ausdauer"},{id:"weightloss",l:"Gewicht"},{id:"health",l:"Gesundheit"},{id:"recovery",l:"Regeneration"}].map(o=>(
                         <button key={o.id} onClick={()=>setEF("goal",o.id)}
-                          style={{padding:"5px 12px",borderRadius:20,border:`1.5px solid ${editForm.goal===o.id?C.neon:C.g200}`,background:editForm.goal===o.id?C.neonDim:C.white,fontSize:11,fontWeight:editForm.goal===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+                          style={{padding:"5px 12px",borderRadius:10,border:`1.5px solid ${editForm.goal===o.id?C.neon:C.g200}`,background:editForm.goal===o.id?C.neonDim:C.white,fontSize:11,fontWeight:editForm.goal===o.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
                           {o.l}
                         </button>
                       ))}
@@ -11595,7 +11595,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div style={{display:"flex",gap:6,marginBottom:20,flexWrap:"wrap"}}>
           {SUB.map(s=>(
             <button key={s.id} onClick={()=>{setSubTab(s.id);window.scrollTo({top:0,behavior:"instant"});}} aria-pressed={subTab===s.id}
-              style={{padding:isMobile?"6px 14px":"6px 16px",borderRadius:100,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
+              style={{padding:isMobile?"6px 14px":"6px 16px",borderRadius:12,border:`1.5px solid ${subTab===s.id?C.black:C.g200}`,background:subTab===s.id?C.neon:C.white,color:C.black,fontSize:12,fontWeight:subTab===s.id?600:400,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .13s"}}>
               {s.l}
             </button>
           ))}
