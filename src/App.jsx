@@ -3338,13 +3338,6 @@ function StepTraining({sportData,onNext,onBack,initial}) {
 const COUNTRIES=[
   {v:"Schweiz"},{v:"Deutschland"},{v:"Österreich"},
 ];
-const PLATFORMS=[
-  {id:"apple",  label:"Apple Health", desc:"Grösse, Gewicht, HRV, Aktivität"},
-  {id:"whoop",  label:"WHOOP",        desc:"Recovery, Strain, Sleep, HRV"},
-  {id:"garmin", label:"Garmin",       desc:"HR, Power, Sleep, HRV, VO2max"},
-  {id:"polar",  label:"Polar",        desc:"HR, VO2max, Recovery, Training"},
-  {id:"manual", label:"Manuell",      desc:"Daten selbst eingeben"},
-];
 // Eigener Pfeil für Auswahlfelder (appearance:none entfernt den Browser-Pfeil)
 const SELECT_ARROW_STYLE={
   backgroundImage:`url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B68' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
@@ -3364,7 +3357,6 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
 
   const isMobile=useWindowWidth()<=768;
   // Gerätewahl ohne Import: es werden nie Werte ins Formular geschrieben (Import folgt später)
-  const [platform,setPlatform]=useState(()=>initial?.platform||null);
   const [form,setForm]=useState(()=>({
     firstname:initial?.firstname||"",lastname:initial?.lastname||"",email:initial?.email||"",
     country:initial?.country||"Schweiz",gender:initial?.gender||"",birthyear:initial?.birthyear||"",
@@ -3415,16 +3407,6 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
   return (
     <OnbShell step={3} total={6}>
       <OnbTitle title="Deine Daten." sub="Körperdaten & Kontakt. Im nächsten Schritt folgen Ziel & Lebensstil."/>
-
-      {/* Gerät (optional) */}
-      <OnbCard label="Welches Gerät nutzt du?" sub="Optional · Der automatische Import ist bald verfügbar. Bis dahin trägst du deine Daten unten selbst ein.">
-        <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,minmax(0,1fr))":"repeat(3,minmax(0,1fr))",gap:7}}>
-          {PLATFORMS.map(p=>(
-            <OnbTile key={p.id} label={p.label} desc={p.desc} note={p.id!=="manual"?"Import bald verfügbar":null}
-              active={platform===p.id} onClick={()=>setPlatform(cur=>cur===p.id?null:p.id)}/>
-          ))}
-        </div>
-      </OnbCard>
 
       {/* Name & Wohnland */}
       <OnbCard label="Name & Wohnland">
@@ -3494,7 +3476,7 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
       </OnbCard>
 
       <OnbNav onBack={onBack} canNext={valid}
-        onNext={()=>{ if(valid) onNext({...form,firstname:form.firstname.trim(),lastname:form.lastname.trim(),email:emailTrim,pregnancy:isF?form.pregnancy:"none",platform}); }}
+        onNext={()=>{ if(valid) onNext({...form,firstname:form.firstname.trim(),lastname:form.lastname.trim(),email:emailTrim,pregnancy:isF?form.pregnancy:"none"}); }}
         hint={navHint}/>
     </OnbShell>
   );
