@@ -6890,13 +6890,20 @@ function checkAllergens(suppId, suppName, allergenData) {
 
 // ─── PRODUCT CARD ─────────────────────────────────────────────────────────────
 
-// Unscharfer Platzhalter für PRO-Inhalte (Dosierung, Timing, Begründung) - keine echten Werte im Code der Seite
-function ProLock({w=70,lines=1}) {
+// Unscharfer Platzhalter für PRO-Inhalte (Dosierung, Timing, Begründung) - keine echten Werte im Code der Seite.
+// Tippen öffnet das Upgrade-Fenster (openProModal). tap={false}: steht schon in einem Knopf, der das Fenster öffnet.
+function ProLock({w=70,lines=1,tap=true}) {
+  const box={display:"inline-flex",flexDirection:"column",gap:4,verticalAlign:"middle",maxWidth:"100%"};
+  const bars=Array.from({length:lines}).map((_,i)=>(
+    <span key={i} style={{display:"inline-block",width:i===lines-1&&lines>1?Math.round(w*0.6):w,maxWidth:"100%",height:9,borderRadius:3,background:"#E6E6E3",filter:"blur(1.5px)",userSelect:"none"}}/>
+  ));
+  if(!tap) return <span title="Nur mit PRO" style={box}>{bars}</span>;
+  const open=e=>{ e.preventDefault(); e.stopPropagation(); openProModal(); };
   return (
-    <span title="Nur mit PRO" style={{display:"inline-flex",flexDirection:"column",gap:4,verticalAlign:"middle",maxWidth:"100%"}}>
-      {Array.from({length:lines}).map((_,i)=>(
-        <span key={i} style={{display:"inline-block",width:i===lines-1&&lines>1?Math.round(w*0.6):w,maxWidth:"100%",height:9,borderRadius:3,background:"#E6E6E3",filter:"blur(1.5px)",userSelect:"none"}}/>
-      ))}
+    <span role="button" tabIndex={0} title="Nur mit PRO" aria-label="Nur mit PRO: freischalten" aria-haspopup="dialog"
+      onClick={open} onKeyDown={e=>{ if(e.key==="Enter"||e.key===" ") open(e); }}
+      style={{...box,cursor:"pointer",padding:"6px 0",margin:"-6px 0"}}>
+      {bars}
     </span>
   );
 }
@@ -7706,22 +7713,25 @@ const ALLERGEN_GROUPS = [
   {id:"glutenfrei",    label:"Glutenfrei (Präferenz)",  ingredients:["Gluten","Weizen","Gerste","Roggen","Hafer"], category:"diet"},
 ];
 
+// Die 10 PRO-Punkte: «So funktioniert TREYN+» und das Upgrade-Fenster nutzen dieselbe Liste
+const PRO_POINTS=[
+  "Kalorien für Trainings-, Ruhe- und Renntag",
+  "Protein, Kohlenhydrate, Fett und Ballaststoffe, pro Tag und pro Mahlzeit",
+  "Wasser, Schweissrate, Natrium und Elektrolyte pro Stunde",
+  "Kohlenhydrate pro Stunde mit Gel- und Trink-Rhythmus",
+  "Tagesplan mit Uhrzeiten und Trainingsrechner «Heute»",
+  "Supplemente und Sportnahrung mit Produkt, Dosis, Timing und Begründung",
+  "Rennplan mit Carb-Loading, Taper und Spieltag-Plan",
+  "VO₂max und Herzfrequenz-Zonen",
+  "Saisonphasen und Darmtraining",
+  "KI-Chat zu deinen Werten",
+];
+
 function StepWillkommen({onNext, priceStr="CHF 14.90"}) {
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const items=[
     {title:"Basicdaten sofort sichtbar", desc:"4 Werte sofort: Energieverbrauch, Grundumsatz, Wasser & Trainingseinheiten/Jahr."},
-    {title:`PRO - ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen:", pro:true, list:[
-      "Kalorien für Trainings-, Ruhe- und Renntag",
-      "Protein, Kohlenhydrate, Fett und Ballaststoffe, pro Tag und pro Mahlzeit",
-      "Wasser, Schweissrate, Natrium und Elektrolyte pro Stunde",
-      "Kohlenhydrate pro Stunde mit Gel- und Trink-Rhythmus",
-      "Tagesplan mit Uhrzeiten und Trainingsrechner «Heute»",
-      "Supplemente und Sportnahrung mit Produkt, Dosis, Timing und Begründung",
-      "Rennplan mit Carb-Loading, Taper und Spieltag-Plan",
-      "VO₂max und Herzfrequenz-Zonen",
-      "Saisonphasen und Darmtraining",
-      "KI-Chat zu deinen Werten",
-    ]},
+    {title:`PRO - ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen:", pro:true, list:PRO_POINTS},
     {title:"Auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 - wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
   ];
 
@@ -7984,22 +7994,12 @@ function StepAllergien({onNext, onBack, initial}) {
 
 function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,priceStr="CHF 14.90"}) {
 
-  const [loadPro,setLoadPro]=useState(false);
   const healthOnly=sportData?.healthOnly;
   const fname=String(profilData?.firstname||"").trim();
   const basic=calcBasic(profilData,trainingData,healthOnly,sportData);
   const isMobile=useWindowWidth()<=768;
-  // Zurueck von Stripe (Browser-Cache): Knopf wieder freigeben
-  useEffect(()=>{
-    const reset=(e)=>{ if(e?.persisted) setLoadPro(false); };
-    window.addEventListener("pageshow",reset);
-    return ()=>window.removeEventListener("pageshow",reset);
-  },[]);
-  const openPro=()=>{
-    if(loadPro) return;
-    setLoadPro(true);
-    try{ onUpgrade?.(); }catch(e){ setLoadPro(false); }
-  };
+  // «PRO freischalten» öffnet das Upgrade-Fenster (dort Bezahlung und Warte-Anzeige)
+  const openPro=()=>{ try{ onUpgrade?.(); }catch{ /* Fenster bleibt zu */ } };
 
   // Die 4 freien Basiswerte (gleiche Rechnung wie im Profil)
   const waterL=Math.round((basic?.waterMl||75*35)/100)/10;
@@ -8048,9 +8048,9 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
           <p style={{fontSize:14,color:C.g700,lineHeight:1.6,marginBottom:16}}>
             {`Alle Werte, Supplements und Sportnahrung mit Dosierung, Tagesplan und Wettkampf. ${priceStr} für 6 Monate - einmal bezahlt, kein Abo.`}
           </p>
-          <button onClick={openPro} disabled={loadPro}
-            style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",boxShadow:loadPro?"none":"0 2px 10px rgba(0,0,0,.08)"}}>
-            {loadPro?"Einen Moment...":"PRO freischalten"}
+          <button type="button" onClick={openPro} aria-haspopup="dialog"
+            style={{width:"100%",background:C.neon,color:C.black,border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",boxShadow:"0 2px 10px rgba(0,0,0,.08)"}}>
+            PRO freischalten
           </button>
         </div>
 
@@ -8294,23 +8294,125 @@ function AnalysingScreen({onDone, profilData, sportData}) {
   );
 }
 
+// ── PRO-ZAHLUNG UND UPGRADE-FENSTER ──────────────────────────────────────────
+// Stripe-Bezahl-Links (Payment Links), je Währung einer. Leer = noch nicht eingerichtet: dann schaltet nichts PRO frei,
+// das Upgrade-Fenster zeigt nur einen Hinweis. WICHTIG: erst eintragen, wenn PRO vom Server kommt (Stripe-Webhook + Login),
+// denn die Rückkehr mit ?pro=success schaltet bewusst nichts mehr frei (den Parameter kann jeder in die Adresse tippen).
+const STRIPE_LINKS={CHF:"",EUR:""};
+// Link fürs Land (Deutschland und Österreich in EUR, sonst CHF). Leer, kein https oder alter Platzhalter = "" (nicht eingerichtet)
+function stripeLinkFor(country){
+  const l=String(STRIPE_LINKS[["Deutschland","Österreich"].includes(country)?"EUR":"CHF"]||"").trim();
+  return /^https:\/\/\S+$/.test(l)&&!/DEIN_PAYMENT_LINK/i.test(l)?l:"";
+}
+// Jede gesperrte Stelle öffnet dasselbe Fenster: App zeichnet es einmal und trägt hier ihr Öffnen ein
+const PRO_MODAL={open:null};
+function openProModal(){ try{ if(typeof PRO_MODAL.open==="function") PRO_MODAL.open(); }catch{ /* ohne App (Tests): nichts */ } }
+// Dev-Knöpfe (?dev=1, springen auch in «Results PRO»): nur lokal und auf Vercel-Vorschauen, nie auf treyn.ch
+function devHostOk(host){
+  const h=String(host||"").trim().toLowerCase().replace(/\.$/,"");
+  if(!h||h==="treyn.ch"||h.endsWith(".treyn.ch")) return false;
+  // .vercel.app nur für Vorschauen (Branch «-git-»), nie die öffentliche Projekt-Adresse
+  return h==="localhost"||h==="127.0.0.1"||h==="[::1]"||(h.endsWith(".vercel.app")&&h.includes("-git-"));
+}
+const PRO_MODAL_SOON="Die Bezahlung wird gerade eingerichtet. Schon bald kannst du PRO hier direkt freischalten.";
+// Upgrade-Fenster «Werte ansehen?». onPay: true = Weiterleitung zu Stripe läuft, false = Bezahlung noch nicht eingerichtet
+// (dann nur der Hinweis, nie PRO). Esc, Tippen daneben, «Später» und × schliessen. Am Handy von unten, scrollt bei wenig Höhe.
+function ProUpgradeModal({onClose,onPay,priceStr="CHF 14.90"}){
+  const isMobile=useWindowWidth()<=600;
+  const cardRef=useRef(null);
+  const closeRef=useRef(onClose);
+  closeRef.current=onClose;
+  const [pay,setPay]=useState("idle"); // idle | wait (Weiterleitung) | soon (noch nicht eingerichtet)
+  const close=()=>{ if(typeof closeRef.current==="function") closeRef.current(); };
+  useEffect(()=>{
+    const prevFocus=document.activeElement;
+    const body=document.body, prevOverflow=body&&body.style?body.style.overflow:"";
+    if(body&&body.style) body.style.overflow="hidden"; // Seite dahinter scrollt nicht mit
+    try{ cardRef.current&&cardRef.current.focus(); }catch{ /* ältere Browser */ }
+    const onKey=e=>{
+      if(e.key==="Escape"){ e.preventDefault(); close(); return; }
+      // Tab bleibt im Fenster
+      const card=cardRef.current;
+      if(e.key!=="Tab"||!card||typeof card.querySelectorAll!=="function") return;
+      const f=Array.from(card.querySelectorAll("button:not([disabled]),a[href],[tabindex]:not([tabindex='-1'])"));
+      if(!f.length) return;
+      const first=f[0], last=f[f.length-1], a=document.activeElement;
+      if(e.shiftKey&&(a===first||a===card)){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey&&a===last){ e.preventDefault(); first.focus(); }
+    };
+    // Zurück von Stripe (Browser-Cache): Knopf wieder freigeben
+    const onShow=e=>{ if(e&&e.persisted) setPay("idle"); };
+    document.addEventListener("keydown",onKey);
+    window.addEventListener("pageshow",onShow);
+    return ()=>{
+      document.removeEventListener("keydown",onKey);
+      window.removeEventListener("pageshow",onShow);
+      if(body&&body.style) body.style.overflow=prevOverflow||"";
+      try{ if(prevFocus&&typeof prevFocus.focus==="function") prevFocus.focus(); }catch{ /* Element weg */ }
+    };
+  },[]);
+  const startPay=()=>{
+    if(pay==="wait") return;
+    let ok=false;
+    try{ ok=typeof onPay==="function"&&onPay()===true; }catch{ ok=false; }
+    setPay(ok?"wait":"soon");
+  };
+  return (
+    <div onClick={e=>{ if(e.target===e.currentTarget) close(); }}
+      style={{position:"fixed",inset:0,zIndex:10000,background:"rgba(10,10,10,.5)",display:"flex",alignItems:isMobile?"flex-end":"center",justifyContent:"center",padding:isMobile?0:16,fontFamily:"Inter,sans-serif"}}>
+      <div ref={cardRef} role="dialog" aria-modal="true" aria-labelledby="treyn-pro-title" aria-describedby="treyn-pro-text" tabIndex={-1}
+        style={{position:"relative",width:"100%",maxWidth:440,maxHeight:isMobile?"calc(100% - 24px)":"calc(100% - 32px)",overflowY:"auto",overscrollBehavior:"contain",WebkitOverflowScrolling:"touch",boxSizing:"border-box",background:C.white,borderRadius:isMobile?"16px 16px 0 0":16,padding:isMobile?"20px 16px calc(16px + env(safe-area-inset-bottom))":"24px 24px 20px",boxShadow:"0 12px 40px rgba(0,0,0,.18)",outline:"none",color:C.black}}>
+        <button type="button" className="icon-btn" onClick={close} aria-label="Schliessen"
+          style={{position:"absolute",top:12,right:12,width:40,height:40,borderRadius:10,border:`1px solid ${C.g200}`,background:C.white,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer"}}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <span style={{display:"inline-block",fontSize:11,padding:"2px 8px",borderRadius:4,background:C.neon,color:C.black,fontWeight:600,marginBottom:10}}>PRO</span>
+        <h2 id="treyn-pro-title" style={{fontSize:20,fontWeight:700,letterSpacing:"-.02em",lineHeight:1.25,margin:"0 48px 8px 0",color:C.black}}>Werte ansehen?</h2>
+        <p id="treyn-pro-text" style={{fontSize:14,color:C.g600,lineHeight:1.6,margin:"0 0 14px"}}>Mit PRO siehst du alles über deinen Körper und deinen Verbrauch - jeden Wert, jede Empfehlung, jeden Tag.</p>
+        <ul style={{listStyle:"none",padding:"12px 14px",margin:0,display:"flex",flexDirection:"column",gap:6,background:ONB_SEL,border:`1px solid ${C.neonBorder}`,borderRadius:12}}>
+          {PRO_POINTS.map(t=>(
+            <li key={t} style={{display:"flex",alignItems:"flex-start",gap:8,fontSize:13,color:C.black,lineHeight:1.45}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0,marginTop:3}}><path d="M5 12l5 5 9-10"/></svg>
+              <span style={{minWidth:0,overflowWrap:"anywhere"}}>{t}</span>
+            </li>
+          ))}
+        </ul>
+        <div style={{fontSize:14,fontWeight:600,color:C.black,lineHeight:1.5,margin:"16px 0 12px"}}>{`${priceStr} für 6 Monate - einmal bezahlt, kein Abo.`}</div>
+        <div role="status" aria-live="polite">
+          {pay==="soon"&&<div style={{fontSize:13,color:C.g700,lineHeight:1.55,background:C.g100,border:`1px solid ${C.g200}`,borderRadius:12,padding:"10px 12px",marginBottom:12}}>{PRO_MODAL_SOON}</div>}
+        </div>
+        <button type="button" onClick={startPay} disabled={pay==="wait"}
+          style={{width:"100%",minHeight:48,background:pay==="wait"?C.g200:C.neon,color:C.black,border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:pay==="wait"?"default":"pointer",fontFamily:"Inter,sans-serif",boxShadow:pay==="wait"?"none":"0 2px 10px rgba(0,0,0,.08)"}}>
+          {pay==="wait"?"Einen Moment...":"PRO freischalten"}
+        </button>
+        <button type="button" onClick={close}
+          style={{width:"100%",minHeight:44,marginTop:6,background:"transparent",color:C.g600,border:"none",borderRadius:12,padding:"10px",fontSize:14,fontWeight:500,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          Später
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // maxHeight (optional): zeigt bei langen Inhalten (z. B. Tagesplan) nur einen Ausschnitt, damit die Karte im Blick bleibt
 function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 14.90", maxHeight=null, children}) {
   // C is already the global constant
   if(isPro) return children;
+  // Tippen irgendwo auf die gesperrte Fläche öffnet das Upgrade-Fenster (nie den Inhalt)
+  const up=()=>{ if(typeof onUpgrade==="function") onUpgrade(); else openProModal(); };
   return (
     <div style={{position:"relative",borderRadius:12,overflow:"hidden",...(maxHeight?{maxHeight}:{})}}>
       <div aria-hidden="true" style={{filter:"blur(4px)",pointerEvents:"none",userSelect:"none",opacity:.6}}>
         {children}
       </div>
-      <div style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:16,background:"rgba(255,255,255,.7)",backdropFilter:"blur(2px)"}}>
+      <div onClick={up} style={{position:"absolute",inset:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:16,background:"rgba(255,255,255,.7)",backdropFilter:"blur(2px)",cursor:"pointer"}}>
         <div style={{textAlign:"center",padding:"18px 20px",background:"#fff",borderRadius:12,boxShadow:"0 4px 20px rgba(0,0,0,.12)",border:"1px solid #EBEBEB",maxWidth:260,width:"100%",fontFamily:"Inter,sans-serif"}}>
           <div style={{display:"flex",justifyContent:"center",marginBottom:8}}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </div>
           <div style={{fontSize:13,fontWeight:600,color:"#0A0A0A",marginBottom:4}}>{label}</div>
           <div style={{fontSize:12,fontWeight:400,color:"#888",marginBottom:12,lineHeight:1.5}}>Nur mit PRO verfügbar</div>
-          <button onClick={onUpgrade}
+          <button type="button" onClick={e=>{ e.stopPropagation(); up(); }} aria-haspopup="dialog"
             style={{background:"#C8FF00",color:"#000",border:"none",borderRadius:8,padding:"9px 16px",fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",width:"100%"}}>
             Upgrade {priceStr} →
           </button>
@@ -8377,6 +8479,30 @@ function todayLoad(){
 }
 function todaySave(st){
   try{ window.localStorage.setItem(TODAY_KEY,JSON.stringify({date:st.date,rest:!!st.rest,active:!!st.active,weather:cleanWeather(st.weather),s:st.s})); }catch{ /* Speicher gesperrt: gilt nur bis zum Neuladen */ }
+}
+// «Heute» ist PRO. Basic darf einmal testen: der erste Tag, an dem «Plan für heute berechnen» gedrückt wird, gilt ganz.
+// Datum (ISO) im localStorage "treyn_today_trial". «Neu» löscht es nicht (sonst wäre jeder Neustart ein neuer Test).
+const TODAY_TRIAL_KEY="treyn_today_trial";
+const TODAY_TRIAL_MEM={date:null}; // Speicher gesperrt: gilt bis zum Neuladen
+const TODAY_TRIAL_NOTE="1x kostenlos testen";
+const TODAY_PRO_NOTE="Mit PRO jeden Tag";
+const TODAY_TRIAL_BADGE={display:"inline-flex",alignItems:"center",alignSelf:"flex-start",fontSize:10,fontWeight:600,color:"#0A0A0A",background:"#C8FF00",borderRadius:6,padding:"1px 7px",lineHeight:1.6,whiteSpace:"nowrap"};
+function todayTrialDate(){
+  let v=null;
+  try{ v=window.localStorage.getItem(TODAY_TRIAL_KEY); }catch{ v=null; }
+  v=v||TODAY_TRIAL_MEM.date;
+  return typeof v==="string"&&v.trim()?v.trim():null;
+}
+// "free": noch nicht getestet · "active": Testtag ist heute · "used": vorbei (jedes andere gespeicherte Datum)
+function todayTrialStatus(){ const d=todayTrialDate(); return !d?"free":d===todayISO()?"active":"used"; }
+// Testtag starten (nur wenn noch keiner war). true = heute ist der Testtag
+function todayTrialStart(){
+  const d=todayTrialDate();
+  if(d) return d===todayISO();
+  const t=todayISO();
+  TODAY_TRIAL_MEM.date=t;
+  try{ window.localStorage.setItem(TODAY_TRIAL_KEY,t); }catch{ /* nur bis zum Neuladen */ }
+  return true;
 }
 // Stand für heute (UI_STATE.today). Neuer Tag oder nichts gespeichert: Standardwerte aus den Trainingsangaben
 function todayState(ctx){
@@ -8601,13 +8727,16 @@ function todayFuel(carbsH,durMin,naNeeded,flLo,flHi,form,rh=null){
   return {text, carbsTot:Math.round(carbsTot), bottles, elyte, fluidMl, rhythm};
 }
 
-// Eingabe-Karte «Heute trainiere ich» (Basic und PRO gleich). Ausserhalb von Results: Regler und Auswahl
+// Eingabe-Karte «Heute trainiere ich». Ausserhalb von Results: Regler und Auswahl
 // werden beim Neuzeichnen nicht neu angelegt und verlieren den Fokus nicht.
-// onApply: "Plan für heute berechnen" · onChange: Änderung bei offenem Plan (PRO rechnet neu)
-// locked (Basic): nach dem Berechnen eine gesperrte Ergebnis-Karte, keine echten Werte im DOM
-function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=false,isMobile=false,onApply,onChange,onUpgrade,priceStr="CHF 14.90"}){
+// onApply: "Plan für heute berechnen" · onChange: Änderung bei offenem Plan (rechnet neu)
+// trial (nur Basic): "free" = Test noch offen (Hinweis «1x kostenlos testen», Berechnen startet den Testtag),
+// "active" = heute ist der Testtag (wie PRO). locked (Basic nach dem Testtag): nur die Einladung, Tippen öffnet das Upgrade-Fenster
+function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=false,trial=null,isMobile=false,onApply,onChange,onUpgrade}){
   const ctx={userSports,trainingData,primarySport};
   const st=todayState(ctx);
+  // Test noch offen: ein früher berechneter Stand (ältere Version) gilt nicht, erst «Plan für heute berechnen» startet den Testtag
+  if(trial==="free"&&st.active) st.active=false;
   const [,setTick]=useState(0);
   const ref=useRef(null);
   const timerRef=useRef(null);
@@ -8725,43 +8854,31 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
   const apply=()=>{
     if(discMissing) return;
     clearTimeout(timerRef.current);
+    if(trial==="free") todayTrialStart(); // Basic: der kostenlose Testtag beginnt jetzt und gilt bis Mitternacht
     st.active=true; st.open=false; st.date=todayISO(); todaySave(st); setTick(x=>x+1);
     if(typeof onApply==="function") onApply();
     setTimeout(()=>{ try{ ref.current?.scrollIntoView({behavior:"smooth",block:"start"}); }catch{ /* ältere Browser */ } },60);
   };
 
-  // Gesperrte Ergebnis-Karte (Basic): Platzhalter statt Werte
-  const lockedTiles=st.rest
-    ?[["Kalorien heute","0000","kcal"],["Protein","000-000","g"],["Trinken","0.0","L"],["Magnesium","000","mg"]]
-    :[["Kalorien heute","0000","kcal"],["Kohlenhydrate","000","g"],["Protein","000-000","g"],["Trinken","0.0","L"],["Natrium unterwegs","000","mg/h"]];
-  const lockedResult=locked&&st.active&&(
-    <div style={{background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:16,marginTop:10}}>
-      <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:8}}>
-        <div style={{fontSize:15,fontWeight:700,color:C.black,letterSpacing:"-.01em",lineHeight:1.3,minWidth:0}}>Dein Plan für heute ist bereit</div>
-        <span style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:10,fontWeight:600,color:C.g500,background:C.g100,borderRadius:100,padding:"2px 8px",flexShrink:0}}>{lockIcon}PRO</span>
-      </div>
-      <div style={{fontSize:12,color:C.g600,lineHeight:1.5,marginTop:3,overflowWrap:"anywhere"}}>{summary}</div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(110px,1fr))",gap:8,marginTop:12}}>
-        {lockedTiles.map(([l,ph,u])=>(
-          <div key={l} style={{background:C.white,border:"1px solid #E8E8E8",borderRadius:12,padding:"12px 14px",minWidth:0}}>
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:6,marginBottom:6}}>
-              <span style={{fontSize:11,fontWeight:500,color:"#AAA",minWidth:0,overflowWrap:"anywhere"}}>{l}</span>{lockIcon}
-            </div>
-            <div style={{display:"flex",alignItems:"baseline",gap:3,lineHeight:1.1}}>
-              <span aria-hidden="true" style={{fontSize:20,fontWeight:300,color:C.black,filter:"blur(6px)",userSelect:"none"}}>{ph}</span>
-              <span style={{fontSize:12,color:"#AAA"}}>{u}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      {!st.rest&&(
-        <div style={{display:"flex",alignItems:"center",gap:8,background:C.g100,borderRadius:10,padding:"10px 12px",marginTop:8,minWidth:0}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.g600,flexShrink:0}}>Unterwegs</span>
-          <span aria-hidden="true" style={{fontSize:12,color:C.black,filter:"blur(5px)",userSelect:"none",minWidth:0,overflow:"hidden",whiteSpace:"nowrap"}}>0 Gels (je ca. 00 g) und 0 Flasche (500 ml)</span>
-        </div>
-      )}
-      <div style={{fontSize:12,color:C.g600,lineHeight:1.55,marginTop:12}}>Mit PRO siehst du deine Werte für heute, was du unterwegs mitnimmst und den ganzen Tag mit Uhrzeiten.</div>
-      <button type="button" onClick={onUpgrade} style={{width:"100%",minHeight:44,marginTop:12,background:C.neon,color:C.black,border:"none",borderRadius:10,padding:"10px 16px",fontSize:13,fontWeight:700,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>{`PRO freischalten - ${priceStr}`}</button>
+  // Basic vor dem Test: kleiner Hinweis «1x kostenlos testen»
+  const trialNote=trial==="free"?<span style={TODAY_TRIAL_BADGE}>{TODAY_TRIAL_NOTE}</span>:null;
+  const openUpgrade=()=>{ if(typeof onUpgrade==="function") onUpgrade(); else openProModal(); };
+
+  // Basic nach dem Testtag: nur die Einladung mit Schloss, Tippen öffnet das Upgrade-Fenster (keine Eingabe, kein Plan)
+  if(locked) return (
+    <div ref={ref} style={{marginBottom:16,scrollMarginTop:72}}>
+      <button type="button" onClick={openUpgrade} aria-haspopup="dialog"
+        style={{display:"flex",alignItems:"center",gap:12,width:"100%",textAlign:"left",background:C.white,border:`1px solid ${C.g200}`,borderRadius:16,padding:"14px 16px",cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+        <span style={icBox}>{calcIcon()}</span>
+        <span style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2}}>
+          <span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>
+          <span style={{fontSize:15,fontWeight:600,lineHeight:1.3,overflowWrap:"anywhere"}}>Was trainierst du heute?</span>
+          <span style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:12,color:C.g600,lineHeight:1.4}}>{lockIcon}{TODAY_PRO_NOTE}</span>
+        </span>
+        {isMobile
+          ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          :<span style={{flexShrink:0,background:C.neon,color:C.black,borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:600}}>PRO freischalten</span>}
+      </button>
     </div>
   );
 
@@ -8772,15 +8889,15 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
         style={{display:"flex",alignItems:"center",gap:12,width:"100%",textAlign:"left",background:st.active?C.white:ONB_SEL,border:`1px solid ${st.active?C.g200:C.neonBorder}`,borderRadius:16,padding:"14px 16px",cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
         <span style={icBox}>{calcIcon()}</span>
         <span style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2}}>
-          <span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>
+          {trialNote?<span style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}><span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>{trialNote}</span>
+            :<span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>}
           <span style={{fontSize:15,fontWeight:600,lineHeight:1.3,overflowWrap:"anywhere"}}>{st.active?summary:"Was trainierst du heute?"}</span>
-          <span style={{fontSize:12,color:C.g600,lineHeight:1.4}}>{st.active?(locked?"Deine Angaben für heute":"Dein Plan für heute steht unten."):"Plan für genau diesen Tag"}</span>
+          <span style={{fontSize:12,color:C.g600,lineHeight:1.4}}>{st.active?"Dein Plan für heute steht unten.":"Plan für genau diesen Tag"}</span>
         </span>
         {isMobile
           ?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
           :<span style={{flexShrink:0,background:C.black,color:C.white,borderRadius:12,padding:"8px 14px",fontSize:12,fontWeight:600}}>{st.active?"Ändern":"Eingeben"}</span>}
       </button>
-      {lockedResult}
     </div>
   );
 
@@ -8790,7 +8907,8 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
         <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
           <span style={icBox}>{calcIcon()}</span>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</div>
+            {trialNote?<div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}><span style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</span>{trialNote}</div>
+              :<div style={{fontSize:11,fontWeight:600,color:C.g600}}>Heute</div>}
             <h3 style={{fontSize:16,fontWeight:700,color:C.black,letterSpacing:"-.01em",margin:0,lineHeight:1.3}}>Heute trainiere ich</h3>
           </div>
           <button type="button" className="icon-btn" onClick={()=>setOpen(false)} aria-label="Schliessen"
@@ -8832,9 +8950,9 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
           </div>
         )}
         {st.active?(<>
-          {!locked&&<div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:16,textAlign:"center"}}>Änderungen siehst du sofort im Plan unten.</div>}
+          <div style={{fontSize:11,color:C.g500,lineHeight:1.5,marginTop:16,textAlign:"center"}}>Änderungen siehst du sofort im Plan unten.</div>
           <button type="button" onClick={()=>{ if(!discMissing) setOpen(false); }} aria-disabled={discMissing||undefined}
-            style={{width:"100%",minHeight:46,marginTop:locked?18:8,borderRadius:12,border:`1.5px solid ${C.black}`,background:C.white,color:C.black,fontSize:14,fontWeight:600,cursor:discMissing?"default":"pointer",opacity:discMissing?.4:1,fontFamily:"Inter,sans-serif"}}>
+            style={{width:"100%",minHeight:46,marginTop:8,borderRadius:12,border:`1.5px solid ${C.black}`,background:C.white,color:C.black,fontSize:14,fontWeight:600,cursor:discMissing?"default":"pointer",opacity:discMissing?.4:1,fontFamily:"Inter,sans-serif"}}>
             Fertig
           </button>
           {discHint}
@@ -8846,7 +8964,6 @@ function TodayCard({userSports=[],trainingData,sportData,primarySport,locked=fal
           {discHint}
         </>)}
       </div>
-      {lockedResult}
     </div>
   );
 }
@@ -8914,6 +9031,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   // Trainingsrechner «Heute»: eigene Sportarten für die Auswahl, Neuzeichnen nach Änderungen (Karte bleibt stehen)
   const todaySports=todayUserSports(sportData,trainingData);
   const refreshView=()=>{ if(resultsMountedRef.current) setViewTick(x=>x+1); };
+  // «Heute» in Basic: ein kostenloser Testtag ("free" offen, "active" heute, "used" vorbei). PRO ohne Grenze (null)
+  const todayTrial=isPro?null:todayTrialStatus();
+  // Nur der Plan von heute (TagesplanTab mit «Heute») rechnet am Testtag wie PRO, alles andere bleibt gesperrt
+  const planPro=isPro||todayTrial==="active";
 
   // Präferenzen aus praeferenzenData ableiten
   const {energieForm:_eF=[],suppForm:_sF=null}=praeferenzenData||{};
@@ -8948,6 +9069,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const kcal=proData||calcPro(profilData,trainingData,sportData);
   // Auswahl nach Sportart und Evidenz (suppCtxOf), auch in Basic aus der Rechnung (calc); Dosen nur in PRO (proData)
   const {primSupps,secSupps}=getPersonalizedSupps({...profile,currentSupps:profilData?.currentSupps,...suppCtxOf(sportData,trainingData,allergenData),calc:kcal},[...specific,...basis],[],proData);
+  // Testtag «Heute» (Basic): Supplements im Plan von heute wie in PRO (Dosis, Timing, Warnungen). Nur dort verwendet
+  const planSupps=(!isPro&&todayTrial==="active")
+    ?getPersonalizedSupps({...profile,currentSupps:profilData?.currentSupps,...suppCtxOf(sportData,trainingData,allergenData),calc:kcal},[...specific,...basis],[],kcal)
+    :{primSupps,secSupps};
   const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport,sportData?.subSel,sportData?.childSel||{});
   const fname=profilData?.firstname||"";
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
@@ -9669,8 +9794,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const setHardOn=v=>{UI_STATE.tagesplanHard=v;setHardOnRaw(v);};
     // «Heute» (Karte oben im Plan): ersetzt Umschalter und Zeitachse durch den Plan für genau diesen Tag
     const todaySt=todayState({userSports:todaySports,trainingData,primarySport});
-    const tdy=(isPro&&todaySt.active)?todayCalc(profilData,todaySt,trainingData,sportData,todaySports):null;
+    const tdy=(planPro&&todaySt.active)?todayCalc(profilData,todaySt,trainingData,sportData,todaySports):null;
     const tdyT=tdy&&!tdy.rest?tdy:null;
+    // Basic (Testtag) sieht hier nur den Plan von heute, nie den Wochenplan
+    if(!isPro&&!tdy) return null;
     const isRestDay=tdy?!!tdy.rest:isRestDaySel;
     const activeSport=tdyT?tdyT.sid1:(allSports.includes(sportSel)?sportSel:defSport);
     // calcAll: ganze Woche (Tages-Supplements, Ruhetag) · calc: nur die gewählte Sportart (Trainingstag)
@@ -9794,7 +9921,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     // Tages-Supplements aus deinem Stack (gleiche Quelle wie «Produkte»): genau das Empfohlene plus was du schon nimmst,
     // mit Dosis, Uhrzeit und denselben Warnungen. Vitamin D: Dosis aus calcPro, bei Blutverdünnern reines D3 (ohne K2)
-    const planSt=suppStack({primSupps,secSupps,profilData,allergenData,calc:calcAll});
+    const planSt=suppStack({primSupps:planSupps.primSupps,secSupps:planSupps.secSupps,profilData,allergenData,calc:calcAll});
     const suppRows=pregCare?[]:suppPlanRows(planSt.planList,{calc:calcAll});
     const rowOf=key=>suppRows.find(r=>r.key===key)||null;
     const vitDItem=rowOf("vitd");
@@ -9812,12 +9939,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const pMin=calc?.proteinMin||140, pMax=calc?.proteinMax||180;
     const kcalPlan=rdT?Math.round(+rdT.dayKcal):(numOr(ls?.dayKcal,0)||calc?.withTraining||2500);
     // Carb-Loading-Tag: das Tagesziel muss die Kohlenhydrate tragen (Protein + 10 g/kg KH + ca. 0.8 g/kg Fett), ohne Defizit
-    const clKcal=(isPro&&clToday)?Math.round(pMin*4+clMin*4+w*0.8*9):0;
+    const clKcal=(planPro&&clToday)?Math.round(pMin*4+clMin*4+w*0.8*9):0;
     const kcalDay=clKcal?Math.max(kcalPlan-Math.min(0,+calc?.goalDeltaKcal||0),clKcal):kcalPlan;
     const clKcalUp=clKcal>0&&kcalDay>kcalPlan;
     // Ruhetag am Carb-Loading-Tag: dieselbe Untergrenze (Protein wie am Trainingstag)
     const restKcalBase=calcAll?.restDay||1800;
-    const restCl=(isPro&&clToday)?Math.round((calcAll?.proteinMin||140)*4+clMin*4+w*0.8*9):0;
+    const restCl=(planPro&&clToday)?Math.round((calcAll?.proteinMin||140)*4+clMin*4+w*0.8*9):0;
     const restKcal=Math.max(restKcalBase,restCl);
     const restClUp=restKcal>restKcalBase;
     const MEALS=[
@@ -9997,13 +10124,13 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     return (
       <div>
         {/* Saison (nur PRO): Phase und Countdown, am Carb-Loading-Tag ein Hinweis */}
-        {isPro&&seasonLine&&(
+        {planPro&&seasonLine&&(
           <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"9px 12px",marginBottom:clToday?8:14}}>
             <div style={{fontSize:12,fontWeight:600,color:C.black,lineHeight:1.45,overflowWrap:"anywhere"}}>{seasonLine}</div>
             {calcAll?.phaseNote&&<div style={{fontSize:11,color:C.g600,lineHeight:1.55,marginTop:2}}>{calcAll.phaseNote}</div>}
           </div>
         )}
-        {isPro&&clToday&&(
+        {planPro&&clToday&&(
           <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
             <div style={{fontSize:13,fontWeight:700,color:C.black,lineHeight:1.4}}>{`Heute Carb-Loading: ${clRangeTxt} g Kohlenhydrate`}</div>
             <div style={{fontSize:11,color:"#4A7000",lineHeight:1.55,marginTop:3}}>{`Über den Tag verteilt (${clMax>clMin?"10-12":"10"} g pro kg), dazu weniger Fett und Ballaststoffe. ${clOther?(raceTomorrow?`Morgen ist ${clName(clRace)}.`:`Morgen nochmals gleich viel, übermorgen ist ${clName(clRace)}.`):(raceTomorrow?"Morgen ist dein Rennen.":"Morgen nochmals gleich viel.")}`}</div>
@@ -11652,15 +11779,19 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           {deficitPauseHint&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:8}}>{deficitPauseHint}</div>}
         </div>
 
-        {/* ── TRAININGSRECHNER «HEUTE»: springt in den Plan-Reiter und öffnet die Karte ── */}
-        <button type="button" onClick={()=>{ UI_STATE.openToday=true; UI_STATE.activeSection="plan"; setTab("plan"); }}
+        {/* ── TRAININGSRECHNER «HEUTE»: springt in den Plan-Reiter und öffnet die Karte. Basic nach dem Testtag: Upgrade-Fenster ── */}
+        <button type="button" onClick={()=>{ if(todayTrial==="used"){ if(typeof onUpgrade==="function") onUpgrade(); else openProModal(); return; } UI_STATE.openToday=true; UI_STATE.activeSection="plan"; setTab("plan"); }}
+          aria-haspopup={todayTrial==="used"?"dialog":undefined}
           style={{display:"flex",alignItems:"center",gap:12,width:"100%",textAlign:"left",background:C.black,color:C.white,border:"none",borderRadius:14,padding:"14px 16px",marginBottom:20,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
           <span style={{width:40,height:40,borderRadius:11,background:C.neon,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}} aria-hidden="true">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg>
           </span>
           <span style={{flex:1,minWidth:0,display:"flex",flexDirection:"column",gap:2}}>
             <span style={{fontSize:15,fontWeight:600,lineHeight:1.3}}>Was trainierst du heute?</span>
-            <span style={{fontSize:12,color:C.g300,lineHeight:1.4}}>Plan für genau diesen Tag</span>
+            {todayTrial==="used"
+              ?<span style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:12,color:C.g300,lineHeight:1.4}}>{lockIcon}{TODAY_PRO_NOTE}</span>
+              :<span style={{fontSize:12,color:C.g300,lineHeight:1.4}}>Plan für genau diesen Tag</span>}
+            {todayTrial==="free"&&<span style={{...TODAY_TRIAL_BADGE,marginTop:4}}>{TODAY_TRIAL_NOTE}</span>}
           </span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.neon} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0}} aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </button>
@@ -11899,7 +12030,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
                 <div key={r.key} style={{padding:"12px 16px",borderBottom:i<arr.length-1?"1px solid #F5F5F5":"none",display:"flex",alignItems:"center",justifyContent:"space-between",gap:10}}>
                   <span style={{fontSize:13,fontWeight:500,color:"#0A0A0A",minWidth:0,overflowWrap:"anywhere"}}>{r.label}</span>
                   <span style={{display:"flex",alignItems:"center",gap:8,flexShrink:0}}>
-                    <ProLock w={56}/>
+                    <ProLock w={56} tap={false}/>
                     <span style={{fontSize:10,color:grayText}}>g pro Session</span>
                   </span>
                 </div>
@@ -11932,7 +12063,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:8,width:"100%",marginBottom:20,padding:"14px 16px",borderRadius:12,background:"#fff",border:"1px solid #EBEBEB",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
             {["Pre-Workout","Post-Workout","Kreatin"].map(l=>(
               <span key={l} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6,minWidth:0}}>
-                <ProLock w={52}/>
+                <ProLock w={52} tap={false}/>
                 <span style={{fontSize:10,color:grayText,overflowWrap:"anywhere"}}>{l}</span>
               </span>
             ))}
@@ -14265,11 +14396,16 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         <div>
           <h2 style={h2Style}>Plan</h2>
           <p style={introStyle}>{`Dein Tagesplan mit Supplement-Timing für Trainings- und Ruhetage${hasCompPlan?" und deine Race-Day Strategie":""}.`}</p>
+          {/* «Heute» in Basic: 1x kostenlos testen (der ganze Tag), danach gesperrt (Tippen öffnet das Upgrade-Fenster) */}
           <TodayCard userSports={todaySports} trainingData={trainingData} sportData={sportData} primarySport={primarySport} isMobile={isMobile}
-            locked onUpgrade={onUpgrade} priceStr={PRICE_STR}/>
-          <BlurGate isPro={false} onUpgrade={onUpgrade} label="Tagesplan mit PRO" priceStr={PRICE_STR} maxHeight={isMobile?560:680}>
-            <TagesplanTeaser/>
-          </BlurGate>
+            trial={todayTrial} locked={todayTrial==="used"} onUpgrade={onUpgrade}
+            onApply={()=>{ UI_STATE.activeSection="plan"; refreshView(); }} onChange={refreshView}/>
+          {/* Testtag: nur der Plan von heute (ohne Wochenplan, Protokolle und Wettkampf), sonst die unscharfe Vorschau */}
+          {todayTrial==="active"&&todayState({userSports:todaySports,trainingData,primarySport}).active?<TagesplanTab/>:(
+            <BlurGate isPro={false} onUpgrade={onUpgrade} label="Tagesplan mit PRO" priceStr={PRICE_STR} maxHeight={isMobile?560:680}>
+              <TagesplanTeaser/>
+            </BlurGate>
+          )}
         </div>
       ))}
 
@@ -14473,7 +14609,16 @@ function App() {
   const [tier,setTier]=useState(()=>saved?.tier==="pro"?"pro":"basic");
   const [isDemoMode,setIsDemoMode]=useState(false);
   const preDemo=useRef(null); // eigene Angaben vor dem Demo, werden beim Verlassen zurückgeholt
-  const [devMode]=useState(()=>new URLSearchParams(window.location.search).get("dev")==="1");
+  // ?dev=1 nur auf localhost, 127.0.0.1 und Vercel-Vorschauen (devHostOk), nie auf treyn.ch
+  const [devMode]=useState(()=>new URLSearchParams(window.location.search).get("dev")==="1"&&devHostOk(window.location.hostname));
+  // Upgrade-Fenster: eine Stelle für alle gesperrten Elemente (Results, Vorschau und openProModal() aus ProLock & Co.)
+  const [proModal,setProModal]=useState(false);
+  useEffect(()=>{
+    const open=()=>setProModal(true);
+    PRO_MODAL.open=open;
+    return ()=>{ if(PRO_MODAL.open===open) PRO_MODAL.open=null; };
+  },[]);
+  useEffect(()=>{ setProModal(false); },[phase,tier]);
 
   // Nach PRO-Freischaltung an den Anfang, damit man die neuen Werte sieht
   const tierRef=useRef(tier);
@@ -14520,7 +14665,7 @@ function App() {
     return true;
   };
 
-  // Dev shortcut - only active when ?dev=1 in URL
+  // Dev shortcut - only active with ?dev=1 on localhost / Vercel previews (devMode, devHostOk)
   const DEV_SPORT={primarySport:"cycling",selectedSports:["cycling","running"],sel:{cycling:true,running:true},subSel:{cycling_road:true,run_road:true},childSel:{"run_road_run_road_m":true},healthOnly:false};
   const DEV_TRAINING={cycling:{days:5,intensity:"high",duration:90,hasCompetition:true,compCount:8,compTypes:["Rennen"],trainingTimes:["morning"],sweatRate:"high"},running:{days:3,intensity:"medium",duration:60,hasCompetition:false,compCount:3,compTypes:[],trainingTimes:["morning"],sweatRate:"medium"}};
   const DEV_PROFIL={firstname:"Kevin",lastname:"Oberholzer",email:"kevin@test.ch",gender:"m",birthyear:"1988",height:"192",weight:"100",country:"Schweiz",platform:"wahoo",rhr:"48",sleep:"7",goal:"performance",stressLevel:3,dietQuality:"good",altitude:"low",recoveryStatus:"good",jobActivity:"sedentary",sleepHours:"7",sunExposure:"low",caffeineDaily:"medium",bodyComposition:"athletic",cyclePhase:null,currentSupps:["kreatin"],medications:["none"],monthlyBudget:"high",injuries:[]};
@@ -14531,6 +14676,9 @@ function App() {
     setAllergenData(DEV_ALLERGEN);setPraeferenzenData(DEV_PRAEF);setTier(t);setPhase(target);
   };
 
+  // Rückkehr von Stripe (?pro=success): nur die vor der Zahlung gemerkten Angaben zurückholen.
+  // Schaltet PRO NICHT frei: den Parameter kann jeder in die Adresse tippen. PRO kommt später vom Server
+  // (Stripe-Webhook + Login), erst dann darf hier der Tarif gesetzt werden.
   React.useEffect(()=>{
     const params=new URLSearchParams(window.location.search);
     if(params.get("pro")==="success"){
@@ -14543,28 +14691,23 @@ function App() {
           if(pd){ setProfilData(pd); setSelectedCountry(pd.country||"Schweiz"); }
           if(ad)setAllergenData(ad); if(pf)setPraeferenzenData(pf);
           window.sessionStorage.removeItem("treyn_pre_payment");
-          setTier("pro"); setPhase((sd&&td&&pd)||savedHasData?"results":"intro");
+          setPhase((sd&&td&&pd)||savedHasData?"results":"intro");
           return;
         }
       }catch{}
-      setTier("pro"); setPhase(savedHasData?"results":"intro");
+      setPhase(savedHasData?"results":"intro");
     }
   },[]);
 
+  // «PRO freischalten» im Upgrade-Fenster: true = Weiterleitung zu Stripe, false = Bezahl-Link noch nicht eingerichtet
+  // (STRIPE_LINKS leer). Setzt nie selbst PRO: das kommt später nur vom Server (Stripe-Webhook + Login).
   const openStripePayment=(sd,td,pd,ad,pf)=>{
     // CH → CHF 14.90 | DE/AT → EUR 14.90
-    const country=pd?.country||"Schweiz";
-    const isEUR=["Deutschland","Österreich"].includes(country);
-    const STRIPE_CHF="https://buy.stripe.com/DEIN_PAYMENT_LINK_CHF"; // CHF 14.90
-    const STRIPE_EUR="https://buy.stripe.com/DEIN_PAYMENT_LINK_EUR"; // EUR 14.90
-    const STRIPE_LINK=isEUR?STRIPE_EUR:STRIPE_CHF;
-    const isPlaceholder=STRIPE_LINK.includes("DEIN_PAYMENT_LINK");
-    if(isPlaceholder){
-      if(sd)setSportData(sd); if(td)setTrainingData(td); if(pd)setProfilData(pd); if(ad)setAllergenData(ad); if(pf)setPraeferenzenData(pf);
-      setTier("pro"); setPhase("results"); return;
-    }
+    const link=stripeLinkFor(pd?.country||"Schweiz");
+    if(!link) return false;
     try{ window.sessionStorage.setItem("treyn_pre_payment",JSON.stringify({sd,td,pd,ad,pf})); }catch{}
-    window.location.href=STRIPE_LINK;
+    window.location.href=link;
+    return true;
   };
 
   const startDemo=()=>{
@@ -14594,6 +14737,11 @@ function App() {
     setTier(s.tier==="pro"?"pro":"basic");
     setIsDemoMode(false);
   };
+  // Wer aus dem Demo in die eigenen Schritte geht (z. B. Zurück im Browser), verlässt das Demo: eigene Angaben und eigener
+  // Tarif zurück. Sonst gäbe es mit dem Demo-PRO eine Analyse der eigenen Angaben.
+  useEffect(()=>{
+    if(isDemoMode&&["sport","training","profil","lebensstil","allergien","praeferenzen","willkommen","analysing","preview"].includes(phase)) exitDemo();
+  },[phase,isDemoMode]);
 
   return (
     <div style={{minHeight:"100vh",background:C.white,fontFamily:"Inter,sans-serif"}}>
@@ -14631,7 +14779,7 @@ function App() {
       {phase==="willkommen" && <StepWillkommen priceStr={PRICE_GLOBAL} onNext={()=>setPhase("analysing")}/>}
       {phase==="preview"    && <AnalysePreview  priceStr={PRICE_GLOBAL} sportData={sportData} trainingData={trainingData} profilData={profilCalc}
         onContinue={()=>{setTier("basic");setPhase("results");}}
-        onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData,praeferenzenData)}/>}
+        onUpgrade={()=>setProModal(true)}/>}
       {phase==="analysing" && <AnalysingScreen onDone={()=>setPhase(tier==="pro"?"results":"preview")} profilData={profilData} sportData={sportData}/>}
       {phase==="results"    && isDemoMode&&(
         <div style={{position:"fixed",top:0,left:0,right:0,zIndex:9999,background:"#0A0A0A",padding:"10px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -14645,9 +14793,14 @@ function App() {
       )}
       {phase==="results"    && <Results         sportData={sportData} trainingData={trainingData} profilData={profilCalc} allergenData={allergenData} praeferenzenData={praeferenzenData} tier={tier} onReset={confirmReset}
         onTrainingChange={setTrainingData}
-        onEditSports={()=>setPhase("sport")}
+        onEditSports={()=>{ exitDemo(); setPhase("sport"); }}
         onProfilChange={p=>{ if(!p) return; setProfilData(prev=>({...(prev||{}),...p})); if(p.country) setSelectedCountry(p.country); }}
-        onUpgrade={()=>openStripePayment(sportData,trainingData,profilData,allergenData,praeferenzenData)}/>}
+        onUpgrade={()=>setProModal(true)}/>}
+      {/* Upgrade-Fenster «Werte ansehen?» (nur Basic): Bezahlen öffnet Stripe, solange kein Link da ist nur ein Hinweis */}
+      {proModal&&tier!=="pro"&&(
+        <ProUpgradeModal priceStr={PRICE_GLOBAL} onClose={()=>setProModal(false)}
+          onPay={()=>openStripePayment(sportData,trainingData,profilData,allergenData,praeferenzenData)}/>
+      )}
     </div>
   );
 }
