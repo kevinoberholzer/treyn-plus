@@ -3984,7 +3984,7 @@ function StepProfil({sportData,trainingData,onNext,onBack,initial}) {
 
       {bmr&&(
         <div style={{marginBottom:10,padding:"16px 18px",background:C.neon,borderRadius:16,animation:"fadeUp .4s ease forwards"}}>
-          <div style={{fontSize:12,fontWeight:500,color:"rgba(0,0,0,.55)",marginBottom:10}}>Schätzung · mit PRO exakt berechnet</div>
+          <div style={{fontSize:12,fontWeight:500,color:"rgba(0,0,0,.55)",marginBottom:10}}>Basic zeigt die Grundwerte · PRO zeigt alle Werte</div>
           <div style={{display:"grid",gridTemplateColumns:"repeat(2,minmax(0,1fr))",gap:12}}>
             <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Grundumsatz (Ruhe)</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{bmr.toLocaleString("de-CH")}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
             <div><div style={{fontSize:11,color:"rgba(0,0,0,.6)",marginBottom:4}}>Mit Training</div><div style={{fontSize:22,fontWeight:700,color:C.black,letterSpacing:"-.03em"}}>{basicPreview?.withTraining?basicPreview.withTraining.toLocaleString("de-CH"):"-"}</div><div style={{fontSize:10,color:"rgba(0,0,0,.5)"}}>kcal / Tag</div></div>
@@ -8024,7 +8024,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
         <div className="fu3" style={{background:"#F5FFE0",border:`2px solid ${C.neon}`,borderRadius:16,padding:isMobile?"18px":"20px 22px",marginBottom:10}}>
           <div style={{fontSize:18,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1.25,marginBottom:6}}>PRO freischalten</div>
           <p style={{fontSize:14,color:C.g700,lineHeight:1.6,marginBottom:16}}>
-            {`Alle Werte exakt berechnet, Supplements und Sportnahrung mit Dosierung, Tagesplan und Wettkampf. ${priceStr} einmalig, 6 Monate.`}
+            {`Alle Werte, Supplements und Sportnahrung mit Dosierung, Tagesplan und Wettkampf. ${priceStr} einmalig, 6 Monate.`}
           </p>
           <button onClick={openPro} disabled={loadPro}
             style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",boxShadow:loadPro?"none":"0 2px 10px rgba(0,0,0,.08)"}}>
@@ -11610,7 +11610,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
               <div style={{fontSize:12,color:grayText,marginTop:4}}>{age} Jahre · {profilData?.height||"-"} cm · {w} kg</div>
             </div>
             <div style={{fontSize:10,padding:"4px 10px",borderRadius:20,background:isPro?C.neon:"#F0F0F0",color:isPro?"#000":"#888",fontWeight:600,whiteSpace:"nowrap",flexShrink:0,fontFamily:"Inter,sans-serif"}}>
-              {isPro?"PRO · exakt berechnet":"Basic · Schätzung"}
+              {isPro?"PRO · alle Werte":"Basic · Grundwerte"}
             </div>
           </div>
           {(sportTags.length>0||contextTags.length>0)&&(
