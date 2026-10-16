@@ -1057,7 +1057,7 @@ function WhyTREYN({onNext, priceStr="CHF 14.90"}) {
           <p style={{fontSize:14,lineHeight:1.65,color:C.g600,margin:"0 0 20px"}}>TREYN+ rechnet aus deinem Training, Körper und Alltag aus, was du brauchst: Kalorien, Kohlenhydrate, Protein, Wasser und Salz. Dazu die passenden Supplemente & Sportnahrung, mit Menge & Uhrzeit.</p>
           <div className="dbd-steps" style={{display:"grid",gridTemplateColumns:"repeat(3,minmax(0,1fr))",gap:6,marginBottom:16}}>
             {[["Angaben machen","Training, Körper, Alltag. Ca. 5 Minuten."],["TREYN+ rechnet","Mit Formeln aus der Sportwissenschaft."],["Dein Plan","Sofort sichtbar. Basic ist kostenlos."]].map(([h,d],i)=>(
-              <div key={h} style={{background:C.white,border:`0.5px solid ${C.g200}`,borderRadius:12,padding:"12px 10px",display:"flex",flexDirection:"column",gap:0,minWidth:0}}>
+              <div key={h} style={{background:C.g100,border:`0.5px solid ${C.g100}`,borderRadius:12,padding:"12px 10px",display:"flex",flexDirection:"column",gap:0,minWidth:0}}>
                 <span style={{width:20,height:20,borderRadius:6,background:C.black,color:C.neon,fontSize:10,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",marginBottom:10}}>{i+1}</span>
                 <b style={{fontSize:11,fontWeight:500,lineHeight:1.3,marginBottom:4}}>{h}</b>
                 <small style={{fontSize:10,color:C.g600,lineHeight:1.4}}>{d}</small>
