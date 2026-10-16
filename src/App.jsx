@@ -185,10 +185,6 @@ const SPORT_GROUPS = [
   ]},
   {id:"golf",           label:"Golf",                icon:"GOLF",  subs:null},
   {id:"klettern",       label:"Klettern",            icon:"CLIMB", subs:null},
-  {id:"wandern",        label:"Wandern & Bergsteigen", icon:"HIKE", subs:[
-    {id:"wandern",        label:"Wandern",             children:null},
-    {id:"bergsteigen",    label:"Bergsteigen & Hochtouren", children:null},
-  ]},
   {id:"kampfsport",     label:"Kampfsport",          icon:"FIGHT", subs:[
     {id:"boxing",         label:"Boxen",               children:null},
     {id:"mma",            label:"MMA",                 children:null},
@@ -204,6 +200,10 @@ const SPORT_GROUPS = [
     {id:"handball",       label:"Handball",            children:null},
     {id:"volleyball",     label:"Volleyball",          children:null},
     {id:"beachvolley",    label:"Beach Volleyball",    children:null},
+  ]},
+  {id:"wandern",        label:"Wandern & Bergsteigen", icon:"HIKE", subs:[
+    {id:"wandern",        label:"Wandern",             children:null},
+    {id:"bergsteigen",    label:"Bergsteigen & Hochtouren", children:null},
   ]},
 ];
 
