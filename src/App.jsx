@@ -1517,7 +1517,7 @@ const TRANSLATIONS={
     summary_locked:"Vollständige Analyse - gesperrt",
     summary_upgrade_title:"Alles was du brauchst. Einmalig. Für 6 Monate.",
     summary_upgrade_price:"CHF 14.90",
-    summary_upgrade_period:"/ 6 Monate · CHF 2.15/Mt.",
+    summary_upgrade_period:"/ 6 Monate · CHF 2.48/Mt.",
     summary_upgrade_cta:"Jetzt PRO freischalten →",
     summary_free_cta:"Kostenlos weiter",
     summary_no_sub:"Kein Passwort · Kein Abo · Jederzeit erneuerbar",
@@ -8012,7 +8012,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
   ];
 
   return (
-    <div style={{minHeight:"100vh",background:C.white,display:"flex",justifyContent:"center",alignItems:"flex-start",padding:isMobile?"32px 16px 64px":"40px 24px 80px"}}>
+    <div style={{minHeight:"100vh",background:C.white,display:"flex",justifyContent:"center",alignItems:"center",padding:isMobile?"32px 16px":"40px 24px"}}>
       <div style={{width:"100%",maxWidth:520}}>
         <div className="fu" style={{marginBottom:28}}><Logo/></div>
 
@@ -8046,7 +8046,7 @@ function AnalysePreview({sportData,trainingData,profilData,onContinue,onUpgrade,
         <div className="fu3" style={{background:"#F5FFE0",border:`2px solid ${C.neon}`,borderRadius:16,padding:isMobile?"18px":"20px 22px",marginBottom:10}}>
           <div style={{fontSize:18,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1.25,marginBottom:6}}>PRO freischalten</div>
           <p style={{fontSize:14,color:C.g700,lineHeight:1.6,marginBottom:16}}>
-            {`Alle Werte, Supplements und Sportnahrung mit Dosierung, Tagesplan und Wettkampf. ${priceStr} einmalig, 6 Monate.`}
+            {`Alle Werte, Supplements und Sportnahrung mit Dosierung, Tagesplan und Wettkampf. ${priceStr} für 6 Monate - einmal bezahlt, kein Abo.`}
           </p>
           <button onClick={openPro} disabled={loadPro}
             style={{width:"100%",background:loadPro?C.g200:C.neon,color:C.black,border:"none",borderRadius:12,padding:"14px",fontSize:15,fontWeight:600,cursor:loadPro?"default":"pointer",fontFamily:"Inter,sans-serif",transition:"all .14s",boxShadow:loadPro?"none":"0 2px 10px rgba(0,0,0,.08)"}}>
@@ -8888,7 +8888,7 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const userCountry=profilData?.country||"Schweiz";
   const isEUR=["Deutschland","Österreich"].includes(userCountry);
   const PRICE_STR=isEUR?"EUR 14.90":"CHF 14.90";
-  const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
+  const PRICE_PERIOD=isEUR?"/ 6 Monate · EUR 2.48/Mt.":"/ 6 Monate · CHF 2.48/Mt.";
   const PRICE_MONTH=isEUR?"EUR 1.65":"CHF 2.15";
   const ProUnlockBanner=({text})=>(
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:"wrap",background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:12,padding:"10px 14px",marginBottom:14}}>
@@ -14465,7 +14465,7 @@ function App() {
   const [selectedCountry,setSelectedCountry]=useState(()=>saved?.profilData?.country||"Schweiz");
   const isEUR_global=["Deutschland","Österreich"].includes(selectedCountry);
   const PRICE_GLOBAL=isEUR_global?"EUR 14.90":"CHF 14.90";
-  const PERIOD_GLOBAL=isEUR_global?"/ 6 Monate · EUR 1.65/Mt.":"/ 6 Monate · CHF 2.15/Mt.";
+  const PERIOD_GLOBAL=isEUR_global?"/ 6 Monate · EUR 2.48/Mt.":"/ 6 Monate · CHF 2.48/Mt.";
   const [allergenData,setAllergenData]=useState(()=>saved?.allergenData??null);
   // Rechnung mit Ernährungsweise (vegan/vegetarisch): alle Rechnungen in Vorschau und Dashboard sehen profilData.diet
   const profilCalc=React.useMemo(()=>withDiet(profilData,allergenData),[profilData,allergenData]);
