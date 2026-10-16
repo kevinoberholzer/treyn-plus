@@ -7710,7 +7710,18 @@ function StepWillkommen({onNext, priceStr="CHF 14.90"}) {
   useEffect(()=>{ window.scrollTo(0,0); },[]);
   const items=[
     {title:"Basicdaten sofort sichtbar", desc:"4 Werte sofort: Energieverbrauch, Grundumsatz, Wasser & Trainingseinheiten/Jahr."},
-    {title:`PRO - ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen - inkl. Elektrolyte, VO₂max, Kohlenhydrate/h, Produkten, Dosierungen & Tagesplan.", pro:true},
+    {title:`PRO - ${priceStr} / 6 Monate`, desc:"Alle Daten, alle Empfehlungen:", pro:true, list:[
+      "Kalorien für Trainings-, Ruhe- und Renntag",
+      "Protein, Kohlenhydrate, Fett und Ballaststoffe, pro Tag und pro Mahlzeit",
+      "Wasser, Schweissrate, Natrium und Elektrolyte pro Stunde",
+      "Kohlenhydrate pro Stunde mit Gel- und Trink-Rhythmus",
+      "Tagesplan mit Uhrzeiten und Trainingsrechner «Heute»",
+      "Supplemente und Sportnahrung mit Produkt, Dosis, Timing und Begründung",
+      "Rennplan mit Carb-Loading, Taper und Spieltag-Plan",
+      "VO₂max und Herzfrequenz-Zonen",
+      "Saisonphasen und Darmtraining",
+      "KI-Chat zu deinen Werten",
+    ]},
     {title:"Auf dich berechnet", desc:"Berechnet aus MET-Compendium 2024 - wissenschaftlicher Standard. Präzise auf deine Daten, Gewicht, Sport, Lifestyle und Intensität."},
   ];
 
@@ -7721,6 +7732,16 @@ function StepWillkommen({onNext, priceStr="CHF 14.90"}) {
         <div key={i} style={{...ONB_CARD,marginBottom:10,...(item.pro?{background:ONB_SEL,border:`1px solid ${C.neon}`}:{})}}>
           <div style={{fontSize:14,fontWeight:600,color:C.black,letterSpacing:"-.01em",lineHeight:1.35,marginBottom:4}}>{item.title}</div>
           <div style={{fontSize:13,color:C.g600,lineHeight:1.6}}>{item.desc}</div>
+          {item.list&&(
+            <ul style={{listStyle:"none",padding:0,margin:"8px 0 0",display:"flex",flexDirection:"column",gap:6}}>
+              {item.list.map(t=>(
+                <li key={t} style={{display:"flex",alignItems:"flex-start",gap:8,fontSize:13,color:C.black,lineHeight:1.45}}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0,marginTop:3}}><path d="M5 12l5 5 9-10"/></svg>
+                  <span style={{minWidth:0}}>{t}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       ))}
       <OnbNav onNext={()=>onNext&&onNext()} label="Kostenlose Analyse entdecken →" hint="Dauert wenige Sekunden."/>
@@ -8196,20 +8217,25 @@ function AnalysingScreen({onDone, profilData, sportData}) {
     "Supplement-Profil personalisieren...",
     "Sportnahrung abstimmen...",
     "Elektrolyte & Hydration berechnen...",
+    "Saison & Rennen einplanen...",
+    "Tagesplan zusammenstellen...",
     "TREYN AI analysiert deine Werte...",
     "Alles bereit.",
   ];
 
   useEffect(()=>{
-    const duration = 3800;
-    const interval = 80;
+    // Bewusst etwas langsamer (ca. 9 s): jeder Schritt läuft an und hält kurz an, wie beim echten Rechnen
+    const duration = 9000;
+    const interval = 60;
     let elapsed = 0;
     const timer = setInterval(()=>{
       elapsed += interval;
-      const pct = Math.min((elapsed/duration)*100, 100);
+      const t = Math.min(elapsed/duration, 1);
+      const n = STEPS.length, seg = Math.min(Math.floor(t*n), n-1), f = t*n-seg;
+      const pct = t>=1 ? 100 : ((seg + Math.min(1, f/0.75)) / n) * 100;
       setProgress(pct);
-      setStep(Math.min(Math.floor((pct/100)*STEPS.length), STEPS.length-1));
-      if(elapsed >= duration){ clearInterval(timer); setTimeout(onDone, 400); }
+      setStep(t>=1 ? n-1 : seg);
+      if(elapsed >= duration){ clearInterval(timer); setTimeout(onDone, 700); }
     }, interval);
     return ()=>clearInterval(timer);
   },[]);
