@@ -2743,7 +2743,8 @@ function useOnbRows(order,missing) {
   const nextAfter=(fromId)=>{
     const {order:o,missing:m}=live.current;
     const i=o.indexOf(fromId);
-    return m.find(x=>x!==fromId&&o.indexOf(x)>i)||null;
+    // zuerst die nächste offene Pflicht-Frage darunter, sonst eine übersprungene weiter oben
+    return m.find(x=>x!==fromId&&o.indexOf(x)>i)||m.find(x=>x!==fromId)||null;
   };
   // Frage öffnen und ins Bild scrollen (z. B. erste fehlende Frage bei "Weiter")
   const reveal=(id)=>{ hold(); setOpenId(id||null); if(id) setScrollReq({id}); };
@@ -3753,7 +3754,7 @@ function StepTraining({sportData,onNext,onBack,initial}) {
         )}
         <OnbRow {...row("times")} first={sports.length<=1} label="Wann trainierst du meistens?" sub="Beeinflusst Supplement-Timing. Bis zu 2 Zeiten wählbar."
           answer={onbSummary(TIMES,currentTimes)} onDone={()=>rows.finish("times")}>
-          <OnbChips options={TIMES} multi isOn={v=>currentTimes.includes(v)} onPick={v=>{ rows.hold(); toggleTime(v); }}/>
+          <OnbChips options={TIMES} multi isOn={v=>currentTimes.includes(v)} onPick={v=>{ const full=!currentTimes.includes(v)&&currentTimes.length===1; toggleTime(v); if(full) rows.advance("times"); else rows.hold(); }}/>
         </OnbRow>
         <OnbRow {...row("sweat")} label="Wie stark schwitzt du beim Sport?" sub="Bestimmt deinen Elektrolyt- und Flüssigkeitsbedarf."
           answer={onbSummary(SWEAT,first?.sweatRate)}>
