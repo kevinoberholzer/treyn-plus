@@ -11820,6 +11820,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const [localTraining,setLocalTrainingRaw]=useState(()=>JSON.parse(JSON.stringify(trainingData||{})));
     React.useEffect(()=>{ if(trainingData&&Object.keys(trainingData).length>0) setLocalTrainingRaw(JSON.parse(JSON.stringify(trainingData))); },[JSON.stringify(trainingData||{})]);
     const [showEditor,setShowEditor]=useState(false);
+    // Erklärungen der Wertekarten hinter «Mehr» / «Weniger», zu Beginn zu. In UI_STATE gemerkt, weil der Reiter neu aufgebaut wird
+    const [openInfo,setOpenInfo]=useState(()=>({...(UI_STATE.sumInfo||{})}));
+    const toggleInfo=k=>setOpenInfo(o=>{ const n={...o,[k]:!o[k]}; UI_STATE.sumInfo=n; return n; });
     // Aenderungen unter "Anpassen" an App weitergeben (onTrainingChange), damit alle Reiter dieselben Daten nutzen.
     // Uebernommen wird bei "Fertig" und beim Verlassen des Reiters (nicht bei jedem Slider-Schritt).
     const dirtyRef=useRef(false);
@@ -12040,46 +12043,24 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       </button>
     );
 
-    // Wertekarte. locked: unscharfer Platzhalter statt Wert, Klick fuehrt zu PRO
-    const M=({label,value,unit,sub,desc,locked,accent,ph="0000"})=>locked?(
-      <button type="button" onClick={onUpgrade} aria-label={`${label}: mit PRO freischalten`}
-        style={{display:"block",width:"100%",minWidth:0,textAlign:"left",background:C.g100,borderRadius:12,padding:"14px 16px",border:`1px solid ${C.g100}`,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:6,marginBottom:6}}>
-          <span style={{fontSize:11,fontWeight:500,color:grayText,minWidth:0,overflowWrap:"anywhere"}}>{label}</span>
-          {lockIcon}
-        </div>
-        <div style={{display:"flex",alignItems:"baseline",gap:3,lineHeight:1.1}}>
-          <span aria-hidden="true" style={{fontSize:22,fontWeight:300,color:"#0A0A0A",letterSpacing:"-.03em",filter:"blur(6px)",userSelect:"none"}}>{ph}</span>
-          {unit&&<span style={{fontSize:12,color:grayText,fontWeight:400}}>{unit}</span>}
-        </div>
-      </button>
-    ):(
-      <div style={{background:C.g100,borderRadius:12,padding:"14px 16px",border:`1px solid ${C.g100}`,boxShadow:"0 1px 4px rgba(0,0,0,.05)",minWidth:0}}>
-        <div style={{fontSize:11,fontWeight:500,color:grayText,marginBottom:6,overflowWrap:"anywhere"}}>{label}</div>
-        <div style={{fontSize:22,fontWeight:300,color:accent?"#4A7000":"#0A0A0A",letterSpacing:"-.03em",lineHeight:1.1,overflowWrap:"anywhere"}}>
-          {value}<span style={{fontSize:12,color:grayText,marginLeft:3,fontWeight:400}}>{unit}</span>
-        </div>
-        {sub&&<div style={{fontSize:10,color:grayText,marginTop:2}}>{sub}</div>}
-        {desc&&<div style={{fontSize:10,color:C.g600,marginTop:6,lineHeight:1.5,paddingTop:6,borderTop:`1px solid ${C.g200}`}}>{desc}</div>}
-      </div>
-    );
-
     // Werte-Gruppen: PRO offen, Basic gesperrt (ohne echte Werte)
     const energieCards=isPro?[
-      {label:"Grundumsatz",value:fmt(bmr),unit:"kcal",sub:calc?.bmrMethod==="cunningham"?"täglich · aus deiner fettfreien Masse":calc?.bmrMethod==="tenhaaf"?"täglich · Formel für Sportler (ten Haaf 2014)":"täglich, ohne Training",desc:"Kalorien die dein Körper in Ruhe verbraucht - Atmung, Herzschlag, Organe. Basis für alle Berechnungen."},
-      {label:"Trainingstag",value:fmt(withTraining),unit:"kcal",sub:hardEasy?`Ø · hart ${fmt(hardEasy.hardKcal)} · locker ${fmt(hardEasy.easyKcal)} kcal`:"MET-basiert · exakt",desc:"Gesamtbedarf an einem Trainingstag - dein Ruhetag plus der Verbrauch durch Sport.",accent:true},
-      {label:"Ruhetag",value:fmt(restDayKcal),unit:"kcal",sub:`Alltagsfaktor ${palFactor.toFixed(1)} · ohne Sport`,desc:"Grundumsatz mal Alltagsfaktor je nach Job (sitzend 1.4, leicht aktiv 1.6, mässig aktiv 1.8, sehr aktiv 2.0, nach DGE), inklusive Verdauung."},
-      {label:"Mehrverbrauch durch Training",value:fmt(extraPerTrainingDay),unit:"kcal",sub:"pro Trainingstag",desc:"Zusätzliche Kalorien, die du an einem Trainingstag durch Sport verbrennst (ohne den Grundumsatz, der schon zählt). Die solltest du an diesen Tagen zusätzlich essen."},
-      {label:"Training / Woche",value:totalDays,unit:"×",sub:doubleDays>0?`an ${trainingDays} ${trainingDays===1?"Tag":"Tagen"} · ${Math.round(totalMin/60)}h total`:`${Math.round(totalMin/60)}h total`,desc:"Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."},
-      {label:"Kcal / Monat (Training)",value:fmt(monthTrainingKcal),unit:"kcal",desc:"Hochgerechneter Kalorienverbrauch nur durch Training pro Monat (Woche × 4.33)."},
+      {slot:"side",label:"Grundumsatz",value:fmt(bmr),unit:"kcal",sub:calc?.bmrMethod==="cunningham"?"täglich · aus deiner fettfreien Masse":calc?.bmrMethod==="tenhaaf"?"täglich · Formel für Sportler (ten Haaf 2014)":"täglich, ohne Training",desc:"Kalorien die dein Körper in Ruhe verbraucht - Atmung, Herzschlag, Organe. Basis für alle Berechnungen."},
+      {slot:"hero",label:"Trainingstag",value:fmt(withTraining),unit:"kcal",sub:hardEasy?`Ø · hart ${fmt(hardEasy.hardKcal)} · locker ${fmt(hardEasy.easyKcal)} kcal`:"aus deinen Trainings berechnet",
+        // Hauptkarte: dieselbe Zeile als Schilder («Ø» vor der Zahl)
+        pre:hardEasy?"Ø":null,chips:hardEasy?[["bolt",`hart ${fmt(hardEasy.hardKcal)}`],["leaf",`locker ${fmt(hardEasy.easyKcal)} kcal`]]:[[null,"aus deinen Trainings berechnet"]],desc:"Gesamtbedarf an einem Trainingstag - dein Ruhetag plus der Verbrauch durch Sport.",accent:true},
+      {slot:"side",label:"Ruhetag",value:fmt(restDayKcal),unit:"kcal",sub:`Alltagsfaktor ${palFactor.toFixed(1)} · ohne Sport`,desc:"Grundumsatz mal Alltagsfaktor je nach Job (sitzend 1.4, leicht aktiv 1.6, mässig aktiv 1.8, sehr aktiv 2.0, nach DGE), inklusive Verdauung."},
+      {slot:"mini",label:"Mehrverbrauch durch Training",value:fmt(extraPerTrainingDay),unit:"kcal",sub:"pro Trainingstag",desc:"Zusätzliche Kalorien, die du an einem Trainingstag durch Sport verbrennst (ohne den Grundumsatz, der schon zählt). Die solltest du an diesen Tagen zusätzlich essen."},
+      {slot:"mini",label:"Training / Woche",value:totalDays,unit:"×",sub:doubleDays>0?`an ${trainingDays} ${trainingDays===1?"Tag":"Tagen"} · ${Math.round(totalMin/60)}h total`:`${Math.round(totalMin/60)}h total`,desc:"Deine gesamten Trainingseinheiten pro Woche über alle Sportarten."},
+      {slot:"mini",label:"Kcal / Monat (Training)",value:fmt(monthTrainingKcal),unit:"kcal",desc:"Hochgerechneter Kalorienverbrauch nur durch Training pro Monat (Woche × 4.33)."},
     ]:[
-      {label:"Ruhetag",unit:"kcal",locked:true},
-      {label:"Mehrverbrauch durch Training",unit:"kcal",locked:true,ph:"000"},
-      {label:"Kcal / Monat (Training)",unit:"kcal",locked:true,ph:"00 000"},
+      {slot:"side",label:"Ruhetag",unit:"kcal",locked:true},
+      {slot:"mini",label:"Mehrverbrauch durch Training",unit:"kcal",locked:true,ph:"000"},
+      {slot:"mini",label:"Kcal / Monat (Training)",unit:"kcal",locked:true,ph:"00 000"},
     ];
     const makroCards=isPro?[
-      {label:"Protein / Tag",value:`${proteinMin}-${proteinMax}`,unit:"g",sub:"exakt",desc:"Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport. Gleich viel an Trainings- und Ruhetagen."},
-      {label:"Kohlenhydrate am Trainingstag",value:`${carbsG}`,unit:"g",sub:restCarbsG!=null?`Ruhetag ${restCarbsG} g`:"exakt",desc:"Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."},
+      {label:"Protein / Tag",value:`${proteinMin}-${proteinMax}`,unit:"g",sub:"gleich an Trainings- und Ruhetagen",desc:"Eiweissbedarf für Muskelaufbau und -erhalt. Besonders wichtig bei Kraft- und Ausdauersport. Gleich viel an Trainings- und Ruhetagen."},
+      {label:"Kohlenhydrate am Trainingstag",value:`${carbsG}`,unit:"g",sub:restCarbsG!=null?`Ruhetag ${restCarbsG} g`:"pro Trainingstag",desc:"Primärer Energielieferant für intensive Trainings. Füllt deine Glykogenspeicher."},
       {label:"Fett am Trainingstag",value:fatG,unit:"g",sub:`ca. ${fatPct}% der Kalorien${restFatG!=null?` · Ruhetag ${restFatG} g`:""}`,desc:"Wichtig für Hormonsynthese, fettlösliche Vitamine und Langzeitenergie. Protein, Kohlenhydrate und Fett ergeben zusammen deinen Trainingstag."},
     ]:[
       {label:"Protein / Tag",unit:"g",locked:true,ph:"000"},
@@ -12192,11 +12173,271 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
       if(e<=0) return `Alle Einheiten rechnen wir mit «${hardL}».`;
       return `${h} ${h===1?"harte Einheit":"harte Einheiten"} rechnen wir mit «${hardL}», ${e} lockere mit «${easyL}».`;
     };
-    const cardGrid=(cards,cols,mb=20)=>(
-      <div style={{display:"grid",gridTemplateColumns:cols,gap:8,marginBottom:mb}}>
-        {cards.map(c=><M key={c.label} {...c}/>)}
+    // ── WERTE-ABSCHNITTE (Stil wie «Das bekommst du»): jeder Abschnitt eine Karte, abwechselnd hellgrau und hellgrün,
+    // Kacheln darin weiss, Symbol in runder Box, Erklärung hinter «Mehr» (zu Beginn zu). Neon nur für die Hauptkarte
+    // «Trainingstag» und für Hervorhebungen. Basic: gesperrte Kacheln wie bisher (Knopf, unscharfer Platzhalter, Upgrade-Fenster)
+    const SUM_IC={
+      flame:<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>,
+      moon:<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/>,
+      pulse:<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>,
+      heart:<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>,
+      egg:<path d="M12 22c6.23-.05 7.87-5.57 7.5-10-.36-4.34-3.95-9.96-7.5-10-3.55.04-7.14 5.66-7.5 10-.37 4.43 1.27 9.95 7.5 10z"/>,
+      grain:<><path d="M2 22 16 8"/><path d="M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94z"/><path d="M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94z"/><path d="M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94z"/><path d="M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4z"/><path d="M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0z"/><path d="M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0z"/><path d="M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0z"/></>,
+      drop:<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>,
+      drops:<><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></>,
+      glass:<><path d="M6 3h12l-1.6 17.1a1 1 0 0 1-1 .9H8.6a1 1 0 0 1-1-.9L6 3z"/><path d="M6.6 9h10.8"/></>,
+      salt:<><path d="M8 10h8l-1 11H9L8 10z"/><path d="M9 10V8a3 3 0 0 1 6 0v2"/><path d="M11 5.5h.01M13 5.5h.01M12 4h.01"/></>,
+      plus:<><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></>,
+      pill:<><path d="M10.5 20.5l10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><path d="M8.5 8.5l7 7"/></>,
+      bolt:<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>,
+      leaf:<><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></>,
+      clock:<><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+      mountain:<path d="M8 3l4 8 5-5 5 15H2L8 3z"/>,
+      gauge:<><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></>,
+      wind:<path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>,
+    };
+    const SUM_ICON_OF={
+      "Trainingstag":"flame","Ruhetag":"moon","Grundumsatz":"pulse",
+      "Protein / Tag":"egg","Kohlenhydrate am Trainingstag":"grain","Fett am Trainingstag":"drop",
+      "Harter Tag":"bolt","Lockerer Tag":"leaf","KH lange Einheit":"clock","Langer Tag":"mountain",
+      "Natrium-Verlust / Einheit":"salt","Natrium-Zufuhr / Stunde":"plus","Magnesium-Supplement / Tag":"pill","Schweissrate":"drops",
+      "Wasser gesamt Trainingstag":"glass","Wasser gesamt Ruhetag":"glass",
+      "Max. Herzfrequenz":"heart","Fettverbrennungszone":"flame","Ausdauerzone":"gauge","VO₂max (geschätzt)":"wind",
+    };
+    const sumIcon=(name,color=C.black,size=18)=>(
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0}}>{SUM_IC[name]||SUM_IC.plus}</svg>
+    );
+    const icBox=bg=>({width:36,height:36,borderRadius:11,background:bg,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0});
+    const sumTile={background:C.white,borderRadius:14,padding:12,minWidth:0,display:"flex",flexDirection:"column",alignItems:"stretch",fontFamily:"Inter,sans-serif",textAlign:"left"};
+    const infoId=k=>"sum-info-"+k.replace(/[^A-Za-z0-9]+/g,"-");
+    // «Mehr» / «Weniger»: rechteckiger Textknopf mit Pfeil, öffnet die Erklärung (Text unverändert)
+    const moreBlock=(k,label,desc,dark=false)=>{
+      const open=!!openInfo[k];
+      return (<>
+        <button type="button" onClick={()=>toggleInfo(k)} aria-expanded={open} aria-controls={open?infoId(k):undefined} aria-label={`${open?"Weniger":"Mehr"} zu ${label}`}
+          style={{alignSelf:"flex-start",display:"inline-flex",alignItems:"center",gap:4,minHeight:32,padding:"0 8px",margin:"4px 0 0 -8px",border:"none",borderRadius:10,background:"transparent",color:dark?C.black:C.g600,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+          {open?"Weniger":"Mehr"}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        {open&&<div id={infoId(k)} style={{fontSize:11,color:dark?"rgba(0,0,0,.72)":C.g600,lineHeight:1.55,overflowWrap:"anywhere"}}>{desc}</div>}
+      </>);
+    };
+    // Abschnitts-Karte: Titel (wie bisher) mit PRO-Schild, darunter die Kacheln. acid = hellgrün, sonst hellgrau
+    const sumSection=(title,locked,acid,body)=>(
+      <section aria-label={title} style={{background:acid?ONB_SEL:C.g100,border:`1px solid ${acid?C.neonBorder:C.g100}`,borderRadius:18,padding:isMobile?12:16,marginBottom:16,minWidth:0}}>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,marginBottom:10,minHeight:20}}>
+          <div style={{fontSize:14,fontWeight:600,color:C.black,letterSpacing:"-.01em",fontFamily:"Inter,sans-serif",minWidth:0,overflowWrap:"anywhere"}}>{title}</div>
+          {locked&&<div style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:10,fontWeight:600,color:C.g500,background:C.white,borderRadius:100,padding:"2px 8px",flexShrink:0,fontFamily:"Inter,sans-serif"}}>{lockIcon}PRO</div>}
+        </div>
+        {body}
+      </section>
+    );
+    // Wert mit Einheit (gleiche Zeichen wie bisher: Wert, dann Einheit)
+    const valLine=(c,size=22)=>(
+      <div style={{display:"flex",alignItems:"baseline",flexWrap:"wrap",columnGap:3,lineHeight:1.15,minWidth:0}}>
+        <span style={{fontSize:size,fontWeight:600,color:c.accent?"#4A7000":C.black,letterSpacing:"-.03em",fontVariantNumeric:"tabular-nums",overflowWrap:"anywhere",minWidth:0}}>{c.value}</span>
+        {c.unit&&<span style={{fontSize:12,color:grayText,fontWeight:400}}>{c.unit}</span>}
       </div>
     );
+    // Kachel: weiss auf der Abschnitts-Karte. dot = Farbe im Makro-Balken, extra = kleine Grafik unter dem Untertitel
+    const tileOf=(sec,c,acid,{dot=null,extra=null}={},row=false)=>{
+      const icBg=acid?ONB_SEL:C.g100;
+      if(c.locked) return (
+        <button key={c.label} type="button" onClick={onUpgrade} aria-label={`${c.label}: mit PRO freischalten`}
+          style={{...sumTile,width:"100%",border:`1px solid ${C.white}`,cursor:"pointer",...(row?{flexDirection:"row",alignItems:"center",gap:12}:{})}}>
+          <span style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:6,marginBottom:row?0:10,flexShrink:0}}>
+            <span style={icBox(icBg)}>{sumIcon(SUM_ICON_OF[c.label],C.g500)}</span>
+            {!row&&lockIcon}
+          </span>
+          <span style={{display:"flex",flexDirection:"column",flex:1,minWidth:0}}>
+            <span style={{fontSize:11,fontWeight:500,color:grayText,marginBottom:4,overflowWrap:"anywhere"}}>{c.label}</span>
+            <span style={{display:"flex",alignItems:"baseline",gap:3,lineHeight:1.15}}>
+              <span aria-hidden="true" style={{fontSize:22,fontWeight:300,color:C.black,letterSpacing:"-.03em",filter:"blur(6px)",userSelect:"none"}}>{c.ph||"0000"}</span>
+              {c.unit&&<span style={{fontSize:12,color:grayText,fontWeight:400}}>{c.unit}</span>}
+            </span>
+          </span>
+          {row&&lockIcon}
+        </button>
+      );
+      return (
+        <div key={c.label} style={{...sumTile,border:c.accent?`1.5px solid ${C.neon}`:`1px solid ${C.white}`,...(row?{flexDirection:"row",alignItems:"flex-start",gap:12}:{})}}>
+          <span style={{...icBox(icBg),marginBottom:row?0:10}}>{sumIcon(SUM_ICON_OF[c.label])}</span>
+          <div style={{display:"flex",flexDirection:"column",flex:1,minWidth:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:6,fontSize:11,fontWeight:500,color:grayText,marginBottom:4,overflowWrap:"anywhere",minWidth:0}}>
+            {dot&&<span aria-hidden="true" style={{width:9,height:9,borderRadius:3,background:dot,border:dot===C.white?`1px solid ${C.g300}`:"none",flexShrink:0}}/>}
+            <span style={{minWidth:0}}>{c.label}</span>
+          </div>
+          {valLine(c)}
+          {c.sub&&<div style={{fontSize:10,color:grayText,marginTop:3,lineHeight:1.45,overflowWrap:"anywhere"}}>{c.sub}</div>}
+          {extra}
+          {/* Abstand wächst: «Mehr» steht in einer Reihe gleich hoher Kacheln auf derselben Höhe */}
+          {c.desc&&<div style={{flex:"1 0 0px"}}/>}
+          {c.desc&&moreBlock(`${sec}|${c.label}`,c.label,c.desc)}
+          </div>
+        </div>
+      );
+    };
+    const tileGrid=(sec,cards,cols,acid,optOf)=>(
+      <div style={{display:"grid",gridTemplateColumns:cols,gap:8,minWidth:0}}>
+        {cards.map(c=>tileOf(sec,c,acid,optOf?optOf(c):undefined,cols==="minmax(0,1fr)"))}
+      </div>
+    );
+    const cols2="repeat(2,minmax(0,1fr))";
+    // Hauptkarte «Trainingstag»: Neon, grosse Zahl, Aufteilung als kleine Schilder
+    const heroOf=(sec,c)=>(
+      <div key={c.label} style={{background:C.neon,borderRadius:16,padding:isMobile?14:18,minWidth:0,display:"flex",flexDirection:"column",fontFamily:"Inter,sans-serif"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14,minWidth:0}}>
+          <span style={icBox(C.white)}>{sumIcon(SUM_ICON_OF[c.label])}</span>
+          <span style={{fontSize:13,fontWeight:600,color:C.black,minWidth:0,overflowWrap:"anywhere"}}>{c.label}</span>
+        </div>
+        <div style={{display:"flex",alignItems:"baseline",flexWrap:"wrap",columnGap:6,lineHeight:1,minWidth:0}}>
+          {c.pre&&<span style={{fontSize:18,fontWeight:500,color:"rgba(0,0,0,.6)"}}>{c.pre}</span>}
+          <span style={{fontSize:isMobile?36:42,fontWeight:600,color:C.black,letterSpacing:"-.04em",fontVariantNumeric:"tabular-nums",overflowWrap:"anywhere",minWidth:0}}>{c.value}</span>
+          <span style={{fontSize:14,fontWeight:500,color:"rgba(0,0,0,.6)"}}>{c.unit}</span>
+        </div>
+        {c.chips?.length>0&&(
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginTop:14}}>
+            {c.chips.map(([ic,t])=>(
+              <span key={t} style={{display:"inline-flex",alignItems:"center",gap:5,background:"rgba(255,255,255,.62)",borderRadius:8,padding:"5px 9px",fontSize:11,fontWeight:600,color:C.black,maxWidth:"100%",overflowWrap:"anywhere"}}>
+                {ic&&sumIcon(ic,C.black,12)}{t}
+              </span>
+            ))}
+          </div>
+        )}
+        <div style={{flex:1}}/>
+        {c.desc&&<div style={{marginTop:8,display:"flex",flexDirection:"column"}}>{moreBlock(`${sec}|${c.label}`,c.label,c.desc,true)}</div>}
+      </div>
+    );
+    // Kleine Kennzahlen (Mehrverbrauch, Training / Woche, Kcal / Monat): kompakte Kacheln, eine «Mehr»-Taste für alle drei
+    const miniRow=(sec,cards)=>{
+      if(!cards.length) return null;
+      const k=`${sec}|mini`, withDesc=cards.filter(c=>!c.locked&&c.desc);
+      const cell=c=>{
+        const lbl=<span style={{fontSize:11,fontWeight:500,color:grayText,lineHeight:1.35,overflowWrap:"anywhere"}}>{c.label}</span>;
+        const v=c.locked
+          ?<span style={{display:"flex",alignItems:"baseline",gap:3,flexShrink:0}}><span aria-hidden="true" style={{fontSize:17,fontWeight:300,color:C.black,filter:"blur(5px)",userSelect:"none"}}>{c.ph||"0000"}</span>{c.unit&&<span style={{fontSize:11,color:grayText}}>{c.unit}</span>}</span>
+          :<span style={{display:"flex",alignItems:"baseline",gap:3,flexShrink:0,minWidth:0}}><span style={{fontSize:17,fontWeight:600,color:C.black,letterSpacing:"-.02em",fontVariantNumeric:"tabular-nums"}}>{c.value}</span>{c.unit&&<span style={{fontSize:11,color:grayText}}>{c.unit}</span>}</span>;
+        const inner=isMobile?(
+          <span style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,minWidth:0}}>
+            <span style={{display:"flex",flexDirection:"column",minWidth:0}}>{lbl}{c.sub&&<span style={{fontSize:10,color:grayText,lineHeight:1.4,marginTop:1,overflowWrap:"anywhere"}}>{c.sub}</span>}</span>
+            {c.locked?<span style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>{v}{lockIcon}</span>:v}
+          </span>
+        ):(
+          <span style={{display:"flex",flexDirection:"column",gap:4,minWidth:0}}>
+            <span style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:6}}>{lbl}{c.locked&&lockIcon}</span>
+            {v}
+            {c.sub&&<span style={{fontSize:10,color:grayText,lineHeight:1.4,overflowWrap:"anywhere"}}>{c.sub}</span>}
+          </span>
+        );
+        const box={background:C.white,borderRadius:12,padding:"10px 12px",minWidth:0,display:"block",width:"100%",textAlign:"left",fontFamily:"Inter,sans-serif"};
+        return c.locked
+          ?<button key={c.label} type="button" onClick={onUpgrade} aria-label={`${c.label}: mit PRO freischalten`} style={{...box,border:"none",cursor:"pointer"}}>{inner}</button>
+          :<div key={c.label} style={box}>{inner}</div>;
+      };
+      const open=!!openInfo[k];
+      return (
+        <div style={{marginTop:8,minWidth:0}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":`repeat(${cards.length},minmax(0,1fr))`,gap:isMobile?6:8}}>{cards.map(cell)}</div>
+          {withDesc.length>0&&(<>
+            <button type="button" onClick={()=>toggleInfo(k)} aria-expanded={open} aria-controls={open?infoId(k):undefined} aria-label={`${open?"Weniger":"Mehr"} zu ${withDesc.map(c=>c.label).join(", ")}`}
+              style={{display:"inline-flex",alignItems:"center",gap:4,minHeight:32,padding:"0 8px",margin:"4px 0 0 -4px",border:"none",borderRadius:10,background:"transparent",color:C.g600,fontSize:11,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif"}}>
+              {open?"Weniger":"Mehr"}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{transform:open?"rotate(180deg)":"none",transition:"transform .2s"}}><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            {open&&(
+              <div id={infoId(k)} style={{background:C.white,borderRadius:12,padding:"10px 12px",display:"flex",flexDirection:"column",gap:8}}>
+                {withDesc.map(c=>(
+                  <div key={c.label} style={{fontSize:11,color:C.g600,lineHeight:1.55,overflowWrap:"anywhere"}}>
+                    <div style={{fontWeight:600,color:C.black,marginBottom:1}}>{c.label}</div>
+                    <div>{c.desc}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>)}
+        </div>
+      );
+    };
+    // Waagrechter Balken (Vergleich hart/locker): Breite im Verhältnis zum grösseren Tag
+    const cmpBar=(ic,frac,hi)=>(
+      <div style={{display:"flex",alignItems:"center",gap:6}}>
+        {sumIcon(ic,C.g500,12)}
+        <div style={{flex:1,height:6,borderRadius:6,background:C.g100,overflow:"hidden",minWidth:0}}>
+          <div style={{width:`${Math.max(4,Math.min(100,Math.round(frac*100)))}%`,height:"100%",borderRadius:6,background:hi?C.black:C.g400}}/>
+        </div>
+      </div>
+    );
+    // Herzfrequenz-Zonen 1-5 (50-100 % HFmax), die Zone der Karte hervorgehoben
+    const zoneBar=z=>(
+      <div aria-hidden="true" style={{display:"grid",gridTemplateColumns:"repeat(5,minmax(0,1fr))",gap:3,marginTop:8}}>
+        {[0,1,2,3,4].map(i=><span key={i} style={{height:6,borderRadius:3,background:i===z?C.neon:C.g100,boxShadow:i===z?"inset 0 0 0 1px rgba(0,0,0,.25)":"none"}}/>)}
+      </div>
+    );
+    // Makro-Balken: Anteil von Protein (Mitte der Spanne, wie calcPro), Kohlenhydraten und Fett an der Summe ihrer kcal
+    const MAC_COL={p:C.black,c:C.neon,f:C.white};
+    const macroShares=(()=>{
+      if(!isPro) return null;
+      const raw=[["p",(proteinMin+proteinMax)/2*4],["c",carbsG*4],["f",fatG*9]].map(([k,v])=>[k,Math.max(0,safeNum(v,0))]);
+      const sum=raw.reduce((s,[,v])=>s+v,0); if(!(sum>0)) return null;
+      const ex=raw.map(([k,v])=>({k,x:v/sum*100})), out=ex.map(e=>({k:e.k,pct:Math.floor(e.x),r:e.x-Math.floor(e.x)}));
+      let left=100-out.reduce((s,e)=>s+e.pct,0);
+      [...out].sort((a,b)=>b.r-a.r).forEach(e=>{ if(left>0){ e.pct++; left--; } });
+      return out;
+    })();
+    const MAC_NAME={p:"Protein",c:"Kohlenhydrate",f:"Fett"};
+    const macroBar=isPro?(macroShares&&(
+      <div role="img" aria-label={`Anteil am Trainingstag: ${macroShares.map(s=>`${MAC_NAME[s.k]} ${s.pct}%`).join(", ")}`}
+        style={{display:"flex",gap:2,height:30,borderRadius:10,overflow:"hidden",marginBottom:8}}>
+        {macroShares.filter(s=>s.pct>0).map(s=>(
+          <div key={s.k} style={{width:`${s.pct}%`,background:MAC_COL[s.k],color:s.k==="p"?C.white:C.black,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:600,fontFamily:"Inter,sans-serif",fontVariantNumeric:"tabular-nums",minWidth:0,overflow:"hidden",whiteSpace:"nowrap"}}>
+            {s.pct>=8?`${s.pct}%`:""}
+          </div>
+        ))}
+      </div>
+    )):(
+      // Basic: Platzhalter ohne Werte (feste Breiten), unscharf, Tippen öffnet das Upgrade-Fenster
+      <div aria-hidden="true" onClick={onUpgrade} style={{display:"flex",gap:2,height:30,borderRadius:10,overflow:"hidden",marginBottom:8,cursor:"pointer",filter:"blur(3px)",userSelect:"none"}}>
+        {[[30,C.g400],[48,C.g300],[22,C.white]].map(([p,bg],i)=><div key={i} style={{width:`${p}%`,background:bg}}/>)}
+      </div>
+    );
+    const macroDot={"Protein / Tag":MAC_COL.p,"Kohlenhydrate am Trainingstag":MAC_COL.c,"Fett am Trainingstag":MAC_COL.f};
+    // Abschnitte in fester Reihenfolge, Farbe abwechselnd nach den sichtbaren Abschnitten (Energie hellgrau, damit Neon heraussticht)
+    const eHero=energieCards.find(c=>c.slot==="hero")||null;
+    const eSide=energieCards.filter(c=>c.slot==="side");
+    const eMini=energieCards.filter(c=>c.slot==="mini");
+    const hardMaxKcal=hardEasy?Math.max(hardEasy.hardKcal,hardEasy.easyKcal):0;
+    const hardCarbs=Math.round(safeNum(hardDayObj?.carbsG,0)), easyCarbs=Math.round(safeNum(easyDayObj?.carbsG,0));
+    const hardMaxCarbs=Math.max(hardCarbs,easyCarbs);
+    const valueSections=[
+      {key:"energie",render:acid=>sumSection("Energie",!isPro,acid,(<>
+        {eHero?(
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"minmax(0,1fr)":"minmax(0,1.35fr) minmax(0,1fr)",gap:8,minWidth:0}}>
+            {heroOf("energie",eHero)}
+            {tileGrid("energie",eSide,isMobile?cols2:"minmax(0,1fr)",acid)}
+          </div>
+        ):tileGrid("energie",eSide,"minmax(0,1fr)",acid)}
+        {miniRow("energie",eMini)}
+      </>))},
+      {key:"makros",render:acid=>sumSection("Makronährstoffe",!isPro,acid,(<>
+        {macroBar}
+        {tileGrid("makros",makroCards,isMobile?"minmax(0,1fr)":"repeat(3,minmax(0,1fr))",acid,c=>({dot:isPro?macroDot[c.label]:null}))}
+      </>))},
+      ...(hardEasyCards.length>0?[{key:"hart",render:acid=>sumSection("Harte und lockere Tage",false,acid,
+        tileGrid("hart",hardEasyCards,cols2,acid,c=>{ const hard=c.label==="Harter Tag"; const kc=hard?hardEasy.hardKcal:hardEasy.easyKcal, kh=hard?hardCarbs:easyCarbs;
+          return {extra:<div aria-hidden="true" style={{display:"flex",flexDirection:"column",gap:6,marginTop:10}}>
+            {cmpBar("flame",hardMaxKcal>0?kc/hardMaxKcal:0,hard)}
+            {hardMaxCarbs>0&&kh>0&&cmpBar("grain",kh/hardMaxCarbs,hard)}
+          </div>}; }))}]:[]),
+      ...(longCards.length>0?[{key:"lang",render:acid=>sumSection("Lange Einheit",!isPro,acid,tileGrid("lang",longCards,cols2,acid))}]:[]),
+      {key:"elektrolyte",render:acid=>sumSection("Elektrolyte & Flüssigkeit",!isPro,acid,(<>
+        {tileGrid("elektrolyte",elektrolytCards,isMobile?cols2:"repeat(4,minmax(0,1fr))",acid)}
+        <div style={{height:8}}/>
+        {tileGrid("wasser",wasserCards,cols2,acid)}
+      </>))},
+      {key:"leistung",render:acid=>sumSection("Leistung & Herzfrequenz-Zonen",!isPro,acid,
+        tileGrid("leistung",leistungCards,isMobile?cols2:leistungCards.length>3?"repeat(4,minmax(0,1fr))":"repeat(3,minmax(0,1fr))",acid,
+          c=>c.locked?undefined:{extra:c.label==="Fettverbrennungszone"?zoneBar(1):c.label==="Ausdauerzone"?zoneBar(2):null}))},
+    ];
 
     return (
       <div>
@@ -12370,34 +12611,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         </>)}
 
-        {/* ── ENERGIE ── */}
-        {groupLabel("Energie",!isPro)}
-        {cardGrid(energieCards,grid3)}
-
-        {/* ── MAKROS ── */}
-        {groupLabel("Makronährstoffe",!isPro)}
-        {cardGrid(makroCards,grid3)}
-
-        {/* ── HARTER UND LOCKERER TAG (nur PRO mit Aufteilung) ── */}
-        {hardEasyCards.length>0&&(<>
-          {groupLabel("Harte und lockere Tage")}
-          {cardGrid(hardEasyCards,"repeat(2,minmax(0,1fr))")}
-        </>)}
-
-        {/* ── LANGE EINHEIT (nur mit längster Einheit über der Ø Dauer) ── */}
-        {longCards.length>0&&(<>
-          {groupLabel("Lange Einheit",!isPro)}
-          {cardGrid(longCards,"repeat(2,minmax(0,1fr))")}
-        </>)}
-
-        {/* ── ELEKTROLYTE & FLÜSSIGKEIT ── */}
-        {groupLabel("Elektrolyte & Flüssigkeit",!isPro)}
-        {cardGrid(elektrolytCards,"repeat(2,minmax(0,1fr))",8)}
-        {cardGrid(wasserCards,"repeat(2,minmax(0,1fr))")}
-
-        {/* ── LEISTUNG & HERZFREQUENZ-ZONEN ── */}
-        {groupLabel("Leistung & Herzfrequenz-Zonen",!isPro)}
-        {cardGrid(leistungCards,isMobile?"repeat(2,minmax(0,1fr))":leistungCards.length>3?"repeat(4,minmax(0,1fr))":"repeat(3,minmax(0,1fr))")}
+        {/* ── WERTE: Energie, Makronährstoffe, harte und lockere Tage, lange Einheit, Elektrolyte, Leistung (Karten abwechselnd hellgrau und hellgrün) ── */}
+        {valueSections.map((sec,i)=><React.Fragment key={sec.key}>{sec.render(i%2===1)}</React.Fragment>)}
+        <div style={{height:8}}/>
 
         {/* ── KOHLENHYDRATE IM TRAINING ── */}
         {trainingEntries.length>0&&(<>
