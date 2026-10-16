@@ -7268,7 +7268,7 @@ function SectionHeader({label,count,color}) {
 const AI_CONSENT_KEY="treyn_ai_consent";
 const AI_CONSENT_MEM={};
 const AI_CONSENT_TEXT={
-  angaben:"Ich willige ein, dass meine Angaben zur Auswertung an Anthropic (USA) übermittelt werden.",
+  angaben:"Ich willige ein, dass meine Fragen und Angaben über den Server von TREYN+ zur Auswertung an Anthropic (USA) übermittelt werden. Name und E-Mail werden nicht übermittelt.",
   pdf:"Ich willige ein, dass mein PDF zur Auswertung an Anthropic (USA) übermittelt wird.",
 };
 function readAiConsent(){
@@ -7313,6 +7313,103 @@ function AiConsentBox({scope="angaben",intro=null,onAccept}) {
       </button>
     </div>
   );
+}
+
+// ─── KI-KONTEXT (für /api/ai) ────────────────────────────────────────────────
+// Die TREYN+-Daten für TREYN AI: Profil ohne Name und E-Mail, Sportarten, Werte aus calcPro und der Stack.
+// PRO: alle Werte für Antworten, Stack mit Dosis und Zeit. Basic: nur die 4 Basiswerte und die Namen im Stack (keine Dosen).
+// Schwangerschaft/Stillzeit: keine Dosen. Den Systemprompt baut nur der Server (api/ai.js), hier entstehen nur Daten.
+const AI_MED_TXT={blutverd:"Blutverdünner",schilddruese:"Schilddrüse",blutdruck:"Blutdruck",niere:"Nierenerkrankung",ppi:"Magensäureblocker",metformin:"Metformin",leber:"Lebererkrankung"};
+const AI_SLOT_TXT={breakfast:"Frühstück",lunch:"Mittagessen",dinner:"Abendessen",snack:"Zwischenmahlzeit",pre:"vor dem Training",post:"nach dem Training",post2:"nach der 2. Einheit",bed:"vor dem Schlafen",presleep:"vor dem Schlafen"};
+function aiPlanContext({profilData,trainingData,sportData,allergenData,praeferenzenData,calc,isPro,primSupps,secSupps}={}){
+  const p=profilData||{}, c=calc||{}, sd=sportData||{}, td=trainingData||{};
+  const n=(v,d=0)=>{ if(v===null||v===undefined||v===""||typeof v==="boolean") return null; const x=Number(v); if(!Number.isFinite(x)) return null; const f=10**d; return Math.round(x*f)/f; };
+  const rg=(lo,hi)=>{ const a=n(lo), b=n(hi); return a==null&&b==null?null:(a!=null&&b!=null&&a!==b)?`${a}-${b}`:(a??b); };
+  const txt=(v,max=280)=>typeof v==="string"&&v.trim()?String(noDash(v.trim())).slice(0,max):null;
+  const arr=v=>Array.isArray(v)?v:(v?[v]:[]);
+  const pregnant=isPregnancyState(p);
+  const prim=sd.primarySport||c.primarySport||null;
+  const ids=(Array.isArray(sd.selectedSports)&&sd.selectedSports.length?sd.selectedSports:Object.keys(td)).slice(0,8);
+  const diet=arr(allergenData?.diet).map(x=>txt(x,30)).filter(Boolean);
+  const allerg=arr(allergenData?.allergens).map(x=>txt(x,30)).filter(Boolean);
+  const out={
+    profil:{geschlecht:p.gender==="f"?"weiblich":"männlich",alterJahre:n(c.age),gewichtKg:n(p.weight??c.w,1),groesseCm:n(p.height),land:txt(p.country,40),
+      ziel:txt(c.goal||p.goal,40),zielgewichtKg:n(c.targetWeightUsed,1),jobAktivitaet:txt(c.jobActivity,40),schlafStunden:n(c.sleepHours,1),stress:txt(c.stressLevel,30),
+      ernaehrungsqualitaet:txt(c.dietQuality,30),hoehenlage:txt(c.altitude,30),erholung:txt(c.recoveryStatus,30),koerperbau:txt(c.bodyComposition,30),
+      zyklusphase:p.gender==="f"?txt(c.cyclePhase,30):null,ernaehrung:diet,allergien:allerg,
+      schwangerschaft:pregnant?(p.pregnancy==="pregnant"?"schwanger":"Stillzeit"):null,
+      medikamente:arr(p.medications).filter(m=>m&&m!=="none").map(m=>AI_MED_TXT[m]||txt(String(m),40)).filter(Boolean),
+      nimmtSchon:arr(p.currentSupps).filter(x=>x&&x!=="none").map(x=>txt(String(x),40)).filter(Boolean)},
+    sport:ids.map(id=>{ const t=td[id]||{}; return {sport:txt(sportDisplayName(id,sd)||id,60),hauptsport:id===prim,tageProWoche:n(t.days),dauerMin:n(t.duration),intensitaet:txt(t.intensity,20),wettkaempfeProJahr:t.hasCompetition?(n(t.compCount)??"ja"):0}; }),
+  };
+  // Die 4 Basiswerte wie in Basic angezeigt (gleiche Rechnung wie calcBasic)
+  const wMl=n(c.waterRestMl)>0?n(c.waterRestMl):Math.round((n(c.w)||n(p.weight)||75)*35);
+  const dMl=n(c.drinkRestMl)>0?n(c.drinkRestMl):wMl*0.7;
+  out.basiswerte={grundumsatzKcal:n(c.bmr),trainingstagKcal:n(c.withTraining),wasserGesamtOhneTrainingL:Math.round(wMl/100)/10,davonTrinkenL:Math.round(dMl/100)/10,trainingseinheitenProJahr:n(c.sessionsPerYear)};
+  const nm=s=>txt(s?.name,80);
+  try{
+    if(isPro){
+      const w=n(c.w??p.weight,1)||75, pt=td[prim]||{}, durMin=n(pt.duration)||60;
+      const form=["gel","riegel","drink"].find(f=>arr(praeferenzenData?.energieForm).includes(f))||"gel";
+      const kind=planRhythmKind(prim,sd);
+      const day=d=>(d&&typeof d==="object")?{dauerMin:n(d.min),tagKcal:n(d.dayKcal),kohlenhydrateG:n(d.carbsG),fettG:n(d.fatG),khProStundeG:n(d.carbsPerHour),schweissLProStunde:n(d.sweatRateLh,2),
+        trinkenMlProStunde:rg(d.fluidLoMl,d.fluidHiMl),natriumVerlustMgProStunde:n(d.natriumPerHourMg),natriumZufuhrMgProStunde:d.natriumIntakeNeeded?n(d.natriumIntakePerHourMg):"nicht nötig",trinkenTagMl:n(d.drinkMl)}:null;
+      const meals=slots=>c.proteinMin==null?null:Object.entries(proteinMealPlan(c.proteinMin,c.proteinMax,w,c.age,c.goal,slots).by||{}).map(([k,g])=>`${AI_SLOT_TXT[k]||k}: ${g} g`);
+      const rhythm=a=>{ try{ return planRhythmLines(planRhythm(a)).map(l=>txt(l,200)); }catch{ return null; } };
+      const race=r=>(r&&typeof r==="object")?{name:txt(r.name,60),datum:txt(r.date,10),inTagen:n(r.daysUntil),hauptrennen:!!r.main}:null;
+      const raceH=n(c.raceHours,2);
+      out.energie={ruhetagKcal:n(c.restDay),trainingstagKcal:n(c.withTraining),wochenschnittKcal:n(c.avgDayKcal),alltagNeatKcal:n(c.neatKcal),zielZuschlagKcalProTag:n(c.goalDeltaKcal),zielWochen:n(c.goalWeeks),defizitPausiert:!!c.deficitPaused,redsHinweis:txt(c.redsNote)};
+      out.makros={proteinGProTag:rg(c.proteinMin,c.proteinMax),trainingstag:{kohlenhydrateG:n(c.carbsG),fettG:n(c.fatG)},ruhetag:{kohlenhydrateG:n(c.restCarbsG),fettG:n(c.restFatG)},ballaststoffeG:n(c.fibreG),
+        proteinProMahlzeitTrainingstag:meals(["dinner","lunch","breakfast","post","presleep"]),proteinProMahlzeitRuhetag:meals(["dinner","lunch","breakfast","snack","presleep"])};
+      out.wasser={trainingstagGesamtMl:n(c.waterMl),ruhetagGesamtMl:n(c.waterRestMl),trainingstagTrinkenMl:n(c.drinkMl),ruhetagTrinkenMl:n(c.drinkRestMl)};
+      out.training={einheitMin:durMin,khProStundeG:n(c.carbsPerHour),schweissLProStunde:n(c.sweatRateLh,2),schweissProEinheitL:n(c.sweatLitresPerSession,1),schweissGemessen:!!c.sweatMeasured,trinkenMlProStunde:rg(c.fluidLoMl,c.fluidHiMl),
+        natriumVerlustMgProStunde:n(c.natriumPerHourMg),natriumZufuhrMgProStunde:c.natriumIntakeNeeded?n(c.natriumIntakePerHourMg):"nicht nötig",natriumProEinheitMg:n(c.natriumMg),
+        rhythmusUnterwegs:rhythm({carbsH:c.carbsPerHour,fluidLoMl:c.fluidLoMl,fluidHiMl:c.fluidHiMl,naIntakeH:c.natriumIntakePerHourMg,naNeeded:!!c.natriumIntakeNeeded,durMin,form,kind})};
+      out.langeEinheit=day(c.longSession);
+      out.harterTag=day(c.hardDay);
+      out.lockererTag=day(c.easyDay);
+      out.saison={phase:txt(c.seasonPhaseLabel||c.seasonPhase,40),hinweis:txt(c.phaseNote)};
+      out.koffein={vorHartenEinheitenMg:pregnant?null:n(c.caffeinePreWorkoutDose),letztesKoffeinBis:txt(c.caffeineCutoff,10),keinKoffein:!!c.caffeineNone,empfindlich:!!c.caffeineSensitive};
+      out.mikro={magnesiumSupplementMg:pregnant?null:n(c.magnesiumMg),vitaminDIE:pregnant?null:n(c.vitDDose),vitaminDWinter:!!c.vitDWinter,eisenRisiko:!!c.ironRisk,vitaminDRisiko:!!c.vitDRisk,b12Risiko:!!c.b12Risk};
+      out.weitere={vo2max:n(c.vo2max,1),maxPuls:n(c.maxHR),fettverbrennungPuls:rg(c.fatBurnMin,c.fatBurnMax),energieverfuegbarkeit:n(c.energyAvailability,1),schlafdefizit:!!c.sleepDeficit};
+      const tol=c.carbTol;
+      if(tol&&typeof tol==="object") out.darmtraining={vertraegtGProStunde:n(tol.tolerated),zielGProStunde:n(tol.target),langeEinheitJetztGProStunde:n(tol.longTarget),wocheJetzt:n(tol.weekNow),wochenTotal:n(tol.weeksTotal),erreicht:!!tol.reached};
+      if(Object.values(td).some(d=>d?.hasCompetition)||c.nextRace){
+        out.wettkampf={naechstesRennen:race(c.nextRace),hauptrennen:race(c.mainRace),renndauerStunden:raceH,renndauerGeschaetzt:!!c.raceDurationEstimated,
+          khProStundeG:n(c.raceCarbsPerHour),khProStundeBereichG:rg(c.raceCarbsMinPerHour,c.raceCarbsMaxPerHour),khImRennenG:n(c.raceCarbsTotalG),renntagKcal:n(c.raceDayKcal),renntagKohlenhydrateG:n(c.raceDayCarbsG),
+          carbLoading:c.carbLoadNeeded?{kohlenhydrateGProTag:rg(c.carbLoadG,c.carbLoadMaxG),tage:n(c.carbLoadDays)}:"nicht nötig",
+          carbLoadingRennen:arr(c.carbLoadRaces).slice(0,3).map(r=>({name:txt(r?.name,60),datum:txt(r?.date,10),tage:n(r?.days),kohlenhydrateGProTag:rg(r?.loadG,r?.loadMaxG)})),
+          koffeinHoechstensMg:pregnant?null:n(c.caffeineRaceMaxMg),koffeinGels100mg:pregnant?null:n(c.caffeineRaceGels),schweissLProStunde:n(c.raceSweatRateLh,2),schweissVerlustL:n(c.raceSweatLossL,1),
+          trinkenMlProStunde:rg(c.raceFluidLoMl,c.raceFluidHiMl),natriumVerlustMgProStunde:n(c.raceNatriumPerHourMg),natriumZufuhrMgProStunde:c.raceNatriumNeeded?n(c.raceNatriumIntakePerHourMg):"nicht nötig",
+          rehydrationNachherL:n(c.raceRehydL,1),kcalProStunde:n(c.raceKcalPerHour),
+          // Ohne Darmtraining derselbe Rhythmus wie im Wettkampf-Reiter (mit Darmtraining gilt dort der Plan)
+          rhythmusImRennen:(!c.gutPlan&&raceH*60>=45)?rhythm({carbsH:c.raceCarbsPerHour,fluidLoMl:c.raceFluidLoMl,fluidHiMl:c.raceFluidHiMl,naIntakeH:c.raceNatriumIntakePerHourMg,naNeeded:!!c.raceNatriumNeeded&&n(c.raceNatriumIntakePerHourMg)>0,durMin:Math.round(raceH*60),form,kind}):null};
+      }
+    }
+    if(primSupps||secSupps){
+      const st=suppStack({primSupps,secSupps,profilData:p,allergenData,calc:c});
+      // Ashwagandha nie von sich aus: im Optional-Teil nur, wenn du es schon nimmst
+      const opt=st.secList.filter(s=>s.alreadyTaking||!/ashwa/i.test(`${s?.id||""} ${s?.name||""}`)).slice(0,8);
+      if(isPro&&!st.pregnant){
+        out.stack={empfohlen:st.primList.slice(0,12).map(s=>({name:nm(s),dosis:txt(s.dose,80),wann:txt(s.when,80),hinweis:txt(s.mediWarning||s.mediHint||s.fitNote,200),...(s.alreadyTaking?{nimmstDuSchon:true}:{})})),
+          optional:opt.map(s=>({name:nm(s),dosis:s.mediWarning?null:txt(s.dose,80),hinweis:txt(s.mediWarning,200)})),
+          tagesplan:suppPlanRows(st.planList,{rest:false,calc:c}).slice(0,14).map(r=>txt(`${AI_SLOT_TXT[r.slot]||r.slot}: ${r.label} - ${r.detail}`))};
+      } else {
+        out.stack={empfohlen:st.primList.slice(0,12).map(nm),optional:opt.map(nm),
+          hinweis:st.pregnant?"Schwangerschaft oder Stillzeit: keine Dosierungen, Supplemente nur nach ärztlicher Rücksprache":"Basic: Dosierung und Timing nur mit PRO"};
+      }
+    }
+  }catch{ /* Teilkontext reicht, die Antwort sagt dann, was fehlt */ }
+  return out;
+}
+// Fehlertext für /api/ai: der feste deutsche Satz vom Server, sonst nach HTTP-Status
+function aiErrorText(status,data){
+  const msg=typeof data?.error==="string"?data.error.trim().slice(0,240):"";
+  if(msg) return msg;
+  if(status===429) return "Heute sind schon sehr viele Anfragen an TREYN AI gegangen. Morgen geht es wieder.";
+  if(status===413) return "Die Anfrage ist zu gross. Bitte stell eine kürzere Frage.";
+  if(status>=500) return "TREYN AI ist gerade nicht erreichbar. Bitte versuche es später erneut.";
+  return "Die Antwort konnte gerade nicht erstellt werden. Bitte versuche es später erneut.";
 }
 
 // ─── AI CHAT ─────────────────────────────────────────────────────────────────
@@ -7373,26 +7470,25 @@ function AiChat({context, isPro}) {
     setMessages(m=>[...m,{role:"user",content:userMsg}]);
     setLoading(true);
     try{
-      const pd=context?.proData;
-      // Nur das Nötigste: kein Name, keine E-Mail. Medikamente/Erkrankungen und Schwangerschaft nur für Sicherheitshinweise.
-      let prof={};
-      try{ prof=window.__TREYN_PROFIL__||{}; }catch{}
-      const MED_TXT={blutverd:"Blutverdünner",schilddruese:"Schilddrüse",blutdruck:"Blutdruck",niere:"Nierenerkrankung",ppi:"Magensäureblocker",metformin:"Metformin",leber:"Lebererkrankung"};
-      const medList=(Array.isArray(prof?.medications)?prof.medications:[]).filter(m=>m&&m!=="none").map(m=>MED_TXT[m]||m);
-      const pregTxt=isPregnancyState(prof)?(prof.pregnancy==="pregnant"?"schwanger":"in der Stillzeit"):"";
-      const sys=`Du bist TREYN AI, Supplement- und Sportnahrungsberater. Deutsch, präzise, keine Emojis, max 150 Wörter. Schweizer Rechtschreibung (ss statt ß). Kein Markdown, keine Sternchen, keine Überschriften. Für Aufzählungen neue Zeilen mit "- " verwenden.
-Keine Heilversprechen, keine Diagnosen und keine Wirkversprechen mit Zahlen. Für Nährstoffe nur zugelassene Aussagen, gern mit dem Bereich vorne wie «Für deine Muskeln: Magnesium trägt zu einer normalen Muskelfunktion bei». Für Pflanzenstoffe wie Ashwagandha keine Wirkaussagen. Punch kommt aus Fakten, Mengen und Timing, nicht aus Versprechen. Bei Erkrankungen, Medikamenten, Schwangerschaft oder Stillzeit an die Ärztin oder den Arzt verweisen. Dosen wie in der App (unter den Schweizer Höchstmengen): Kreatin 3 g, Beta-Alanin 3.2 g als Retard-Tabletten, Zink 5 mg, Omega-3 1 g EPA+DHA, Koffein nur an harten Tagen, vor der Einheit höchstens 3 mg pro kg, pro Tag höchstens 400 mg inklusive Kaffee. Ashwagandha nie von dir aus empfehlen.${pregTxt?`
-Die Person ist ${pregTxt}: keine Supplement-Dosierungen nennen, Supplemente nur nach ärztlicher Rücksprache.`:""}${medList.length?`
-Medikamente/Erkrankungen: ${medList.join(", ")} - Wechselwirkungen beachten (z. B. Vitamin K2 bei Blutverdünnern).`:""}
-Profil: Sport: ${context?.sportLabel} · Intensität: ${context?.intensity} · ${context?.days}×/Woche Ø ${context?.duration}min · ${context?.weight}kg · ${context?.gender==="f"?"Weiblich":"Männlich"} · Wettkämpfe: ${context?.hasComp?`${context?.compCount}/Jahr`:"Nein"}${pd?`
-Pro-Berechnungen: kcal Ruhetag ${pd.restDay} / Trainingstag ${pd.trainingDay??pd.withTraining} · Protein ${pd.proteinMin}-${pd.proteinMax}g/Tag · Carbs ${pd.carbsG}g am Trainingstag${pd.restCarbsG!=null?`, ${pd.restCarbsG}g am Ruhetag`:""} · Natrium-Verlust ${pd.natriumMg}mg pro Einheit · Magnesium-Supplement ${pd.magnesiumMg}mg/Tag`:""}`;
-      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:400,system:sys,
-          messages:[...messages.map(m=>({role:m.role,content:m.content})),{role:"user",content:userMsg}]})});
+      // Über den Server /api/ai (Schlüssel nur dort): Frage, die letzten 6 Nachrichten ohne Fehlermeldungen und die TREYN+-Daten.
+      // Kein Name, keine E-Mail. Basic schickt tier "basic": dann keine Dosierungen und keine PRO-Werte in der Antwort.
+      let ctx={};
+      try{ ctx=aiPlanContext(context||{}); }catch{ ctx={}; }
+      const history=messages.filter(m=>!m.err).slice(-6).map(m=>({role:m.role,content:String(m.content||"").slice(0,2000)}));
+      const res=await fetch("/api/ai",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({kind:"chat",tier:isPro?"pro":"basic",question:userMsg,history,context:ctx})});
       const data=await res.json().catch(()=>null);
-      const answer=res.ok?cleanAi(data?.content?.[0]?.text):"";
-      setMessages(m=>[...m,{role:"assistant",content:answer||"Die Antwort konnte gerade nicht erstellt werden. Bitte versuche es später erneut."}]);
-    }catch(e){setMessages(m=>[...m,{role:"assistant",content:"Verbindung fehlgeschlagen. Bitte prüfe deine Internetverbindung und versuche es erneut."}]);}
+      const answer=res.ok?cleanAi(data?.answer):"";
+      if(answer) setMessages(m=>[...m,{role:"assistant",content:answer}]);
+      else{
+        // Ohne Antwort zählt die Frage nicht
+        const back=Math.max(0,newUsed-1); setUsedToday(back); saveTodayUsage(back);
+        setMessages(m=>[...m,{role:"assistant",err:true,content:aiErrorText(res.status,data)}]);
+      }
+    }catch(e){
+      const back=Math.max(0,newUsed-1); setUsedToday(back); saveTodayUsage(back);
+      setMessages(m=>[...m,{role:"assistant",err:true,content:"Verbindung fehlgeschlagen. Bitte prüfe deine Internetverbindung und versuche es erneut."}]);
+    }
     setLoading(false);
   };
   const SUGG=["Wann Kreatin nehmen?","Vit D + Zink zusammen ok?","Proteinbedarf nach Training?","Wie viel trinken pro Einheit?"];
@@ -7420,7 +7516,7 @@ Pro-Berechnungen: kcal Ruhetag ${pd.restDay} / Trainingstag ${pd.trainingDay??pd
       {!consent&&(
         <div style={{padding:"14px 16px",background:C.g100}}>
           <AiConsentBox scope="angaben" onAccept={()=>setConsent(true)}
-            intro="Für Antworten schickt TREYN AI deine Fragen und deine Angaben (Sport, Training, Gewicht, Geschlecht, berechnete Werte, Medikamente) an Anthropic in den USA. Name und E-Mail werden nicht übermittelt."/>
+            intro="Für Antworten schickt TREYN AI deine Fragen und deine Angaben (Sport, Training, Gewicht, Geschlecht, berechnete Werte, Medikamente) an den Server von TREYN+ und von dort an Anthropic in den USA. Name und E-Mail werden nicht übermittelt."/>
         </div>
       )}
 
@@ -7444,7 +7540,7 @@ Pro-Berechnungen: kcal Ruhetag ${pd.restDay} / Trainingstag ${pd.trainingDay??pd
       </div>}
 
       {consent&&!isLimited&&<div style={{padding:"12px 14px",borderTop:`1px solid ${C.g200}`,display:"flex",gap:8,background:C.white}}>
-        <input type="text" value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Frage stellen..."
+        <input type="text" value={input} maxLength={1000} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder="Frage stellen..."
           style={{flex:1,padding:"10px 14px",border:`1.5px solid ${input?C.neon:C.g200}`,borderRadius:10,fontSize:13,background:input?C.neonDim:C.white,color:C.black,fontFamily:"Inter,sans-serif",outline:"none"}}/>
         <button onClick={send} disabled={!input.trim()||loading}
           style={{background:input.trim()&&!loading?C.black:C.g200,color:input.trim()&&!loading?C.white:C.g400,border:"none",borderRadius:10,padding:"10px 16px",fontSize:13,fontWeight:600,cursor:input.trim()&&!loading?"pointer":"default",fontFamily:"Inter,sans-serif",transition:"all .14s",flexShrink:0}}>
@@ -8116,21 +8212,11 @@ function sportDisplayName(id, sd) {
 const AI_SUMMARY_CACHE={};
 const AI_SUMMARY_PENDING={};
 function VerbrauchAISummary({profilData, training, sportIds, sportData, calc}) {
-  const sportsText=(sportIds&&sportIds.length?sportIds:Object.keys(training||{})).map(id=>{
-    const d=(training||{})[id]||{};
-    return `${sportDisplayName(id,sportData)||id}: ${d.days||3}x/Wo, ${d.duration||60}min, Intensität ${d.intensity||"medium"}`;
-  }).join("; ");
-  // Schwangerschaft / Stillzeit (nur Frauen): die KI soll dann nicht zum Abnehmen oder zu Supplementen raten
-  const pregState=isPregnancyState(profilData)?(profilData.pregnancy==="pregnant"?"schwanger":"in der Stillzeit"):null;
-  const prompt=`Du bist TREYN AI, ein präziser Sportnutrition-Coach. Bewerte diese Trainingsdaten kurz und direkt auf Deutsch (3-4 Sätze, kein Markdown, keine Aufzählung):
-
-Sportler: ${profilData?.gender==="f"?"weiblich":"männlich"}, ${new Date().getFullYear()-(+profilData?.birthyear||1990)} Jahre, ${profilData?.weight||75}kg, ${profilData?.height||175}cm${pregState?`, ${pregState} (der Tagesbedarf enthält den Mehrbedarf; keine Tipps zum Abnehmen, Supplemente nur nach Rücksprache mit der Ärztin oder dem Arzt)`:""}
-Training: ${sportsText}
-Grundumsatz: ${calc?.bmr} kcal, Tagesbedarf an einem Trainingstag: ${calc?.withTraining} kcal
-Protein: ${calc?.proteinMin||Math.round((+profilData?.weight||75)*1.6)}g/Tag, Kohlenhydrate: ${calc?.carbsG||Math.round((calc?.withTraining||2500)*0.5/4)}g/Tag
-
-Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr reicht, und gib einen konkreten Tipp. Persönlich und motivierend, nicht technisch. Keine Heilversprechen, keine Diagnosen, keine Wirkversprechen zu Supplements.`;
-  const key=prompt;
+  // TREYN+-Daten für die KI-Einschätzung (nur PRO): dieselbe Quelle wie der AI Chat, ohne Name und E-Mail.
+  // Schwangerschaft/Stillzeit steht darin, der Server sagt der KI dann: keine Tipps zum Abnehmen, keine Dosierungen.
+  let ctx={};
+  try{ ctx=aiPlanContext({profilData,trainingData:training,sportData:{...(sportData||{}),selectedSports:sportIds&&sportIds.length?sportIds:sportData?.selectedSports},calc,isPro:true}); }catch{ ctx={}; }
+  const key=JSON.stringify(ctx);
   const [summary,setSummary]=useState(()=>AI_SUMMARY_CACHE[key]||"");
   const [loading,setLoading]=useState(false);
   // Einwilligung (treyn_ai_consent): ohne sie wird nichts an die KI geschickt
@@ -8138,33 +8224,35 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
   const keyRef=useRef(key);
   keyRef.current=key;
 
-  const run=async(k,p)=>{
+  const run=async(k,c)=>{
     if(!hasAiConsent("angaben")){ setConsent(false); setLoading(false); return; }
     setLoading(true);
     if(!AI_SUMMARY_PENDING[k]) {
       AI_SUMMARY_PENDING[k]=(async()=>{
         try{
-          const res=await fetch("https://api.anthropic.com/v1/messages",{
+          // Über den Server /api/ai (Schlüssel nur dort), den Systemprompt baut der Server
+          const res=await fetch("/api/ai",{
             method:"POST",
             headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:p}]})
+            body:JSON.stringify({kind:"summary",tier:"pro",context:c})
           });
-          const data=await res.json();
-          return noDash(data?.content?.[0]?.text)||"";
-        }catch(e){ return ""; }
+          const data=await res.json().catch(()=>null);
+          const text=res.ok&&typeof data?.answer==="string"?String(noDash(data.answer)).replace(/ß/g,"ss").trim():"";
+          return text?{text}:{error:aiErrorText(res.status,data)};
+        }catch(e){ return {error:"Verbindung fehlgeschlagen. Bitte prüfe deine Internetverbindung und versuche es erneut."}; }
       })().finally(()=>{ delete AI_SUMMARY_PENDING[k]; });
     }
-    const text=await AI_SUMMARY_PENDING[k];
+    const r=await AI_SUMMARY_PENDING[k];
     if(keyRef.current!==k) return; // Daten wurden inzwischen geaendert
-    if(text){ AI_SUMMARY_CACHE[k]=text; setSummary(text); }
-    else setSummary("Analyse konnte nicht geladen werden. Bitte versuche es erneut.");
+    if(r?.text){ AI_SUMMARY_CACHE[k]=r.text; setSummary(r.text); }
+    else setSummary(r?.error||"Analyse konnte nicht geladen werden. Bitte versuche es erneut.");
     setLoading(false);
   };
 
   useEffect(()=>{
     if(!consent) return;
     if(AI_SUMMARY_CACHE[key]){ setSummary(AI_SUMMARY_CACHE[key]); setLoading(false); return; }
-    const tm=setTimeout(()=>{ run(key,prompt); },1500);
+    const tm=setTimeout(()=>{ run(key,ctx); },1500);
     return ()=>clearTimeout(tm);
   },[key,consent]);
 
@@ -8176,11 +8264,11 @@ Sag dem Sportler direkt wie gut sein Trainingsvolumen ist, ob die Energiezufuhr 
           <div style={{width:8,height:8,borderRadius:"50%",background:loading?"#CCC":C.neon,transition:"background .3s"}}/>
           <span style={{fontSize:12,fontWeight:500,color:"#4A7000",fontFamily:"Inter,sans-serif"}}>TREYN AI · Deine Analyse</span>
         </div>
-        {consent&&(loaded||summary)&&!loading&&<button onClick={()=>{ delete AI_SUMMARY_CACHE[key]; run(key,prompt); }} style={{background:"none",border:"none",fontSize:10,color:"#AAA",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↺ Neu</button>}
+        {consent&&(loaded||summary)&&!loading&&<button onClick={()=>{ delete AI_SUMMARY_CACHE[key]; run(key,ctx); }} style={{background:"none",border:"none",fontSize:10,color:"#AAA",cursor:"pointer",fontFamily:"Inter,sans-serif"}}>↺ Neu</button>}
       </div>
       {!consent&&(
         <AiConsentBox scope="angaben" onAccept={()=>setConsent(true)}
-          intro="Für die KI-Einschätzung gehen Alter, Geschlecht, Gewicht, Grösse, dein Training und deine berechneten Werte an Anthropic in den USA. Name und E-Mail werden nicht übermittelt."/>
+          intro="Für die KI-Einschätzung gehen Alter, Geschlecht, Gewicht, Grösse, dein Training und deine berechneten Werte an den Server von TREYN+ und von dort an Anthropic in den USA. Name und E-Mail werden nicht übermittelt."/>
       )}
       {consent&&(loading||(!summary&&!loaded))&&(
         <div style={{display:"flex",gap:4,alignItems:"center"}}>
@@ -8419,6 +8507,249 @@ function BlurGate({isPro, onUpgrade, label="PRO Feature", priceStr="CHF 14.90", 
         </div>
       </div>
     </div>
+  );
+}
+
+// ── APP AUFS HANDY (PWA) ─────────────────────────────────────────────────────
+// Manifest und Symbole in public/, Service Worker in public/sw.js. Grundlage für den späteren Wochen-Check per Push.
+// Android/Chrome: Ereignis «beforeinstallprompt» früh abfangen (kommt oft vor dem ersten Zeichnen), der Knopf öffnet den
+// Installieren-Dialog des Browsers. iPhone/iPad: kurze Anleitung (Teilen, Zum Home-Bildschirm). Schon installiert: nichts.
+const PWA_HINT_KEY="treyn_pwa_hint"; // "hidden" = Hinweis in der Übersicht ausgeblendet (im Profil bleibt er)
+const PWA={prompt:null,installed:false,subs:new Set()};
+const pwaNotify=()=>{ PWA.subs.forEach(fn=>{ try{ fn(); }catch{ /* Komponente weg */ } }); };
+try{
+  if(typeof window!=="undefined"&&typeof window.addEventListener==="function"){
+    window.addEventListener("beforeinstallprompt",e=>{ try{ e.preventDefault(); }catch{ /* älterer Browser */ } PWA.prompt=e; pwaNotify(); });
+    window.addEventListener("appinstalled",()=>{ PWA.prompt=null; PWA.installed=true; pwaNotify(); });
+  }
+}catch{ /* ohne Fenster (Tests) */ }
+// Läuft schon als App (eigenes Fenster vom Startbildschirm)?
+function pwaStandalone(){
+  try{ return !!((typeof window.matchMedia==="function"&&window.matchMedia("(display-mode: standalone)").matches)||window.navigator?.standalone===true); }catch{ return false; }
+}
+// "android" = der Browser bietet Installieren an (Chrome, Edge, Samsung am Handy), "ios" = iPhone/iPad mit Anleitung, sonst null.
+// In-App-Browser (Instagram, Facebook, Google-App ...) können nichts auf den Home-Bildschirm legen: dort kein Hinweis.
+function pwaKind(){
+  try{
+    const nav=window.navigator||{}, ua=String(nav.userAgent||"");
+    const ios=/iPhone|iPad|iPod/i.test(ua)||(nav.platform==="MacIntel"&&+nav.maxTouchPoints>1);
+    // iPhone/iPad: die App vom Home-Bildschirm hat einen eigenen Speicher ohne die Angaben aus Safari.
+    // Bis das Login die Daten mitbringt, zeigen wir dort keinen Hinweis (sonst startet die App leer).
+    if(ios) return null;
+    const mobile=/Android|Mobi/i.test(ua)||(typeof window.matchMedia==="function"&&window.matchMedia("(pointer: coarse)").matches);
+    return PWA.prompt&&mobile?"android":null;
+  }catch{ return null; }
+}
+// Service Worker nur im fertigen Build über https (nicht lokal, nicht in Tests). ?v= ist der Name der Haupt-Datei dieses
+// Builds: jeder Deploy ist für den Browser eine neue Version (siehe public/sw.js). Fehler hier dürfen die App nie stören.
+function registerServiceWorker(){
+  try{
+    if(!import.meta.env.PROD) return;
+    if(typeof window==="undefined"||typeof navigator==="undefined"||!navigator.serviceWorker) return;
+    if(window.location.protocol!=="https:") return;
+    let v="";
+    try{ v=String(new URL(import.meta.url).pathname.split("/").pop()||"").replace(/\.js$/,""); }catch{ v=""; }
+    const url=`/sw.js${v?`?v=${encodeURIComponent(v)}`:""}`;
+    const go=()=>{ try{ navigator.serviceWorker.register(url,{scope:"/",updateViaCache:"none"}).catch(()=>{}); }catch{ /* Browser ohne Service Worker */ } };
+    if(document.readyState==="complete") go(); else window.addEventListener("load",go,{once:true});
+  }catch{ /* nie die App stören */ }
+}
+// Hinweis-Karte «TREYN+ aufs Handy legen». place="summary": Übersicht, mit × ausblendbar (gemerkt in PWA_HINT_KEY).
+// place="profil": im Profil immer da, solange Installieren möglich ist (so findet man es nach dem Ausblenden wieder).
+function PwaInstallCard({place="summary"}){
+  const [,setTick]=useState(0);
+  const [hidden,setHidden]=useState(()=>{ try{ return localStorage.getItem(PWA_HINT_KEY)==="hidden"; }catch{ return false; } });
+  const [busy,setBusy]=useState(false);
+  useEffect(()=>{ const fn=()=>setTick(x=>x+1); PWA.subs.add(fn); return ()=>{ PWA.subs.delete(fn); }; },[]);
+  if(PWA.installed||pwaStandalone()) return null;
+  const kind=pwaKind();
+  if(!kind||(place==="summary"&&hidden)) return null;
+  const hide=()=>{ try{ localStorage.setItem(PWA_HINT_KEY,"hidden"); }catch{ /* privater Modus */ } setHidden(true); };
+  const install=async()=>{
+    const p=PWA.prompt; if(!p||busy) return;
+    setBusy(true);
+    try{ await p.prompt(); const r=await p.userChoice; if(r&&r.outcome==="accepted") PWA.installed=true; }catch{ /* Dialog nicht möglich */ }
+    PWA.prompt=null; setBusy(false); pwaNotify(); // der Browser erlaubt den Dialog nur einmal pro Ereignis
+  };
+  const home=kind==="ios"?"Home-Bildschirm":"Startbildschirm";
+  return (
+    <div style={{...ONB_CARD,padding:"14px",marginBottom:place==="summary"?20:16,fontFamily:"Inter,sans-serif"}}>
+      <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+        <span aria-hidden="true" style={{width:40,height:40,borderRadius:10,background:C.neon,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="3.2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </span>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:14,fontWeight:600,color:C.black,lineHeight:1.35,overflowWrap:"anywhere"}}>TREYN+ aufs Handy legen</div>
+          <div style={{fontSize:12,color:C.g600,lineHeight:1.5,marginTop:2,overflowWrap:"anywhere"}}>{`Mit eigenem Symbol auf deinem ${home}. TREYN+ öffnet sich dann wie eine App.`}</div>
+        </div>
+        {place==="summary"&&(
+          <button type="button" onClick={hide} aria-label="Hinweis ausblenden"
+            style={{width:36,height:36,borderRadius:12,border:`1px solid ${C.g200}`,background:C.white,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",flexShrink:0,padding:0}}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.g600} strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        )}
+      </div>
+      {kind==="android"?(
+        <button type="button" onClick={install} disabled={busy}
+          style={{width:"100%",minHeight:44,marginTop:12,background:busy?C.g200:C.neon,color:C.black,border:"none",borderRadius:12,padding:"10px 14px",fontSize:13,fontWeight:600,cursor:busy?"default":"pointer",fontFamily:"Inter,sans-serif"}}>
+          Zum Startbildschirm hinzufügen
+        </button>
+      ):(
+        <div style={{display:"flex",alignItems:"center",gap:10,marginTop:12,background:C.white,border:`1px solid ${C.g200}`,borderRadius:12,padding:"10px 12px"}}>
+          {/* Teilen-Symbol wie in Safari (Quadrat mit Pfeil nach oben) */}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.black} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0}}><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 00-1 1v8a1 1 0 001 1h14a1 1 0 001-1v-8a1 1 0 00-1-1h-1"/></svg>
+          <span style={{fontSize:13,color:C.black,lineHeight:1.45,minWidth:0,overflowWrap:"anywhere"}}>Tippe auf Teilen und dann auf ‹Zum Home-Bildschirm›</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── RENN-COUNTDOWN ───────────────────────────────────────────────────────────
+// Ab 14 Tagen vor dem nächsten Hauptrennen (ohne Hauptrennen: vor dem nächsten Rennen) bis zum Renntag jeden Tag ein eigener
+// Plan, oben in Übersicht und Tagesplan. Werte nur aus calcPro (Phase, Trainings- und Ruhetag, Carb-Loading, Renntag) und aus
+// denselben Formeln wie der Reiter Wettkampf. Basic: nur die Countdown-Zeile, der Rest öffnet das Upgrade-Fenster.
+const RACE_COUNTDOWN_DAYS=14;
+// Rennen des Countdowns aus calcPro (mainRace, sonst nextRace) oder null
+function raceCountdownRace(calc){
+  const ok=r=>!!r&&!!parseISODate(r.date)&&Number.isFinite(+r.daysUntil)&&+r.daysUntil>=0;
+  const r=ok(calc?.mainRace)?calc.mainRace:ok(calc?.nextRace)?calc.nextRace:null;
+  return r&&+r.daysUntil<=RACE_COUNTDOWN_DAYS?r:null;
+}
+// Rennmorgen (Reiter Wettkampf und Renn-Countdown): Hauptmahlzeit und Trinken vor dem Start, an beiden Orten dieselben Mengen
+function raceMorningMeal(w,longFuel,mp){
+  const r=v=>Math.round(v);
+  return mp?{title:"3-4 h vor Spielbeginn: Hauptmahlzeit",detail:`${r(w)}-${r(w*3)} g Kohlenhydrate (1-3 g/kg), dazu ca. ${r(w*0.3)} g Protein - z. B. Pasta, Reis, Brot`,bold:true}
+    :{title:`${longFuel?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${longFuel?`${r(w*2)}-${r(w*3)}`:`${r(w*1)}-${r(w*2)}`}g Kohlenhydrate, ${r(w*0.3)}g Protein - Hafer, Brot, Banane`,bold:true};
+}
+function raceMorningDrink(w,mp,naNeeded){
+  const r50=v=>Math.round(v/50)*50;
+  return {title:mp?"Trinken vor dem Spiel":"Trinken vor dem Start",detail:`${r50(w*5)}-${r50(w*7)} ml 3-4 h vor ${mp?"Spielbeginn":"dem Start"}${naNeeded?" mit 1 Elektrolyt-Tab":""}, ${r50(w*3)}-${r50(w*5)} ml 2 h vorher nur bei dunklem Urin - danach nur noch Schlucke`};
+}
+// Carb-Loading-Tag: Kalorien mindestens Protein + Kohlenhydrate + ca. 0.8 g/kg Fett (Tagesplan und Renn-Countdown)
+function carbLoadKcalFloor(pMin,clG,w){ return Math.round(pMin*4+clG*4+w*0.8*9); }
+// Inhalt der Karte ohne Anzeige. Kopf (eyebrow, title, dateLine) für alle; pro=true dazu Phase von heute, 2-4 Punkte und den
+// Saison-Satz (note). pro=false rechnet keine Werte (nichts davon kommt in die Seite).
+function raceCountdownInfo({calc,profilData,trainingData,sportData,pro=false}){
+  const r=raceCountdownRace(calc); if(!r) return null;
+  const d=Math.round(+r.daysUntil), sid=r.sportId;
+  const today=addDaysISO(r.date,-d)||todayISO(); // derselbe «heute» wie in calcPro
+  const td=(trainingData||{})[sid]||null;
+  const full=allRaces(trainingData,today).find(x=>x.id===r.id)||null;
+  // Rechnung dieses Rennens wie im Reiter Wettkampf: Renndauer und Wetter des Rennens, ohne Saison (raceData {})
+  const rc=td?calcPro(profilData,{[sid]:{...td,raceDuration:r.duration||td.raceDuration||null,raceWeather:full?.weather||null,races:[]}},{...(sportData||{}),primarySport:sid,raceData:{}}):null;
+  // Spiel (Teamsport, Tennis, Padel ...): calcPro.matchPlan dieser Sportart, dann «Spiel» und «Spieltag» statt «Rennen»
+  const mp=rc?.matchPlan&&typeof rc.matchPlan==="object"?rc.matchPlan:null;
+  const isMatch=!!mp;
+  const nm=String(r.name||"").trim();
+  const title=d===0?`Heute ist ${isMatch?"Spieltag":"Renntag"}${nm?`: «${nm}»`:""}`
+    :`Noch ${d} ${d===1?"Tag":"Tage"} bis ${nm?`«${nm}»`:isMatch?"zu deinem Spiel":"zu deinem Rennen"}`;
+  const sportLbl=sportDisplayName(sid,sportData)||SPORT_GROUPS.find(g=>g.id===sid)?.label||"";
+  const head={race:r,d,isMatch,eyebrow:isMatch?"Spiel-Countdown":"Renn-Countdown",title,dateLine:[fmtDateCH(r.date,{weekday:true}),sportLbl].filter(Boolean).join(" · ")};
+  if(!pro) return head;
+
+  const num=v=>v!=null&&v!==""&&Number.isFinite(+v)&&+v>0;
+  const k=v=>Math.round(+v).toLocaleString("de-CH");
+  const w=(+calc?.w)||(+rc?.w)||(+profilData?.weight)||75;
+  const ref=nm?`«${nm}»`:isMatch?"dein Spiel":"dein Rennen";
+  // Carb-Loading dieses Rennens (calcPro.carbLoadRaces): heute Tag 1 von 2, Tag 2 von 2 oder der eine Tag davor
+  const clR=(Array.isArray(calc?.carbLoadRaces)?calc.carbLoadRaces:[]).find(x=>x&&x.id===r.id)||null;
+  const clN=clR?Math.max(0,Math.round(+clR.days)||0):0;
+  const clDates=Array.isArray(clR?.dates)?clR.dates:[];
+  const clToday=clN>0&&d>=1&&d<=clN&&clDates.includes(today);
+  const clMin=Math.round(+clR?.loadG||0), clMax=Math.max(clMin,Math.round(+clR?.loadMaxG||0));
+  const clRange=clMax>clMin?`${clMin}-${clMax}`:`${clMin}`;
+  const recovery=calc?.seasonPhase==="recovery";
+  const phase=d===0?(isMatch?"Spieltag":"Renntag")
+    :clToday?(clN>1?`Carb-Loading Tag ${clN-d+1}/${clN}`:"Carb-Loading")
+    :recovery?"Erholung"
+    :d<=6?(isMatch?"Spielwoche":"Rennwoche")
+    :(r.main&&d<=13)?"Taper"
+    :SEASON_PHASE_LABEL.build;
+  // Taper (calcPro.phaseTrainingFactor unter 1): weniger Umfang, gleiche Intensität. 14 Tage vor dem Hauptrennen: ab morgen
+  const taper=+calc?.phaseTrainingFactor>0&&+calc.phaseTrainingFactor<1;
+  const rowTrain=taper?{l:"Training",t:"Weniger Umfang, gleiche Intensität - dein Trainingstag ist darum etwas tiefer."}
+    :(r.main&&d===RACE_COUNTDOWN_DAYS)?{l:"Training",t:"Ab morgen weniger Umfang, gleiche Intensität."}:null;
+  const dayRow=(l,kc,cg)=>num(kc)?{l,t:`ca. ${k(kc)} kcal${num(cg)?`, ${Math.round(+cg)} g Kohlenhydrate`:""}`}:null;
+  let rows;
+  if(d===0){
+    // Renntag: ganzer Tag aus calcPro (raceDay wie in der Übersicht, sonst wie im Reiter Wettkampf), Rennmorgen wie dort
+    const rd=(calc?.raceDay&&calc.raceDay.raceId===r.id&&num(calc.raceDay.dayKcal))?calc.raceDay:null;
+    const dk=rd?rd.dayKcal:rc?.raceDayKcal, dc=rd?rd.carbsG:rc?.raceDayCarbsG, dr=rd?rd.raceCarbsG:rc?.raceCarbsTotalG;
+    const wr=(+rc?.w)||w, raceH=Math.max(0.1,(+rc?.raceHours)||1);
+    const naNeeded=!!rc?.raceNatriumNeeded&&Math.round(+rc?.raceNatriumIntakePerHourMg||0)>0;
+    const meal=raceMorningMeal(wr,isEnduranceSport(sid,sportData)&&raceH>=1.5,mp), drink=raceMorningDrink(wr,mp,naNeeded);
+    rows=[
+      (num(dk)&&num(dc))?{l:isMatch?"Dein Spieltag gesamt":"Dein Renntag gesamt",t:`Verbrauch ca. ${k(dk)} kcal, Kohlenhydrate ca. ${Math.round(+dc)} g${num(dr)?`, davon ${Math.round(+dr)} g ${isMatch?"rund ums Spiel":"unterwegs"}`:""}.`}:null,
+      {l:meal.title,t:meal.detail},
+      {l:drink.title,t:drink.detail},
+      {l:isMatch?"Dein Spieltag-Plan":"Dein Rennplan",t:`Trinken, Kohlenhydrate, Natrium und Koffein für ${isMatch?"das Spiel":"das Rennen"} stehen unter «Wettkampf». Halte dich an diesen Plan.`},
+    ];
+  } else if(clToday){
+    rows=[
+      {l:"Kohlenhydrate heute",t:`${clRange} g - über den Tag verteilt (${clMax>clMin?"10-12":"10"} g pro kg), dazu weniger Fett und Ballaststoffe.`},
+      {l:"Kalorien heute",t:`mindestens ca. ${k(carbLoadKcalFloor((+calc?.proteinMin)||140,clMin,w))} kcal - damit die Kohlenhydrate Platz haben.`},
+      rowTrain,
+      {l:"Morgen",t:d===1?`Morgen ist ${ref}.`:`Morgen nochmals gleich viel, übermorgen ist ${ref}.`},
+    ];
+  } else {
+    rows=[
+      rowTrain,
+      dayRow("Trainingstag",calc?.withTraining,calc?.carbsG),
+      dayRow("Ruhetag",calc?.restDay,calc?.restCarbsG),
+      (clR&&clDates.length&&clMin>0)?{l:"Carb-Loading",t:`${clDates.map(x=>fmtDateCH(x,{weekday:true,year:false})).join(" und ")}: je ${clRange} g Kohlenhydrate`}:null,
+      (recovery&&num(calc?.proteinMin)&&num(calc?.proteinMax))?{l:"Protein",t:`${calc.proteinMin}-${calc.proteinMax} g - in der Erholung rechnen wir mit etwas mehr Protein.`}:null,
+      (isMatch&&d===1)?{l:"Morgen",t:"Morgen ist dein Spiel. Deinen Spieltag-Plan findest du unter «Wettkampf»."}:null,
+      (calc?.deficitPaused&&calc?.goal==="weightloss")?{l:"Abnehmen",t:`Dein Defizit pausiert bis nach ${isMatch?"dem Spiel":"dem Rennen"}.`}:null,
+    ];
+  }
+  return {...head,phase,rows:rows.filter(Boolean).slice(0,4),note:calc?.phaseNote||null};
+}
+// Karte: calc = calcPro der ganzen Woche (gleich wie die Übersicht). onOpenPlan(raceId): öffnet Plan · Wettkampf mit diesem
+// Rennen (nur PRO). showNote: Saison-Satz in der Karte (im Tagesplan ersetzt die Karte die Saison-Zeile).
+function RaceCountdownCard({calc,profilData,trainingData,sportData,isPro=false,onUpgrade,onOpenPlan,showNote=false,style}){
+  const info=raceCountdownInfo({calc,profilData,trainingData,sportData,pro:!!isPro});
+  if(!info) return null;
+  const up=()=>{ if(typeof onUpgrade==="function") onUpgrade(); else openProModal(); };
+  return (
+    <section aria-label={info.eyebrow} data-treyn="race-countdown"
+      style={{background:C.neonDim,border:`1px solid ${C.neonBorder}`,borderRadius:14,padding:"14px 16px",marginBottom:20,fontFamily:"Inter,sans-serif",minWidth:0,...(style||{})}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:8,flexWrap:"wrap",marginBottom:6}}>
+        <span style={{fontSize:11,fontWeight:500,color:"#4A7000"}}>{info.eyebrow}</span>
+        {isPro&&info.phase&&<span style={{fontSize:11,fontWeight:600,color:C.black,background:C.neon,borderRadius:6,padding:"2px 8px",maxWidth:"100%",overflowWrap:"anywhere"}}>{info.phase}</span>}
+      </div>
+      <div style={{fontSize:18,fontWeight:600,color:C.black,letterSpacing:"-.02em",lineHeight:1.25,overflowWrap:"anywhere"}}>{info.title}</div>
+      <div style={{fontSize:12,color:C.g600,lineHeight:1.5,marginTop:3,overflowWrap:"anywhere"}}>{info.dateLine}</div>
+      {isPro?(<>
+        {info.rows.length>0&&(
+          <div style={{marginTop:12,paddingTop:12,borderTop:`1px solid ${C.neonBorder}`,display:"flex",flexDirection:"column",gap:10}}>
+            {info.rows.map(x=>(
+              <div key={x.l} style={{minWidth:0}}>
+                <div style={{fontSize:12,fontWeight:600,color:C.black,lineHeight:1.4,overflowWrap:"anywhere"}}>{x.l}</div>
+                <div style={{fontSize:12,color:C.g700,lineHeight:1.5,marginTop:1,overflowWrap:"anywhere"}}>{x.t}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {showNote&&info.note&&<div style={{fontSize:11,color:C.g600,lineHeight:1.55,marginTop:10,overflowWrap:"anywhere"}}>{info.note}</div>}
+        {typeof onOpenPlan==="function"&&(
+          <button type="button" onClick={()=>onOpenPlan(info.race.id)}
+            style={{marginTop:12,minHeight:40,padding:"8px 14px",borderRadius:12,border:`1.5px solid ${C.g200}`,background:C.white,color:C.black,fontSize:12,fontWeight:600,cursor:"pointer",fontFamily:"Inter,sans-serif",maxWidth:"100%"}}>
+            {info.isMatch?"Zum Spieltag-Plan":"Zum Rennplan"}
+          </button>
+        )}
+      </>):(
+        <button type="button" onClick={up} aria-haspopup="dialog" aria-label={`${info.eyebrow}: mit PRO freischalten`}
+          style={{display:"block",width:"100%",textAlign:"left",marginTop:12,padding:"12px",borderRadius:12,border:`1px solid ${C.neonBorder}`,background:C.white,cursor:"pointer",fontFamily:"Inter,sans-serif",color:C.black}}>
+          <span style={{display:"flex",alignItems:"flex-start",gap:6,fontSize:12,fontWeight:600,lineHeight:1.45,overflowWrap:"anywhere"}}>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={C.g500} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0,marginTop:3}}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span style={{minWidth:0}}>{info.isMatch?"Jeden Tag bis zum Spiel ein eigener Plan: Training, Kohlenhydrate, Spieltag.":"Jeden Tag bis zum Rennen ein eigener Plan: Taper, Carb-Loading, Renntag."}</span>
+          </span>
+          <span style={{display:"block",marginTop:10}}><ProLock w={200} lines={3} tap={false}/></span>
+          <span style={{display:"block",fontSize:12,fontWeight:600,marginTop:10}}>PRO freischalten →</span>
+        </button>
+      )}
+    </section>
   );
 }
 
@@ -9076,7 +9407,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
   const sportNutrition=healthOnly?{primary:[],secondary:[]}:getSportNutrition(primarySport,sportData?.subSel,sportData?.childSel||{});
   const fname=profilData?.firstname||"";
   const intensityLabel={"low":"Leicht","medium":"Mittel","high":"Intensiv","competition":"Wettkampf"}[primaryTraining.intensity]||"Mittel";
-  const aiCtx={sportLabel,intensity:primaryTraining.intensity,days:Object.values(trainingData||{}).reduce((s,d)=>s+(d?.days||0),0)||primaryTraining.days||3,duration:primaryTraining.duration||60,weight:profilData?.weight||75,gender:profilData?.gender||"m",hasComp:primaryTraining.hasCompetition,compCount:primaryTraining.compCount||0,proData};
+  // AI Chat: Rohdaten, aiPlanContext baut daraus erst beim Senden die TREYN+-Daten (PRO voll, Basic nur Basiswerte und Namen)
+  const aiCtx={profilData,trainingData,sportData,allergenData,praeferenzenData,calc:kcal,isPro,primSupps,secSupps};
 
   // Navigation fuer Basic und PRO gleich: 4 Reiter, nichts gesperrt (gesperrte Inhalte zeigen die Seiten selbst)
   const NAV=[
@@ -9879,6 +10211,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const clName=r=>r?.name?`«${r.name}»`:`dein Rennen (${SPORT_GROUPS.find(g=>g.id===r?.sportId)?.label||"Sport"})`;
     const raceTomorrow=clRace?clRace.date===addDaysISO(today,1):(!!nextR&&nextR.date===addDaysISO(today,1));
     const sportLabel=SPORT_GROUPS.find(s=>s.id===activeSport)?.label||activeSport||"Sport";
+    // Renn-Countdown (nur PRO, ab 14 Tagen vor dem Rennen): enthält Phase, Saison-Satz und das Carb-Loading dieses Rennens
+    const cdRace=isPro?raceCountdownRace(calcAll):null;
+    const cdHasCl=!!cdRace&&!!clRace&&clRace.id===cdRace.id;
     // Schwangerschaft / Stillzeit: keine Supplement-Dosierungen, stattdessen ein Hinweis
     const pregCare=!!calcAll?.pregnancyCare;
     const pregItem=pregCare?{label:"Supplemente",detail:"Schwangerschaft und Stillzeit: Supplemente nur nach Rücksprache mit deiner Ärztin oder deinem Arzt."}:null;
@@ -9939,12 +10274,12 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const pMin=calc?.proteinMin||140, pMax=calc?.proteinMax||180;
     const kcalPlan=rdT?Math.round(+rdT.dayKcal):(numOr(ls?.dayKcal,0)||calc?.withTraining||2500);
     // Carb-Loading-Tag: das Tagesziel muss die Kohlenhydrate tragen (Protein + 10 g/kg KH + ca. 0.8 g/kg Fett), ohne Defizit
-    const clKcal=(planPro&&clToday)?Math.round(pMin*4+clMin*4+w*0.8*9):0;
+    const clKcal=(planPro&&clToday)?carbLoadKcalFloor(pMin,clMin,w):0;
     const kcalDay=clKcal?Math.max(kcalPlan-Math.min(0,+calc?.goalDeltaKcal||0),clKcal):kcalPlan;
     const clKcalUp=clKcal>0&&kcalDay>kcalPlan;
     // Ruhetag am Carb-Loading-Tag: dieselbe Untergrenze (Protein wie am Trainingstag)
     const restKcalBase=calcAll?.restDay||1800;
-    const restCl=(planPro&&clToday)?Math.round((calcAll?.proteinMin||140)*4+clMin*4+w*0.8*9):0;
+    const restCl=(planPro&&clToday)?carbLoadKcalFloor(calcAll?.proteinMin||140,clMin,w):0;
     const restKcal=Math.max(restKcalBase,restCl);
     const restClUp=restKcal>restKcalBase;
     const MEALS=[
@@ -10123,14 +10458,17 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
 
     return (
       <div>
-        {/* Saison (nur PRO): Phase und Countdown, am Carb-Loading-Tag ein Hinweis */}
-        {planPro&&seasonLine&&(
+        {/* Renn-Countdown (PRO): ab 14 Tagen vor dem Rennen, «Zum Rennplan» öffnet den Reiter Wettkampf mit diesem Rennen */}
+        {cdRace&&<RaceCountdownCard calc={calcAll} profilData={profilData} trainingData={trainingData} sportData={sportData} isPro showNote style={{marginBottom:14}}
+          onOpenPlan={rid=>{ UI_STATE.activeSection="wettkampf"; UI_STATE.wettkampfRace=rid; refreshView(); window.scrollTo({top:0,behavior:"instant"}); }}/>}
+        {/* Saison (nur PRO): Phase und Countdown, am Carb-Loading-Tag ein Hinweis (mit Renn-Countdown steht beides in der Karte) */}
+        {planPro&&seasonLine&&!cdRace&&(
           <div style={{background:C.g100,border:`0.5px solid ${C.g200}`,borderRadius:10,padding:"9px 12px",marginBottom:clToday?8:14}}>
             <div style={{fontSize:12,fontWeight:600,color:C.black,lineHeight:1.45,overflowWrap:"anywhere"}}>{seasonLine}</div>
             {calcAll?.phaseNote&&<div style={{fontSize:11,color:C.g600,lineHeight:1.55,marginTop:2}}>{calcAll.phaseNote}</div>}
           </div>
         )}
-        {planPro&&clToday&&(
+        {planPro&&clToday&&!cdHasCl&&(
           <div style={{background:C.neonDim,border:`1px solid ${C.neon}`,borderRadius:12,padding:"12px 14px",marginBottom:14}}>
             <div style={{fontSize:13,fontWeight:700,color:C.black,lineHeight:1.4}}>{`Heute Carb-Loading: ${clRangeTxt} g Kohlenhydrate`}</div>
             <div style={{fontSize:11,color:"#4A7000",lineHeight:1.55,marginTop:3}}>{`Über den Tag verteilt (${clMax>clMin?"10-12":"10"} g pro kg), dazu weniger Fett und Ballaststoffe. ${clOther?(raceTomorrow?`Morgen ist ${clName(clRace)}.`:`Morgen nochmals gleich viel, übermorgen ist ${clName(clRace)}.`):(raceTomorrow?"Morgen ist dein Rennen.":"Morgen nochmals gleich viel.")}`}</div>
@@ -10676,12 +11014,11 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
         label:mp?(selRace?`Spieltag · ${dayWord(selRace.date)}`:"Spieltag"):selRace?`Race Morning · ${dayWord(selRace.date)}`:"Race Morning",
         items:[
           ...(raceDayItem?[{...raceDayItem,title:mp?"Dein Spieltag gesamt":raceDayItem.title}]:[]),
-          mp?{title:"3-4 h vor Spielbeginn: Hauptmahlzeit",detail:`${mpW(w)}-${mpW(w*3)} g Kohlenhydrate (1-3 g/kg), dazu ca. ${mpW(w*0.3)} g Protein - z. B. Pasta, Reis, Brot`,bold:true}
-          :{title:`${longFuel?"3h vor Start":"2h vor Start"}: Hauptmahlzeit`,detail:`${longFuel?`${Math.round(w*2)}-${Math.round(w*3)}`:`${Math.round(w*1)}-${Math.round(w*2)}`}g Kohlenhydrate, ${Math.round(w*0.3)}g Protein - Hafer, Brot, Banane`,bold:true},
+          raceMorningMeal(w,longFuel,mp),
           ...((cafNone||pregCare)?[]:[{title:mp?"45 min vor Spielbeginn: Koffein":"45 min vor Start: Koffein",detail:hasBlutdruck?"Blutdruckmedikamente: Koffein kann den Blutdruck erhöhen - nur nach Rücksprache mit deinem Arzt":cafSensitive?"Bei dir lieber weglassen - am Wettkampftag nichts Neues ausprobieren":`${cafDose}mg Koffein (ca. 3 mg/kg, genau auf dein Gewicht dosiert) - der Klassiker vor ${mp?"Spielen":"Rennen"}, aber nur wenn du es im Training getestet hast`}]),
           mp?{title:mpWarm,detail:rc>0?`ca. ${mpPortion} g Kohlenhydrate (Gel oder Sportgetränk) kurz vor Spielbeginn - die sichere Gelegenheit vor dem Spiel.`:"Nicht nötig - optional 1 Banane oder eine Mundspülung mit Sportgetränk"}
           :{title:"30 min vor Start: Gel",detail:(isEndurance&&rc>0)?"1 Gel (ca. 20-40g Carbs) mit etwas Wasser - die letzte Portion Kohlenhydrate vor dem Startschuss":"Nicht nötig - optional 1 Banane oder eine Mundspülung mit Sportgetränk"},
-          {title:mp?"Trinken vor dem Spiel":"Trinken vor dem Start",detail:`${r50W(w*5)}-${r50W(w*7)} ml 3-4 h vor ${mp?"Spielbeginn":"dem Start"}${naNeeded?" mit 1 Elektrolyt-Tab":""}, ${r50W(w*3)}-${r50W(w*5)} ml 2 h vorher nur bei dunklem Urin - danach nur noch Schlucke`},
+          raceMorningDrink(w,mp,naNeeded),
         ]
       },
       {
@@ -11779,6 +12116,10 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           {deficitPauseHint&&<div style={{fontSize:11,color:C.g600,lineHeight:1.5,marginTop:8}}>{deficitPauseHint}</div>}
         </div>
 
+        {/* ── RENN-COUNTDOWN: ab 14 Tagen vor dem Rennen bis zum Renntag (Basic: Countdown-Zeile, Plan gesperrt) ── */}
+        <RaceCountdownCard calc={calc} profilData={profilData} trainingData={localTraining} sportData={sportData} isPro={isPro} onUpgrade={onUpgrade}
+          onOpenPlan={isPro?(rid=>{ UI_STATE.activeSection="wettkampf"; UI_STATE.wettkampfRace=rid; setTab("plan"); }):null}/>
+
         {/* ── TRAININGSRECHNER «HEUTE»: springt in den Plan-Reiter und öffnet die Karte. Basic nach dem Testtag: Upgrade-Fenster ── */}
         <button type="button" onClick={()=>{ if(todayTrial==="used"){ if(typeof onUpgrade==="function") onUpgrade(); else openProModal(); return; } UI_STATE.openToday=true; UI_STATE.activeSection="plan"; setTab("plan"); }}
           aria-haspopup={todayTrial==="used"?"dialog":undefined}
@@ -11811,6 +12152,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
             </button>
           </div>
         )}
+
+        {/* ── APP AUFS HANDY: nur wenn Installieren möglich ist, mit × ausblendbar (im Profil bleibt der Hinweis) ── */}
+        <PwaInstallCard place="summary"/>
 
         {/* ── BASIC: 4 offene Basiswerte + eine Upgrade-Karte ── */}
         {!isPro&&(<>
@@ -14115,6 +14459,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           </div>
         </div>
 
+        {/* 2b. App aufs Handy (nur wenn Installieren möglich ist) */}
+        <PwaInstallCard place="profil"/>
+
         {/* 3. Mehr: AI Chat (PRO), Kontakt & Impressum, Loyalty (zugeklappt) */}
         <div style={{fontSize:12,fontWeight:500,color:C.g400,fontFamily:"Inter,sans-serif",margin:"0 2px 8px"}}>Mehr</div>
         <div style={{border:`1px solid ${C.g200}`,borderRadius:12,overflow:"hidden",marginBottom:16,background:C.white}}>
@@ -14400,6 +14747,8 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
           <TodayCard userSports={todaySports} trainingData={trainingData} sportData={sportData} primarySport={primarySport} isMobile={isMobile}
             trial={todayTrial} locked={todayTrial==="used"} onUpgrade={onUpgrade}
             onApply={()=>{ UI_STATE.activeSection="plan"; refreshView(); }} onChange={refreshView}/>
+          {/* Renn-Countdown: Basic sieht die Countdown-Zeile, Tippen auf den Plan öffnet das Upgrade-Fenster */}
+          <RaceCountdownCard calc={kcal} profilData={profilData} trainingData={trainingData} sportData={sportData} isPro={false} onUpgrade={onUpgrade}/>
           {/* Testtag: nur der Plan von heute (ohne Wochenplan, Protokolle und Wettkampf), sonst die unscharfe Vorschau */}
           {todayTrial==="active"&&todayState({userSports:todaySports,trainingData,primarySport}).active?<TagesplanTab/>:(
             <BlurGate isPro={false} onUpgrade={onUpgrade} label="Tagesplan mit PRO" priceStr={PRICE_STR} maxHeight={isMobile?560:680}>
@@ -14619,6 +14968,8 @@ function App() {
     return ()=>{ if(PRO_MODAL.open===open) PRO_MODAL.open=null; };
   },[]);
   useEffect(()=>{ setProModal(false); },[phase,tier]);
+  // App aufs Handy: Service Worker (nur Build über https, siehe registerServiceWorker)
+  useEffect(()=>{ registerServiceWorker(); },[]);
 
   // Nach PRO-Freischaltung an den Anfang, damit man die neuen Werte sieht
   const tierRef=useRef(tier);
