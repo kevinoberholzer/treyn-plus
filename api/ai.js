@@ -352,7 +352,9 @@ async function askClaude(client, params) {
 // ── Handler ──────────────────────────────────────────────────────────────────
 export async function handleRequest(request) {
   try {
-    if (request.method !== "POST") return json(405, { error: MSG.method }, { Allow: "POST" });
+    // GET: ist TREYN AI bereit (Schlüssel gesetzt)? Verrät nur ja/nein, die App zeigt sonst «startet in Kürze»
+    if (request.method === "GET") return json(200, { ready: !!String(process.env.ANTHROPIC_API_KEY || "").trim() });
+    if (request.method !== "POST") return json(405, { error: MSG.method }, { Allow: "GET, POST" });
     if (!originAllowed(request.headers)) return json(403, { error: MSG.origin });
     if (!/^application\/json\b/i.test(request.headers.get("content-type") || "")) return json(415, { error: MSG.format });
 

@@ -7414,6 +7414,31 @@ function aiErrorText(status,data){
 
 // ─── AI CHAT ─────────────────────────────────────────────────────────────────
 
+// TREYN AI bereit? GET /api/ai sagt nur, ob der Server einen Schlüssel hat (ein Aufruf pro Seitenaufruf).
+// Ohne Schlüssel zeigen Chat und Einschätzung «startet in Kürze» statt einer Fehlermeldung.
+let AI_READY_P=null;
+function aiReadyCheck(){
+  if(!AI_READY_P) AI_READY_P=fetch("/api/ai",{method:"GET",cache:"no-store"}).then(r=>r.ok?r.json():null).then(d=>d?.ready===true).catch(()=>false);
+  return AI_READY_P;
+}
+function useAiReady(){
+  const [ready,setReady]=useState(null);
+  useEffect(()=>{ let on=true; aiReadyCheck().then(v=>{ if(on) setReady(v); }); return ()=>{ on=false; }; },[]);
+  return ready;
+}
+function AiSoonCard({label="TREYN AI"}){
+  return (
+    <div style={{borderRadius:14,background:C.g100,border:`1px solid ${C.g100}`,padding:"16px 18px",marginTop:8,marginBottom:12}}>
+      <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+        <div style={{width:8,height:8,borderRadius:"50%",background:C.neon,flexShrink:0}}/>
+        <span style={{fontSize:12,fontWeight:500,color:"#4A7000",fontFamily:"Inter,sans-serif"}}>{label}</span>
+      </div>
+      <div style={{fontSize:14,fontWeight:600,color:C.black,lineHeight:1.4}}>TREYN AI startet in Kürze.</div>
+      <div style={{fontSize:12,color:C.g600,lineHeight:1.5,marginTop:4}}>Hier beantwortet dir TREYN AI bald Fragen zu deinen eigenen Werten.</div>
+    </div>
+  );
+}
+
 function AiChat({context, isPro}) {
   const LIMIT = isPro ? Infinity : 3;
   const STORAGE_KEY = "treyn_chat_usage";
@@ -7492,6 +7517,8 @@ function AiChat({context, isPro}) {
     setLoading(false);
   };
   const SUGG=["Wann Kreatin nehmen?","Vit D + Zink zusammen ok?","Proteinbedarf nach Training?","Wie viel trinken pro Einheit?"];
+  const aiReady=useAiReady();
+  if(aiReady===false) return <AiSoonCard label="TREYN AI"/>;
   return (
     <div style={{border:`1px solid ${C.g200}`,borderRadius:16,overflow:"hidden",marginTop:8}}>
       <div style={{background:C.black,padding:"12px 18px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -8249,14 +8276,16 @@ function VerbrauchAISummary({profilData, training, sportIds, sportData, calc}) {
     setLoading(false);
   };
 
+  const aiReady=useAiReady();
   useEffect(()=>{
-    if(!consent) return;
+    if(!consent||aiReady!==true) return;
     if(AI_SUMMARY_CACHE[key]){ setSummary(AI_SUMMARY_CACHE[key]); setLoading(false); return; }
     const tm=setTimeout(()=>{ run(key,ctx); },1500);
     return ()=>clearTimeout(tm);
-  },[key,consent]);
+  },[key,consent,aiReady]);
 
   const loaded=!!AI_SUMMARY_CACHE[key];
+  if(aiReady===false) return <AiSoonCard label="TREYN AI · Deine Analyse"/>;
   return (
     <div style={{borderRadius:14,border:`1px solid ${C.neonBorder||"#E0FF80"}`,background:C.neonDim,padding:"18px 20px",marginBottom:20}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:10}}>
