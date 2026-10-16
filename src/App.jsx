@@ -10946,7 +10946,9 @@ function Results({sportData,trainingData,profilData,allergenData,praeferenzenDat
     const cafGels=Math.max(0,Math.round(+calcAll?.caffeineRaceGels||0));
     const cafMaxMg=Math.round(+calcAll?.caffeineRaceMaxMg||0);
     // Renntag als eigener Tag (calcPro, Rennen dieser Dauer): Verbrauch und KH des ganzen Tages, davon unterwegs
-    const rdKcal=Math.round(+calc?.raceDayKcal||0), rdCarbs=Math.round(+calc?.raceDayCarbsG||0), rdRaceCarbs=Math.round(+calc?.raceCarbsTotalG||0);
+    // Mit Darmtraining gilt unterwegs die Menge, die bis zum Rennen aufgebaut ist (rc), wie in Übersicht und Countdown
+    const rdRaceCarbs=(gutBelow&&!calc?.matchPlan)?Math.round(rc*raceH):Math.round(+calc?.raceCarbsTotalG||0);
+    const rdKcal=Math.round(+calc?.raceDayKcal||0), rdCarbs=Math.max(rdRaceCarbs,Math.round(+calc?.raceDayCarbsG||0));
     const raceDayItem=rdKcal>0&&rdCarbs>0?{title:"Dein Renntag gesamt",detail:`Verbrauch ca. ${rdKcal.toLocaleString("de-CH")} kcal, Kohlenhydrate ca. ${rdCarbs} g${rdRaceCarbs>0?`, davon ${rdRaceCarbs} g ${calc?.matchPlan?"rund ums Spiel":"unterwegs"}`:""}. Was fehlt, holst du in den 1-2 Tagen danach nach.`}:null;
     // Nächstes Rennen oder Spiel in höchstens 3 Tagen nach dem gewählten: dann schnell auftanken
     const nextSoon=!!selRace&&upcoming.some(r=>r.id!==selRace.id&&r.date>=selRace.date&&daysBetweenISO(selRace.date,r.date)<=3);
